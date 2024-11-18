@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rozetka_Api", "Rozetka_Api\Rozetka_Api.csproj", "{F869E378-EF6C-424D-AB14-D0899551EEAD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F869E378-EF6C-424D-AB14-D0899551EEAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F869E378-EF6C-424D-AB14-D0899551EEAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F869E378-EF6C-424D-AB14-D0899551EEAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F869E378-EF6C-424D-AB14-D0899551EEAD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4A518E8F-6395-4448-B978-6B35599097B5}
+	EndGlobalSection
+EndGlobal
