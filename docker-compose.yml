@@ -1,0 +1,47 @@
+version: "3.9"
+networks:
+  myAppNetwork:
+    driver: bridge
+
+services:
+  postgresServerDb:
+    container_name: container-postgres
+    image: postgres:latest
+    ports:
+      - "5022:5432"
+    environment:
+      - POSTGRES_USER=rozetkapi
+      - POSTGRES_PASSWORD=Qwety-1
+      - POSTGRES_DB=rozetkaDb
+    networks:
+      - myAppNetwork
+    volumes:
+#       - d:/web/pd322/postgresql:/var/lib/postgresql/data  # Use the volume name msvol here
+        - /data/postgresql/data:/var/lib/postgresql/data
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 5
+
+  app:
+    container_name: olx_container
+    image: flexxdarker/rozetka-asp-api
+    ports:
+      - "5817:8080"
+    networks:
+     - myAppNetwork
+    depends_on:
+      - postgresServerDb
+    volumes:
+     - /volumes/rozetka-asp/images:/app/uploading  # Use the volume name appvol here
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 5
+  
+  # client:
+  #   container_name: olx_client_container
+  #   image: novakvova/storepd322-client
+  #   ports:
+  #     - "5092:80"
+      
