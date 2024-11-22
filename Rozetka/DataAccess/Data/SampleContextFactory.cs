@@ -1,12 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace DataAccess.Data
 {
-    internal class Class1
+    public class SampleContextFactory : IDesignTimeDbContextFactory<RozetkaDbContext>
     {
+        public RozetkaDbContext CreateDbContext(string[] args)
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<RozetkaDbContext>();
+
+            ConfigurationBuilder builder = new ConfigurationBuilder();
+            builder.SetBasePath(Directory.GetCurrentDirectory());
+            builder.AddJsonFile("appsettings.Development.json");
+            IConfigurationRoot config = builder.Build();
+
+            string? connectionString = config.GetConnectionString("LocalDb");
+            optionsBuilder.UseSqlServer(connectionString);
+            return new RozetkaDbContext(optionsBuilder.Options);
+        }
     }
 }

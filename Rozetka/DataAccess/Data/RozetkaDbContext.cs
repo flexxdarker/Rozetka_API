@@ -12,8 +12,8 @@ namespace DataAccess.Data
 {
     public class RozetkaDbContext : IdentityDbContext<User>
     {
-        
-        public CinemaDbContext(DbContextOptions options) : base(options) { }
+
+        public RozetkaDbContext(DbContextOptions options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
