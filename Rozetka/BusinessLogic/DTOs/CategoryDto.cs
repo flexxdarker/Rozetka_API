@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic.DTOs
 {
-    internal class Category
+    internal class CategoryDto
     {
     }
 }
