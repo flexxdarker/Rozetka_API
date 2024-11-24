@@ -2,8 +2,9 @@
 using BusinessLogic.DTOs;
 using BusinessLogic.Enities;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.Filter;
 using BusinessLogic.Interfaces;
-using DataAccess.Entities;
+using DataAccess.Data.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,28 +16,47 @@ namespace BusinessLogic.Profiles
 {
     public class ApplicationProfile : Profile
     {
-        //public ApplicationProfile(IFileService fileService)
-        //{
-        //    //CreateMap<FilmDto, Film>()
-        //    //    .ForMember(x => x.Category, opt => opt.Ignore());
-        //    //CreateMap<Film, FilmDto>();
-        //    //CreateMap<CreateFilmModel, Film>();
-        //    ////.ForMember(x => x.ImageUrl, opt => opt.MapFrom(src => fileService.SaveFilmImage(src.ImageUrl).Result));
+        public ApplicationProfile(/*IFileService fileService*/)
+        {
+            //    //CreateMap<FilmDto, Film>()
+            //    //    .ForMember(x => x.Category, opt => opt.Ignore());
+            //    //CreateMap<Film, FilmDto>();
+            //    //CreateMap<CreateFilmModel, Film>();
+            //    ////.ForMember(x => x.ImageUrl, opt => opt.MapFrom(src => fileService.SaveFilmImage(src.ImageUrl).Result));
 
-        //    //CreateMap<RegisterModel, User>()
-        //    //    .ForMember(x => x.UserName, opts => opts.MapFrom(s => s.Email));
+            //    //CreateMap<RegisterModel, User>()
+            //    //    .ForMember(x => x.UserName, opts => opts.MapFrom(s => s.Email));
 
-        //    //CreateMap<SessionDto, Session>()
-        //    //    .ForMember(x => x.CinemaHall, opt => opt.Ignore())
-        //    //    .ForMember(x => x.Film, opt => opt.Ignore());
-        //    //CreateMap<Session, SessionDto>();
-        //    //CreateMap<CreateSessionModel, Session>();
+            //    //CreateMap<SessionDto, Session>()
+            //    //    .ForMember(x => x.CinemaHall, opt => opt.Ignore())
+            //    //    .ForMember(x => x.Film, opt => opt.Ignore());
+            //    //CreateMap<Session, SessionDto>();
+            //    //CreateMap<CreateSessionModel, Session>();
 
-        //    //CreateMap<Category, CategoryDto>();
-        //    //CreateMap<CategoryDto, Category>();
+            //    //CreateMap<Category, CategoryDto>();
+            //    //CreateMap<CategoryDto, Category>();
 
-        //    //CreateMap<Company, CompanyDto>();
-        //    //CreateMap<CompanyDto, Company>();
-        //}
+            //    //CreateMap<Company, CompanyDto>();
+            //    //CreateMap<CompanyDto, Company>();
+
+            CreateMap<Advert, AdvertDto>()
+                .ForMember(x => x.CategoryName, opt => opt.MapFrom(x => x.Category.Name))
+                .ForMember(x => x.FirstImage, opt => opt.MapFrom(x => x.Images.FirstOrDefault(x => x.Priority == 0).Name ?? "Error first image"));
+
+            CreateMap<AdvertDto, Advert>();
+            //CreateMap<AdvertCreationModel, Advert>();
+
+            CreateMap<Category, CategoryDto>().ReverseMap();
+
+            CreateMap<Filter, FilterDto>()
+                .ForMember(x => x.Values, opt =>
+                opt.MapFrom(z => z.Values.Select(y => new FilterValueDto { Id = y.Id, FilterId = y.FilterId, Value = y.Value }).ToArray()));
+
+            CreateMap<FilterValue, FilterValueDto>()
+                .ForMember(x => x.FilterName, opt =>
+                opt.MapFrom(z => z.Filter.Name));
+
+            CreateMap<Image, ImageDto>().ReverseMap();
+        }
     }
 }

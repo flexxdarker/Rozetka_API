@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic.DTOs
 {
-    public class CategoryDto
+    public class FilterValueDto
     {
         public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public string Image { get; set; } = string.Empty;
+        public string Value { get; set; } = string.Empty;
+        public int FilterId { get; set; }
+        public string FilterName { get; set; } = string.Empty;
     }
 }

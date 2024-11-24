@@ -1,4 +1,7 @@
 ﻿using BusinessLogic.Enities;
+using BusinessLogic.Entities;
+using BusinessLogic.Entities.Filter;
+using DataAccess.Data.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -12,7 +15,15 @@ namespace DataAccess.Data
 {
     public class RozetkaDbContext : IdentityDbContext<User>
     {
-
+        public DbSet<AdvertValue> AdvertValues { get; set; }
+        public DbSet<CategoryFilter> CategoryFilters { get; set; }
+        public DbSet<Filter> Filters { get; set; }
+        public DbSet<FilterValue> FilterValues { get; set; }
+        public DbSet<Advert> Adverts { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Image> Images { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<User> User { get; set; }
         public RozetkaDbContext(DbContextOptions options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
