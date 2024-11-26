@@ -11,6 +11,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import Button from '@mui/material/Button';
 
 
+
 import Menu from '@mui/material/Menu';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
@@ -22,6 +23,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import Divider from '@mui/material/Divider';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
+import {Link} from "react-router-dom";
 
 
 const Header: React.FC = () => {
@@ -34,9 +36,9 @@ const Header: React.FC = () => {
     const [setAnchorElNav] = React.useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
-    const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorElNav(event.currentTarget);
-    };
+    // const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
+    //     setAnchorElNav(event.currentTarget);
+    // };
 
     const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElUser(event.currentTarget);
@@ -209,20 +211,34 @@ const Header: React.FC = () => {
                         component="div"
                         sx={{flexGrow: 1, display: {xs: 'none', sm: 'block'}}}
                     >
+                        <Link to="/" style={{ color: 'red' }}>
                         Rozetka
+                        </Link>
                     </Typography>
 
 
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                        {pages.map((page) => (
-                            <Button
-                                key={page}
-                                onClick={handleCloseNavMenu}
-                                sx={{ my: 2, color: 'white', display: 'block' }}
-                            >
-                                {page}
+                        {/*{pages.map((page) => (*/}
+                        {/*    <Button*/}
+                        {/*        key={page}*/}
+                        {/*        onClick={handleCloseNavMenu}*/}
+                        {/*        sx={{ my: 2, color: 'white', display: 'block' }}*/}
+                        {/*    >*/}
+                        {/*        {page}*/}
+                        {/*    </Button>*/}
+                        {/*))}*/}
+
+                        <Link to="categorytable">
+                            <Button sx={{ my: 2, color: 'white', display: 'block' }}>
+                                Categories
                             </Button>
-                        ))}
+                        </Link>
+
+                        <Link to="producttable">
+                            <Button sx={{ my: 2, color: 'white', display: 'block' }}>
+                                Products
+                            </Button>
+                        </Link>
                     </Box>
 
 
