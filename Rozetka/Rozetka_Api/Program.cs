@@ -1,3 +1,5 @@
+using BusinessLogic.Exstensions;
+using DataAccess;
 
 namespace Rozetka_Api
 {
@@ -8,10 +10,19 @@ namespace Rozetka_Api
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            var connStr = builder.Configuration.GetConnectionString("DefaultConnectionTest")!;
+
+            builder.Services.AddCustomServices();
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddDbContext(connStr);
+            builder.Services.AddIdentity();
+            builder.Services.AddRepositories();
+
+            builder.Services.AddCustomServices();
 
             var app = builder.Build();
 
@@ -27,3 +38,4 @@ namespace Rozetka_Api
         }
     }
 }
+       
