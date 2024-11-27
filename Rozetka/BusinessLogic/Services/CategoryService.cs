@@ -1,9 +1,9 @@
 using AutoMapper;
 using BusinessLogic.DTOs;
 using BusinessLogic.Entities;
-using BusinessLogic.Exceptions;
 using BusinessLogic.Interfaces;
 using BusinessLogic.Specifications;
+using DataAccess.Repostories;
 using System.Net;
 
 namespace BusinessLogic.Services

@@ -7,18 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ardalis.Specification" Version="8.0.0" />
-    <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="8.0.0" />
-    <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.20" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.20" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.20">
-      <PrivateAssets>all</PrivateAssets>
+		<PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.20" />
-    <PackageReference Include="Microsoft.SqlServer.Server" Version="1.0.0" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.18" />
   </ItemGroup>
 
   <ItemGroup>

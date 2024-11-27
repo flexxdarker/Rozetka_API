@@ -16,7 +16,7 @@ namespace DataAccess.Data
             IConfigurationRoot config = builder.Build();
 
             string? connectionString = config.GetConnectionString("LocalDb");
-            optionsBuilder.UseSqlServer(connectionString);
+            optionsBuilder.UseNpgsql(connectionString);
             return new RozetkaDbContext(optionsBuilder.Options);
         }
     }

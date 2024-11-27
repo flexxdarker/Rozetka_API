@@ -1,5 +1,4 @@
 ﻿using BusinessLogic.Entities.Filter;
-using DataAccess.Data.Entities;
 
 namespace BusinessLogic.Entities
 {

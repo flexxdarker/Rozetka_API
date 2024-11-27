@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using BusinessLogic.Exceptions;
 using BusinessLogic.Interfaces;
 using DataAccess.Repostories;
 using Microsoft.AspNetCore.Hosting;
@@ -41,7 +40,7 @@ namespace BusinessLogic.Services
 
         public async Task<List<string>> SaveImagesAsync(IEnumerable<IFormFile> images)
         {
-            List<string> result = [];
+            List<string> result = new();
 
             try
             {
@@ -112,7 +111,7 @@ namespace BusinessLogic.Services
 
         public async Task<List<string>> SaveImagesAsync(IEnumerable<byte[]> bytesArrays)
         {
-            List<string> result = [];
+            List<string> result = new();
 
             try
             {

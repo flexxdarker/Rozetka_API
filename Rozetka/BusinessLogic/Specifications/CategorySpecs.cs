@@ -1,6 +1,5 @@
 using Ardalis.Specification;
 using BusinessLogic.Entities;
-using DataAccess.Data.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -4,7 +4,6 @@ using BusinessLogic.Enities;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.Filter;
 using BusinessLogic.Interfaces;
-using DataAccess.Data.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;

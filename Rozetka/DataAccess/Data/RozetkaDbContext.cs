@@ -1,7 +1,6 @@
 ﻿using BusinessLogic.Enities;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.Filter;
-using DataAccess.Data.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
