@@ -91,7 +91,7 @@ namespace BusinessLogic.Services
                 !jwtSecurityToken.Header.Alg
                     .Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
             {
-                throw new HttpException(/*Errors.InvalidToken, */HttpStatusCode.BadRequest);
+                throw new HttpException(Errors.InvalidToken,HttpStatusCode.BadRequest);
             }
 
             return jwtSecurityToken.Claims;
