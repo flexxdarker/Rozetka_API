@@ -5,7 +5,7 @@ using DataAccess;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var connStr = builder.Configuration.GetConnectionString("LocalDb")!;
+var connStr = builder.Configuration.GetConnectionString("DefaultConnectionTest")!;
 
 builder.Services.AddCustomServices();
 

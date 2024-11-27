@@ -12,10 +12,11 @@ namespace DataAccess.Data
 
             ConfigurationBuilder builder = new ConfigurationBuilder();
             builder.SetBasePath(Directory.GetCurrentDirectory());
-            builder.AddJsonFile("appsettings.Development.json");
+            //builder.AddJsonFile("appsettings.Development.json");
+            builder.AddJsonFile("appsettings.json");
             IConfigurationRoot config = builder.Build();
 
-            string? connectionString = config.GetConnectionString("LocalDb");
+            string? connectionString = config.GetConnectionString("DefaultConnectionTest");
             optionsBuilder.UseNpgsql(connectionString);
             return new RozetkaDbContext(optionsBuilder.Options);
         }
