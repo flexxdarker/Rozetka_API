@@ -15,6 +15,8 @@ namespace DataAccess.Data.Entities
         public string Image { get; set; } = string.Empty;
         public ICollection<Advert> Adverts { get; set; } = new HashSet<Advert>();
         public ICollection<CategoryFilter> Filters { get; set; } = new HashSet<CategoryFilter>();
+        public int? ParentId { get; set; }
+        public Category Parent { get; set; } = null!;
 
     }
 }
