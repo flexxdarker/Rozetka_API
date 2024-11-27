@@ -26,6 +26,7 @@ namespace Rozetka_Api
 
             var app = builder.Build();
 
+            app.DataBaseMigrate();
             app.UseSwagger();
             app.UseSwaggerUI();
 

@@ -1,6 +1,7 @@
 ﻿using BusinessLogic.Enities;
 using DataAccess.Data;
 using DataAccess.Repostories;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,5 +35,12 @@ namespace DataAccess
                .AddEntityFrameworkStores<RozetkaDbContext>();
         }
 
+        public static void DataBaseMigrate(this WebApplication app)
+        {
+            using var scope = app.Services.CreateScope();
+            var serviceProvider = scope.ServiceProvider;
+            var context = serviceProvider.GetRequiredService<RozetkaDbContext>();
+            context.Database.Migrate();
+        }
     }
 }
