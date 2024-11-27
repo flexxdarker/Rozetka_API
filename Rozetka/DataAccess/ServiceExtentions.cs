@@ -33,5 +33,6 @@ namespace DataAccess
                .AddDefaultTokenProviders()
                .AddEntityFrameworkStores<RozetkaDbContext>();
         }
+
     }
 }
