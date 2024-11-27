@@ -1,33 +1,41 @@
 using BusinessLogic.Exstensions;
 using DataAccess;
 
+namespace Rozetka_Api
+{
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            var builder = WebApplication.CreateBuilder(args);
 
-var builder = WebApplication.CreateBuilder(args);
+            // Add services to the container.
+            var connStr = builder.Configuration.GetConnectionString("DefaultConnectionTest")!;
 
-// Add services to the container.
-var connStr = builder.Configuration.GetConnectionString("DefaultConnectionTest")!;
+            builder.Services.AddCustomServices();
 
-builder.Services.AddCustomServices();
+            builder.Services.AddControllers();
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+            builder.Services.AddDbContext(connStr);
+            builder.Services.AddIdentity();
+            builder.Services.AddRepositories();
 
-builder.Services.AddDbContext(connStr);
-builder.Services.AddIdentity();
-builder.Services.AddRepositories();
+            builder.Services.AddCustomServices();
 
-builder.Services.AddCustomServices();
+            var app = builder.Build();
 
-var app = builder.Build();
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
-app.UseSwagger();
-app.UseSwaggerUI();
-
-app.UseAuthorization();
+            app.UseAuthorization();
 
 
-app.MapControllers();
+            app.MapControllers();
 
-app.Run();
+            app.Run();
+        }
+    }
+}
        
