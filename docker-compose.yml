@@ -27,7 +27,7 @@ services:
     container_name: olx_container
     image: flexxdarker/rozetka-asp-api
     ports:
-      - "5817:8080"
+      - "5817:80"
     networks:
      - myAppNetwork
     depends_on:
