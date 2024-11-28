@@ -27,6 +27,8 @@ namespace Rozetka_Api
             var app = builder.Build();
 
             app.DataBaseMigrate();
+            app.AddUploadingsFolder(Directory.GetCurrentDirectory());
+
             app.UseSwagger();
             app.UseSwaggerUI();
 

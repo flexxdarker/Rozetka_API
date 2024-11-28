@@ -42,5 +42,15 @@ namespace DataAccess
             var context = serviceProvider.GetRequiredService<RozetkaDbContext>();
             context.Database.Migrate();
         }
+
+        public static void AddUploadingsFolder(this WebApplication app, string CurrentDirectoryPath)
+        {
+            string imagesDirPath = Path.Combine(CurrentDirectoryPath, app.Configuration["DirImages"]!);
+
+            if (!Directory.Exists(imagesDirPath))
+            {
+                Directory.CreateDirectory(imagesDirPath);
+            }
+        }
     }
 }
