@@ -16,7 +16,7 @@ namespace DataAccess.Data
             builder.AddJsonFile("appsettings.json");
             IConfigurationRoot config = builder.Build();
 
-            string? connectionString = config.GetConnectionString("DefaultConnection");
+            string? connectionString = config.GetConnectionString("TestConnection");
             optionsBuilder.UseNpgsql(connectionString);
             return new RozetkaDbContext(optionsBuilder.Options);
         }
