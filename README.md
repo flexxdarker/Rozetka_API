@@ -1,4 +1,4 @@
-# OLX_Dyplom
+# Rozetka
 Publish with Docker-Compose
 ```
 apt  install docker-compose
