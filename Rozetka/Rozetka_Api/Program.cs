@@ -11,7 +11,7 @@ namespace Rozetka_Api
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            var connStr = builder.Configuration.GetConnectionString("TestConnection")!;
+            var connStr = builder.Configuration.GetConnectionString("DefaultConnection")!;
 
             builder.Services.AddCustomServices();
 
