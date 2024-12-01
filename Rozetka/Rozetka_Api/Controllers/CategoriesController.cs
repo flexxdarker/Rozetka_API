@@ -18,10 +18,24 @@ namespace Rozetka_Api.Controllers
 
 
         [AllowAnonymous]
-        [HttpGet("getcategories")]
-        public async Task<IActionResult> GetAllCountries()
+        [HttpGet("getallcategories")]
+        public async Task<IActionResult> GetAllCategories()
         {
             return Ok(await categoriesService.GetAllAsync());
+        }
+
+        [AllowAnonymous]
+        [HttpGet("getparentcategories")]
+        public async Task<IActionResult> GetParentCategories()
+        {
+            return Ok(await categoriesService.GetParentAsync());
+        }
+
+        [AllowAnonymous]
+        [HttpGet("getsubcategoriesof/{parentId:int}")]
+        public async Task<IActionResult> GetSubCategories([FromRoute] int parentId)
+        {
+            return Ok(await categoriesService.GetSubAsync(parentId));
         }
 
         [AllowAnonymous]

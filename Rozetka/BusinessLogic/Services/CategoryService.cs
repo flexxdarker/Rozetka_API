@@ -21,6 +21,8 @@ namespace BusinessLogic.Services
         }
 
         public async Task<IEnumerable<CategoryDto>> GetAllAsync() => mapper.Map<IEnumerable<CategoryDto>>(await categories.GetListBySpec(new CategorySpecs.GetAll()));
+        public async Task<IEnumerable<CategoryDto>> GetParentAsync() => mapper.Map<IEnumerable<CategoryDto>>(await categories.GetListBySpec(new CategorySpecs.GetParent()));
+        public async Task<IEnumerable<CategoryDto>> GetSubAsync(int parentId) => mapper.Map<IEnumerable<CategoryDto>>(await categories.GetListBySpec(new CategorySpecs.GetSub(parentId)));
         public async Task<CategoryDto> GetByIdAsync(int id) => mapper.Map<CategoryDto>(await categories.GetItemBySpec(new CategorySpecs.GetById(id)));
 
 
