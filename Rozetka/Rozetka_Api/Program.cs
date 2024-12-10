@@ -1,5 +1,6 @@
 using BusinessLogic.Exstensions;
 using DataAccess;
+using Rozetka_Api.Helpers;
 
 namespace Rozetka_Api
 {
@@ -25,6 +26,15 @@ namespace Rozetka_Api
             builder.Services.AddCustomServices();
 
             var app = builder.Build();
+
+            app.DataBaseMigrate();
+            app.AddUploadingsFolder(Directory.GetCurrentDirectory());
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var serviceProvider = scope.ServiceProvider;
+                serviceProvider.SeedCategories(builder.Configuration).Wait();
+            }
 
             app.UseSwagger();
             app.UseSwaggerUI();

@@ -15,6 +15,17 @@ namespace BusinessLogic.Specifications
         {
             public GetAll() => Query.Where(x => true); 
         }
+        
+        public class GetParent : Specification<Category>
+        {
+            public GetParent() => Query.Where(x => x.ParentCategoryId == null);
+        }
+       
+        public class GetSub : Specification<Category>
+        {
+            public GetSub(int parentId) => Query.Where(x => x.ParentCategoryId == parentId);
+        }
+
         public class GetById : Specification<Category>
         {
             public GetById(int id) => Query.Where(x => x.Id == id);

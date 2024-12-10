@@ -10,18 +10,19 @@ namespace BusinessLogic.Services
 {
     internal class CategoryService : ICategoryService
     {
-      private readonly IMapper mapper;
-      private readonly IRepository<Category> categories;
+        private readonly IMapper mapper;
+        private readonly IRepository<Category> categories;
 
-
-      public CategoryService(IMapper mapper,
-      IRepository<Category> categories)
-      {
-         this.mapper = mapper;
-         this.categories = categories;
-      }
+        public CategoryService(IMapper mapper,
+        IRepository<Category> categories)
+        {
+           this.mapper = mapper;
+             this.categories = categories;
+        }
 
         public async Task<IEnumerable<CategoryDto>> GetAllAsync() => mapper.Map<IEnumerable<CategoryDto>>(await categories.GetListBySpec(new CategorySpecs.GetAll()));
+        public async Task<IEnumerable<CategoryDto>> GetParentAsync() => mapper.Map<IEnumerable<CategoryDto>>(await categories.GetListBySpec(new CategorySpecs.GetParent()));
+        public async Task<IEnumerable<CategoryDto>> GetSubAsync(int parentId) => mapper.Map<IEnumerable<CategoryDto>>(await categories.GetListBySpec(new CategorySpecs.GetSub(parentId)));
         public async Task<CategoryDto> GetByIdAsync(int id) => mapper.Map<CategoryDto>(await categories.GetItemBySpec(new CategorySpecs.GetById(id)));
 
 

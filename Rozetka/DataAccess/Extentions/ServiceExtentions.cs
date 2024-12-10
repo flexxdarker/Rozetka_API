@@ -1,6 +1,7 @@
 ﻿using BusinessLogic.Enities;
 using DataAccess.Data;
 using DataAccess.Repostories;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,6 +33,24 @@ namespace DataAccess
             })
                .AddDefaultTokenProviders()
                .AddEntityFrameworkStores<RozetkaDbContext>();
+        }
+
+        public static void DataBaseMigrate(this WebApplication app)
+        {
+            using var scope = app.Services.CreateScope();
+            var serviceProvider = scope.ServiceProvider;
+            var context = serviceProvider.GetRequiredService<RozetkaDbContext>();
+            context.Database.Migrate();
+        }
+
+        public static void AddUploadingsFolder(this WebApplication app, string CurrentDirectoryPath)
+        {
+            string imagesDirPath = Path.Combine(CurrentDirectoryPath, app.Configuration["DirImages"]!);
+
+            if (!Directory.Exists(imagesDirPath))
+            {
+                Directory.CreateDirectory(imagesDirPath);
+            }
         }
     }
 }

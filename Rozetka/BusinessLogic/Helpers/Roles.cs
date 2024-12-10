@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Olx.BLL.Helpers
+namespace BusinessLogic.Helpers
 {
     public static class Roles
     {
