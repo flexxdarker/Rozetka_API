@@ -56,7 +56,6 @@ namespace Rozetka_Api.Helpers
                 var rootCategories = await Task.WhenAll(fakeCategories.Select(config => CreateCategoryAsync(config)));
                 await categories.AddRangeAsync(rootCategories);
                 await categories.SaveAsync();
-                
             }
         }
     }

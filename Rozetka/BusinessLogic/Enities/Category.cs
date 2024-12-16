@@ -11,7 +11,7 @@ namespace BusinessLogic.Entities
         public ICollection<CategoryFilter>? Filters { get; set; } = new HashSet<CategoryFilter>();
         public int? ParentCategoryId { get; set; }
         public Category? ParentCategory { get; set; } = null!;
-        public ICollection<Category> SubCategories { get; set; } = new HashSet<Category>();
+        public ICollection<Category>? SubCategories { get; set; } = new HashSet<Category>();
 
     }
 }
