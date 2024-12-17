@@ -1,3 +1,6 @@
+using BusinessLogic.Exstensions;
+using DataAccess;
+using Rozetka_Api.Helpers;
 
 namespace Rozetka_Api
 {
@@ -8,12 +11,38 @@ namespace Rozetka_Api
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            var connStr = builder.Configuration.GetConnectionString("DefaultConnection")!;
+
+            builder.Services.AddCustomServices();
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddDbContext(connStr);
+            builder.Services.AddIdentity();
+            builder.Services.AddRepositories();
+
+            builder.Services.AddCustomServices();
+
             var app = builder.Build();
+
+            app.DataBaseMigrate();
+            app.AddUploadingsFolder(Directory.GetCurrentDirectory());
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var serviceProvider = scope.ServiceProvider;
+                serviceProvider.SeedCategories(builder.Configuration).Wait();
+            }
+
+            app.UseCors(options =>
+            {
+                options
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowAnyOrigin();
+            });
 
             app.UseSwagger();
             app.UseSwaggerUI();
@@ -27,3 +56,4 @@ namespace Rozetka_Api
         }
     }
 }
+       
