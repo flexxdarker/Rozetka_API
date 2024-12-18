@@ -1,5 +1,5 @@
 import React from 'react';
-import { styled, alpha } from '@mui/material/styles';
+import {styled, alpha} from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -11,12 +11,10 @@ import SearchIcon from '@mui/icons-material/Search';
 import Button from '@mui/material/Button';
 
 
-
 import Menu from '@mui/material/Menu';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-
 
 
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -51,8 +49,6 @@ const Header: React.FC = () => {
     const handleCloseNavMenu = () => {
         setAnchorElNav(null);
     };
-
-
 
 
     const Search = styled('div')(({theme}) => ({
@@ -99,8 +95,6 @@ const Header: React.FC = () => {
     }));
 
 
-
-
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -109,7 +103,6 @@ const Header: React.FC = () => {
     const handleClose = () => {
         setAnchorEl(null);
     };
-
 
 
     return (
@@ -172,16 +165,16 @@ const Header: React.FC = () => {
                                 },
                             },
                         }}
-                        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                        transformOrigin={{horizontal: 'right', vertical: 'top'}}
+                        anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
                     >
                         <MenuItem onClick={handleClose}>
-                            <Avatar /> Profile
+                            <Avatar/> Profile
                         </MenuItem>
                         <MenuItem onClick={handleClose}>
-                            <Avatar /> My account
+                            <Avatar/> My account
                         </MenuItem>
-                        <Divider />
+                        <Divider/>
                         {/*<MenuItem onClick={handleClose}>*/}
                         {/*    <ListItemIcon>*/}
                         {/*        <PersonAdd fontSize="small" />*/}
@@ -190,19 +183,17 @@ const Header: React.FC = () => {
                         {/*</MenuItem>*/}
                         <MenuItem onClick={handleClose}>
                             <ListItemIcon>
-                                <Settings fontSize="small" />
+                                <Settings fontSize="small"/>
                             </ListItemIcon>
                             Settings
                         </MenuItem>
                         <MenuItem onClick={handleClose}>
                             <ListItemIcon>
-                                <Logout fontSize="small" />
+                                <Logout fontSize="small"/>
                             </ListItemIcon>
                             Logout
                         </MenuItem>
                     </Menu>
-
-
 
 
                     <Typography
@@ -211,13 +202,13 @@ const Header: React.FC = () => {
                         component="div"
                         sx={{flexGrow: 1, display: {xs: 'none', sm: 'block'}}}
                     >
-                        <Link to="/" style={{ color: 'red' }}>
-                        Rozetka
+                        <Link to="/" style={{color: 'red'}}>
+                            Rozetka
                         </Link>
                     </Typography>
 
 
-                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+                    <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
                         {/*{pages.map((page) => (*/}
                         {/*    <Button*/}
                         {/*        key={page}*/}
@@ -229,13 +220,13 @@ const Header: React.FC = () => {
                         {/*))}*/}
 
                         <Link to="categorytable">
-                            <Button sx={{ my: 2, color: 'white', display: 'block' }}>
+                            <Button sx={{my: 2, color: 'white', display: 'block'}}>
                                 Categories
                             </Button>
                         </Link>
 
                         <Link to="producttable">
-                            <Button sx={{ my: 2, color: 'white', display: 'block' }}>
+                            <Button sx={{my: 2, color: 'white', display: 'block'}}>
                                 Products
                             </Button>
                         </Link>
@@ -252,14 +243,14 @@ const Header: React.FC = () => {
                         />
                     </Search>
 
-                    <Box sx={{ flexGrow: 0 }}>
+                    <Box sx={{flexGrow: 0}}>
                         <Tooltip title="Open settings">
-                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                            <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
+                                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg"/>
                             </IconButton>
                         </Tooltip>
                         <Menu
-                            sx={{ mt: '45px' }}
+                            sx={{mt: '45px'}}
                             id="menu-appbar"
                             anchorEl={anchorElUser}
                             anchorOrigin={{
@@ -276,7 +267,7 @@ const Header: React.FC = () => {
                         >
                             {settings.map((setting) => (
                                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                    <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
+                                    <Typography sx={{textAlign: 'center'}}>{setting}</Typography>
                                 </MenuItem>
                             ))}
                         </Menu>

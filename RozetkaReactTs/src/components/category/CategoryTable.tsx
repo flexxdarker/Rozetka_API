@@ -1,6 +1,10 @@
-import React, { useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {CategoriesServices} from "../../services/categoriesService.ts";
 import {CategoryModel} from "../../models/categoriesModel.ts";
+import MyTable from "./MyTable.tsx";
+import Button from '@mui/material/Button';
+import {Link} from "react-router-dom";
+import {MyTable2} from "./MyTable2.tsx";
 
 const CategoryTable: React.FC = () => {
 
@@ -21,19 +25,16 @@ const CategoryTable: React.FC = () => {
         //     });
     };
 
-    const loadCategoriesId = (async (id:number) => {
+    const loadCategoriesId = (async (id: number) => {
         const res = await CategoriesServices.getById(id);
         setCategoriesId(res.data);
         console.log(res);
     });
 
-
-
     useEffect(() => {
         loadCategories();
         loadCategoriesId(1);
     }, []);
-
 
     const listItems = Categories.map((cat) =>
         <li key={cat.id}>
@@ -41,22 +42,25 @@ const CategoryTable: React.FC = () => {
         </li>
     );
 
-
     useEffect(() => {
-        if (CategoriesId != undefined)
-        {
+        if (CategoriesId != undefined) {
             setItem(CategoriesId.name)
         }
     }, [CategoriesId]);
 
 
-
     return (
         <>
-
-            <h1>Category Table for admin</h1>
-                <ul>{listItems}</ul>
-                <h2>{item}</h2>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <h1>Category Table for admin</h1>
+                <Link to="/categorycreate">
+                    <Button variant="contained" style={{maxHeight: "25px"}}>Add</Button>
+                </Link>
+            </div>
+            <ul>{listItems}</ul>
+            <h2>{item}</h2>
+            <MyTable/>
+            <MyTable2/>
         </>
     );
 };
