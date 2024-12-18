@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState} from 'react';
 import {CategoriesServices} from "../../services/categoriesService.ts";
 import {CategoryModel} from "../../models/categoriesModel.ts";
 
@@ -53,9 +53,10 @@ const CategoryTable: React.FC = () => {
 
     return (
         <>
+
             <h1>Category Table for admin</h1>
-            <ul>{listItems}</ul>
-            <h2>{item}</h2>
+                <ul>{listItems}</ul>
+                <h2>{item}</h2>
         </>
     );
 };
