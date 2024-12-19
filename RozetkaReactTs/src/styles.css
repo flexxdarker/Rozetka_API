@@ -2,14 +2,4 @@
     font-family: sans-serif;
     text-align: center;
 }
-.react-resizable-handle {
-    position: absolute;
-    right: -5px;
-    bottom: 0;
-    z-index: 1;
-    width: 10px;
-    height: 100%;
-    cursor: ew-resize;
-    display: grid;
-    place-content: center;
-}
+
