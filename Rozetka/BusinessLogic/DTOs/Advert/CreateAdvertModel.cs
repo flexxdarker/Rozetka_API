@@ -1,13 +1,14 @@
-﻿
-namespace BusinessLogic.DTOs
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BusinessLogic.DTOs.Advert
 {
-    public class AdvertDto
+    public class CreateAdvertModel
     {
-        public int Id { get; set; }
-
         public int CategoryId { get; set; }
-
-        public string CategoryName { get; set; } = string.Empty;
 
         public DateTime Date { get; set; }
 

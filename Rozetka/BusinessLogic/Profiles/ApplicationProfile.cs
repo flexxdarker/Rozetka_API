@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
 using BusinessLogic.DTOs;
+using BusinessLogic.DTOs.Advert;
+using BusinessLogic.DTOs.Category;
+using BusinessLogic.DTOs.Filter;
 using BusinessLogic.Enities;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.Filter;

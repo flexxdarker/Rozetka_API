@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BusinessLogic.DTOs
+namespace BusinessLogic.DTOs.Filter
 {
-    public class CreateCategoryModel
+    public class FilterDto
     {
+        public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
-        public string Image { get; set; } = string.Empty;
-        public int? ParentCategoryId { get; set; }
+        public FilterValueDto[] Values { get; set; } = Array.Empty<FilterValueDto>();
     }
 }

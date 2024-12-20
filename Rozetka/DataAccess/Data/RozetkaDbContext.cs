@@ -15,6 +15,7 @@ namespace DataAccess.Data
     public class RozetkaDbContext : IdentityDbContext<User>
     {
         public DbSet<AdvertValue> AdvertValues { get; set; }
+        public DbSet<Cart> Carts { get; set; }
         public DbSet<CategoryFilter> CategoryFilters { get; set; }
         public DbSet<Filter> Filters { get; set; }
         public DbSet<FilterValue> FilterValues { get; set; }

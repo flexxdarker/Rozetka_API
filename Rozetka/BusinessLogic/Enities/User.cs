@@ -13,9 +13,8 @@ namespace BusinessLogic.Enities
         public string Name { get; set; }
         public string Surname { get; set; }
         public bool isAdmin { get; set; }
-        public int OrderId { get; set; }
-        public Order Order { get; set; }
         public DateTime Birthdate { get; set; }
+        public ICollection<Order>? Orders { get; set; }
         public ICollection<RefreshToken>? RefreshTokens { get; set; }
     }
 }

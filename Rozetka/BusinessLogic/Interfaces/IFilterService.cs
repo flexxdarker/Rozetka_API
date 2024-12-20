@@ -1,4 +1,4 @@
-﻿using BusinessLogic.DTOs;
+﻿using BusinessLogic.DTOs.Filter;
 using BusinessLogic.Entities.Filter;
 using System;
 using System.Collections.Generic;
