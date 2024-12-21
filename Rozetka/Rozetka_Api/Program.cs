@@ -1,6 +1,8 @@
 using BusinessLogic.Exstensions;
 using DataAccess;
+using Microsoft.EntityFrameworkCore;
 using Rozetka_Api.Helpers;
+using System;
 
 namespace Rozetka_Api
 {
@@ -9,6 +11,8 @@ namespace Rozetka_Api
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            
 
             // Add services to the container.
             var connStr = builder.Configuration.GetConnectionString("DefaultConnection")!;
