@@ -1,4 +1,5 @@
 import React from 'react';
+import "../../styles.css"
 import {Link, useLocation} from "react-router-dom";
 
 const Breadcrumbs : React.FC = () => {
@@ -11,17 +12,18 @@ const Breadcrumbs : React.FC = () => {
         .filter(crumb => crumb !== '')
         .map(crumb => {
             currentLink += `/${crumb}`;
-            // currentLink =+ `/${crumb}`;//?????????????????????????????
+            crumb = crumb.replace(/[-]/g, ' ').toLowerCase();
+           // currentLink =+ `/${crumb}`;//?????????????????????????????
 
             return (
-                <div key={crumb}>
-                    <Link to={currentLink}>{crumb}</Link>
+                <div className="crumb" key={crumb}>
+                    <Link to={currentLink}>{String(crumb[0].toUpperCase()) + String(crumb.slice(1))}</Link>
                 </div>
             )
         })
 
     return (
-        <div>{crumbs}</div>
+        <div className="breadcrumbs">{crumbs}</div>
     );
 };
 

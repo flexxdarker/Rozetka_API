@@ -40,20 +40,20 @@ export default function App() {
                 <Route index element={<Home />} />
 
                 {/*Admin*/}
-                <Route path="producttable" element={<ProductTable />} />
-                <Route path="productcreate" element={<ProductForm />} />
+                <Route path="product-table" element={<ProductTable />} />
+                <Route path="product-create" element={<ProductForm />} />
 
-                <Route path="categorytable" element={<CategoryTable />} />
-                <Route path="categorycreate" element={<CategoryForm />} />
+                <Route path="category-table" element={<CategoryTable />} />
+                <Route path="category-create" element={<CategoryForm />} />
 
                 {/*Footer*/}
-                <Route path="aboutus" element={<AboutUs />} />
+                <Route path="about-us" element={<AboutUs />} />
                 <Route path="contacts" element={<Contacts />} />
 
-                <Route path="deliveryandpayment" element={<DeliveryAndPayment />} />
-                <Route path="returnofgoods" element={<ReturnOfGoods />} />
+                <Route path="delivery-and-payment" element={<DeliveryAndPayment />} />
+                <Route path="return-of-goods" element={<ReturnOfGoods />} />
 
-                <Route path="forcorporateclient" element={<ForCorporateClient />} />
+                <Route path="for-corporate-client" element={<ForCorporateClient />} />
 
                 <Route path="franchising" element={<Franchising />} />
 

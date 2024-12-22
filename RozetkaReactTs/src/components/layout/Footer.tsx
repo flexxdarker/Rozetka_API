@@ -25,20 +25,20 @@ const Footer: React.FC = () => {
             >
                     <Stack style={{minWidth: '20%'}}>
                         <h3 style={{textAlign: "center"}}>Company information</h3>
-                        <Link to="aboutus">About us</Link>
+                        <Link to="about-us">About us</Link>
                         <Link to="contacts">Contacts</Link>
                         {/*<LinkMui href="/aboutus">22</LinkMui>*/}
                     </Stack>
 
                     <Stack style={{minWidth: '20%'}}>
                         <h3 style={{textAlign: "center"}}>Help</h3>
-                        <Link to="deliveryandpayment">Delivery and payment</Link>
-                        <Link to="returnofgoods">Return of goods</Link>
+                        <Link to="delivery-and-payment">Delivery and payment</Link>
+                        <Link to="return-of-goods">Return of goods</Link>
                     </Stack>
 
                     <Stack style={{minWidth: '20%'}}>
                         <h3 style={{textAlign: "center"}}>Services</h3>
-                        <Link to="forcorporateclient">For corporate client</Link>
+                        <Link to="for-corporate-client">For corporate client</Link>
                     </Stack>
 
                     <Stack style={{minWidth: '20%'}}>

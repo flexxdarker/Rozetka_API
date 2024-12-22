@@ -219,13 +219,13 @@ const Header: React.FC = () => {
                         {/*    </Button>*/}
                         {/*))}*/}
 
-                        <Link to="categorytable">
+                        <Link to="category-table">
                             <Button sx={{my: 2, color: 'white', display: 'block'}}>
                                 Categories
                             </Button>
                         </Link>
 
-                        <Link to="producttable">
+                        <Link to="product-table">
                             <Button sx={{my: 2, color: 'white', display: 'block'}}>
                                 Products
                             </Button>

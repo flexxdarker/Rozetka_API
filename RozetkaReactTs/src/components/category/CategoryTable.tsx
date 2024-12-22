@@ -174,7 +174,7 @@ const CategoryTable : React.FC = () => {
         <>
             <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                 <h1>Category Table for admin</h1>
-                <Link to="/categorycreate">
+                <Link to="/category-create">
                     <Button variant="contained" style={{maxHeight: "25px"}}>Add</Button>
                 </Link>
             </div>

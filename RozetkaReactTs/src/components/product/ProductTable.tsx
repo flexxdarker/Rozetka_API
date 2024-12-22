@@ -7,7 +7,7 @@ const ProductTable: React.FC = () => {
         <>
             <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                 <h1>Product table for admin</h1>
-                <Link to="/productcreate">
+                <Link to="/product-create">
                     <Button variant="contained" style={{maxHeight: "25px"}}>Add</Button>
                 </Link>
             </div>

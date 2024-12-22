@@ -19,9 +19,10 @@ const Home: React.FC = () => {
                     color="danger"
                     onClick={function(){}}
                     size="lg"
+                    style={{backgroundColor: "#c9eb34",borderRadius: "0px", color: "red"}}
                 >ButtonMui</ButtonMui>
 
-                <Button color="primary" variant="dashed">
+                <Button color="primary" variant="dashed" style={{backgroundColor: "#c9eb34",borderRadius: "0px"}} onClick={function(){}}>
                     ButtonAntDesign
                 </Button>
 
