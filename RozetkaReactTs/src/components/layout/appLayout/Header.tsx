@@ -26,12 +26,9 @@ import {Link} from "react-router-dom";
 
 const Header: React.FC = () => {
 
-
-    const pages = ['Products', 'Pricing', 'Blog'];
     const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
     //
     //const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-    const [setAnchorElNav] = React.useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
     // const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -46,9 +43,6 @@ const Header: React.FC = () => {
         setAnchorElUser(null);
     };
 
-    const handleCloseNavMenu = () => {
-        setAnchorElNav(null);
-    };
 
 
     const Search = styled('div')(({theme}) => ({
@@ -228,6 +222,18 @@ const Header: React.FC = () => {
                         <Link to="product-table">
                             <Button sx={{my: 2, color: 'white', display: 'block'}}>
                                 Products
+                            </Button>
+                        </Link>
+
+                        <Link to="signin">
+                            <Button sx={{my: 2, color: 'white', display: 'block'}}>
+                                SignIn
+                            </Button>
+                        </Link>
+
+                        <Link to="signup">
+                            <Button sx={{my: 2, color: 'white', display: 'block'}}>
+                                SignUp
                             </Button>
                         </Link>
                     </Box>

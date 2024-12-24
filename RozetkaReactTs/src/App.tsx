@@ -1,7 +1,9 @@
 import {Route, Routes} from "react-router-dom";
 import {lazy, Suspense} from 'react';
-import Layout from "./components/layout/Layout.tsx";
+import AppLayout from "./components/layout/appLayout/AppLayout.tsx";
 import MainLoader from "./components/loaders/MainLoader.tsx";
+import MainLayout from "./components/layout/mainLayout/MainLayout.tsx";
+import CategoryLayout from "./components/layout/categoryLayout/CategoryLayout.tsx";
 // import Home from "./components/Home.tsx";
 // import AboutUs from "./components/layout/footer/AboutUs.tsx";
 // import SignIn from "./components/auth/SignIn.tsx";
@@ -35,27 +37,33 @@ const CategoryForm = lazy(() => import("./components/category/CategoryForm.tsx")
 export default function App() {
     return (
         <Routes>
-            <Route path="/" element={<Layout/>}>
-                {/*Header*/}
-                <Route index element={<Home />} />
+            <Route path="/" element={<AppLayout/>}>
+                <Route path="" element={<MainLayout/>}>
+                    {/*Header*/}
+                    <Route index element={<Home/>}/>
 
-                {/*Admin*/}
-                <Route path="product-table" element={<ProductTable />} />
-                <Route path="product-create" element={<ProductForm />} />
+                    {/*Admin*/}
+                    <Route path="product-table" element={<ProductTable/>}/>
+                    <Route path="product-create" element={<ProductForm/>}/>
 
-                <Route path="category-table" element={<CategoryTable />} />
-                <Route path="category-create" element={<CategoryForm />} />
+                    <Route path="category-table" element={<CategoryTable/>}/>
+                    <Route path="category-create" element={<CategoryForm/>}/>
 
-                {/*Footer*/}
-                <Route path="about-us" element={<AboutUs />} />
-                <Route path="contacts" element={<Contacts />} />
+                    {/*Footer*/}
+                    <Route path="about-us" element={<AboutUs/>}/>
+                    <Route path="contacts" element={<Contacts/>}/>
 
-                <Route path="delivery-and-payment" element={<DeliveryAndPayment />} />
-                <Route path="return-of-goods" element={<ReturnOfGoods />} />
+                    <Route path="delivery-and-payment" element={<DeliveryAndPayment/>}/>
+                    <Route path="return-of-goods" element={<ReturnOfGoods/>}/>
 
-                <Route path="for-corporate-client" element={<ForCorporateClient />} />
+                    <Route path="for-corporate-client" element={<ForCorporateClient/>}/>
 
-                <Route path="franchising" element={<Franchising />} />
+                    <Route path="franchising" element={<Franchising/>}/>
+                </Route>
+
+                <Route path="" element={<CategoryLayout/>}>
+                    <Route path="category-1" element={<ProductTable/>}/>
+                </Route>
 
             </Route>
             <Route path="signin" element={<Suspense fallback={<MainLoader/>}> <SignIn/> </Suspense>}/>
