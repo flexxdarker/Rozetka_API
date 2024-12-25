@@ -35,7 +35,7 @@ namespace Rozetka_Api.Helpers
                         Name = config.Name,
                         Image = image,
                         ParentCategory = parentCategory,
-                        Filters = parentCategory != null ? config.Filters.Select(filter => new CategoryFilter
+                        Filters = parentCategory != null ? config.Filters?.Select(filter => new CategoryFilter
                         {
                             Filter = new Filter
                             {
@@ -47,7 +47,8 @@ namespace Rozetka_Api.Helpers
 
                     if (config.SubCategories != null)
                     {
-                        category.SubCategories = (await Task.WhenAll(config.SubCategories.Select(sub => CreateCategoryAsync(sub, category)))).ToHashSet();
+                        var subcategories = await Task.WhenAll(config.SubCategories.Select(sub => CreateCategoryAsync(sub, category)));
+                        category.SubCategories = subcategories.ToHashSet();
                     }
 
                     return category;
