@@ -7,7 +7,6 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using BusinessLogic.Enities;
 using BusinessLogic.Entities;
 using BusinessLogic.Helpers;
 using BusinessLogic.Interfaces;

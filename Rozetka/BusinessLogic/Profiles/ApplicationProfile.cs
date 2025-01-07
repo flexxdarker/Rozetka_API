@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using BusinessLogic.DTOs;
-using BusinessLogic.Enities;
 using BusinessLogic.Entities;
-using BusinessLogic.Entities.Filter;
 using BusinessLogic.Interfaces;
 using System;
 using System.Collections.Generic;

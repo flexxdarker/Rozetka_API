@@ -1,9 +1,11 @@
-﻿namespace Rozetka_Api.Models.CategoryConfigModels
+﻿using static Rozetka_Api.Models.CategoryConfigModels.CategorySeedModel;
+
+namespace Rozetka_Api.Models.CategoryConfigModels
 {
-    public partial class CategoryConfig
+    public partial class CategorySeedModel
     {
         public string Name { get; set; }
-        public List<Filter>? Filters { get; set; }
-        public List<CategoryConfig>? SubCategories { get; set; }
+        public List<CategorySeedModel>? SubCategories { get; set; }
+        public List<FilterSeedModel>? Filters { get; set; }
     }
 }

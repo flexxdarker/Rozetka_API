@@ -1,4 +1,4 @@
-﻿using BusinessLogic.Enities;
+﻿using BusinessLogic.Entities;
 using DataAccess.Data;
 using DataAccess.Repostories;
 using Microsoft.AspNetCore.Builder;

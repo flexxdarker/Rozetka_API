@@ -1,6 +1,4 @@
-﻿using BusinessLogic.Entities.Filter;
-
-namespace BusinessLogic.Entities
+﻿namespace BusinessLogic.Entities
 {
     public class Category
     {
@@ -8,7 +6,7 @@ namespace BusinessLogic.Entities
         public string Name { get; set; } = string.Empty;
         public string Image { get; set; } = string.Empty;
         public ICollection<Advert> Adverts { get; set; } = new HashSet<Advert>();
-        public ICollection<CategoryFilter>? Filters { get; set; } = new HashSet<CategoryFilter>();
+        public ICollection<Filter>? Filters { get; set; } = new HashSet<Filter>();
         public int? ParentCategoryId { get; set; }
         public Category? ParentCategory { get; set; } = null!;
         public ICollection<Category>? SubCategories { get; set; } = new HashSet<Category>();

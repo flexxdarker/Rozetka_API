@@ -1,5 +1,4 @@
-﻿using BusinessLogic.Enities;
-using BusinessLogic.Entities;
+﻿using BusinessLogic.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
