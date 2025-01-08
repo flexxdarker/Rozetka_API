@@ -44,6 +44,11 @@ namespace Rozetka_Api.Helpers
 
             var filters = await filtersRepo.GetListBySpec(new FilterSpecs.GetAll());
 
+            if (filters == null || !filters.Any())
+            {
+                throw new Exception("Filters are not seeded correctly or empty.");
+            }
+
             if (!await categoriesRepo.AnyAsync())
             {
                 var faker = new Faker();
@@ -56,19 +61,20 @@ namespace Rozetka_Api.Helpers
                     Console.WriteLine(imageUrl);
                     byte[] imageBytes = await httpClient.GetByteArrayAsync(imageUrl);
                     var image = await imageService.SaveImageAsync(imageBytes);
-        
 
-                    // Знаходимо фільтри для цієї категорії
-                    var categoryFilters = config.Filters != null ? filters.Where(f => config.Filters.Any(filterConfig => filterConfig.Name == f.Name)).ToList() : null;
+                    var categoryFilters = filters
+                        .Where(filter => config.Filters != null && config.Filters.Any(f => f.Name == filter.Name))
+                        .Select(filter => new CategoryFilter { Filter = filter })
+                        .ToList();
 
                     var category = new Category
                     {
                         Name = config.Name,
                         Image = image,
                         ParentCategory = parentCategory,
-                        Filters = categoryFilters, // Призначаємо фільтри для категорії
+                        Filters = categoryFilters
                     };
-                    
+
                     if (config.SubCategories != null)
                     {
                         var subcategories = await Task.WhenAll(config.SubCategories.Select(sub => CreateCategoryAsync(sub, category)));

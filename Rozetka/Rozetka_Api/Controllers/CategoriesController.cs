@@ -1,4 +1,9 @@
-﻿using BusinessLogic.Interfaces;
+﻿using AutoMapper;
+using BusinessLogic.DTOs;
+using BusinessLogic.Entities;
+using BusinessLogic.Interfaces;
+using BusinessLogic.Specifications;
+using DataAccess.Repostories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +15,9 @@ namespace Rozetka_Api.Controllers
     public class CategoriesController : ControllerBase
     {
         private readonly ICategoryService categoriesService;
+        private readonly IFilterService filtersService;
+        private readonly IMapper mapper;
+        private readonly IRepository<Filter> filterRepo;
 
         public CategoriesController(ICategoryService categoriesService)
         {
@@ -45,5 +53,16 @@ namespace Rozetka_Api.Controllers
             return Ok(await categoriesService.GetByIdAsync(id));
         }
 
+        [AllowAnonymous]
+        [HttpGet("getfilters")]
+        public async Task<IActionResult> GetFilters([FromRoute] int categoryId)
+        {
+            var filters = await filterRepo.GetListBySpec(new FilterSpecs.GetAll());
+            if (filters == null)
+                return NotFound("Filters not found.");
+            return Ok(mapper.Map<IEnumerable<FilterDto>>(filters));
+
+            //return Ok(await filtersService.GetByCategoryIdAsync(categoryId));
+        }
     }
 }

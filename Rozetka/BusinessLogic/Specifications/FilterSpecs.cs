@@ -1,5 +1,6 @@
 ﻿using Ardalis.Specification;
 using BusinessLogic.Entities;
+using Microsoft.AspNetCore.Authentication.OAuth.Claims;
 
 namespace BusinessLogic.Specifications
 {
@@ -17,6 +18,19 @@ namespace BusinessLogic.Specifications
         public class GetById : Specification<Filter>
         {
             public GetById(int id) => Query.Where(x => x.Id == id);
+        }
+        public class GetByCategoryId  : Specification<Filter>
+        {
+            public GetByCategoryId(int categoryId) => Query.Where(x => x.Categories.Where(y => y.CategoryId == categoryId).Select(x => x.Filter) != null);
+        }
+
+        public class GetCategoryFilters : Specification<Filter>
+        {
+            public GetCategoryFilters(int categoryId) =>
+                Query
+                .Include(x => x.Values)
+                .Include(x => x.Categories)
+                .Where(x => x.Categories.Any(z => z.CategoryId == categoryId));
         }
     }
 }

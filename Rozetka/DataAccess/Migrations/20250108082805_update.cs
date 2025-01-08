@@ -11,11 +11,32 @@ namespace DataAccess.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_CategoryFilters_Categories_CategoryId",
+                table: "CategoryFilters");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_CategoryFilters_Filters_FilterId",
+                table: "CategoryFilters");
+
             migrationBuilder.DropTable(
                 name: "AdvertValues");
 
-            migrationBuilder.DropTable(
-                name: "CategoryFilters");
+            migrationBuilder.AlterColumn<int>(
+                name: "FilterId",
+                table: "CategoryFilters",
+                type: "integer",
+                nullable: true,
+                oldClrType: typeof(int),
+                oldType: "integer");
+
+            migrationBuilder.AlterColumn<int>(
+                name: "CategoryId",
+                table: "CategoryFilters",
+                type: "integer",
+                nullable: true,
+                oldClrType: typeof(int),
+                oldType: "integer");
 
             migrationBuilder.CreateTable(
                 name: "AdvertFilterValue",
@@ -41,49 +62,59 @@ namespace DataAccess.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "CategoryFilter",
-                columns: table => new
-                {
-                    CategoriesId = table.Column<int>(type: "integer", nullable: false),
-                    FiltersId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CategoryFilter", x => new { x.CategoriesId, x.FiltersId });
-                    table.ForeignKey(
-                        name: "FK_CategoryFilter_Categories_CategoriesId",
-                        column: x => x.CategoriesId,
-                        principalTable: "Categories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CategoryFilter_Filters_FiltersId",
-                        column: x => x.FiltersId,
-                        principalTable: "Filters",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_AdvertFilterValue_FilterValuesId",
                 table: "AdvertFilterValue",
                 column: "FilterValuesId");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_CategoryFilter_FiltersId",
-                table: "CategoryFilter",
-                column: "FiltersId");
+            migrationBuilder.AddForeignKey(
+                name: "FK_CategoryFilters_Categories_CategoryId",
+                table: "CategoryFilters",
+                column: "CategoryId",
+                principalTable: "Categories",
+                principalColumn: "Id");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_CategoryFilters_Filters_FilterId",
+                table: "CategoryFilters",
+                column: "FilterId",
+                principalTable: "Filters",
+                principalColumn: "Id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_CategoryFilters_Categories_CategoryId",
+                table: "CategoryFilters");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_CategoryFilters_Filters_FilterId",
+                table: "CategoryFilters");
+
             migrationBuilder.DropTable(
                 name: "AdvertFilterValue");
 
-            migrationBuilder.DropTable(
-                name: "CategoryFilter");
+            migrationBuilder.AlterColumn<int>(
+                name: "FilterId",
+                table: "CategoryFilters",
+                type: "integer",
+                nullable: false,
+                defaultValue: 0,
+                oldClrType: typeof(int),
+                oldType: "integer",
+                oldNullable: true);
+
+            migrationBuilder.AlterColumn<int>(
+                name: "CategoryId",
+                table: "CategoryFilters",
+                type: "integer",
+                nullable: false,
+                defaultValue: 0,
+                oldClrType: typeof(int),
+                oldType: "integer",
+                oldNullable: true);
 
             migrationBuilder.CreateTable(
                 name: "AdvertValues",
@@ -111,32 +142,6 @@ namespace DataAccess.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "CategoryFilters",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CategoryId = table.Column<int>(type: "integer", nullable: false),
-                    FilterId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CategoryFilters", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_CategoryFilters_Categories_CategoryId",
-                        column: x => x.CategoryId,
-                        principalTable: "Categories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CategoryFilters_Filters_FilterId",
-                        column: x => x.FilterId,
-                        principalTable: "Filters",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_AdvertValues_AdvertId",
                 table: "AdvertValues",
@@ -147,15 +152,21 @@ namespace DataAccess.Migrations
                 table: "AdvertValues",
                 column: "FilterValueId");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_CategoryFilters_CategoryId",
+            migrationBuilder.AddForeignKey(
+                name: "FK_CategoryFilters_Categories_CategoryId",
                 table: "CategoryFilters",
-                column: "CategoryId");
+                column: "CategoryId",
+                principalTable: "Categories",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
 
-            migrationBuilder.CreateIndex(
-                name: "IX_CategoryFilters_FilterId",
+            migrationBuilder.AddForeignKey(
+                name: "FK_CategoryFilters_Filters_FilterId",
                 table: "CategoryFilters",
-                column: "FilterId");
+                column: "FilterId",
+                principalTable: "Filters",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
         }
     }
 }

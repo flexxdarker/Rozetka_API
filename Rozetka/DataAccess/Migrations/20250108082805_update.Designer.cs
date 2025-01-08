@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(RozetkaDbContext))]
-    [Migration("20250107131413_update")]
+    [Migration("20250108082805_update")]
     partial class update
     {
         /// <inheritdoc />
@@ -100,6 +100,29 @@ namespace DataAccess.Migrations
                     b.HasIndex("ParentCategoryId");
 
                     b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("BusinessLogic.Entities.CategoryFilter", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("FilterId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("FilterId");
+
+                    b.ToTable("CategoryFilters");
                 });
 
             modelBuilder.Entity("BusinessLogic.Entities.Filter", b =>
@@ -257,21 +280,6 @@ namespace DataAccess.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
-                });
-
-            modelBuilder.Entity("CategoryFilter", b =>
-                {
-                    b.Property<int>("CategoriesId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("FiltersId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("CategoriesId", "FiltersId");
-
-                    b.HasIndex("FiltersId");
-
-                    b.ToTable("CategoryFilter");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -441,6 +449,21 @@ namespace DataAccess.Migrations
                     b.Navigation("ParentCategory");
                 });
 
+            modelBuilder.Entity("BusinessLogic.Entities.CategoryFilter", b =>
+                {
+                    b.HasOne("BusinessLogic.Entities.Category", "Category")
+                        .WithMany("Filters")
+                        .HasForeignKey("CategoryId");
+
+                    b.HasOne("BusinessLogic.Entities.Filter", "Filter")
+                        .WithMany("Categories")
+                        .HasForeignKey("FilterId");
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Filter");
+                });
+
             modelBuilder.Entity("BusinessLogic.Entities.FilterValue", b =>
                 {
                     b.HasOne("BusinessLogic.Entities.Filter", "Filter")
@@ -472,21 +495,6 @@ namespace DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("CategoryFilter", b =>
-                {
-                    b.HasOne("BusinessLogic.Entities.Category", null)
-                        .WithMany()
-                        .HasForeignKey("CategoriesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BusinessLogic.Entities.Filter", null)
-                        .WithMany()
-                        .HasForeignKey("FiltersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -549,11 +557,15 @@ namespace DataAccess.Migrations
                 {
                     b.Navigation("Adverts");
 
+                    b.Navigation("Filters");
+
                     b.Navigation("SubCategories");
                 });
 
             modelBuilder.Entity("BusinessLogic.Entities.Filter", b =>
                 {
+                    b.Navigation("Categories");
+
                     b.Navigation("Values");
                 });
 
