@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using BusinessLogic.DTOs;
 using BusinessLogic.DTOs.Advert;
+using BusinessLogic.DTOs.Cart;
 using BusinessLogic.DTOs.Category;
 using BusinessLogic.DTOs.Filter;
+using BusinessLogic.DTOs.Order;
 using BusinessLogic.Enities;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.Filter;
@@ -20,26 +22,6 @@ namespace BusinessLogic.Profiles
     {
         public ApplicationProfile(/*IFileService fileService*/)
         {
-            //    //CreateMap<FilmDto, Film>()
-            //    //    .ForMember(x => x.Category, opt => opt.Ignore());
-            //    //CreateMap<Film, FilmDto>();
-            //    //CreateMap<CreateFilmModel, Film>();
-            //    ////.ForMember(x => x.ImageUrl, opt => opt.MapFrom(src => fileService.SaveFilmImage(src.ImageUrl).Result));
-
-            //    //CreateMap<RegisterModel, User>()
-            //    //    .ForMember(x => x.UserName, opts => opts.MapFrom(s => s.Email));
-
-            //    //CreateMap<SessionDto, Session>()
-            //    //    .ForMember(x => x.CinemaHall, opt => opt.Ignore())
-            //    //    .ForMember(x => x.Film, opt => opt.Ignore());
-            //    //CreateMap<Session, SessionDto>();
-            //    //CreateMap<CreateSessionModel, Session>();
-
-            //    //CreateMap<Category, CategoryDto>();
-            //    //CreateMap<CategoryDto, Category>();
-
-            //    //CreateMap<Company, CompanyDto>();
-            //    //CreateMap<CompanyDto, Company>();
 
             CreateMap<Advert, AdvertDto>()
                 .ForMember(x => x.CategoryName, opt => opt.MapFrom(x => x.Category.Name))
@@ -59,6 +41,12 @@ namespace BusinessLogic.Profiles
                 opt.MapFrom(z => z.Filter.Name));
 
             CreateMap<Image, ImageDto>().ReverseMap();
+
+            CreateMap<Cart, CartDto>();
+            CreateMap<CartDto, Cart>();
+
+            CreateMap<Order, OrderDto>();
+            CreateMap<OrderDto, Order>();
         }
     }
 }
