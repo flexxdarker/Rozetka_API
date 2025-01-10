@@ -6,6 +6,6 @@ namespace Rozetka_Api.Models.CategoryConfigModels
     {
         public string Name { get; set; }
         public List<CategorySeedModel>? SubCategories { get; set; }
-        public List<FilterSeedModel>? Filters { get; set; }
+        public List<String>? Filters { get; set; }
     }
 }

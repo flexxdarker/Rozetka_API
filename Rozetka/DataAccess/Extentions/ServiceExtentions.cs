@@ -40,7 +40,13 @@ namespace DataAccess
             using var scope = app.Services.CreateScope();
             var serviceProvider = scope.ServiceProvider;
             var context = serviceProvider.GetRequiredService<RozetkaDbContext>();
-            context.Database.Migrate();
+            try
+            {
+                context.Database.Migrate();
+            }
+            catch (Exception ex) {
+                Console.WriteLine(ex.Message + ex.Source);
+            }
         }
 
         public static void AddUploadingsFolder(this WebApplication app, string CurrentDirectoryPath)

@@ -9,7 +9,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace BusinessLogic.Specifications
 {
-    internal class CategorySpecs
+    public class CategorySpecs
     {
         public class GetAll : Specification<Category>
         {
@@ -29,6 +29,11 @@ namespace BusinessLogic.Specifications
         public class GetById : Specification<Category>
         {
             public GetById(int id) => Query.Where(x => x.Id == id);
+        }
+        public class GetByName : Specification<Category>
+        {
+            public GetByName(string Name) => Query.Where(x => x.Name.ToLower() == Name);
+            int a = 0;
         }
     }
 }

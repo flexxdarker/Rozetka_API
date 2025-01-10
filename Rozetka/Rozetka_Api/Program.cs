@@ -6,45 +6,40 @@ namespace Rozetka_Api
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
             var connStr = builder.Configuration.GetConnectionString("TestConnection")!;
 
-            builder.Services.AddCustomServices();
-
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddDbContext(connStr);
-            builder.Services.AddIdentity();
-            builder.Services.AddRepositories();
-
             builder.Services.AddCustomServices();
+            builder.Services.AddRepositories();
+            builder.Services.AddIdentity();
 
             var app = builder.Build();
 
             app.DataBaseMigrate();
             app.AddUploadingsFolder(Directory.GetCurrentDirectory());
 
-            using (var scope = app.Services.CreateScope())
-            {
-                var serviceProvider = scope.ServiceProvider;
-                serviceProvider.SeedCategories(builder.Configuration).Wait();
-            }
+            //using (var scope = app.Services.CreateScope())
+            //{
+            //    var serviceProvider = scope.ServiceProvider;
+            //    serviceProvider.SeedCategories(builder.Configuration).Wait();
+            //}
 
             app.UseSwagger();
             app.UseSwaggerUI();
-
             app.UseAuthorization();
-
-
             app.MapControllers();
 
-            app.Run();
+            await app.SeedCategoriesAndFilters(builder.Configuration);
+            await app.RunAsync();
         }
     }
 }

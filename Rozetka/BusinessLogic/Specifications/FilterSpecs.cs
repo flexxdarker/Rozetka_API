@@ -27,10 +27,8 @@ namespace BusinessLogic.Specifications
         public class GetCategoryFilters : Specification<Filter>
         {
             public GetCategoryFilters(int categoryId) =>
-                Query
-                .Include(x => x.Values)
-                .Include(x => x.Categories)
-                .Where(x => x.Categories.Any(z => z.CategoryId == categoryId));
+                Query.Where(x => x.Categories.Where(x => x.CategoryId == categoryId) != null);
+               
         }
     }
 }
