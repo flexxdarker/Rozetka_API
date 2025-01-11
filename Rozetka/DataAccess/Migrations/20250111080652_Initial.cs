@@ -60,14 +60,14 @@ namespace DataAccess.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Image = table.Column<string>(type: "text", nullable: false),
-                    ParentId = table.Column<int>(type: "integer", nullable: true)
+                    ParentCategoryId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Categories", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Categories_Categories_ParentId",
-                        column: x => x.ParentId,
+                        name: "FK_Categories_Categories_ParentCategoryId",
+                        column: x => x.ParentCategoryId,
                         principalTable: "Categories",
                         principalColumn: "Id");
                 });
@@ -304,45 +304,38 @@ namespace DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AdvertValues",
+                name: "AdvertFilterValue",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    AdvertId = table.Column<int>(type: "integer", nullable: false),
-                    FilterValueId = table.Column<int>(type: "integer", nullable: false)
+                    AdvertsId = table.Column<int>(type: "integer", nullable: false),
+                    FilterValuesId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AdvertValues", x => x.Id);
+                    table.PrimaryKey("PK_AdvertFilterValue", x => new { x.AdvertsId, x.FilterValuesId });
                     table.ForeignKey(
-                        name: "FK_AdvertValues_Adverts_AdvertId",
-                        column: x => x.AdvertId,
+                        name: "FK_AdvertFilterValue_Adverts_AdvertsId",
+                        column: x => x.AdvertsId,
                         principalTable: "Adverts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AdvertValues_FilterValues_FilterValueId",
-                        column: x => x.FilterValueId,
+                        name: "FK_AdvertFilterValue_FilterValues_FilterValuesId",
+                        column: x => x.FilterValuesId,
                         principalTable: "FilterValues",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_AdvertFilterValue_FilterValuesId",
+                table: "AdvertFilterValue",
+                column: "FilterValuesId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Adverts_CategoryId",
                 table: "Adverts",
                 column: "CategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AdvertValues_AdvertId",
-                table: "AdvertValues",
-                column: "AdvertId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AdvertValues_FilterValueId",
-                table: "AdvertValues",
-                column: "FilterValueId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -382,9 +375,9 @@ namespace DataAccess.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Categories_ParentId",
+                name: "IX_Categories_ParentCategoryId",
                 table: "Categories",
-                column: "ParentId");
+                column: "ParentCategoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CategoryFilters_CategoryId",
@@ -416,7 +409,7 @@ namespace DataAccess.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AdvertValues");
+                name: "AdvertFilterValue");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");

@@ -27,7 +27,7 @@ namespace DataAccess.Data
 
             //modelBuilder.SeedData();
             modelBuilder.Entity<CategoryFilter>()
-       .HasKey(cf => cf.Id);
+            .HasKey(cf => cf.Id);
 
             modelBuilder.Entity<CategoryFilter>()
                 .HasOne(cf => cf.Category)

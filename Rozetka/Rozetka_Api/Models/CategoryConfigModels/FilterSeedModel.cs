@@ -2,8 +2,8 @@
 {
     public class FilterSeedModel
     {
-        public string Name { get; set; }
-        public List<string> Values { get; set; }
+        public string Name { get; set; } 
+        public List<string> Values { get; set; } = new List<string>();
     }
 
 }

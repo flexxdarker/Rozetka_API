@@ -24,6 +24,11 @@ namespace BusinessLogic.Specifications
             public GetByCategoryId(int categoryId) => Query.Where(x => x.Categories.Where(y => y.CategoryId == categoryId).Select(x => x.Filter) != null);
         }
 
+        public class GetByIds : Specification<Filter>
+        {
+            public GetByIds(IEnumerable<int> ids) => Query.Where(x => ids.Contains(x.Id));
+        }
+
         public class GetCategoryFilters : Specification<Filter>
         {
             public GetCategoryFilters(int categoryId) =>

@@ -4,14 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BusinessLogic.Entities
+namespace BusinessLogic.DTOs
 {
-    public class CategoryFilter
+    public class CategoryFilterCreationModel
     {
-        public int Id { get; set; }
         public int CategoryId { get; set; }
-        public Category? Category { get; set; }
         public int FilterId { get; set; }
-        public Filter? Filter { get; set; }
     }
 }

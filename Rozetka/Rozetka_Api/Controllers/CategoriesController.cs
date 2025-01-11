@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BusinessLogic.DTOs;
+using BusinessLogic.DTOs.Models;
 using BusinessLogic.Entities;
 using BusinessLogic.Interfaces;
 using BusinessLogic.Specifications;
@@ -52,6 +53,13 @@ namespace Rozetka_Api.Controllers
         {
             return Ok(await categoriesService.GetByIdAsync(id));
         }
+
+        [HttpPut("create")]
+        public async Task<IActionResult> Create([FromForm] CategoryCreationModel categoryCreationModel)
+        {
+            return Ok(await categoriesService.CreateAsync(categoryCreationModel));
+        }
+
 
         [AllowAnonymous]
         [HttpGet("getfilters")]

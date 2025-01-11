@@ -13,7 +13,10 @@ namespace BusinessLogic.Specifications
     {
         public class GetAll : Specification<Category>
         {
-            public GetAll() => Query.Where(x => true); 
+            public GetAll() => Query
+                .Include(c => c.Filters)
+                .ThenInclude(f => f.Filter)
+                .Where(x => true); 
         }
         
         public class GetParent : Specification<Category>
@@ -33,7 +36,6 @@ namespace BusinessLogic.Specifications
         public class GetByName : Specification<Category>
         {
             public GetByName(string Name) => Query.Where(x => x.Name.ToLower() == Name);
-            int a = 0;
         }
     }
 }

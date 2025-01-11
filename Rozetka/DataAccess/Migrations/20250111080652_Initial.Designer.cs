@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(RozetkaDbContext))]
-    [Migration("20250108082805_update")]
-    partial class update
+    [Migration("20250111080652_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -110,10 +110,10 @@ namespace DataAccess.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CategoryId")
+                    b.Property<int>("CategoryId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("FilterId")
+                    b.Property<int>("FilterId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -453,11 +453,15 @@ namespace DataAccess.Migrations
                 {
                     b.HasOne("BusinessLogic.Entities.Category", "Category")
                         .WithMany("Filters")
-                        .HasForeignKey("CategoryId");
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("BusinessLogic.Entities.Filter", "Filter")
                         .WithMany("Categories")
-                        .HasForeignKey("FilterId");
+                        .HasForeignKey("FilterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Category");
 

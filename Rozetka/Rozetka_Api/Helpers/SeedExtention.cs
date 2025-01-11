@@ -83,41 +83,18 @@ namespace Rozetka_Api.Helpers
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine("\nSeed Categories\n");
                         Console.ForegroundColor = ConsoleColor.White;
-                        //List<CategoryFilter> allCategoryFiltersList = new List<CategoryFilter>();
-                        //int countCategories = 0;
                         async Task<Category> CreateCategoryAsync(CategorySeedModel config, Category? parentCategory = null)
                         {
                             var imageUrl = "https://ssl-product-images.www8-hp.com/digmedialib/prodimg/lowres/c08514660.png"; //faker.Image.LoremFlickrUrl(width: 640, height: 480);
                             byte[] imageBytes = await httpClient.GetByteArrayAsync(imageUrl);
                             var image = await imageService.SaveImageAsync(imageBytes);
 
-                            //var categoryFilters = allFilters
-                            //    .Where(filter => config.Filters != null && config.Filters.Any(filterName => filterName == filter.Name))
-                            //    .Select(filter => new CategoryFilter { Filter = filter, FilterId = filter.Id })
-                            //    .ToList();
-
                             var category = new Category
                             {
-                                //Id = countCategories,
                                 Name = config.Name,
                                 Image = image,
                                 ParentCategory = parentCategory,
-                                Filters = null
                             };
-
-                            //if(config.Filters != null)
-                            //{
-                            //    List<CategoryFilter> currentCategoryFiltersList= new List<CategoryFilter>();                     
-                            //    foreach (var categoryFilter in categoryFilters)
-                            //    {
-                            //        categoryFilter.Category = category;
-                            //        categoryFilter.CategoryId = countCategories;
-                            //        allCategoryFiltersList.Add(categoryFilter);
-                            //        currentCategoryFiltersList.Add(categoryFilter);
-                            //    }
-                            //    category.Filters = currentCategoryFiltersList;
-                            //}
-                            //++countCategories;
 
                             if (config.SubCategories != null)
                             {
@@ -130,14 +107,11 @@ namespace Rozetka_Api.Helpers
 
                         var rootCategories = await Task.WhenAll(categoriesModels.Select(config => CreateCategoryAsync(config)));
                         await categoriesRepo.AddRangeAsync(rootCategories);
-                        //await categoryFiltersRepo.AddRangeAsync(allCategoryFiltersList);
-                        //await categoryFiltersRepo.SaveAsync();
                         await categoriesRepo.SaveAsync();
-
 
                         var allCategories = await categoriesRepo.GetListBySpec(new CategorySpecs.GetAll());
                         Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine("Seed CategoryFilters");
+                        Console.WriteLine("\nSeed CategoryFilters\n");
                         Console.ForegroundColor = ConsoleColor.White;
                         async Task CreateCategoryFiltersAsync(CategorySeedModel config, List<CategoryFilter> categoryFiltersList)
                         {
@@ -154,7 +128,7 @@ namespace Rozetka_Api.Helpers
                                     Filter = filter.Filter,
                                     FilterId = filter.FilterId,
                                     Category = category,
-                                    CategoryId = category.Id + 1
+                                    CategoryId = category!.Id + 1
                                 });
                             }
 
@@ -167,7 +141,6 @@ namespace Rozetka_Api.Helpers
                             }
 
                         }
-
                         List<CategoryFilter> categoryFiltersList = new List<CategoryFilter>();
                         foreach (var categorySeedModel in categoriesModels)
                         {
