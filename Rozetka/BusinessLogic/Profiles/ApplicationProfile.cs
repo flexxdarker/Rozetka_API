@@ -2,7 +2,6 @@
 using BusinessLogic.DTOs;
 using BusinessLogic.DTOs.Models;
 using BusinessLogic.Entities;
-using BusinessLogic.Entities.Filter;
 using BusinessLogic.Interfaces;
 using System;
 using System.Collections.Generic;
