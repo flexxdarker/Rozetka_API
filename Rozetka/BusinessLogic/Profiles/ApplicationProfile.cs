@@ -45,7 +45,7 @@ namespace BusinessLogic.Profiles
             //CreateMap<AdvertCreationModel, Advert>();
 
             CreateMap<Category, CategoryDto>()
-                .ForMember(x => x.Filters, opt => opt.MapFrom(z => z.Filters.Select(y => y.Id))).ReverseMap();
+                .ForMember(x => x.Filters, opt => opt.MapFrom(z => z.Filters.Select(y => y.FilterId))).ReverseMap();
             //.ForMember(x => x.SubCategories, opt => opt.MapFrom(x => x.SubCategories));
 
             //CreateMap<Int32, Int32>();

@@ -15,7 +15,7 @@ namespace Rozetka_Api
             
 
             // Add services to the container.
-            var connStr = builder.Configuration.GetConnectionString("TestConnection")!;
+            var connStr = builder.Configuration.GetConnectionString("DefaultConnection")!;
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
