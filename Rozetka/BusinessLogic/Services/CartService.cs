@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using BusinessLogic.DTOs.Advert;
+using BusinessLogic.DTOs.Cart;
+using BusinessLogic.DTOs.Order;
 using BusinessLogic.Enities;
 using BusinessLogic.Interfaces;
 using DataAccess.Repostories;
@@ -14,14 +16,19 @@ namespace BusinessLogic.Services
     public class CartService : ICartService
     {
         private readonly IMapper mapper;
-        private readonly IRepository<Order> orderR;
         private readonly IRepository<Cart> cartR;
 
-        public CartService(IMapper mapper, IRepository<Order> orderR, IRepository<Cart> cartR)
+        public CartService(IMapper mapper, IRepository<Cart> cartR)
         {
             this.mapper = mapper;
-            this.orderR = orderR;
             this.cartR = cartR;
+        }
+
+        public void Add(CreateCartModel cartModel)
+        {
+            //cartR.Insert(mapper.Map<Cart>(cartModel));
+            
+            //cartR.Insert()
         }
 
         public void Add(int id)
@@ -31,22 +38,23 @@ namespace BusinessLogic.Services
 
         public Task<IEnumerable<AdvertDto>> GetAdverts()
         {
-            throw new NotImplementedException();
+            return (Task<IEnumerable<AdvertDto>>)cartR.GetAll();
         }
 
         public int GetCount()
         {
+            var items = cartR.GetAll();
+            return items.Count();
+        }
+
+        public IEnumerable<int> GetProductIds()
+        {
             throw new NotImplementedException();
         }
 
-        //public IEnumerable<int> GetProductIds()
-        //{
-        //     //cartR.GetListBySpec()
-        //}
-
         public void Remove(int id)
         {
-            throw new NotImplementedException();
+            cartR.Delete(id);
         }
     }
 }

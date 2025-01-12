@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using BusinessLogic.DTOs.Cart;
 using BusinessLogic.DTOs.Order;
 using BusinessLogic.Enities;
 using BusinessLogic.Interfaces;
@@ -16,9 +17,7 @@ namespace BusinessLogic.Services
         private readonly IMapper mapper;
         private readonly IRepository<Order> orderR;
 
-
-
-        public Task Create(string userId)
+        public Task Create(CreateCartModel cartModel)
         {
             throw new NotImplementedException();
         }
@@ -26,6 +25,7 @@ namespace BusinessLogic.Services
         public Task<IEnumerable<OrderDto>> GetAllByUser(string userId)
         {
             throw new NotImplementedException();
+            //return orderR.GetByID(userId);
         }
     }
 }
