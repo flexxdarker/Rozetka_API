@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using BusinessLogic.DTOs;
-using BusinessLogic.Enities;
+using BusinessLogic.DTOs.Models;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.Filter;
 using BusinessLogic.Interfaces;
@@ -45,7 +45,18 @@ namespace BusinessLogic.Profiles
             CreateMap<AdvertDto, Advert>();
             //CreateMap<AdvertCreationModel, Advert>();
 
-            CreateMap<Category, CategoryDto>().ReverseMap();
+            CreateMap<Category, CategoryDto>()
+                .ForMember(x => x.Filters, opt => opt.MapFrom(z => z.Filters.Select(y => y.FilterId))).ReverseMap();
+            //.ForMember(x => x.SubCategories, opt => opt.MapFrom(x => x.SubCategories));
+
+            //CreateMap<Int32, Int32>();
+
+            //CreateMap<int, CategoryFilter>()
+            //.ForMember(dest => dest.FilterId, opt => opt.MapFrom(src => src))
+            //.ReverseMap();
+
+            CreateMap<CategoryCreationModel, Category>().ForMember(x => x.Filters, opt => opt.Ignore())
+                .ReverseMap();
 
             CreateMap<Filter, FilterDto>()
                 .ForMember(x => x.Values, opt =>
@@ -56,6 +67,9 @@ namespace BusinessLogic.Profiles
                 opt.MapFrom(z => z.Filter.Name));
 
             CreateMap<Image, ImageDto>().ReverseMap();
+
+            CreateMap<CategoryFilter, CategoryFilterDto>().ReverseMap();
+
         }
     }
 }

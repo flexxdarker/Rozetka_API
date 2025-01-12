@@ -1,6 +1,4 @@
-﻿using BusinessLogic.Enities;
-using BusinessLogic.Entities;
-using BusinessLogic.Entities.Filter;
+﻿using BusinessLogic.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -14,9 +12,8 @@ namespace DataAccess.Data
 {
     public class RozetkaDbContext : IdentityDbContext<User>
     {
-        public DbSet<AdvertValue> AdvertValues { get; set; }
-        public DbSet<CategoryFilter> CategoryFilters { get; set; }
         public DbSet<Filter> Filters { get; set; }
+        public DbSet<CategoryFilter> CategoryFilters { get; set; }
         public DbSet<FilterValue> FilterValues { get; set; }
         public DbSet<Advert> Adverts { get; set; }
         public DbSet<Category> Categories { get; set; }
@@ -27,9 +24,20 @@ namespace DataAccess.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
             //modelBuilder.SeedData();
+            modelBuilder.Entity<CategoryFilter>()
+            .HasKey(cf => cf.Id);
+
+            modelBuilder.Entity<CategoryFilter>()
+                .HasOne(cf => cf.Category)
+                .WithMany(c => c.Filters)
+                .HasForeignKey(cf => cf.CategoryId);
+
+            modelBuilder.Entity<CategoryFilter>()
+                .HasOne(cf => cf.Filter)
+                .WithMany(f => f.Categories)
+                .HasForeignKey(cf => cf.FilterId);
         }
 
 
