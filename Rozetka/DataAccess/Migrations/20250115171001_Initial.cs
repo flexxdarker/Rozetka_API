@@ -218,12 +218,12 @@ namespace DataAccess.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ContactEmail = table.Column<string>(type: "text", nullable: false),
                     CategoryId = table.Column<int>(type: "integer", nullable: false),
                     Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Title = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
-                    Price = table.Column<decimal>(type: "numeric", nullable: false)
+                    Price = table.Column<decimal>(type: "numeric", nullable: false),
+                    Discount = table.Column<decimal>(type: "numeric", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -304,38 +304,45 @@ namespace DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AdvertFilterValue",
+                name: "AdvertValue",
                 columns: table => new
                 {
-                    AdvertsId = table.Column<int>(type: "integer", nullable: false),
-                    FilterValuesId = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    AdvertId = table.Column<int>(type: "integer", nullable: false),
+                    ValueId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AdvertFilterValue", x => new { x.AdvertsId, x.FilterValuesId });
+                    table.PrimaryKey("PK_AdvertValue", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AdvertFilterValue_Adverts_AdvertsId",
-                        column: x => x.AdvertsId,
+                        name: "FK_AdvertValue_Adverts_AdvertId",
+                        column: x => x.AdvertId,
                         principalTable: "Adverts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AdvertFilterValue_FilterValues_FilterValuesId",
-                        column: x => x.FilterValuesId,
+                        name: "FK_AdvertValue_FilterValues_ValueId",
+                        column: x => x.ValueId,
                         principalTable: "FilterValues",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AdvertFilterValue_FilterValuesId",
-                table: "AdvertFilterValue",
-                column: "FilterValuesId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Adverts_CategoryId",
                 table: "Adverts",
                 column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AdvertValue_AdvertId",
+                table: "AdvertValue",
+                column: "AdvertId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AdvertValue_ValueId",
+                table: "AdvertValue",
+                column: "ValueId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -409,7 +416,7 @@ namespace DataAccess.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AdvertFilterValue");
+                name: "AdvertValue");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");

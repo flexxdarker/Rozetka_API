@@ -8,7 +8,7 @@ namespace BusinessLogic.Specifications
     {
         public class GetValues : Specification<FilterValue>
         {
-            public GetValues(int[] ids) => Query.Where(x => ids.Contains(x.Id));
+            public GetValues(IEnumerable<int> ids) => Query.Where(x => ids.Contains(x.Id));
         }
 
         public class GetAll : Specification<Filter>

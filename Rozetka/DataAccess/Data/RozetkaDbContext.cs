@@ -38,6 +38,19 @@ namespace DataAccess.Data
                 .HasOne(cf => cf.Filter)
                 .WithMany(f => f.Categories)
                 .HasForeignKey(cf => cf.FilterId);
+
+            modelBuilder.Entity<AdvertValue>()
+            .HasKey(cf => cf.Id);
+
+            modelBuilder.Entity<AdvertValue>()
+                .HasOne(cf => cf.Advert)
+                .WithMany(c => c.Values)
+                .HasForeignKey(cf => cf.AdvertId);
+
+            modelBuilder.Entity<AdvertValue>()
+                .HasOne(cf => cf.Value)
+                .WithMany(f => f.Adverts)
+                .HasForeignKey(cf => cf.ValueId);
         }
 
 
