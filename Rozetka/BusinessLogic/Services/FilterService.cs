@@ -41,5 +41,10 @@ namespace BusinessLogic.Services
         {
             return mapper.Map<FilterDto>(await filterRepo.GetItemBySpec(new FilterSpecs.GetCategoryFilters(categoryId)));
         }
+
+        public async Task<IEnumerable<FilterValueDto>> GetValuesByIds(IEnumerable<int> ids)
+        {
+            return mapper.Map<IEnumerable<FilterValueDto>>(await values.GetListBySpec(new FilterSpecs.GetValues(ids)));
+        }
     }
 }
