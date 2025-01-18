@@ -57,6 +57,7 @@ const CategoryTable : React.FC = () => {
         console.log(res);
         setCategories(res.data);
         // fetch("http://localhost:5119/api/Categories/getparentcategories")
+        // fetch("http://rapi.itstep.click/api/Categories/getparentcategories")
         //     .then((res) => res.json())
         //     .then((data) => {
         //         console.log("start data");

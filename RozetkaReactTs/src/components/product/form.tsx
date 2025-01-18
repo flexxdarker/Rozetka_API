@@ -1,10 +1,105 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Checkbox, Form, FormProps, Input, InputNumber, Select, SelectProps, Space, Upload, message } from 'antd';
+import React, {useEffect, useState} from 'react';
+import {Button, Checkbox, Form, FormProps, Input, InputNumber, Select, SelectProps, Space, Upload, message} from 'antd';
 import TextArea from 'antd/es/input/TextArea';
-import { ArrowLeftOutlined, UploadOutlined } from '@ant-design/icons';
-import { useNavigate, useParams } from "react-router-dom";
+import {ArrowLeftOutlined, UploadOutlined} from '@ant-design/icons';
+import {useNavigate, useParams} from "react-router-dom";
 //import { EditProductModel, ProductModel } from '../models/products.model';
 //import { productsService } from '../services/products.service';
+// import {createGlobalStyle} from 'styled-components';
+//
+//
+// const GlobalStyle = createGlobalStyle` body {
+//     background-color: #f0f0f0;
+//     font-family: Arial, sans-serif;
+// }
+//
+// button {
+//     background-color: #4CAF50; /* Зелений */
+//     border: none;
+//     color: white;
+//     padding: 15px 32px;
+//     text-align: center;
+//     text-decoration: none;
+//     display: inline-block;
+//     font-size: 16px;
+//     margin: 4px 2px;
+//     cursor: pointer;
+//     border-radius: 4px;
+//
+//     &:hover {
+//         background-color: #45a049;
+//     }
+// } `;
+// import {css} from 'styled-components';
+//
+// const buttonStyles = css` background-color: #4CAF50; /* Зелений */
+//     border: none;
+//     color: white;
+//     padding: 15px 32px;
+//     text-align: center;
+//     text-decoration: none;
+//     display: inline-block;
+//     font-size: 16px;
+//     margin: 4px 2px;
+//     cursor: pointer;
+//     border-radius: 4px;
+//
+//     &:hover {
+//         background-color: #45a049;
+//     } `;
+
+import styled from 'styled-components';
+const UL = styled.ul`
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #38444d;
+
+    li {
+        float: left;
+    }
+
+    li a, .dropbtn {
+        display: inline-block;
+        color: white;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+    }
+
+    li a:hover, .dropdown:hover .dropbtn {
+        background-color: red;
+    }
+
+    li.dropdown {
+        display: inline-block;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+
+    .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        text-align: left;
+    }
+
+    .dropdown-content a:hover {background-color: #f1f1f1;}
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }`;
+
+
 
 type FieldType = {
     name: string;
@@ -46,6 +141,7 @@ export interface EditProductModel {
     description?: string;
     inStock: boolean;
 }
+
 
 const ProductForm: React.FC = () => {
 
@@ -131,9 +227,25 @@ const ProductForm: React.FC = () => {
     return (
         <>
             <Button type="text" onClick={() => navigate(-1)}>
-                <ArrowLeftOutlined />
+                <ArrowLeftOutlined/>
             </Button>
-            <h1 style={{ textAlign: "center" }}>{editMode ? "Edit" : "Create"} Product</h1>
+
+
+                <UL>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#news">News</a></li>
+                    <li className="dropdown">
+                        <a href="javascript:void(0)" className="dropbtn">Dropdown</a>
+                        <div className="dropdown-content">
+                            <a href="#">Link 1</a>
+                            <a href="#">Link 2</a>
+                            <a href="#">Link 3</a>
+                        </div>
+                    </li>
+                </UL>
+
+
+            <h1 style={{textAlign: "center"}}>{editMode ? "Edit" : "Create"} Product</h1>
             <Form
                 form={form}
                 name="control-hooks"
@@ -157,7 +269,7 @@ const ProductForm: React.FC = () => {
                     }}
 
                 >
-                    <Input placeholder="Enter product name" />
+                    <Input placeholder="Enter product name"/>
                 </Form.Item>
 
                 <div style={col2}>
@@ -234,7 +346,7 @@ const ProductForm: React.FC = () => {
                     ]}
                 >
                     <Upload maxCount={1}>
-                        <Button icon={<UploadOutlined />}>Click to Choose a File</Button>
+                        <Button icon={<UploadOutlined/>}>Click to Choose a File</Button>
                     </Upload>
                 </Form.Item>
 
@@ -245,7 +357,7 @@ const ProductForm: React.FC = () => {
                     initialValue={null}>
                     <TextArea rows={4}
                               placeholder="Enter product description"
-                              minLength={10} maxLength={3000} showCount />
+                              minLength={10} maxLength={3000} showCount/>
                 </Form.Item>
 
                 <Form.Item<FieldType>

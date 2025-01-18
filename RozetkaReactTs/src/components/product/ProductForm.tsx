@@ -23,7 +23,10 @@ const ProductForm: React.FC = () => {
             <h1>Product form</h1>
             <Form/>
 
-            <EditorTiny/>
+            <EditorTiny>
+
+
+            </EditorTiny>
 
         </>
     );
