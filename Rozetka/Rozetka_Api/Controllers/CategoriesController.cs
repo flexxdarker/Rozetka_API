@@ -54,12 +54,20 @@ namespace Rozetka_Api.Controllers
             return Ok(await categoriesService.GetByIdAsync(id));
         }
 
+        [AllowAnonymous]
         [HttpPut("create")]
         public async Task<IActionResult> Create([FromForm] CategoryCreationModel categoryCreationModel)
         {
             return Ok(await categoriesService.CreateAsync(categoryCreationModel));
         }
 
+        [AllowAnonymous]
+        [HttpDelete("delete/{id:int}")]
+        public async Task<IActionResult> Delete([FromRoute] int id)
+        {
+            await categoriesService.DeleteAsync(id);
+            return Ok();
+        }
 
         [AllowAnonymous]
         [HttpGet("getfilters")]

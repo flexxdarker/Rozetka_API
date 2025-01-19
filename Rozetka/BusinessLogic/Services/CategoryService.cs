@@ -14,16 +14,19 @@ namespace BusinessLogic.Services
         private readonly IMapper mapper;
         private readonly IRepository<Category> categoriesRepo;
         private readonly IFilterService filtersService;
+        private readonly IImageService imageService;
         private readonly ICategoryFilterService categoryFiltersService;
         public CategoryService(IMapper mapper,
         IRepository<Category> categoriesRepo,
         IFilterService filtersService,
-        ICategoryFilterService categoryFiltersService)
+        ICategoryFilterService categoryFiltersService,
+        IImageService imageService)
         {
             this.mapper = mapper;
             this.categoriesRepo = categoriesRepo;
             this.filtersService = filtersService;
             this.categoryFiltersService = categoryFiltersService;
+            this.imageService = imageService;
         }
 
         public async Task<IEnumerable<CategoryDto>> GetAllAsync() 
@@ -46,6 +49,19 @@ namespace BusinessLogic.Services
                 await categoryFiltersService.CreateRangeAsync(category, filters);
             }
             return mapper.Map<CategoryDto>(category);
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var category = await categoriesRepo.GetItemBySpec(new CategorySpecs.GetById(id));
+            if (category != null)
+            {
+                await categoriesRepo.DeleteAsync(id);
+                await categoriesRepo.SaveAsync();
+                if (category.Image != null) {
+                    imageService.DeleteImageIfExists(category.Image);
+                }
+            }
         }
     }
 }
