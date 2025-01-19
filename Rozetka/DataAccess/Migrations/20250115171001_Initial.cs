@@ -60,14 +60,14 @@ namespace DataAccess.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Image = table.Column<string>(type: "text", nullable: false),
-                    ParentId = table.Column<int>(type: "integer", nullable: true)
+                    ParentCategoryId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Categories", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Categories_Categories_ParentId",
-                        column: x => x.ParentId,
+                        name: "FK_Categories_Categories_ParentCategoryId",
+                        column: x => x.ParentCategoryId,
                         principalTable: "Categories",
                         principalColumn: "Id");
                 });
@@ -218,12 +218,12 @@ namespace DataAccess.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ContactEmail = table.Column<string>(type: "text", nullable: false),
                     CategoryId = table.Column<int>(type: "integer", nullable: false),
                     Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Title = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
-                    Price = table.Column<decimal>(type: "numeric", nullable: false)
+                    Price = table.Column<decimal>(type: "numeric", nullable: false),
+                    Discount = table.Column<decimal>(type: "numeric", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -304,26 +304,26 @@ namespace DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AdvertValues",
+                name: "AdvertValue",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     AdvertId = table.Column<int>(type: "integer", nullable: false),
-                    FilterValueId = table.Column<int>(type: "integer", nullable: false)
+                    ValueId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AdvertValues", x => x.Id);
+                    table.PrimaryKey("PK_AdvertValue", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AdvertValues_Adverts_AdvertId",
+                        name: "FK_AdvertValue_Adverts_AdvertId",
                         column: x => x.AdvertId,
                         principalTable: "Adverts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AdvertValues_FilterValues_FilterValueId",
-                        column: x => x.FilterValueId,
+                        name: "FK_AdvertValue_FilterValues_ValueId",
+                        column: x => x.ValueId,
                         principalTable: "FilterValues",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -335,14 +335,14 @@ namespace DataAccess.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AdvertValues_AdvertId",
-                table: "AdvertValues",
+                name: "IX_AdvertValue_AdvertId",
+                table: "AdvertValue",
                 column: "AdvertId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AdvertValues_FilterValueId",
-                table: "AdvertValues",
-                column: "FilterValueId");
+                name: "IX_AdvertValue_ValueId",
+                table: "AdvertValue",
+                column: "ValueId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -382,9 +382,9 @@ namespace DataAccess.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Categories_ParentId",
+                name: "IX_Categories_ParentCategoryId",
                 table: "Categories",
-                column: "ParentId");
+                column: "ParentCategoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CategoryFilters_CategoryId",
@@ -416,7 +416,7 @@ namespace DataAccess.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AdvertValues");
+                name: "AdvertValue");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");

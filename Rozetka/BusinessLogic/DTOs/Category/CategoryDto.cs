@@ -12,6 +12,8 @@ namespace BusinessLogic.DTOs.Category
         public string Name { get; set; } = string.Empty;
         public string Image { get; set; } = string.Empty;
         public int? ParentCategoryId { get; set; }
-        public string? ParentCategoryName { get; set; } = string.Empty;
+        public IEnumerable<int>? Filters { get; set; } = new HashSet<int>();
+        //public IEnumerable<CategoryDto> SubCategories { get; set; } = new HashSet<CategoryDto>();
+
     }
 }

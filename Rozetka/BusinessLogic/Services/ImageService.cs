@@ -4,6 +4,7 @@ using DataAccess.Repostories;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Primitives;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.Processing;
@@ -19,7 +20,7 @@ namespace BusinessLogic.Services
         private readonly IRepository<EntityImage> images;
         private readonly string imgPath;
 
-        public ImageService(IWebHostEnvironment env,
+        public ImageService(
             IMapper mapper,
             IConfiguration config, 
             IRepository<EntityImage> images)
@@ -27,7 +28,7 @@ namespace BusinessLogic.Services
             this.mapper = mapper;
             this.config = config;
             this.images = images;
-            imgPath = Path.Combine(env.WebRootPath, config["UserImgDir"] ?? string.Empty);
+            imgPath = Path.Combine(Directory.GetCurrentDirectory(), config["DirImages"] ?? string.Empty);
         }
 
         public async Task<string> SaveImageAsync(IFormFile image)

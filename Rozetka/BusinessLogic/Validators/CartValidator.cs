@@ -12,7 +12,7 @@ namespace BusinessLogic.Validators
     {
         public CartValidator() 
         {
-            RuleFor(x => x.TotalSumm)
+            RuleFor(x => x.Count)
                 .NotEmpty()
                 .GreaterThanOrEqualTo(0);
         }

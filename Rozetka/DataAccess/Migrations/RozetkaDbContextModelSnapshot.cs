@@ -22,73 +22,6 @@ namespace DataAccess.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("BusinessLogic.Enities.User", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("Birthdate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasDatabaseName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasDatabaseName("UserNameIndex");
-
-                    b.ToTable("AspNetUsers", (string)null);
-                });
-
             modelBuilder.Entity("BusinessLogic.Entities.Advert", b =>
                 {
                     b.Property<int>("Id")
@@ -100,16 +33,15 @@ namespace DataAccess.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("ContactEmail")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<decimal>("Discount")
+                        .HasColumnType("numeric");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("numeric");
@@ -123,6 +55,29 @@ namespace DataAccess.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Adverts");
+                });
+
+            modelBuilder.Entity("BusinessLogic.Entities.AdvertValue", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AdvertId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ValueId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdvertId");
+
+                    b.HasIndex("ValueId");
+
+                    b.ToTable("AdvertValue");
                 });
 
             modelBuilder.Entity("BusinessLogic.Entities.Category", b =>
@@ -141,40 +96,17 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("ParentId")
+                    b.Property<int?>("ParentCategoryId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ParentId");
+                    b.HasIndex("ParentCategoryId");
 
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("BusinessLogic.Entities.Filter.AdvertValue", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AdvertId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("FilterValueId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AdvertId");
-
-                    b.HasIndex("FilterValueId");
-
-                    b.ToTable("AdvertValues");
-                });
-
-            modelBuilder.Entity("BusinessLogic.Entities.Filter.CategoryFilter", b =>
+            modelBuilder.Entity("BusinessLogic.Entities.CategoryFilter", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -197,7 +129,7 @@ namespace DataAccess.Migrations
                     b.ToTable("CategoryFilters");
                 });
 
-            modelBuilder.Entity("BusinessLogic.Entities.Filter.Filter", b =>
+            modelBuilder.Entity("BusinessLogic.Entities.Filter", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -214,7 +146,7 @@ namespace DataAccess.Migrations
                     b.ToTable("Filters");
                 });
 
-            modelBuilder.Entity("BusinessLogic.Entities.Filter.FilterValue", b =>
+            modelBuilder.Entity("BusinessLogic.Entities.FilterValue", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -285,6 +217,73 @@ namespace DataAccess.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("RefreshTokens");
+                });
+
+            modelBuilder.Entity("BusinessLogic.Entities.User", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("Birthdate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex");
+
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -430,16 +429,7 @@ namespace DataAccess.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("BusinessLogic.Entities.Category", b =>
-                {
-                    b.HasOne("BusinessLogic.Entities.Category", "Parent")
-                        .WithMany()
-                        .HasForeignKey("ParentId");
-
-                    b.Navigation("Parent");
-                });
-
-            modelBuilder.Entity("BusinessLogic.Entities.Filter.AdvertValue", b =>
+            modelBuilder.Entity("BusinessLogic.Entities.AdvertValue", b =>
                 {
                     b.HasOne("BusinessLogic.Entities.Advert", "Advert")
                         .WithMany("Values")
@@ -447,18 +437,27 @@ namespace DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BusinessLogic.Entities.Filter.FilterValue", "FilterValue")
-                        .WithMany("Values")
-                        .HasForeignKey("FilterValueId")
+                    b.HasOne("BusinessLogic.Entities.FilterValue", "Value")
+                        .WithMany("Adverts")
+                        .HasForeignKey("ValueId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Advert");
 
-                    b.Navigation("FilterValue");
+                    b.Navigation("Value");
                 });
 
-            modelBuilder.Entity("BusinessLogic.Entities.Filter.CategoryFilter", b =>
+            modelBuilder.Entity("BusinessLogic.Entities.Category", b =>
+                {
+                    b.HasOne("BusinessLogic.Entities.Category", "ParentCategory")
+                        .WithMany("SubCategories")
+                        .HasForeignKey("ParentCategoryId");
+
+                    b.Navigation("ParentCategory");
+                });
+
+            modelBuilder.Entity("BusinessLogic.Entities.CategoryFilter", b =>
                 {
                     b.HasOne("BusinessLogic.Entities.Category", "Category")
                         .WithMany("Filters")
@@ -466,8 +465,8 @@ namespace DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BusinessLogic.Entities.Filter.Filter", "Filter")
-                        .WithMany("Filters")
+                    b.HasOne("BusinessLogic.Entities.Filter", "Filter")
+                        .WithMany("Categories")
                         .HasForeignKey("FilterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -477,9 +476,9 @@ namespace DataAccess.Migrations
                     b.Navigation("Filter");
                 });
 
-            modelBuilder.Entity("BusinessLogic.Entities.Filter.FilterValue", b =>
+            modelBuilder.Entity("BusinessLogic.Entities.FilterValue", b =>
                 {
-                    b.HasOne("BusinessLogic.Entities.Filter.Filter", "Filter")
+                    b.HasOne("BusinessLogic.Entities.Filter", "Filter")
                         .WithMany("Values")
                         .HasForeignKey("FilterId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -501,7 +500,7 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("BusinessLogic.Entities.RefreshToken", b =>
                 {
-                    b.HasOne("BusinessLogic.Enities.User", "User")
+                    b.HasOne("BusinessLogic.Entities.User", "User")
                         .WithMany("RefreshTokens")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -521,7 +520,7 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("BusinessLogic.Enities.User", null)
+                    b.HasOne("BusinessLogic.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -530,7 +529,7 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("BusinessLogic.Enities.User", null)
+                    b.HasOne("BusinessLogic.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -545,7 +544,7 @@ namespace DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BusinessLogic.Enities.User", null)
+                    b.HasOne("BusinessLogic.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -554,16 +553,11 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("BusinessLogic.Enities.User", null)
+                    b.HasOne("BusinessLogic.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("BusinessLogic.Enities.User", b =>
-                {
-                    b.Navigation("RefreshTokens");
                 });
 
             modelBuilder.Entity("BusinessLogic.Entities.Advert", b =>
@@ -578,18 +572,25 @@ namespace DataAccess.Migrations
                     b.Navigation("Adverts");
 
                     b.Navigation("Filters");
+
+                    b.Navigation("SubCategories");
                 });
 
-            modelBuilder.Entity("BusinessLogic.Entities.Filter.Filter", b =>
+            modelBuilder.Entity("BusinessLogic.Entities.Filter", b =>
                 {
-                    b.Navigation("Filters");
+                    b.Navigation("Categories");
 
                     b.Navigation("Values");
                 });
 
-            modelBuilder.Entity("BusinessLogic.Entities.Filter.FilterValue", b =>
+            modelBuilder.Entity("BusinessLogic.Entities.FilterValue", b =>
                 {
-                    b.Navigation("Values");
+                    b.Navigation("Adverts");
+                });
+
+            modelBuilder.Entity("BusinessLogic.Entities.User", b =>
+                {
+                    b.Navigation("RefreshTokens");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,13 +1,10 @@
 ﻿using AutoMapper;
 using BusinessLogic.DTOs;
 using BusinessLogic.DTOs.Advert;
-using BusinessLogic.DTOs.Cart;
 using BusinessLogic.DTOs.Category;
 using BusinessLogic.DTOs.Filter;
-using BusinessLogic.DTOs.Order;
-using BusinessLogic.Enities;
+using BusinessLogic.DTOs.Models;
 using BusinessLogic.Entities;
-using BusinessLogic.Entities.Filter;
 using BusinessLogic.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -24,13 +21,18 @@ namespace BusinessLogic.Profiles
         {
 
             CreateMap<Advert, AdvertDto>()
-                .ForMember(x => x.CategoryName, opt => opt.MapFrom(x => x.Category.Name))
+                .ForMember(x => x.Values, opt => opt.MapFrom(z => z.Values.Select(y => y.ValueId)))
                 .ForMember(x => x.FirstImage, opt => opt.MapFrom(x => x.Images.FirstOrDefault(x => x.Priority == 0).Name ?? "Error first image"));
+                
+            CreateMap<AdvertCreationModel, Advert>().ForMember(x => x.Values, opt => opt.Ignore())
+                .ReverseMap();
 
-            CreateMap<AdvertDto, Advert>();
-            //CreateMap<AdvertCreationModel, Advert>();
+            CreateMap<Category, CategoryDto>()
+                .ForMember(x => x.Filters, opt => opt.MapFrom(z => z.Filters.Select(y => y.FilterId))).ReverseMap();
+            //.ForMember(x => x.SubCategories, opt => opt.MapFrom(x => x.SubCategories));
 
-            CreateMap<Category, CategoryDto>().ReverseMap();
+            CreateMap<CategoryCreationModel, Category>().ForMember(x => x.Filters, opt => opt.Ignore())
+                .ReverseMap();
 
             CreateMap<Filter, FilterDto>()
                 .ForMember(x => x.Values, opt =>
@@ -42,11 +44,12 @@ namespace BusinessLogic.Profiles
 
             CreateMap<Image, ImageDto>().ReverseMap();
 
-            CreateMap<Basket, BasketDto>();
-            CreateMap<BasketDto, Basket>();
+            CreateMap<CategoryFilter, CategoryFilterDto>().ReverseMap();
+            CreateMap<CategoryFilter, CategoryFilterCreationModel>().ReverseMap();
 
-            CreateMap<Order, OrderDto>();
-            CreateMap<OrderDto, Order>();
+            CreateMap<AdvertValue, AdvertValueDto>().ReverseMap();
+            CreateMap<AdvertValue, AdvertValueCreationModel>().ReverseMap();
+
         }
     }
 }

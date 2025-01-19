@@ -24,7 +24,7 @@ namespace BusinessLogic.Services
             this.cartR = cartR;
         }
 
-        public void Add(CreateBasketModel cartModel)
+        public void Add()//CreateBasketModel cartModel)
         {
             //cartR.Insert(mapper.Map<Cart>(cartModel));
             
@@ -36,18 +36,55 @@ namespace BusinessLogic.Services
             throw new NotImplementedException();
         }
 
+        public Task<List<int>> DeleteProductWithBascet(int userId, int productId)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<IEnumerable<AdvertDto>> GetAdverts()
         {
-            return (Task<IEnumerable<AdvertDto>>)cartR.GetAll();
+            throw new NotImplementedException();
+            //return (Task<IEnumerable<AdvertDto>>)cartR.GetAll();
+        }
+
+        public Task<List<BasketViewItem>> GetBasketItems(int userId, int[] array)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<BasketViewItem>> GetBasketItemsLogout(int[] array)
+        {
+            throw new NotImplementedException();
         }
 
         public int GetCount()
         {
-            var items = cartR.GetAll();
-            return items.Count();
+            //var items = cartR.GetAll();
+            //return items.Count();
+            throw new NotImplementedException();
         }
 
         public IEnumerable<int> GetProductIds()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task pushBasketArray(int userId, int[] productIds)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task pushBasketById(int id, int user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task PushOrderWhenLogin(int userId) //List<OrderItemDto> orderItems)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task PushOrderWhenLogin(int userId, List<OrderItemDto> orderItems)
         {
             throw new NotImplementedException();
         }
