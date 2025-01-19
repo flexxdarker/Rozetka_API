@@ -24,13 +24,6 @@ namespace BusinessLogic.Services
             this.cartR = cartR;
         }
 
-        public void Add()//CreateBasketModel cartModel)
-        {
-            //cartR.Insert(mapper.Map<Cart>(cartModel));
-            
-            //cartR.Insert()
-        }
-
         public void Add(int id)
         {
             throw new NotImplementedException();
