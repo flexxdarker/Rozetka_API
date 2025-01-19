@@ -12,6 +12,6 @@ namespace BusinessLogic.Interfaces
     public interface IOrderService
     {
         Task<IEnumerable<OrderDto>> GetAllByUser(string userId);
-        Task Create(CreateCartModel cartModel);
+        Task Create(CreateBasketModel cartModel);
     }
 }

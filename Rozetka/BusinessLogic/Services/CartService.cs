@@ -13,18 +13,18 @@ using DataAccess.Repostories;
 
 namespace BusinessLogic.Services
 {
-    public class CartService : ICartService
+    public class CartService : IBasketService
     {
         private readonly IMapper mapper;
-        private readonly IRepository<Cart> cartR;
+        private readonly IRepository<Basket> cartR;
 
-        public CartService(IMapper mapper, IRepository<Cart> cartR)
+        public CartService(IMapper mapper, IRepository<Basket> cartR)
         {
             this.mapper = mapper;
             this.cartR = cartR;
         }
 
-        public void Add(CreateCartModel cartModel)
+        public void Add(CreateBasketModel cartModel)
         {
             //cartR.Insert(mapper.Map<Cart>(cartModel));
             

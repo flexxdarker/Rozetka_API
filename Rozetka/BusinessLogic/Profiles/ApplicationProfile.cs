@@ -42,8 +42,8 @@ namespace BusinessLogic.Profiles
 
             CreateMap<Image, ImageDto>().ReverseMap();
 
-            CreateMap<Cart, CartDto>();
-            CreateMap<CartDto, Cart>();
+            CreateMap<Basket, BasketDto>();
+            CreateMap<BasketDto, Basket>();
 
             CreateMap<Order, OrderDto>();
             CreateMap<OrderDto, Order>();

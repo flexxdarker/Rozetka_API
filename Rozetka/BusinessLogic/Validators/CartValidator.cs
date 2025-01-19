@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic.Validators
 {
-    public class CartValidator: AbstractValidator<CartDto>
+    public class CartValidator: AbstractValidator<BasketDto>
     {
         public CartValidator() 
         {

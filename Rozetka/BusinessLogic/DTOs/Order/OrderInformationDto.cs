@@ -7,10 +7,12 @@ using BusinessLogic.DTOs.Advert;
 
 namespace BusinessLogic.DTOs.Order
 {
-    public class CreateOrderModel
+    public class OrderInformationDto
     {
-        public DateTime OrderDate { get; set; }
-        public string UserId { get; set; }
+        public int Id { get; set; }
+        public List<string> Names { get; set; } = new List<string>();
+        public string Status { get; set; }
         public decimal TotalPrice { get; set; }
+        public List<string> ImagePaths { get; set; }
     }
 }

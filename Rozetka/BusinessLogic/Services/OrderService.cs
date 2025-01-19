@@ -17,7 +17,7 @@ namespace BusinessLogic.Services
         private readonly IMapper mapper;
         private readonly IRepository<Order> orderR;
 
-        public Task Create(CreateCartModel cartModel)
+        public Task Create(CreateBasketModel cartModel)
         {
             throw new NotImplementedException();
         }

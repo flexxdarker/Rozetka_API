@@ -10,11 +10,11 @@ namespace BusinessLogic.Specifications
 {
     internal class CartSpecs
     {
-        public class GetAll: Specification<Cart>
+        public class GetAll: Specification<Basket>
         {
             public GetAll() => Query.Where(x => true);
         }
-        public class GetId: Specification<Cart> 
+        public class GetId: Specification<Basket> 
         { 
             public GetId(int id) => Query.Where(x=>x.Id == id);
         }
