@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using BusinessLogic.DTOs;
 using BusinessLogic.DTOs.Models;
+using BusinessLogic.DTOs;
 using BusinessLogic.Entities;
 using BusinessLogic.Interfaces;
 using BusinessLogic.Specifications;
@@ -13,32 +13,32 @@ namespace Rozetka_Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoriesController : ControllerBase
+    public class SubCategoriesController : ControllerBase
     {
         private readonly ICategoryService categoriesService;
 
-        public CategoriesController(ICategoryService categoriesService)
+        public SubCategoriesController(ICategoryService categoriesService)
         {
-           this.categoriesService = categoriesService;
+            this.categoriesService = categoriesService;
         }
 
         [AllowAnonymous]
-        [HttpGet("getall")]
-        public async Task<IActionResult> GetAllCategories()
+        [HttpGet("getparents")]
+        public async Task<IActionResult> GetParentCategories()
         {
-            return Ok(await categoriesService.GetAllAsync());
+            return Ok(await categoriesService.GetParentAsync());
         }
 
         [AllowAnonymous]
-        [HttpGet("gettree")]
-        public async Task<IActionResult> GetTree()
+        [HttpGet("getsub/{parentId:int}")]
+        public async Task<IActionResult> GetSubCategories([FromRoute] int parentId)
         {
-            return Ok(await categoriesService.GetTreeAsync());
+            return Ok(await categoriesService.GetSubAsync(parentId));
         }
 
         [AllowAnonymous]
         [HttpGet("getbyid/{id:int}")]
-        public async Task<IActionResult> GetById([FromRoute]int id)
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
             return Ok(await categoriesService.GetByIdAsync(id));
         }

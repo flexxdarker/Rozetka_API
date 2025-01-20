@@ -6,6 +6,7 @@ namespace BusinessLogic.Interfaces
     public interface ICategoryService
     {
          Task<IEnumerable<CategoryDto>> GetAllAsync();
+         Task<IEnumerable<CategoryTreeDto>> GetTreeAsync();
          Task<IEnumerable<CategoryDto>> GetParentAsync();
          Task<IEnumerable<CategoryDto>> GetSubAsync(int parentId);
          Task<CategoryDto> CreateAsync(CategoryCreationModel categoryCreationModel);

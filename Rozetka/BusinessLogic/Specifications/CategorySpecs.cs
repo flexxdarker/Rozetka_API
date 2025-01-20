@@ -18,7 +18,7 @@ namespace BusinessLogic.Specifications
                 .ThenInclude(f => f.Filter)
                 .Where(x => true); 
         }
-        
+
         public class GetParent : Specification<Category>
         {
             public GetParent() => Query.Where(x => x.ParentCategoryId == null);

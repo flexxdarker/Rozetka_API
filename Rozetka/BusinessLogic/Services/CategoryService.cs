@@ -26,10 +26,28 @@ namespace BusinessLogic.Services
             this.categoryFiltersService = categoryFiltersService;
         }
 
-        public async Task<IEnumerable<CategoryDto>> GetAllAsync() 
+        public async Task<IEnumerable<CategoryDto>> GetAllAsync()
         {
             return mapper.Map<IEnumerable<CategoryDto>>(await categoriesRepo.GetListBySpec(new CategorySpecs.GetAll()));
         }
+
+        public async Task<IEnumerable<CategoryTreeDto>> GetTreeAsync()
+        {
+            var categories = await categoriesRepo.GetListBySpec(new CategorySpecs.GetAll());
+            return mapper.Map<IEnumerable<CategoryTreeDto>>(BuildTree(null, categories));
+        }
+
+        private IEnumerable<Category> BuildTree(int? parentId, IEnumerable<Category> categories)
+        {
+            return categories.AsParallel()
+                .Where(c => c.ParentCategoryId == parentId)
+                .Select(c =>
+                {
+                    c.SubCategories = BuildTree(c.Id, categories).ToList();
+                    return c;
+                });
+        }
+
         public async Task<IEnumerable<CategoryDto>> GetParentAsync() => mapper.Map<IEnumerable<CategoryDto>>(await categoriesRepo.GetListBySpec(new CategorySpecs.GetParent()));
         public async Task<IEnumerable<CategoryDto>> GetSubAsync(int parentId) => mapper.Map<IEnumerable<CategoryDto>>(await categoriesRepo.GetListBySpec(new CategorySpecs.GetSub(parentId)));
         public async Task<CategoryDto> GetByIdAsync(int id) => mapper.Map<CategoryDto>(await categoriesRepo.GetItemBySpec(new CategorySpecs.GetById(id)));
