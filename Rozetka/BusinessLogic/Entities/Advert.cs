@@ -15,6 +15,6 @@ namespace BusinessLogic.Entities
         public decimal Discount { get; set; }
         public ICollection<Image> Images { get; set; } = new HashSet<Image>();
         public ICollection<AdvertValue> Values { get; set; } = new HashSet<AdvertValue>();
-        public ICollection<Order> Orders { get; set; } = new HashSet<Order>();
+        public ICollection<OrderAdvert> Orders { get; set; } = new HashSet<OrderAdvert>();
     }
 }

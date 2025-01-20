@@ -1,4 +1,5 @@
-﻿using BusinessLogic.Entities;
+﻿using BusinessLogic.Enities;
+using BusinessLogic.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -51,6 +52,31 @@ namespace DataAccess.Data
                 .HasOne(cf => cf.Value)
                 .WithMany(f => f.Adverts)
                 .HasForeignKey(cf => cf.ValueId);
+
+            modelBuilder.Entity<OrderAdvert>()
+                .HasKey(cf => cf.Id);
+
+            modelBuilder.Entity<OrderAdvert>()
+                .HasOne(cf => cf.Order)
+                .WithMany(cf => cf.OrderAdverts)
+                .HasForeignKey(cf=>cf.OrderId);
+
+            modelBuilder.Entity<OrderAdvert>()
+                .HasOne(cf=>cf.Advert)
+                .WithMany(cf=>cf.Orders)
+                .HasForeignKey(cf=>cf.AdvertId);
+
+            modelBuilder.Entity<OrderStatus>()
+                .HasKey(cf => cf.Id);
+
+            modelBuilder.Entity<OrderStatus>()
+                .HasMany(cf=>cf.Orders)
+                .WithOne(cf=>cf.OrderStatus)
+                .HasForeignKey(cf=>cf.OrderStatusId);
+
+            modelBuilder.Entity<Order>()
+                .HasKey(cf=>cf.Id);
+
         }
 
 

@@ -10,11 +10,11 @@ namespace BusinessLogic.Interfaces
 {
     public interface IBasketService
     {
-        Task pushBasketById(int id, int user);
-        Task pushBasketArray(int userId, int[] productIds);
-        Task<List<BasketViewItem>> GetBasketItems(int userId, int[] array);
+        Task pushBasketById(string id, int user);
+        Task pushBasketArray(string userId, int[] productIds);
+        Task<List<BasketViewItem>> GetBasketItems(string userId, int[] array);
         Task<List<BasketViewItem>> GetBasketItemsLogout(int[] array);
-        Task<List<int>> DeleteProductWithBascet(int userId, int productId);
-        Task PushOrderWhenLogin(int userId, List<OrderItemDto> orderItems);
+        Task<List<int>> DeleteProductWithBascet(string userId, int productId);
+        Task PushOrderWhenLogin(string userId, List<OrderItemDto> orderItems);
     }
 }
