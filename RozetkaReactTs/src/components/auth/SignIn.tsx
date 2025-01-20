@@ -1,26 +1,18 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {LockOutlined, UserOutlined} from '@ant-design/icons';
 import {Button, Checkbox, Form, Input, Flex, type FormProps} from 'antd';
 import {Link} from "react-router-dom";
-import EditorTiny from "../other/EditorTiny.tsx";
 
 type FieldTypeSignIn = {
     username?: string;
     password?: string;
     remember?: string;
-    description?: string;
 };
 
 const SignIn: React.FC = () => {
 
-        const [description, setEditorContent] = useState('');
-        const handleEditorChange = (content: string) => {
-            setEditorContent(content);
-        };
-        // const editorRef = useRef<Editor | null>(null);
-
         const onFinish: FormProps<FieldTypeSignIn>['onFinish'] = (values) => {
-                console.log('Form values:', {...values, description}); // Обробка відправки форми з додатковими даними редактора
+                console.log('Form values:', {...values}); // Обробка відправки форми з додатковими даними редактора
         };
 
         const onFinishFailed: FormProps<FieldTypeSignIn>['onFinishFailed'] = (errorInfo) => {
@@ -118,11 +110,6 @@ const SignIn: React.FC = () => {
                         {/*    />*/}
                         {/*</Form.Item>*/}
 
-                        <Form.Item>
-                            <EditorTiny
-                                onEditorChange={handleEditorChange}
-                            />
-                        </Form.Item>
 
                         <Form.Item>
                             <Button block type="primary" htmlType="submit">

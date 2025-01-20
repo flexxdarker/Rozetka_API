@@ -1,5 +1,7 @@
 import {Editor, IAllProps} from "@tinymce/tinymce-react";
 import {FC} from "react";
+// import {FC, useRef} from "react";
+// import {Editor as TinyMCEEditorType} from 'tinymce';
 
 interface MyEditorProps extends IAllProps {
     onEditorChange: (content: string) => void;
@@ -9,6 +11,7 @@ interface MyEditorProps extends IAllProps {
 const EditorTiny: FC<MyEditorProps> = ({onEditorChange}) => {
 
     // const editorRef = useRef<Editor | null>(null);
+    // const editorRef = useRef<TinyMCEEditorType | null>(null);
 
     const handleEditorChange = (content: string) => {
         if (onEditorChange) {
@@ -16,6 +19,24 @@ const EditorTiny: FC<MyEditorProps> = ({onEditorChange}) => {
             console.log(content)
         }
     };
+
+
+    // const handleInit = (editor: TinyMCEEditorType) => {
+    //     editorRef.current = editor;
+    //     if (!editor.getContent()) {
+    //         editor.setContent('<p class="placeholder">Enter your text here...</p>');
+    //     }
+    //     editor.on('focus', () => {
+    //         if (editor.getContent({format: 'text'}) === 'Enter your text here...') {
+    //             editor.setContent('');
+    //         }
+    //     });
+    //     editor.on('blur', () => {
+    //         if (!editor.getContent()) {
+    //             editor.setContent('<p class="placeholder">Enter your text here...</p>');
+    //         }
+    //     });
+    // };
 
     // const handleEditorChange = (content, editor) => { onEditorChange(content); };
     // const log = () => {
@@ -31,8 +52,10 @@ const EditorTiny: FC<MyEditorProps> = ({onEditorChange}) => {
                     apiKey="l4ipj5d2e673xkfnuw4xjsxgaqqu4f45uf8qoh4az9o28mzr"
                     tinymceScriptSrc='/src/components/tinymce/js/tinymce/tinymce.min.js'
                     // onInit={(_evt, editor) => editorRef.current = editor}
-                    initialValue="<p>This is the initial content of the editor.</p>"
+                    //onInit={(editor) => handleInit(editor)}
+                    // initialValue='<p class="placeholder">Enter your text here...</p>'
                     init={{
+                        placeholder: "Enter your text here...",
                         height: 500, //висота самого інтупа
                         language: "en", //мова панелі
                         menubar: true, //показувать меню
