@@ -1,8 +1,9 @@
 import React from 'react';
-import {FormProps} from 'antd';
-import { Button, Checkbox, Form, Input } from 'antd';
+import { Select, Button, Checkbox, Form, Input, FormProps } from 'antd';
 import {LockOutlined, UserOutlined,MailOutlined } from "@ant-design/icons";
 import {Link} from "react-router-dom";
+
+const { Option } = Select;
 
 type FieldTypeSignUp = {
     // username?: string;
@@ -24,6 +25,14 @@ const GoogleSignUp = () => {
 };
 
 const SignUp: React.FC = () => {
+
+    const prefixSelector = (
+        <Form.Item name="prefix" noStyle>
+            <Select style={{ width: 100 }}>
+                <Option value="380">+380</Option>
+            </Select>
+        </Form.Item>
+    );
 
 
     return (
@@ -52,6 +61,13 @@ const SignUp: React.FC = () => {
                         ]}
                     >
                         <Input prefix={<MailOutlined />} placeholder="E-mail" />
+                    </Form.Item>
+
+                    <Form.Item
+                        name="phoneNumber"
+                        rules={[{ required: true, message: 'Please input your phone number!' }]}
+                    >
+                        <Input addonBefore={prefixSelector} style={{ width: '100%' }} placeholder="Phone Number"/>
                     </Form.Item>
 
                     <Form.Item
