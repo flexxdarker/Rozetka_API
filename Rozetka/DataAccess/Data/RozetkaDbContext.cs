@@ -21,7 +21,9 @@ namespace DataAccess.Data
         public DbSet<Image> Images { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<User> User { get; set; }
+
         public RozetkaDbContext(DbContextOptions options) : base(options) { }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
