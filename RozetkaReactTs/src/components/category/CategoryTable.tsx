@@ -1,12 +1,10 @@
-import React from "react";
-// import React, {useEffect, useState} from "react";
-// import Table from "antd";
-// import {Popconfirm, Space, Table} from "antd";
-// import Button from "@mui/material/Button";
+import React, {useEffect, useState} from "react";
+import {Popconfirm, Space, Table} from "antd";
+import Button from "@mui/material/Button";
 // import { Resizable } from "react-resizable";
-// import {CategoryModel} from "../../models/categoriesModel.ts";
-// import {CategoriesServices} from "../../services/categoriesService.ts";
-// import {Link} from "react-router-dom";
+import {CategoryModel} from "../../models/categoriesModel.ts";
+import {CategoriesServices} from "../../services/categoriesService.ts";
+import {Link} from "react-router-dom";
 
 // const style = {
 //     // position: "absolute",
@@ -49,24 +47,24 @@ import React from "react";
 
 const CategoryTable : React.FC = () => {
 
-    // const [categories, setCategories] = useState<CategoryModel[]>([]);
+    const [categories, setCategories] = useState<CategoryModel[]>([]);
     // // const [item, setItem] = useState("");
     // const [CategoriesId, setCategoriesId] = useState<CategoryModel>();
     //
     //
-    // const loadCategories = async () => {
-    //     const res = await CategoriesServices.getAll();
-    //     console.log(res);
-    //     setCategories(res.data);
-    //     // fetch("http://localhost:5119/api/Categories/getparentcategories")
-    //     // fetch("http://rapi.itstep.click/api/Categories/getparentcategories")
-    //     //     .then((res) => res.json())
-    //     //     .then((data) => {
-    //     //         console.log("start data");
-    //     //         console.log(data);
-    //     //         setCategories(data);
-    //     //     });
-    // };
+    const loadCategories = async () => {
+        const res = await CategoriesServices.getAll();
+        console.log(res);
+        setCategories(res.data);
+        // fetch("http://localhost:5119/api/Categories/getparentcategories")
+        // fetch("http://rapi.itstep.click/api/Categories/getparentcategories")
+        //     .then((res) => res.json())
+        //     .then((data) => {
+        //         console.log("start data");
+        //         console.log(data);
+        //         setCategories(data);
+        //     });
+    };
     //
     // const loadCategoriesId = (async (id: number) => {
     //     const res = await CategoriesServices.getById(id);
@@ -74,10 +72,10 @@ const CategoryTable : React.FC = () => {
     //     console.log(res);
     // });
     //
-    // useEffect(() => {
-    //     loadCategories();
-    //     loadCategoriesId(1);
-    // }, []);
+    useEffect(() => {
+        loadCategories();
+        // loadCategoriesId(1);
+    }, []);
     //
     // // const listItems = categories.map((cat) =>
     // //     <li key={cat.id}>
@@ -92,69 +90,95 @@ const CategoryTable : React.FC = () => {
     // // }, [CategoriesId]);
     //
     // const [columns, setColumns] = useState([
-    //     {
-    //         title: "Id",
-    //         dataIndex: "id",
-    //         key: "id",
-    //         width: 75
-    //     },
-    //     {
-    //         title: "Name",
-    //         dataIndex: "name",
-    //         key: "name",
-    //         width: 150
-    //     },
-    //     {
-    //         title: "Image",
-    //         dataIndex: "image",
-    //         key: "image",
-    //         width: 150
-    //     },
-    //     {
-    //         title: "Category ID",
-    //         dataIndex: "parentCategoryId",
-    //         key: "parentCategoryId",
-    //         width: 150,
-    //         sorter: (a: { parentCategoryId: number; }, b: { parentCategoryId: number; }) => a.parentCategoryId - b.parentCategoryId
-    //     },
-    //     {
-    //         title: "Category Name",
-    //         dataIndex: "parentCategoryName",
-    //         key: "parentCategoryName",
-    //         width: 150,
-    //     },
-    //     {
-    //         title: "Action",
-    //         key: "action",
-    //         width: 150,
-    //         // render: () => <a>Delete</a>
-    //         render: (_, record) => (
-    //             <Space size="middle">
-    //                 {/* <Button>Show</Button> */}
-    //
-    //                 <Link to={`../show/${record.id}`}>
-    //                     <Button>Show</Button>
-    //                 </Link>
-    //
-    //                 <Link to={`edit/${record.id}`}>
-    //                     <Button>Edit</Button>
-    //                 </Link>
-    //
-    //                 <Popconfirm
-    //                     title="Delete the hotel room"
-    //                     description={`Are you sure to delete this ${record.name}?`}
-    //                     // onConfirm={() => deleteHandler(record.id)}
-    //                     okText="Yes"
-    //                     cancelText="No"
-    //                 >
-    //                     <Button>Delete</Button>
-    //                 </Popconfirm>
-    //
-    //                 {/* <a>Delete</a> */}
-    //             </Space>
-    //         ),
-    //     }
-    // ]);
+     const [columns] = useState([
+        {
+            title: "Id",
+            dataIndex: "id",
+            key: "id",
+            width: 75
+        },
+        {
+            title: "Name",
+            dataIndex: "name",
+            key: "name",
+            width: 150
+        },
+        {
+            title: "Image",
+            dataIndex: "image",
+            key: "image",
+            width: 150
+        },
+        {
+            title: "Category ID",
+            dataIndex: "parentCategoryId",
+            key: "parentCategoryId",
+            width: 150,
+            sorter: (a: { parentCategoryId: number; }, b: { parentCategoryId: number; }) => a.parentCategoryId - b.parentCategoryId
+        },
+        {
+            title: "Category Name",
+            dataIndex: "parentCategoryName",
+            key: "parentCategoryName",
+            width: 150,
+        },
+        {
+            title: "Action",
+            key: "action",
+            width: 150,
+            // render: () => <a>Delete</a>
+             render: (record:any) => (
+                 <Space size="middle">
+                              {/* <Button>Show</Button> */}
+
+                              <Link to={`../show/${record.id}`}>
+                                  <Button>Show</Button>
+                              </Link>
+
+                              <Link to={`edit/${record.id}`}>
+                                  <Button>Edit</Button>
+                              </Link>
+
+                              <Popconfirm
+                                  title="Delete the hotel room"
+                                  description={`Are you sure to delete this ${record.name}?`}
+                                  // onConfirm={() => deleteHandler(record.id)}
+                                  okText="Yes"
+                                  cancelText="No"
+                              >
+                                 <Button>Delete</Button>
+                              </Popconfirm>
+
+                              {/* <a>Delete</a> */}
+                          </Space>
+             )
+            // render: (_, record) => (
+            //     <Space size="middle">
+            //         {/* <Button>Show</Button> */}
+            //
+            //         <Link to={`../show/${record.id}`}>
+            //             <Button>Show</Button>
+            //         </Link>
+            //
+            //         <Link to={`edit/${record.id}`}>
+            //             <Button>Edit</Button>
+            //         </Link>
+            //
+            //         <Popconfirm
+            //             title="Delete the hotel room"
+            //             description={`Are you sure to delete this ${record.name}?`}
+            //             // onConfirm={() => deleteHandler(record.id)}
+            //             okText="Yes"
+            //             cancelText="No"
+            //         >
+            //             <Button>Delete</Button>
+            //         </Popconfirm>
+            //
+            //         {/* <a>Delete</a> */}
+            //     </Space>
+            // ),
+        }
+    ]);
     //
     // const components = {
     //     header: {
@@ -176,26 +200,26 @@ const CategoryTable : React.FC = () => {
     return (
         <>
             <h1>category table</h1>
-            {/*<div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>*/}
-            {/*    <h1>Category Table for admin</h1>*/}
-            {/*    <Link to="/category-create">*/}
-            {/*        <Button variant="contained" style={{maxHeight: "25px"}}>Add</Button>*/}
-            {/*    </Link>*/}
-            {/*</div>*/}
+            <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                <h1>Category Table for admin</h1>
+                <Link to="/category-create">
+                    <Button variant="contained" style={{maxHeight: "25px"}}>Add</Button>
+                </Link>
+            </div>
 
-            {/*<Table*/}
-            {/*    bordered*/}
-            {/*    components={components}*/}
-            {/*    columns={columns.map((col, index) => ({*/}
-            {/*        ...col,*/}
-            {/*        onHeaderCell: (column: { width: number; }) => ({*/}
-            {/*            width: column.width,*/}
-            {/*            onResize: handleResize(index)*/}
-            {/*        })*/}
-            {/*    }))}*/}
-            {/*    // columns={columns2}*/}
-            {/*    dataSource={categories.map((category) => ({...category,key: category.id}))}*/}
-            {/*/>*/}
+            <Table
+                bordered
+                // components={components}
+                // columns={columns.map((col, index) => ({
+                //     ...col,
+                //     onHeaderCell: (column: { width: number; }) => ({
+                //         width: column.width,
+                //         onResize: handleResize(index)
+                //     })
+                // }))}
+                columns={columns}
+                dataSource={categories.map((category) => ({...category,key: category.id}))}
+            />
         </>
     );
 
