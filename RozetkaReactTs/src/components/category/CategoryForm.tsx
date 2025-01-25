@@ -1,18 +1,33 @@
 import React from 'react';
-import {Button, Form, type FormProps, Input} from "antd";
+import {Button, Form, type FormProps, Input, message} from "antd";
+import {CategoriesServices} from "../../services/categoriesService.ts";
+import { useNavigate } from "react-router-dom";
+import {CreateSubCategoryModel} from "../../models/subCategoryModel.ts";
 
-type FieldTypeCreateCategory = {
-    name?: string;
-    parentCategoryId?: number;
-};
+
+// type FieldTypeCreateCategory = {
+//     name?: string;
+//     parentCategoryId?: number;
+// };
 
 const CategoryForm: React.FC = () => {
 
-    const onFinish: FormProps<FieldTypeCreateCategory>['onFinish'] = (values) => {
+    const navigate = useNavigate();
+    const [form] = Form.useForm();
+
+    const onFinish: FormProps['onFinish'] = async (values:CreateSubCategoryModel) => {
         console.log('Form values:', {...values}); // Обробка відправки форми з додатковими даними редактора
+        const res = await CategoriesServices.create(values);
+        console.log(res);
+        if (res.status == 200) {
+            message.success("Created");
+            navigate(-1);
+        } else {
+            alert("Wrong");
+        }
     };
 
-    const onFinishFailed: FormProps<FieldTypeCreateCategory>['onFinishFailed'] = (errorInfo) => {
+    const onFinishFailed: FormProps<CreateSubCategoryModel>['onFinishFailed'] = (errorInfo) => {
         console.log('Failed:', errorInfo);
     };
 
@@ -22,6 +37,7 @@ const CategoryForm: React.FC = () => {
 
             <h1>Category form</h1>
             <Form
+                form={form}
                 labelCol={{ span: 6 }}
                 wrapperCol={{ span: 18 }}
                 name="login"
@@ -43,7 +59,7 @@ const CategoryForm: React.FC = () => {
                     label={"parentCategoryId"}
                     rules={[{required: true, message: 'Please input id!'}]}
                 >
-                    <Input type="number" placeholder="Password"/>
+                    <Input type="number" placeholder="Number"/>
                 </Form.Item>
 
 

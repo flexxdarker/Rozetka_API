@@ -4,6 +4,8 @@ import AppLayout from "./components/layout/appLayout/AppLayout.tsx";
 import MainLoader from "./components/loaders/MainLoader.tsx";
 import MainLayout from "./components/layout/mainLayout/MainLayout.tsx";
 import CategoryLayout from "./components/layout/categoryLayout/CategoryLayout.tsx";
+// import SubCategoryTable from "./components/subCategory/SubCategoryTable.tsx";
+// import SubCategoryForm from "./components/subCategory/SubCategoryForm.tsx";
 // import Home from "./components/Home.tsx";
 // import AboutUs from "./components/layout/footer/AboutUs.tsx";
 // import SignIn from "./components/auth/SignIn.tsx";
@@ -33,6 +35,8 @@ const Franchising = lazy(() => import("./components/layout/footer/Franchising.ts
 const ReturnOfGoods = lazy(() => import("./components/layout/footer/ReturnOfGoods.tsx"));
 const CategoryTable = lazy(() => import("./components/category/CategoryTable"));
 const CategoryForm = lazy(() => import("./components/category/CategoryForm.tsx"));
+const SubCategoryTable = lazy(() => import("./components/subCategory/SubCategoryTable.tsx"));
+const SubCategoryForm = lazy(() => import("./components/subCategory/SubCategoryForm.tsx"));
 
 export default function App() {
     return (
@@ -48,6 +52,9 @@ export default function App() {
 
                     <Route path="category-table" element={<CategoryTable/>}/>
                     <Route path="category-create" element={<CategoryForm/>}/>
+
+                    <Route path="subcategory-table" element={<SubCategoryTable/>}/>
+                    <Route path="subcategory-create" element={<SubCategoryForm/>}/>
 
                     {/*Footer*/}
                     <Route path="about-us" element={<AboutUs/>}/>

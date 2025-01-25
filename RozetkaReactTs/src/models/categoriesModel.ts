@@ -5,3 +5,9 @@ export interface CategoryModel {
     parentCategoryId: number;
     parentCategoryName: string;
 }
+
+
+export interface CreateCategoryModel {
+    name?: string;
+    parentCategoryId?: number;
+}

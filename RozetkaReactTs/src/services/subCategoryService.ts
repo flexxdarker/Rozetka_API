@@ -1,11 +1,10 @@
 import axios from "axios";
-import {CategoryModel, CreateCategoryModel} from "../models/categoriesModel.ts";
-
+import {CreateSubCategoryModel, SubCategoryModel} from "../models/subCategoryModel.ts";
 //import { tokensService } from "./tokensService";
 
 
 const api = axios.create({
-    baseURL: `${import.meta.env.VITE_ROZETKA_API}` + "Categories",
+    baseURL: `${import.meta.env.VITE_ROZETKA_API}` + "SubCategories",
     //baseURL: "http://localhost:5119/api/Categories/",
 });
 
@@ -26,9 +25,9 @@ const api = axios.create({
 //     (error) => Promise.reject(error)
 // );
 
-export const CategoriesServices = {
+export const SubCategoriesServices = {
     getAll: function() {
-        return api.get<CategoryModel[]>("getall");
+        return api.get<SubCategoryModel[]>("getparentcategories");
         // .then((res) => res.json())
         //   .then((data) => {
         //     console.log("start data");
@@ -38,16 +37,16 @@ export const CategoriesServices = {
     },
 
     getById(id: number) {
-        return api.get<CategoryModel>("getbyid/" + `${id}`);
+        return api.get<SubCategoryModel>("getbyid/" + `${id}`);
     },
 
-    create(model: CreateCategoryModel) {
+    create(model: CreateSubCategoryModel) {
         const data = new FormData();
         for (const prop in model) {
             data.append(prop, (model as any)[prop]);
         }
 
-        return api.put<CreateCategoryModel>("create", data);
+        return api.put<CreateSubCategoryModel>("create", data);
     },
     //
     // delete(id) {

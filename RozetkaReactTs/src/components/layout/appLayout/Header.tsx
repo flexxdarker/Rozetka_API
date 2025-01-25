@@ -225,6 +225,12 @@ const Header: React.FC = () => {
                             </Button>
                         </Link>
 
+                        <Link to="subcategory-table">
+                            <Button sx={{my: 2, color: 'white', display: 'block'}}>
+                                Subcategories
+                            </Button>
+                        </Link>
+
                         <Link to="signin">
                             <Button sx={{my: 2, color: 'white', display: 'block'}}>
                                 SignIn

@@ -199,7 +199,6 @@ const CategoryTable : React.FC = () => {
 
     return (
         <>
-            <h1>category table</h1>
             <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                 <h1>Category Table for admin</h1>
                 <Link to="/category-create">
