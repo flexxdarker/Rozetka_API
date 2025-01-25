@@ -37,7 +37,7 @@ export const CategoriesServices = {
         //   });
     },
 
-    getById(id: number) {
+    getById(id: string) {
         return api.get<CategoryModel>("getbyid/" + `${id}`);
     },
 

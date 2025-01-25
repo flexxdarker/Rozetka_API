@@ -131,7 +131,7 @@ const CategoryTable : React.FC = () => {
                  <Space size="middle">
                               {/* <Button>Show</Button> */}
 
-                              <Link to={`../show/${record.id}`}>
+                              <Link to={`show/${record.id}`}>
                                   <Button>Show</Button>
                               </Link>
 
@@ -140,7 +140,7 @@ const CategoryTable : React.FC = () => {
                               </Link>
 
                               <Popconfirm
-                                  title="Delete the hotel room"
+                                  title="Delete the category"
                                   description={`Are you sure to delete this ${record.name}?`}
                                   // onConfirm={() => deleteHandler(record.id)}
                                   okText="Yes"
@@ -201,7 +201,7 @@ const CategoryTable : React.FC = () => {
         <>
             <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                 <h1>Category Table for admin</h1>
-                <Link to="/category-create">
+                <Link to="create">
                     <Button variant="contained" style={{maxHeight: "25px"}}>Add</Button>
                 </Link>
             </div>

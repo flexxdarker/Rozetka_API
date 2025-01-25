@@ -19,7 +19,7 @@ export const ProductServices = {
         //   });
     },
 
-    getById(id: number) {
+    getById(id: string) {
         return api.get<ProductModel>("getbyid/" + `${id}`);
     },
 

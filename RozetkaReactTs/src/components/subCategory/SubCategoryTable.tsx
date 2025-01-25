@@ -12,7 +12,7 @@ const SubCategoryTable: React.FC = () => {
 
             <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                 <h1>SubCategory Table for admin</h1>
-                <Link to="/subcategory-create">
+                <Link to="create">
                     <Button variant="contained" style={{maxHeight: "25px"}}>Add</Button>
                 </Link>
             </div>

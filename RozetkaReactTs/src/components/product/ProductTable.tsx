@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 import ButtonMui from "@mui/material/Button";
 import {ProductModel} from "../../models/productsModel.ts";
 import {ProductServices} from "../../services/productService.ts";
-import {InputRef, TableColumnType, Input, Button, Space, Table} from "antd";
+import {InputRef, TableColumnType, Input, Button, Space, Table, Popconfirm} from "antd";
 import Highlighter from 'react-highlight-words';
 //npm install @types/react-highlight-words --save-dev
 import { SearchOutlined } from '@ant-design/icons';
@@ -137,6 +137,18 @@ const ProductTable: React.FC = () => {
             dataIndex: "title",
             key: "title",
             ...getColumnSearchProps('title'),
+            render: (text: string) => <div
+                style={{
+                    minWidth: 100,
+                    maxWidth: '30ch',
+                    overflow: 'hidden',
+                    display: '-webkit-box',
+                    WebkitBoxOrient: 'vertical',
+                    WebkitLineClamp: 2,
+                    whiteSpace: 'normal',
+                    textOverflow: 'ellipsis'
+                }}>{
+                text}</div>
         },
         {
             title: "CategoryId",
@@ -147,26 +159,15 @@ const ProductTable: React.FC = () => {
             title: "date",
             dataIndex: "date",
             key: "date",
+            ...getColumnSearchProps('date'),
         },
-        {
-            title: "Description",
-            dataIndex: "description",
-            key: "description",
-            // maxWidth: 20,
-            // ellipsis:true,
-            ...getColumnSearchProps('description'),
-            render: (text: string) => <div
-                style={{
-                    maxWidth: '15ch',
-                    overflow: 'hidden',
-                    display: '-webkit-box',
-                    WebkitBoxOrient: 'vertical',
-                    WebkitLineClamp: 2,
-                    whiteSpace: 'normal',
-                    textOverflow: 'ellipsis'
-            }}>{
-                text}</div>
-        },
+        // {
+        //     title: "Description",
+        //     dataIndex: "description",
+        //     key: "description",
+        //     // maxWidth: 20,
+        //     // ellipsis:true,
+        // },
         {
             title: "Price",
             dataIndex: "price",
@@ -182,22 +183,56 @@ const ProductTable: React.FC = () => {
             dataIndex: "firstImage",
             key: "firstImage",
         },
+        {
+            title: "Action",
+            key: "action",
+            // render: () => <a>Delete</a>
+            render: (record: any) => (
+                <Space size="middle">
+                    {/* <Button>Show</Button> */}
+
+                    <Link to={`page/${record.id}`}>
+                        <Button>Show</Button>
+                    </Link>
+
+                    <Link to={`edit/${record.id}`}>
+                        <Button>Edit</Button>
+                    </Link>
+
+                    <Popconfirm
+                        title="Delete the product"
+                        description={`Are you sure to delete this ${record.name}?`}
+                        // onConfirm={() => deleteHandler(record.id)}
+                        okText="Yes"
+                        cancelText="No"
+                    >
+                        <Button>Delete</Button>
+                    </Popconfirm>
+
+                    {/* <a>Delete</a> */}
+                </Space>
+            )
+        },
     ]);
 
     return (
         <>
             <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                 <h1>Product table for admin</h1>
-                <Link to="/product-create">
+                <Link to="create">
                     <ButtonMui variant="contained" style={{maxHeight: "25px"}}>Add</ButtonMui>
                 </Link>
             </div>
 
-            <Table
+            <Table<ProductModel>
                 tableLayout="auto"
                 bordered
                 columns={columns}
                 dataSource={products.map((product) => ({...product, key: product.id}))}
+                expandable={{
+                    expandedRowRender: (record) => <p style={{ margin: 0 }}>{record.description}</p>,
+                    rowExpandable: (record) => record.title !== 'Not Expandable',
+                }}
             />
         </>
     )

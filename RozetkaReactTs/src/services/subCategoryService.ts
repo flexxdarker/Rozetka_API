@@ -36,7 +36,7 @@ export const SubCategoriesServices = {
         //   });
     },
 
-    getById(id: number) {
+    getById(id: string) {
         return api.get<SubCategoryModel>("getbyid/" + `${id}`);
     },
 

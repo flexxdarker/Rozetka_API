@@ -4,6 +4,7 @@ import AppLayout from "./components/layout/appLayout/AppLayout.tsx";
 import MainLoader from "./components/loaders/MainLoader.tsx";
 import MainLayout from "./components/layout/mainLayout/MainLayout.tsx";
 import CategoryLayout from "./components/layout/categoryLayout/CategoryLayout.tsx";
+import ProductPage from "./components/product/ProductPage.tsx";
 // import SubCategoryTable from "./components/subCategory/SubCategoryTable.tsx";
 // import SubCategoryForm from "./components/subCategory/SubCategoryForm.tsx";
 // import Home from "./components/Home.tsx";
@@ -47,14 +48,18 @@ export default function App() {
                     <Route index element={<Home/>}/>
 
                     {/*Admin*/}
-                    <Route path="product-table" element={<ProductTable/>}/>
-                    <Route path="product-create" element={<ProductForm/>}/>
+                    <Route path="products" element={<ProductTable/>}/>
+                    <Route path="products/create" element={<ProductForm/>}/>
+                    <Route path="products/edit/:id" element={<ProductForm/>}/>
+                    <Route path="products/page/:id" element={<ProductPage/>}/>
 
-                    <Route path="category-table" element={<CategoryTable/>}/>
-                    <Route path="category-create" element={<CategoryForm/>}/>
+                    <Route path="categories" element={<CategoryTable/>}/>
+                    <Route path="categories/create" element={<CategoryForm/>}/>
+                    <Route path="categories/edit/:id" element={<CategoryForm/>}/>
 
-                    <Route path="subcategory-table" element={<SubCategoryTable/>}/>
-                    <Route path="subcategory-create" element={<SubCategoryForm/>}/>
+                    <Route path="subcategories" element={<SubCategoryTable/>}/>
+                    <Route path="subcategories/create" element={<SubCategoryForm/>}/>
+                    <Route path="subcategories/edit/:id" element={<SubCategoryForm/>}/>
 
                     {/*Footer*/}
                     <Route path="about-us" element={<AboutUs/>}/>
