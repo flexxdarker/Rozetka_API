@@ -2,6 +2,7 @@
 using BusinessLogic.Enities;
 using BusinessLogic.Entities;
 using BusinessLogic.Interfaces;
+using BusinessLogic.Specifications;
 using DataAccess.Repostories;
 using System;
 using System.Collections.Generic;
@@ -31,9 +32,9 @@ namespace BusinessLogic.Services
 
             var advert = await _advert.GetByIDAsync(advertId);
 
-            var searh = await _basket.GetAsync();
+            var search = await _basket.GetAsync();
 
-            var existingBasketItem = searh.FirstOrDefault(b => b.AdvertId == advert.Id && b.UserId == userId);
+            var existingBasketItem = search.FirstOrDefault(b => b.AdvertId == advert.Id && b.UserId == userId);
 
             if (existingBasketItem == null)
             {
@@ -47,6 +48,14 @@ namespace BusinessLogic.Services
 
                 await _basket.SaveAsync();
             }
+            else if (existingBasketItem != null)
+            {
+                var item = await _basket.GetItemBySpec(new BasketSpecs.GetById(existingBasketItem.Id));
+                item.Count++;
+                _basket.Update(item);
+                await _basket.SaveAsync();
+            }
+
         }
         public async Task pushBasketArray(string userId, int[] advertIds)
         {
@@ -87,16 +96,23 @@ namespace BusinessLogic.Services
                         DateAdded = DateTime.UtcNow
                     });
                 }
+                else if (existingItem != null)
+                {
+                    var item = await _basket.GetItemBySpec(new BasketSpecs.GetById(existingItem.Id));
+                    item.Count++;
+                    _basket.Update(item);
+                    await _basket.SaveAsync();
+                }
             }
 
             await _basket.SaveAsync();
         }
 
-        public async Task<List<BasketViewItem>> GetBasketItems(string userId, int[] array)
+        public async Task<List<BasketViewItem>> GetBasketItems(string userId)
         {
-            var items = await _basket.GetAsync();
+            var items = await _basket.GetListBySpec(new BasketSpecs.GetAll());
             var basketItems = items
-                .Where(x => x.UserId == userId && array.Contains(x.AdvertId))
+                .Where(x => x.UserId == userId)
                 .Select(x => new BasketViewItem
                 {
                     Id = x.AdvertId,
@@ -104,54 +120,55 @@ namespace BusinessLogic.Services
                     Description = x.Advert.Description,
                     Price = x.Advert.Price,
                     Category = x.Advert.Category.Name,
-                    Amount = 1,
+                    Amount = x.Count,
                     ImagePaths = x.Advert.Images.Select(pi => pi.Name).ToList()
                 }).ToList();
 
             return basketItems;
         }
-        public async Task<List<BasketViewItem>> GetBasketItemsLogout(int[] array)
+        public async Task<List<BasketViewItem>> GetBasketItemsLogout()
         {
-            if (array == null || array.Length == 0)
+            var array = _basket.GetListBySpec(new BasketSpecs.GetAll());
+            if (array == null)
             {
                 return new List<BasketViewItem>();
             }
 
-            var items = await _advert.GetAsync();
+            var items = await _basket.GetListBySpec(new BasketSpecs.GetAll());
             var basketItems = items
-                .Where(x => array.Contains(x.Id))
                 .Select(x => new BasketViewItem
                 {
                     Id = x.Id,
-                    Name = x.Title,
-                    Description = x.Description,
-                    Price = x.Price,
-                    Category = x.Category.Name,
-                    Amount = 1,
-                    ImagePaths = x.Images.Select(pi => pi.Name).ToList()
+                    Name = x.Advert.Title,
+                    Description = x.Advert.Description,
+                    Price = x.Advert.Price,
+                    Category = x.Advert.Category.Name,
+                    Amount = x.Count,
+                    ImagePaths = x.Advert.Images.Select(pi => pi.Name).ToList()
                 }).ToList();
 
             return basketItems;
         }
 
-        public async Task DeleteProductWithBascet(string userId, int advertId)
+        public async Task DeleteProductFromBasket(string userId, int advertId)
         {
             var advert = await _advert.GetByIDAsync(advertId);
 
-            var searh = await _basket.GetAsync();
+            var searсh = await _basket.GetListBySpec(new BasketSpecs.GetAll());
 
-            var existingBasketItem = searh.FirstOrDefault(b => b.AdvertId == advert.Id && b.UserId == userId);
+            var existingBasketItem = searсh.FirstOrDefault(b => b.AdvertId == advert.Id && b.UserId == userId);
             if(existingBasketItem != null)
             {
-                 await _basket.DeleteAsync(advertId);
+                 _basket.Delete(advertId);
             }
+            await _basket.SaveAsync();
         }
 
         public async Task PushOrderWhenLogin(string userId, List<OrderItemDto> orderItems)
         {
 
             var status = await _status.GetAsync();
-            var statusItem = status.Where(x => x.isCompleted == true ).FirstOrDefault();
+            var statusItem = status.Where(x => x.isCompleted == true).FirstOrDefault();
 
             var amount = orderItems.FirstOrDefault().Amount;
 
@@ -192,7 +209,7 @@ namespace BusinessLogic.Services
 
             foreach (var item in orderItems)
             {
-                await DeleteProductWithBascet(userId, item.ProductId);
+                await DeleteProductFromBasket(userId, item.ProductId);
             }
 
             await _order.SaveAsync();

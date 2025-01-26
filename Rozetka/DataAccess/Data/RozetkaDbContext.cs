@@ -36,6 +36,15 @@ namespace DataAccess.Data
             modelBuilder.Entity<CategoryFilter>()
             .HasKey(cf => cf.Id);
 
+            modelBuilder.Entity<Advert>()
+                .HasKey(cf => cf.Id);
+
+            modelBuilder.Entity<Advert>()
+                .HasOne(cf => cf.Category)
+                .WithMany(cf => cf.Adverts)
+                .HasForeignKey(cf => cf.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<CategoryFilter>()
                 .HasOne(cf => cf.Category)
                 .WithMany(c => c.Filters)

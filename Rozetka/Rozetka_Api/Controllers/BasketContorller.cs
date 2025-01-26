@@ -52,19 +52,19 @@ namespace Rozetka_Api.Controllers
 
         [Authorize]
         [HttpPost("GetBasketItems")]
-        public async Task<IActionResult> GetBasketItems([FromBody] int[] array)
+        public async Task<IActionResult> GetBasketItems()
         {
             string userId = User.Claims.ToList()[0].Value.ToString();
 
-            var basket = await _basket.GetBasketItems(userId, array);
+            var basket = await _basket.GetBasketItems(userId);
 
             return Ok(basket);
         }
 
         [HttpPost("GetBasketItemLogout")]
-        public async Task<IActionResult> GetBasketItemsLogout([FromBody] int[] array)
+        public async Task<IActionResult> GetBasketItemsLogout()
         {
-            var basket = await _basket.GetBasketItemsLogout(array);
+            var basket = await _basket.GetBasketItemsLogout();
 
             return Ok(basket);
         }
@@ -75,7 +75,7 @@ namespace Rozetka_Api.Controllers
         {
             string userId = User.Claims.ToList()[0].Value.ToString();
 
-            var array = _basket.DeleteProductWithBascet(userId, productId);
+            var array = _basket.DeleteProductFromBasket(userId, productId);
 
             return Ok(array);
         }
