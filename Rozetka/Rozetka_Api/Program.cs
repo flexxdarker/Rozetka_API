@@ -2,6 +2,7 @@ using BusinessLogic.Exstensions;
 using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Rozetka_Api.Helpers;
+using Shop_Api_PV221;
 using System;
 
 namespace Rozetka_Api
@@ -20,13 +21,20 @@ namespace Rozetka_Api
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddJWT(builder.Configuration);
 
-            builder.Services.AddDbContext(connStr);
+            builder.Services.AddDbContext(connStr); 
             builder.Services.AddCustomServices();
             builder.Services.AddRepositories();
             builder.Services.AddIdentity();
 
             var app = builder.Build();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                scope.ServiceProvider.SeedRoles().Wait();
+                scope.ServiceProvider.SeedAdmin().Wait();
+            }
 
             app.DataBaseMigrate();
             app.AddUploadingsFolder(Directory.GetCurrentDirectory());

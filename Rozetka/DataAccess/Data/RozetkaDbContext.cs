@@ -15,6 +15,10 @@ namespace DataAccess.Data
     {
         public DbSet<Filter> Filters { get; set; }
         public DbSet<CategoryFilter> CategoryFilters { get; set; }
+        public DbSet<Basket> Baskets { get; set; }
+        public DbSet<Order> Orders { get; set; }    
+        public DbSet<OrderAdvert> OrderAdverts { get; set; }
+        public DbSet<OrderStatus> OrderStatuses { get; set; }
         public DbSet<FilterValue> FilterValues { get; set; }
         public DbSet<Advert> Adverts { get; set; }
         public DbSet<Category> Categories { get; set; }

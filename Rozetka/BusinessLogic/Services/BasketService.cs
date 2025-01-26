@@ -1,6 +1,7 @@
 ﻿using BusinessLogic.DTOs.Order;
 using BusinessLogic.Enities;
 using BusinessLogic.Entities;
+using BusinessLogic.Interfaces;
 using DataAccess.Repostories;
 using System;
 using System.Collections.Generic;
@@ -10,29 +11,29 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic.Services
 {
-    public class BasketService
+    public class BasketService : IBasketService
     {
         private readonly IRepository<Basket> _basket;
         private readonly IRepository<Advert> _advert;
         private readonly IRepository<OrderStatus> _status;
-        private readonly RozetkaDbContext _context;
+        private readonly IRepository<Order> _order;
 
-        public BasketService(IRepository<OrderStatus> status, IRepository<Basket> basket, IRepository<Advert> advert, RozetkaDbContext context)
+        public BasketService(IRepository<OrderStatus> status, IRepository<Basket> basket, IRepository<Advert> advert, IRepository<Order> order)
         {
             _basket = basket;
             _advert = advert;
-            _context = context;
+            _order = order;
             _status = status;
         }
 
-        public async Task pushBasketById(string idUser, int productId)
+        public async Task pushBasketById(string userId, int advertId)
         {
 
-            var advert = await _advert.GetByIDAsync(productId);
+            var advert = await _advert.GetByIDAsync(advertId);
 
             var searh = await _basket.GetAsync();
 
-            var existingBasketItem = searh.FirstOrDefault(b => b.AdvertId == advert.Id && b.UserId == idUser);
+            var existingBasketItem = searh.FirstOrDefault(b => b.AdvertId == advert.Id && b.UserId == userId);
 
             if (existingBasketItem == null)
             {
@@ -40,7 +41,7 @@ namespace BusinessLogic.Services
                 await _basket.InsertAsync(new Basket
                 {
                     AdvertId = advert.Id,
-                    UserId = idUser,
+                    UserId = userId,
                     DateAdded = DateTime.UtcNow
                 });
 
@@ -93,22 +94,21 @@ namespace BusinessLogic.Services
 
         public async Task<List<BasketViewItem>> GetBasketItems(string userId, int[] array)
         {
-            List<BasketViewItem> items = await _context.Basket
-            .Where(x => x.UserId == userId && array.Contains(x.ProductId))
-            .Select(x => new BasketViewItem
-            {
-                Id = x.Product.Id,
-                Name = x.Product.Name,
-                Description = x.Product.Description,
-                Price = x.Product.Price,
-                Color = x.Product.Color,
-                Brand = x.Product.Brand.Name,
-                Category = x.Product.Category.Name,
-                Amount = 1,
-                ImagePaths = x.Product.ProductImages.Select(pi => pi.ImagePath).ToList()
-            }).ToListAsync();
+            var items = await _basket.GetAsync();
+            var basketItems = items
+                .Where(x => x.UserId == userId && array.Contains(x.AdvertId))
+                .Select(x => new BasketViewItem
+                {
+                    Id = x.AdvertId,
+                    Name = x.Advert.Title,
+                    Description = x.Advert.Description,
+                    Price = x.Advert.Price,
+                    Category = x.Advert.Category.Name,
+                    Amount = 1,
+                    ImagePaths = x.Advert.Images.Select(pi => pi.Name).ToList()
+                }).ToList();
 
-            return items;
+            return basketItems;
         }
         public async Task<List<BasketViewItem>> GetBasketItemsLogout(int[] array)
         {
@@ -117,57 +117,54 @@ namespace BusinessLogic.Services
                 return new List<BasketViewItem>();
             }
 
-            List<BasketViewItem> items = await _context.Products
+            var items = await _advert.GetAsync();
+            var basketItems = items
                 .Where(x => array.Contains(x.Id))
                 .Select(x => new BasketViewItem
                 {
                     Id = x.Id,
-                    Name = x.Name,
+                    Name = x.Title,
                     Description = x.Description,
                     Price = x.Price,
-                    Color = x.Color,
-                    Brand = x.Brand.Name,
                     Category = x.Category.Name,
                     Amount = 1,
-                    ImagePaths = x.ProductImages.Select(pi => pi.ImagePath).ToList()
-                }).ToListAsync();
+                    ImagePaths = x.Images.Select(pi => pi.Name).ToList()
+                }).ToList();
 
-            return items;
+            return basketItems;
         }
 
-        public async Task<List<int>> DeleteProductWithBascet(string userId, int advertId)
+        public async Task DeleteProductWithBascet(string userId, int advertId)
         {
-            var basketItem = await _context.Basket.FirstOrDefaultAsync(x => x.UserId == userId && x.AdvertId == advertId);
+            var advert = await _advert.GetByIDAsync(advertId);
 
-            if (basketItem != null)
+            var searh = await _basket.GetAsync();
+
+            var existingBasketItem = searh.FirstOrDefault(b => b.AdvertId == advert.Id && b.UserId == userId);
+            if(existingBasketItem != null)
             {
-                _context.Basket.Remove(basketItem);
-
-                await _context.SaveChangesAsync();
+                 await _basket.DeleteAsync(advertId);
             }
-
-            List<int> array = await _context.Basket.Where(x => x.UserId == userId).Select(x => x.ProductId).ToListAsync();
-
-            return array;
         }
 
         public async Task PushOrderWhenLogin(string userId, List<OrderItemDto> orderItems)
         {
 
-            var status = await _context.OrderStatus.Where(x => x.Name == "Booked").FirstOrDefaultAsync();
+            var status = await _status.GetAsync();
+            var statusItem = status.Where(x => x.isCompleted == true ).FirstOrDefault();
 
             var amount = orderItems.FirstOrDefault().Amount;
 
             var order = new Order
             {
                 UserId = userId,
-                OrderStatusId = status.Id,
+                OrderStatusId = statusItem.Id,
                 DateCrated = DateTime.UtcNow,
                 Amount = amount
             };
 
-            _context.Orders.Add(order);
-            await _context.SaveChangesAsync();
+            await _order.InsertAsync(order);
+            await _order.SaveAsync();
 
 
             var listProduct = new List<OrderAdvert>();
@@ -184,16 +181,21 @@ namespace BusinessLogic.Services
                     });
             }
 
-            _context.OrderProducts.AddRange(listProduct);
 
-            await _context.SaveChangesAsync();
+            foreach(var item in listProduct)
+            {
+                await _order.InsertAsync(item.Order);
+
+            }
+
+            await _order.SaveAsync();
 
             foreach (var item in orderItems)
             {
                 await DeleteProductWithBascet(userId, item.ProductId);
             }
 
-            await _context.SaveChangesAsync();
+            await _order.SaveAsync();
         }
     }
 }
