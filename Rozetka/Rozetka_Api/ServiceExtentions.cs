@@ -10,22 +10,29 @@ namespace Rozetka_Api
     {
         public static void AddJWT(this IServiceCollection services, IConfiguration configuration)
         {
-            var jwtOpts = configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>()!;
+            //var jwtOpts = configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>()!;
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(o =>
+            var singinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("adlfjalUIYUuihafy34987432lNLJLhfasify93shfRQR##%^#&&^%@#$!sljdfl33"));
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(cfg =>
+            {
+                cfg.RequireHttpsMetadata = false;
+                cfg.SaveToken = true;
+                cfg.TokenValidationParameters = new TokenValidationParameters()
                 {
-                    o.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = false,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer = jwtOpts.Issuer,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOpts.Key)),
-                        ClockSkew = TimeSpan.Zero
-                    };
-                });
+                    IssuerSigningKey = singinKey,
+                    ValidateAudience = false,
+                    ValidateIssuer = false,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
+
         }
     }
 }

@@ -28,7 +28,7 @@ namespace Rozetka_Api.Controllers
             _basket = basket;
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpPost("CreateBasketId")]
         public async Task<IActionResult> CreateBasketId([FromBody] ProductRequest request)
         {

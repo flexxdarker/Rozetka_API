@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace DataAccess
 {
@@ -22,12 +23,18 @@ namespace DataAccess
 
         public static void AddIdentity(this IServiceCollection services)
         {
+
             services.AddIdentity<User, IdentityRole>(options =>
             {
-                options.SignIn.RequireConfirmedAccount = false;
+                options.Stores.MaxLengthForKeys = 128;
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 5;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
             })
-               .AddDefaultTokenProviders()
-               .AddEntityFrameworkStores<RozetkaDbContext>();
+                .AddEntityFrameworkStores<RozetkaDbContext>()
+                .AddDefaultTokenProviders();
         }
 
         public static void DataBaseMigrate(this WebApplication app)

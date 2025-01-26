@@ -1,6 +1,7 @@
 using BusinessLogic.Exstensions;
 using DataAccess;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using Rozetka_Api.Helpers;
 using Shop_Api_PV221;
 using System;
@@ -20,13 +21,37 @@ namespace Rozetka_Api
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddIdentity();
+            //builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.AddSecurityDefinition("Bearer",
+                    new OpenApiSecurityScheme
+                    {
+                        Description = "Jwt Auth header using the Bearer scheme",
+                        Type = SecuritySchemeType.Http,
+                        Scheme = "bearer"
+                    });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference=new OpenApiReference
+                {
+                    Id="Bearer",
+                    Type = ReferenceType.SecurityScheme
+                }
+            }, new List<string>()
+        }
+    });
+            });
+
+
             builder.Services.AddJWT(builder.Configuration);
 
             builder.Services.AddDbContext(connStr); 
             builder.Services.AddCustomServices();
             builder.Services.AddRepositories();
-            builder.Services.AddIdentity();
 
             var app = builder.Build();
 
@@ -47,6 +72,7 @@ namespace Rozetka_Api
 
             app.UseSwagger();
             app.UseSwaggerUI();
+            app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
 
