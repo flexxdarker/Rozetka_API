@@ -12,8 +12,8 @@ export interface ProductModel {
 
 
 export interface CreateProductModel {
+    id?: number;
     categoryId: number;
-    date: string;
     title: string;
     description: string;
     price: number;

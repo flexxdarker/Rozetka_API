@@ -8,6 +8,12 @@ export interface CategoryModel {
 
 
 export interface CreateCategoryModel {
+    id?: number;
     name?: string;
     parentCategoryId?: number;
+}
+
+export interface ICategoryName {
+    id: number;
+    name: string;
 }
