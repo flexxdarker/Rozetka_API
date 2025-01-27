@@ -5,7 +5,6 @@ using BusinessLogic.Entities;
 using BusinessLogic.Interfaces;
 using BusinessLogic.Specifications;
 using DataAccess.Repostories;
-using System.Net;
 
 namespace BusinessLogic.Services
 {
@@ -62,6 +61,31 @@ namespace BusinessLogic.Services
                     imageService.DeleteImageIfExists(category.Image);
                 }
             }
+        }
+
+        public async Task<CategoryDto> EditAsync(CategoryCreationModel editModel)
+        {
+            var category = await categoriesRepo.GetItemBySpec(new CategorySpecs.GetById(editModel.Id));
+
+            mapper.Map(editModel, category);
+
+            if (editModel.ParentCategoryId.HasValue)
+            {
+                var parentCategory = await categoriesRepo.GetItemBySpec(new CategorySpecs.GetById(editModel.ParentCategoryId.Value));
+                category.ParentCategory = parentCategory;
+            }
+
+            if (editModel.Filters?.Any() ?? false)
+            {
+               foreach(var filter in editModel.Filters) 
+               {
+                   await categoryFiltersService.CreateAsync(new CategoryFilterCreationModel { CategoryId = editModel.Id, FilterId = filter });
+               }
+            }
+            else category.Filters.Clear();
+
+            await categoriesRepo.SaveAsync();
+            return mapper.Map<CategoryDto>(category);
         }
     }
 }

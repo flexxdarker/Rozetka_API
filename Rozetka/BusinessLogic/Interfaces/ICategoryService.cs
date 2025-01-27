@@ -9,6 +9,7 @@ namespace BusinessLogic.Interfaces
          Task<IEnumerable<CategoryDto>> GetParentAsync();
          Task<IEnumerable<CategoryDto>> GetSubAsync(int parentId);
          Task<CategoryDto> CreateAsync(CategoryCreationModel categoryCreationModel);
+         Task<CategoryDto> EditAsync(CategoryCreationModel editModel);
          Task<CategoryDto> GetByIdAsync(int id);
          Task DeleteAsync(int id);
     }

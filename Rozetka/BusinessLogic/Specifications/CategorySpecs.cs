@@ -16,7 +16,7 @@ namespace BusinessLogic.Specifications
             public GetAll() => Query
                 .Include(c => c.Filters)
                 .ThenInclude(f => f.Filter)
-                .Where(x => true); 
+                .Where(x => x.IsDeleted != false); 
         }
         
         public class GetParent : Specification<Category>
