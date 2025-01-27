@@ -12,7 +12,15 @@ namespace BusinessLogic.Specifications
     {
         public class GetAll: Specification<Order>
         {
-            public GetAll() => Query.Where(x => true);
+            public GetAll() => Query
+                .Include(x => x.User)
+                .Include(x=>x.OrderAdverts)
+                .Include(x=>x.OrderStatus)
+                .Where(x => true);
+        }
+        public class GetById : Specification<Order>
+        {
+            public GetById(int id) => Query.Where(x => x.Id == id);
         }
     }
 }
