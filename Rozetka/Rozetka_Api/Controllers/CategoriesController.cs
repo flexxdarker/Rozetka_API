@@ -43,10 +43,31 @@ namespace Rozetka_Api.Controllers
             return Ok(await categoriesService.GetByIdAsync(id));
         }
 
+        [AllowAnonymous]
         [HttpPut("create")]
         public async Task<IActionResult> Create([FromForm] CategoryCreationModel categoryCreationModel)
         {
             return Ok(await categoriesService.CreateAsync(categoryCreationModel));
+        }
+
+        [AllowAnonymous]
+        [HttpDelete("delete/{id:int}")]
+        public async Task<IActionResult> Delete([FromRoute] int id)
+        {
+            await categoriesService.DeleteAsync(id);
+            return Ok();
+        }
+
+        [AllowAnonymous]
+        [HttpGet("getfilters")]
+        public async Task<IActionResult> GetFilters([FromRoute] int categoryId)
+        {
+            var filters = await filterRepo.GetListBySpec(new FilterSpecs.GetAll());
+            if (filters == null)
+                return NotFound("Filters not found.");
+            return Ok(mapper.Map<IEnumerable<FilterDto>>(filters));
+
+            //return Ok(await filtersService.GetByCategoryIdAsync(categoryId));
         }
     }
 }

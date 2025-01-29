@@ -19,6 +19,10 @@ namespace BusinessLogic.Specifications
         {
             public GetByCategoryId(int categoryId) => Query.Where(x => x.CategoryId == categoryId);
         }
+        public class GetById : Specification<Category>
+        {
+            public GetById(int id) => Query.Where(x => x.Id == id);
+        }
     }
 }
     

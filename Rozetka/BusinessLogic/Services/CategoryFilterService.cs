@@ -36,6 +36,17 @@ namespace BusinessLogic.Services
             await categoryFiltersRepo.SaveAsync();
             return mapper.Map<CategoryFilterDto>(categoryFilter);
         }
+
+        public async Task<CategoryFilterDto> EditAsync(CategoryFilterCreationModel editModel)
+        {
+            var categoryFilter = await categoryFiltersRepo.GetItemBySpec(new CategoryFilterSpecs.GetByCategoryId(editModel.CategoryId));
+
+            mapper.Map(editModel, categoryFilter);
+
+            await categoryFiltersRepo.SaveAsync();
+            return mapper.Map<CategoryFilterDto>(categoryFilter);
+        }
+
         public async Task CreateRangeAsync(Category category, IEnumerable<FilterDto> filters)
         {
             var categoryFilters = new List<CategoryFilterDto>();

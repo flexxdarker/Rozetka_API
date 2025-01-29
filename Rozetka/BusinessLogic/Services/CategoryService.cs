@@ -5,7 +5,6 @@ using BusinessLogic.Entities;
 using BusinessLogic.Interfaces;
 using BusinessLogic.Specifications;
 using DataAccess.Repostories;
-using System.Net;
 
 namespace BusinessLogic.Services
 {
@@ -14,16 +13,19 @@ namespace BusinessLogic.Services
         private readonly IMapper mapper;
         private readonly IRepository<Category> categoriesRepo;
         private readonly IFilterService filtersService;
+        private readonly IImageService imageService;
         private readonly ICategoryFilterService categoryFiltersService;
         public CategoryService(IMapper mapper,
         IRepository<Category> categoriesRepo,
         IFilterService filtersService,
-        ICategoryFilterService categoryFiltersService)
+        ICategoryFilterService categoryFiltersService,
+        IImageService imageService)
         {
             this.mapper = mapper;
             this.categoriesRepo = categoriesRepo;
             this.filtersService = filtersService;
             this.categoryFiltersService = categoryFiltersService;
+            this.imageService = imageService;
         }
 
         public async Task<IEnumerable<CategoryDto>> GetAllAsync()
@@ -63,6 +65,50 @@ namespace BusinessLogic.Services
                 var filters = await filtersService.GetByIds(categoryCreationModel.Filters);
                 await categoryFiltersService.CreateRangeAsync(category, filters);
             }
+            return mapper.Map<CategoryDto>(category);
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var category = await categoriesRepo.GetItemBySpec(new CategorySpecs.GetById(id));
+            if (category != null)
+            {
+                if(category.SubCategories?.Any() ?? false) { 
+                    foreach(var subCategory in category.SubCategories)
+                    {
+                        await DeleteAsync(subCategory.Id);
+                    }    
+                }
+                await categoriesRepo.DeleteAsync(id);
+                await categoriesRepo.SaveAsync();
+                if (category.Image != null) {
+                    imageService.DeleteImageIfExists(category.Image);
+                }
+            }
+        }
+
+        public async Task<CategoryDto> EditAsync(CategoryCreationModel editModel)
+        {
+            var category = await categoriesRepo.GetItemBySpec(new CategorySpecs.GetById(editModel.Id));
+
+            mapper.Map(editModel, category);
+
+            if (editModel.ParentCategoryId.HasValue)
+            {
+                var parentCategory = await categoriesRepo.GetItemBySpec(new CategorySpecs.GetById(editModel.ParentCategoryId.Value));
+                category.ParentCategory = parentCategory;
+            }
+
+            if (editModel.Filters?.Any() ?? false)
+            {
+               foreach(var filter in editModel.Filters) 
+               {
+                   await categoryFiltersService.CreateAsync(new CategoryFilterCreationModel { CategoryId = editModel.Id, FilterId = filter });
+               }
+            }
+            else category.Filters.Clear();
+
+            await categoriesRepo.SaveAsync();
             return mapper.Map<CategoryDto>(category);
         }
     }
