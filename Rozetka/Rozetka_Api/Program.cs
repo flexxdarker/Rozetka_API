@@ -17,6 +17,8 @@ namespace Rozetka_Api
             // Add services to the container.
             var connStr = builder.Configuration.GetConnectionString("DefaultConnection")!;
 
+            builder.Services.AddCustomServices();
+
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -36,6 +38,14 @@ namespace Rozetka_Api
             //    var serviceProvider = scope.ServiceProvider;
             //    serviceProvider.SeedCategories(builder.Configuration).Wait();
             //}
+
+            app.UseCors(options =>
+            {
+                options
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowAnyOrigin();
+            });
 
             app.UseSwagger();
             app.UseSwaggerUI();
