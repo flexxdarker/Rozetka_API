@@ -41,15 +41,18 @@ namespace BusinessLogic.Profiles
                 .ForMember(x => x.Values, opt => opt.MapFrom(z => z.Values.Select(y => y.ValueId)))
                 .ForMember(x => x.FirstImage, opt => opt.MapFrom(x => x.Images.FirstOrDefault(x => x.Priority == 0).Name ?? "Error first image"));
                 
-            CreateMap<AdvertCreationModel, Advert>().ForMember(x => x.Values, opt => opt.Ignore())
+            CreateMap<AdvertCreationModel, Advert>()
+                .ForMember(x => x.Values, opt => opt.Ignore())
+                .ForMember(x => x.Price, opt => opt.Ignore())
+                .ForMember(x => x.Discount, opt => opt.Ignore())
                 .ReverseMap();
 
             CreateMap<Category, CategoryDto>()
                 .ForMember(x => x.Filters, opt => opt.MapFrom(z => z.Filters.Select(y => y.FilterId))).ReverseMap();
 
             CreateMap<Category, CategoryTreeDto>()
-               .ForMember(x => x.Filters, opt => opt.MapFrom(z => z.Filters.Select(y => y.FilterId))).ReverseMap()
-            .ForMember(x => x.SubCategories, opt => opt.MapFrom(x => x.SubCategories));
+                .ForMember(x => x.Filters, opt => opt.MapFrom(z => z.Filters.Select(y => y.FilterId))).ReverseMap()
+                .ForMember(x => x.SubCategories, opt => opt.MapFrom(x => x.SubCategories));
 
             CreateMap<CategoryCreationModel, Category>().ForMember(x => x.Filters, opt => opt.Ignore())
                 .ReverseMap();
@@ -59,16 +62,20 @@ namespace BusinessLogic.Profiles
                 opt.MapFrom(z => z.Values.Select(y => new FilterValueDto { Id = y.Id, FilterId = y.FilterId, Value = y.Value }).ToArray()));
 
             CreateMap<FilterValue, FilterValueDto>()
-                .ForMember(x => x.FilterName, opt =>
-                opt.MapFrom(z => z.Filter.Name));
+                .ForMember(x => x.FilterName, opt => opt.MapFrom(z => z.Filter.Name));
 
-            CreateMap<Image, ImageDto>().ReverseMap();
+            CreateMap<Image, ImageDto>()
+                .ReverseMap();
 
-            CreateMap<CategoryFilter, CategoryFilterDto>().ReverseMap();
-            CreateMap<CategoryFilter, CategoryFilterCreationModel>().ReverseMap();
+            CreateMap<CategoryFilter, CategoryFilterDto>()
+                .ReverseMap();
+            CreateMap<CategoryFilter, CategoryFilterCreationModel>()
+                .ReverseMap();
 
-            CreateMap<AdvertValue, AdvertValueDto>().ReverseMap();
-            CreateMap<AdvertValue, AdvertValueCreationModel>().ReverseMap();
+            CreateMap<AdvertValue, AdvertValueDto>()
+                .ReverseMap();
+            CreateMap<AdvertValue, AdvertValueCreationModel>()
+                .ReverseMap();
 
         }
     }

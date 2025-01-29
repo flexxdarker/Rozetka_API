@@ -11,8 +11,8 @@ namespace BusinessLogic.DTOs.Models
         public int CategoryId { get; set; }
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-        public decimal Price { get; set; }
-        public decimal Discount { get; set; }
+        public string Price { get; set; } = string.Empty;
+        public string Discount { get; set; } = string.Empty;
         public IEnumerable<int> Values { get; set; } = new HashSet<int>();
 
         //public string FirstImage { get; set; } = string.Empty;

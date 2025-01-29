@@ -7,6 +7,7 @@ using BusinessLogic.Specifications;
 using DataAccess.Repostories;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,6 +35,39 @@ namespace BusinessLogic.Services
         {
             var advert = mapper.Map<Advert>(advertCreationModel);
             advert.Date = DateTime.UtcNow;
+
+            CultureInfo[] cultures = {
+            new CultureInfo("uk-UA"),
+            new CultureInfo("en-US"),
+            new CultureInfo("de-DE")
+            };
+
+            decimal price, discount;
+            bool priceParsed = false, discountParsed = false;
+
+            foreach (var culture in cultures)
+            {
+                if (Decimal.TryParse(advertCreationModel.Price, NumberStyles.Number, culture, out price) && !priceParsed) {
+                    Console.WriteLine($"\n\n\n\nРозпізнано культуру: {culture.Name}");
+                    Console.WriteLine($"\n\n\n\nЦіна: {price}\n\n");
+                    advert.Price = price;
+                    priceParsed = true;
+                }
+                if (Decimal.TryParse(advertCreationModel.Discount, NumberStyles.Number, culture, out discount) && !discountParsed) {
+                    Console.WriteLine($"\n\n\n\nРозпізнано культуру: {culture.Name}");
+                    Console.WriteLine($"Знижка: {discount}\n\n");
+                    advert.Discount = discount;
+                    discountParsed = true;
+                }
+                if (priceParsed && discountParsed)
+                    break;
+            }
+
+            if (!priceParsed || !discountParsed)
+            {
+                Console.WriteLine("Не вдалося розпізнати культуру.");
+            }
+
             await advertRepo.InsertAsync(advert);
             await advertRepo.SaveAsync();
 
