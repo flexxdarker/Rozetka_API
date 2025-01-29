@@ -55,6 +55,12 @@ namespace BusinessLogic.Services
             var category = await categoriesRepo.GetItemBySpec(new CategorySpecs.GetById(id));
             if (category != null)
             {
+                if(category.SubCategories?.Any() ?? false) { 
+                    foreach(var subCategory in category.SubCategories)
+                    {
+                        await DeleteAsync(subCategory.Id);
+                    }    
+                }
                 await categoriesRepo.DeleteAsync(id);
                 await categoriesRepo.SaveAsync();
                 if (category.Image != null) {
