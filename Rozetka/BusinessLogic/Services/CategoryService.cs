@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using AutoMapper;
 using BusinessLogic.DTOs;
 using BusinessLogic.DTOs.Models;
@@ -49,10 +50,24 @@ namespace BusinessLogic.Services
                     return c;
                 });
         }
-
         public async Task<IEnumerable<CategoryDto>> GetParentAsync() => mapper.Map<IEnumerable<CategoryDto>>(await categoriesRepo.GetListBySpec(new CategorySpecs.GetParent()));
         public async Task<IEnumerable<CategoryDto>> GetSubAsync(int parentId) => mapper.Map<IEnumerable<CategoryDto>>(await categoriesRepo.GetListBySpec(new CategorySpecs.GetSub(parentId)));
         public async Task<CategoryDto> GetByIdAsync(int id) => mapper.Map<CategoryDto>(await categoriesRepo.GetItemBySpec(new CategorySpecs.GetById(id)));
+        public async Task<CategoryTreeDto> GetByIdWithSubAsync(int id) {
+
+            var category = await categoriesRepo.GetItemBySpec(new CategorySpecs.GetById(id));
+            var categories = await categoriesRepo.GetListBySpec(new CategorySpecs.GetAll());
+            return mapper.Map<CategoryTreeDto>(BuildSinglTree(category, categories));
+        }
+        private Category BuildSinglTree(Category category, IEnumerable<Category> allCategories)
+        {
+            category.SubCategories = allCategories
+                .Where(c => c.ParentCategoryId == category.Id)
+                .Select(c => BuildSinglTree(c, allCategories))
+                .ToList();
+
+            return category;
+        }
 
         public async Task<CategoryDto> CreateAsync(CategoryCreationModel categoryCreationModel)
         {

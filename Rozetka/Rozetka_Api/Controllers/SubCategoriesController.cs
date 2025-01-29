@@ -40,7 +40,7 @@ namespace Rozetka_Api.Controllers
         [HttpGet("getbyid/{id:int}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            return Ok(await categoriesService.GetByIdAsync(id));
+            return Ok(await categoriesService.GetByIdWithSubAsync(id));
         }
 
         [HttpPut("create")]

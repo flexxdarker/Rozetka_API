@@ -32,7 +32,8 @@ namespace BusinessLogic.Specifications
 
         public class GetById : Specification<Category>
         {
-            public GetById(int id) => Query.Where(x => x.Id == id).Include(x => x.SubCategories);
+            public GetById(int id) => Query.Where(x => x.Id == id).Include(x => x.SubCategories).Include(c => c.Filters)
+                .ThenInclude(f => f.Filter);
         }
         public class GetByName : Specification<Category>
         {

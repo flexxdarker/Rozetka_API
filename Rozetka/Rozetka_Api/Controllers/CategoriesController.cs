@@ -57,17 +57,5 @@ namespace Rozetka_Api.Controllers
             await categoriesService.DeleteAsync(id);
             return Ok();
         }
-
-        [AllowAnonymous]
-        [HttpGet("getfilters")]
-        public async Task<IActionResult> GetFilters([FromRoute] int categoryId)
-        {
-            var filters = await filterRepo.GetListBySpec(new FilterSpecs.GetAll());
-            if (filters == null)
-                return NotFound("Filters not found.");
-            return Ok(mapper.Map<IEnumerable<FilterDto>>(filters));
-
-            //return Ok(await filtersService.GetByCategoryIdAsync(categoryId));
-        }
     }
 }
