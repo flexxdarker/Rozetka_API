@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BusinessLogic.DTOs.Models
+namespace BusinessLogic.DTOs.Models.CategoryModels
 {
-    public class CategoryCreationModel
+    public abstract class BaseCategoryModel
     {
-        public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public int? ParentCategoryId { get; set; }
         public IEnumerable<int> Filters { get; set; } = new HashSet<int>();

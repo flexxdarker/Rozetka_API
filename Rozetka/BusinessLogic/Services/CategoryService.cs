@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using AutoMapper;
 using BusinessLogic.DTOs;
 using BusinessLogic.DTOs.Models;
+using BusinessLogic.DTOs.Models.CategoryModels;
 using BusinessLogic.Entities;
 using BusinessLogic.Interfaces;
 using BusinessLogic.Specifications;
@@ -69,15 +70,15 @@ namespace BusinessLogic.Services
             return category;
         }
 
-        public async Task<CategoryDto> CreateAsync(CategoryCreationModel categoryCreationModel)
+        public async Task<CategoryDto> CreateAsync(CategoryCreateModel categoryCreateModel)
         {
-            var category = mapper.Map<Category>(categoryCreationModel);
+            var category = mapper.Map<Category>(categoryCreateModel);
 
             await categoriesRepo.InsertAsync(category);
             await categoriesRepo.SaveAsync();
 
-            if (categoryCreationModel.Filters?.Any() ?? false) { 
-                var filters = await filtersService.GetByIds(categoryCreationModel.Filters);
+            if (categoryCreateModel.Filters?.Any() ?? false) { 
+                var filters = await filtersService.GetByIds(categoryCreateModel.Filters);
                 await categoryFiltersService.CreateRangeAsync(category, filters);
             }
             return mapper.Map<CategoryDto>(category);
@@ -102,7 +103,7 @@ namespace BusinessLogic.Services
             }
         }
 
-        public async Task<CategoryDto> EditAsync(CategoryCreationModel editModel)
+        public async Task<CategoryDto> EditAsync(CategoryEditModel editModel)
         {
             var category = await categoriesRepo.GetItemBySpec(new CategorySpecs.GetById(editModel.Id));
 

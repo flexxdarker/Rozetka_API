@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using BusinessLogic.DTOs.Models;
 using BusinessLogic.DTOs;
 using BusinessLogic.Entities;
 using BusinessLogic.Interfaces;
@@ -8,6 +7,8 @@ using DataAccess.Repostories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using BusinessLogic.DTOs.Models.CategoryModels;
+using BusinessLogic.DTOs.Models;
 
 namespace Rozetka_Api.Controllers
 {
@@ -44,9 +45,9 @@ namespace Rozetka_Api.Controllers
         }
 
         [HttpPut("create")]
-        public async Task<IActionResult> Create([FromForm] CategoryCreationModel categoryCreationModel)
+        public async Task<IActionResult> Create([FromForm] CategoryCreateModel categoryCreateModel)
         {
-            return Ok(await categoriesService.CreateAsync(categoryCreationModel));
+            return Ok(await categoriesService.CreateAsync(categoryCreateModel));
         }
     }
 }

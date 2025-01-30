@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using BusinessLogic.DTOs;
 using BusinessLogic.DTOs.Models;
+using BusinessLogic.DTOs.Models.AdvertModels;
+using BusinessLogic.DTOs.Models.AdvertModels;
+using BusinessLogic.DTOs.Models.CategoryModels;
 using BusinessLogic.Entities;
 using BusinessLogic.Interfaces;
 using System;
@@ -51,7 +54,7 @@ namespace BusinessLogic.Profiles
                .ForMember(x => x.Filters, opt => opt.MapFrom(z => z.Filters.Select(y => y.FilterId))).ReverseMap()
             .ForMember(x => x.SubCategories, opt => opt.MapFrom(x => x.SubCategories));
 
-            CreateMap<CategoryCreationModel, Category>().ForMember(x => x.Filters, opt => opt.Ignore())
+            CreateMap<CategoryCreateModel, Category>().ForMember(x => x.Filters, opt => opt.Ignore())
                 .ReverseMap();
 
             CreateMap<Filter, FilterDto>()
