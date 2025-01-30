@@ -50,9 +50,9 @@ namespace BusinessLogic.Services
             return mapper.Map<IEnumerable<AdvertDto>>(await advertRepo.GetListBySpec(new AdvertSpecs.GetAll()));
         }
 
-        public Task<AdvertDto> GetByIdAsync(int id)
+        public async Task<AdvertDto> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return mapper.Map<AdvertDto>(await advertRepo.GetItemBySpec(new  AdvertSpecs.GetById(id)));
         }
     }
 }

@@ -20,7 +20,10 @@ namespace BusinessLogic.Specifications
         }
         public class GetById : Specification<Advert>
         {
-            public GetById(int id) => Query.Where(x => x.Id == id);
+            public GetById(int id) => Query
+                .Where(x => x.Id == id)
+                .Include(c => c.Values)
+                .ThenInclude(f => f.Value);
         }
     }
 }
