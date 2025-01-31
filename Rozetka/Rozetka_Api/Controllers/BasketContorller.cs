@@ -75,9 +75,9 @@ namespace Rozetka_Api.Controllers
         {
             string userId = User.Claims.ToList()[0].Value.ToString();
 
-            var array = _basket.DeleteProductFromBasket(userId, productId);
+            _basket.DeleteProductFromBasket(userId, productId);
 
-            return Ok(array);
+            return Ok();
         }
 
         [HttpPost("PushOrderWhenLogin")]

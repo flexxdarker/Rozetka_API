@@ -4,6 +4,7 @@ using BusinessLogic.Entities;
 using BusinessLogic.Interfaces;
 using BusinessLogic.Specifications;
 using DataAccess.Repostories;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -150,31 +151,27 @@ namespace BusinessLogic.Services
             return basketItems;
         }
 
-        public async Task<List<BasketViewItem>> DeleteProductFromBasket(string userId, int advertId)
+        public async Task DeleteProductFromBasket(string userId, int advertId)
         {
-            var advert = await _advert.GetByIDAsync(advertId);
 
-            var searсh = await _basket.GetListBySpec(new BasketSpecs.GetAll());
+            var searсh = _basket.AsQueryable().FirstOrDefault(x=>x.UserId == userId && x.AdvertId == advertId);
 
-            var existingBasketItem = searсh.FirstOrDefault(b => b.AdvertId == advert.Id && b.UserId == userId);
-            if(existingBasketItem != null)
+            if(searсh != null)
             {
-                 _basket.Delete(advertId);
-            }
-            await _basket.SaveAsync();
-            var items = await _basket.GetListBySpec(new BasketSpecs.GetAll());
-            var basketItems = items
-                .Select(x => new BasketViewItem
+                try
                 {
-                    Id = x.Id,
-                    Name = x.Advert.Title,
-                    Description = x.Advert.Description,
-                    Price = x.Advert.Price,
-                    Category = x.Advert.Category.Name,
-                    Amount = x.Count,
-                    ImagePaths = x.Advert.Images.Select(pi => pi.Name).ToList()
-                }).ToList();
-            return basketItems;
+                    _basket.Delete(searсh.Id);
+                    await _basket.SaveAsync();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+
+            List<int> array = await _basket.AsQueryable().Where(x => x.UserId == userId).Select(x => x.AdvertId).ToListAsync();
+
+            //return array;
         }
 
         public async Task PushOrderWhenLogin(string userId, List<OrderItemDto> orderItems)

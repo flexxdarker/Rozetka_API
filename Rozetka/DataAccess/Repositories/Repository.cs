@@ -99,5 +99,9 @@ namespace DataAccess.Repostories
                 return query.ToList();
             }
         }
+        public IQueryable<TEntity> AsQueryable()
+        {
+            return dbSet;
+        }
     }
 }
