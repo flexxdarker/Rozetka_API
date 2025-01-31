@@ -31,6 +31,13 @@ namespace Rozetka_Api.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet("getcategories")]
+        public async Task<IActionResult> GetCategories()
+        {
+            return Ok(await categoriesService.GetParentAsync());
+        }
+
+        [AllowAnonymous]
         [HttpGet("gettree")]
         public async Task<IActionResult> GetTree()
         {
