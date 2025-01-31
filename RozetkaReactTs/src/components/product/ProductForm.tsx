@@ -3,16 +3,17 @@ import {Button, Form, type FormProps, Input, InputNumber, message, Select} from 
 import EditorTiny from "../other/EditorTiny.tsx";
 import {useParams} from "react-router-dom";
 import {ProductServices} from "../../services/productService.ts";
-import {CreateProductModel, ProductModel} from "../../models/productsModel.ts";
+import {ICreateProductModel, IProductModel} from "../../models/productsModel.ts";
 import { useNavigate } from "react-router-dom";
 import {ICategoryName} from "../../models/categoriesModel.ts";
 import {CategoriesServices} from "../../services/categoriesService.ts";
+
 
 const ProductForm: React.FC = () => {
 
     const params = useParams();
     const [editMode, setEditeMode] = useState(false);
-    const [product, setProduct] = useState<ProductModel | null>(null);
+    const [product, setProduct] = useState<IProductModel | null>(null);
     const [form] = Form.useForm();
     const navigate = useNavigate();
 
@@ -23,7 +24,7 @@ const ProductForm: React.FC = () => {
         setEditorContent(content);
     };
 
-    const onFinish: FormProps<CreateProductModel>['onFinish'] = async (values) => {
+    const onFinish: FormProps<ICreateProductModel>['onFinish'] = async (values) => {
         console.log('Form values:', {...values, description}); // Обробка відправки форм
         if (editMode) {
             console.log("Success edit mode:", {...values, description});
@@ -51,7 +52,7 @@ const ProductForm: React.FC = () => {
         }// з додатковими даними редактора
     };
 
-    const onFinishFailed: FormProps<CreateProductModel>['onFinishFailed'] = (errorInfo) => {
+    const onFinishFailed: FormProps<ICreateProductModel>['onFinishFailed'] = (errorInfo) => {
         console.log('Failed:', errorInfo);
     };
 
@@ -59,10 +60,10 @@ const ProductForm: React.FC = () => {
     useEffect(() => {
         loadProduct();
 
-        loadCategories();
+        loadSubCategories();
     }, []);
 
-    const loadCategories = async () => {
+    const loadSubCategories = async () => {
         const res = await  CategoriesServices.getAll();
         setCategories(res.data);
     }
@@ -147,7 +148,8 @@ const ProductForm: React.FC = () => {
 
                 <Form.Item wrapperCol={{span: 24}} name="description">
                     <EditorTiny
-                        content={editMode && product !== null? product.description : ""}
+                        //content={editMode && product !== null? product.description : ""}
+                        initialValue={editMode && product !== null ? product.description : ""}
                         onEditorChange={handleEditorChange}
                     />
                 </Form.Item>

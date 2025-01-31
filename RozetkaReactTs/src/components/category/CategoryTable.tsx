@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Popconfirm, Space, Table} from "antd";
 import Button from "@mui/material/Button";
 // import { Resizable } from "react-resizable";
-import {CategoryModel} from "../../models/categoriesModel.ts";
+import {ICategoryModel} from "../../models/categoriesModel.ts";
 import {CategoriesServices} from "../../services/categoriesService.ts";
 import {Link} from "react-router-dom";
 
@@ -47,7 +47,7 @@ import {Link} from "react-router-dom";
 
 const CategoryTable : React.FC = () => {
 
-    const [categories, setCategories] = useState<CategoryModel[]>([]);
+    const [categories, setCategories] = useState<ICategoryModel[]>([]);
     // // const [item, setItem] = useState("");
     // const [CategoriesId, setCategoriesId] = useState<CategoryModel>();
     //

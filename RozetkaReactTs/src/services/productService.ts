@@ -1,5 +1,5 @@
 import axios from "axios";
-import {CreateProductModel, ProductModel} from "../models/productsModel.ts";
+import {ICreateProductModel, IProductModel} from "../models/productsModel.ts";
 
 
 const api = axios.create({
@@ -10,7 +10,7 @@ const api = axios.create({
 
 export const ProductServices = {
     getAll: function() {
-        return api.get<ProductModel[]>("getall");
+        return api.get<IProductModel[]>("getall");
         // .then((res) => res.json())
         //   .then((data) => {
         //     console.log("start data");
@@ -20,16 +20,16 @@ export const ProductServices = {
     },
 
     getById(id: string) {
-        return api.get<ProductModel>("getbyid/" + `${id}`);
+        return api.get<IProductModel>("getbyid/" + `${id}`);
     },
 
-    create(model: CreateProductModel) {
+    create(model: ICreateProductModel) {
         const data = new FormData();
         for (const prop in model) {
             data.append(prop, (model as any)[prop]);
         }
 
-        return api.put<CreateProductModel>("create", data);
+        return api.put("create", data);
     },
 
 };

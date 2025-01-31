@@ -1,5 +1,5 @@
 import axios from "axios";
-import {CreateSubCategoryModel, SubCategoryModel} from "../models/subCategoryModel.ts";
+import {ICreateSubCategoryModel, ISubCategoryModel} from "../models/subCategoryModel.ts";
 //import { tokensService } from "./tokensService";
 
 
@@ -27,7 +27,7 @@ const api = axios.create({
 
 export const SubCategoriesServices = {
     getAll: function() {
-        return api.get<SubCategoryModel[]>("getparentcategories");
+        return api.get<ISubCategoryModel[]>("getparentcategories");
         // .then((res) => res.json())
         //   .then((data) => {
         //     console.log("start data");
@@ -37,16 +37,16 @@ export const SubCategoriesServices = {
     },
 
     getById(id: string) {
-        return api.get<SubCategoryModel>("getbyid/" + `${id}`);
+        return api.get<ISubCategoryModel>("getbyid/" + `${id}`);
     },
 
-    create(model: CreateSubCategoryModel) {
+    create(model: ICreateSubCategoryModel) {
         const data = new FormData();
         for (const prop in model) {
             data.append(prop, (model as any)[prop]);
         }
 
-        return api.put<CreateSubCategoryModel>("create", data);
+        return api.put("create", data);
     },
     //
     // delete(id) {

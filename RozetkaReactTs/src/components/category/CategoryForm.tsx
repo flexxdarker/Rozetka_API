@@ -2,7 +2,7 @@ import React from 'react';
 import {Button, Form, type FormProps, Input, message} from "antd";
 import {CategoriesServices} from "../../services/categoriesService.ts";
 import { useNavigate } from "react-router-dom";
-import {CreateCategoryModel} from "../../models/categoriesModel.ts";
+import {ICreateCategoryModel} from "../../models/categoriesModel.ts";
 
 
 // type FieldTypeCreateCategory = {
@@ -15,7 +15,7 @@ const CategoryForm: React.FC = () => {
     const navigate = useNavigate();
     const [form] = Form.useForm();
 
-    const onFinish: FormProps['onFinish'] = async (values:CreateCategoryModel) => {
+    const onFinish: FormProps['onFinish'] = async (values:ICreateCategoryModel) => {
         console.log('Form values:', {...values}); // Обробка відправки форми з додатковими даними редактора
         const res = await CategoriesServices.create(values);
         console.log(res);
@@ -27,7 +27,7 @@ const CategoryForm: React.FC = () => {
         }
     };
 
-    const onFinishFailed: FormProps<CreateCategoryModel>['onFinishFailed'] = (errorInfo) => {
+    const onFinishFailed: FormProps<ICreateCategoryModel>['onFinishFailed'] = (errorInfo) => {
         console.log('Failed:', errorInfo);
     };
 

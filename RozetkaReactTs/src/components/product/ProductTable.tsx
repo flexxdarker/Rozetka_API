@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useRef} from 'react';
 import {Link} from "react-router-dom";
 import ButtonMui from "@mui/material/Button";
-import {ProductModel} from "../../models/productsModel.ts";
+import {IProductModel} from "../../models/productsModel.ts";
 import {ProductServices} from "../../services/productService.ts";
 import {InputRef, TableColumnType, Input, Button, Space, Table, Popconfirm} from "antd";
 import Highlighter from 'react-highlight-words';
@@ -12,11 +12,11 @@ import type { FilterDropdownProps } from 'antd/es/table/interface';
 
 
 
-type DataIndex = keyof ProductModel;
+type DataIndex = keyof IProductModel;
 
 const ProductTable: React.FC = () => {
 
-    const [products, setProducts] = useState<ProductModel[]>([]);
+    const [products, setProducts] = useState<IProductModel[]>([]);
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef<InputRef>(null);
@@ -46,7 +46,7 @@ const ProductTable: React.FC = () => {
         setSearchText('');
     };
 
-    const getColumnSearchProps = (dataIndex: DataIndex): TableColumnType<ProductModel> => ({
+    const getColumnSearchProps = (dataIndex: DataIndex): TableColumnType<IProductModel> => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
             <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
                 <Input
@@ -224,7 +224,7 @@ const ProductTable: React.FC = () => {
                 </Link>
             </div>
 
-            <Table<ProductModel>
+            <Table<IProductModel>
                 tableLayout="auto"
                 bordered
                 columns={columns}

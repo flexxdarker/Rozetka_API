@@ -1,4 +1,4 @@
-export interface ProductModel {
+export interface IProductModel {
     id: number;
     categoryId: number;
     date: string;
@@ -11,7 +11,7 @@ export interface ProductModel {
 }
 
 
-export interface CreateProductModel {
+export interface ICreateProductModel {
     id?: number;
     categoryId: number;
     title: string;

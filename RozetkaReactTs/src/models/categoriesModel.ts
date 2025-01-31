@@ -1,4 +1,4 @@
-export interface CategoryModel {
+export interface ICategoryModel {
     id: number;
     name: string;
     image: string;
@@ -7,7 +7,7 @@ export interface CategoryModel {
 }
 
 
-export interface CreateCategoryModel {
+export interface ICreateCategoryModel {
     id?: number;
     name?: string;
     parentCategoryId?: number;
