@@ -171,7 +171,6 @@ namespace BusinessLogic.Services
 
             List<int> array = await _basket.AsQueryable().Where(x => x.UserId == userId).Select(x => x.AdvertId).ToListAsync();
 
-            //return array;
         }
 
         public async Task PushOrderWhenLogin(string userId, List<OrderItemDto> orderItems)
