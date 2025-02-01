@@ -55,13 +55,15 @@ namespace Rozetka_Api
 
             var app = builder.Build();
 
+            app.DataBaseMigrate();
+            
             using (var scope = app.Services.CreateScope())
             {
                 scope.ServiceProvider.SeedRoles().Wait();
                 scope.ServiceProvider.SeedAdmin().Wait();
             }
 
-            app.DataBaseMigrate();
+            
             app.AddUploadingsFolder(Directory.GetCurrentDirectory());
 
             //using (var scope = app.Services.CreateScope())
