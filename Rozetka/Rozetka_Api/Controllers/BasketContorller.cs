@@ -11,11 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Rozetka_Api.Controllers
-{
-    public class ProductRequest
-    {
-        public int ProductId { get; set; }
-    }
+{ 
 
     [Route("api/[controller]")]
     [ApiController]
@@ -30,18 +26,18 @@ namespace Rozetka_Api.Controllers
 
         [Authorize]
         [HttpPost("CreateBasketId")]
-        public async Task<IActionResult> CreateBasketId([FromBody] ProductRequest request)
+        public async Task<IActionResult> CreateBasketId([FromRoute] int productId)
         {
             string userId = User.Claims.ToList()[0].Value.ToString();
 
-            await _basket.pushBasketById(userId, request.ProductId);
+            await _basket.pushBasketById(userId, productId);
 
             return Ok();
         }
 
         [Authorize]
         [HttpPost("CreateBasketArray")]
-        public async Task<IActionResult> CreateBasketArray([FromBody] int[] array)
+        public async Task<IActionResult> CreateBasketArray([FromRoute] int[] array)
         {
             string userId = User.Claims.ToList()[0].Value.ToString();
 
@@ -81,7 +77,7 @@ namespace Rozetka_Api.Controllers
         }
 
         [HttpPost("PushOrderWhenLogin")]
-        public async Task<IActionResult> PushOrderWhenLogin([FromBody] List<OrderItemDto> orderItems)
+        public async Task<IActionResult> PushOrderWhenLogin([FromRoute] List<OrderItemDto> orderItems)
         {
             string userId = User.Claims.ToList()[0].Value.ToString();
 

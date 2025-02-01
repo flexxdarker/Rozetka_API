@@ -4,6 +4,7 @@ using BusinessLogic.DTOs.Advert;
 using BusinessLogic.DTOs.Category;
 using BusinessLogic.DTOs.Filter;
 using BusinessLogic.DTOs.Models;
+using BusinessLogic.DTOs.User;
 using BusinessLogic.Entities;
 using BusinessLogic.Interfaces;
 using System;
@@ -50,6 +51,9 @@ namespace BusinessLogic.Profiles
             CreateMap<AdvertValue, AdvertValueDto>().ReverseMap();
             CreateMap<AdvertValue, AdvertValueCreationModel>().ReverseMap();
 
+
+            CreateMap<RegisterModel, User>()
+                .ForMember(x => x.UserName, opts => opts.MapFrom(s => s.Email));
         }
     }
 }
