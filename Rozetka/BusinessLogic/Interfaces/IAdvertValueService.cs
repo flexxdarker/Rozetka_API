@@ -1,4 +1,5 @@
 using BusinessLogic.DTOs;
+using BusinessLogic.DTOs.Filter;
 using BusinessLogic.Entities;
 
 namespace BusinessLogic.Interfaces

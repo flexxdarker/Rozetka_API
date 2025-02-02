@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BusinessLogic.DTOs;
+using BusinessLogic.DTOs.Advert;
 using BusinessLogic.DTOs.Models;
 using BusinessLogic.Entities;
 using BusinessLogic.Interfaces;
