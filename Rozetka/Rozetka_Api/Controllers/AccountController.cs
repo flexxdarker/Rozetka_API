@@ -19,14 +19,14 @@ namespace Shop_Api_PV221.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromRoute] RegisterModel model)
+        public async Task<IActionResult> Register([FromBody RegisterModel model)
         {
             await accountsService.Register(model);
             return Ok();
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromRoute] LoginModel model)
+        public async Task<IActionResult> Login([FromForm] LoginModel model)
         {
             return Ok(await accountsService.Login(model));
         }
