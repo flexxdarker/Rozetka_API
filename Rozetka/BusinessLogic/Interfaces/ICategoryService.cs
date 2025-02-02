@@ -1,4 +1,5 @@
 using BusinessLogic.DTOs;
+using BusinessLogic.DTOs.Category;
 using BusinessLogic.DTOs.Models;
 using BusinessLogic.DTOs.Models.CategoryModels;
 

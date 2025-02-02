@@ -1,5 +1,6 @@
 using AutoMapper;
 using BusinessLogic.DTOs;
+using BusinessLogic.DTOs.Filter;
 using BusinessLogic.DTOs.Models;
 using BusinessLogic.Entities;
 using BusinessLogic.Interfaces;
