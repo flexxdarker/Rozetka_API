@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BusinessLogic.DTOs.User
+namespace BusinessLogic.Models.CategoryModels
 {
-    public class LogoutModel
+    public class CategoryCreateModel : BaseCategoryModel
     {
-        public string RefreshToken { get; set; }
+
     }
 }

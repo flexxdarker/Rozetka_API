@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BusinessLogic.DTOs.Models
+namespace BusinessLogic.Models.CategoryModels
 {
-    public class CategoryCreationModel
+    public abstract class BaseCategoryModel
     {
         public string Name { get; set; } = string.Empty;
         public int? ParentCategoryId { get; set; }

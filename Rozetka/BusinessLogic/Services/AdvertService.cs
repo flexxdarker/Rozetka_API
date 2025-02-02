@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using BusinessLogic.DTOs;
 using BusinessLogic.DTOs.Advert;
-using BusinessLogic.DTOs.Models;
 using BusinessLogic.Entities;
 using BusinessLogic.Interfaces;
+using BusinessLogic.Models.AdvertModels;
 using BusinessLogic.Specifications;
 using DataAccess.Repostories;
 using System;
@@ -51,9 +51,9 @@ namespace BusinessLogic.Services
             return mapper.Map<IEnumerable<AdvertDto>>(await advertRepo.GetListBySpec(new AdvertSpecs.GetAll()));
         }
 
-        public Task<AdvertDto> GetByIdAsync(int id)
+        public async Task<AdvertDto> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return mapper.Map<AdvertDto>(await advertRepo.GetItemBySpec(new  AdvertSpecs.GetById(id)));
         }
     }
 }

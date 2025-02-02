@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using BusinessLogic.DTOs;
-using BusinessLogic.DTOs.Models;
 using BusinessLogic.Entities;
 using BusinessLogic.Interfaces;
+using BusinessLogic.Models.AdvertModels;
 using BusinessLogic.Specifications;
 using DataAccess.Repostories;
 using Microsoft.AspNetCore.Authorization;
@@ -37,6 +37,7 @@ namespace Rozetka_Api.Controllers
             return Ok(await advertService.GetByIdAsync(id));
         }
 
+        [AllowAnonymous]
         [HttpPut("create")]
         public async Task<IActionResult> Create([FromForm] AdvertCreationModel advertCreationModel)
         {

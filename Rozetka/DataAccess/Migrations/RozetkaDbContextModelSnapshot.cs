@@ -582,7 +582,7 @@ namespace DataAccess.Migrations
                     b.HasOne("BusinessLogic.Entities.Category", "Category")
                         .WithMany("Adverts")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Category");

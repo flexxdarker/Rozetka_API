@@ -1,9 +1,9 @@
 using AutoMapper;
 using BusinessLogic.DTOs;
 using BusinessLogic.DTOs.Filter;
-using BusinessLogic.DTOs.Models;
 using BusinessLogic.Entities;
 using BusinessLogic.Interfaces;
+using BusinessLogic.Models;
 using BusinessLogic.Specifications;
 using DataAccess.Repostories;
 using System.Net;

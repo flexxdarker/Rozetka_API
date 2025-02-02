@@ -1,6 +1,5 @@
 using AutoMapper;
 using BusinessLogic.DTOs;
-using BusinessLogic.DTOs.Models;
 using BusinessLogic.DTOs.Order;
 using BusinessLogic.Entities;
 using BusinessLogic.Interfaces;
@@ -25,7 +24,7 @@ namespace Rozetka_Api.Controllers
         }
 
         [Authorize]
-        [HttpPost("CreateBasketId")]
+        [HttpPost("CreateBasketId/{productId}")]
         public async Task<IActionResult> CreateBasketId([FromRoute] int productId)
         {
             string userId = User.Claims.ToList()[0].Value.ToString();

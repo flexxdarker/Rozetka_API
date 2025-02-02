@@ -3,10 +3,13 @@ using BusinessLogic.DTOs;
 using BusinessLogic.DTOs.Advert;
 using BusinessLogic.DTOs.Category;
 using BusinessLogic.DTOs.Filter;
-using BusinessLogic.DTOs.Models;
 using BusinessLogic.DTOs.User;
 using BusinessLogic.Entities;
 using BusinessLogic.Interfaces;
+using BusinessLogic.Models;
+using BusinessLogic.Models.AdvertModels;
+using BusinessLogic.Models.CategoryModels;
+using BusinessLogic.Models.UserModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,9 +33,12 @@ namespace BusinessLogic.Profiles
 
             CreateMap<Category, CategoryDto>()
                 .ForMember(x => x.Filters, opt => opt.MapFrom(z => z.Filters.Select(y => y.FilterId))).ReverseMap();
-            //.ForMember(x => x.SubCategories, opt => opt.MapFrom(x => x.SubCategories));
 
-            CreateMap<CategoryCreationModel, Category>().ForMember(x => x.Filters, opt => opt.Ignore())
+            CreateMap<Category, CategoryTreeDto>()
+               .ForMember(x => x.Filters, opt => opt.MapFrom(z => z.Filters.Select(y => y.FilterId))).ReverseMap()
+            .ForMember(x => x.SubCategories, opt => opt.MapFrom(x => x.SubCategories));
+
+            CreateMap<CategoryCreateModel, Category>().ForMember(x => x.Filters, opt => opt.Ignore())
                 .ReverseMap();
 
             CreateMap<Filter, FilterDto>()

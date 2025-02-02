@@ -1,6 +1,7 @@
 using BusinessLogic.DTOs;
 using BusinessLogic.DTOs.Filter;
 using BusinessLogic.Entities;
+using BusinessLogic.Models;
 
 namespace BusinessLogic.Interfaces
 {
@@ -9,6 +10,7 @@ namespace BusinessLogic.Interfaces
          Task<IEnumerable<CategoryFilterDto>> GetAllAsync();
          Task<IEnumerable<CategoryFilterDto>> GetByCategoryIdAsync(int categoryId);
          Task<CategoryFilterDto> CreateAsync(CategoryFilterCreationModel creationModel);
+         Task<CategoryFilterDto> EditAsync(CategoryFilterCreationModel editModel);
          Task CreateRangeAsync(Category category, IEnumerable<FilterDto> filters);
 
     }

@@ -1,6 +1,7 @@
 using BusinessLogic.DTOs;
 using BusinessLogic.DTOs.User;
 using BusinessLogic.Interfaces;
+using BusinessLogic.Models.UserModels;
 using BusinessLogic.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +20,7 @@ namespace Shop_Api_PV221.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody RegisterModel model)
+        public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
             await accountsService.Register(model);
             return Ok();
