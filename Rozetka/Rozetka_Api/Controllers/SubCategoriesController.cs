@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using BusinessLogic.DTOs.Models;
 using BusinessLogic.DTOs;
 using BusinessLogic.Entities;
 using BusinessLogic.Interfaces;
@@ -23,13 +22,6 @@ namespace Rozetka_Api.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("getparents")]
-        public async Task<IActionResult> GetParentCategories()
-        {
-            return Ok(await categoriesService.GetParentAsync());
-        }
-
-        [AllowAnonymous]
         [HttpGet("getsub/{parentId:int}")]
         public async Task<IActionResult> GetSubCategories([FromRoute] int parentId)
         {
@@ -41,12 +33,6 @@ namespace Rozetka_Api.Controllers
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
             return Ok(await categoriesService.GetByIdWithSubAsync(id));
-        }
-
-        [HttpPut("create")]
-        public async Task<IActionResult> Create([FromForm] CategoryCreationModel categoryCreationModel)
-        {
-            return Ok(await categoriesService.CreateAsync(categoryCreationModel));
         }
     }
 }

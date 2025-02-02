@@ -33,13 +33,13 @@ namespace BusinessLogic.Services
         public string CreateToken(IEnumerable<Claim> claims)
         {
             // TODO: make separate method
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Key));
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("adlfjalUIYUuihafy34987432lNLJLhfasify93shfRQR##%^#&&^%@#$!sljdfl33"));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
-                issuer: jwtOptions.Issuer,
+                //issuer: jwtOptions.Issuer,
                 claims: claims,
-                expires: DateTime.UtcNow.AddDays(jwtOptions.AcceeTokenLifetimeInMinutes),
+                expires: DateTime.UtcNow.AddDays(100),
                 signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);

@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
 using BusinessLogic.DTOs;
-using BusinessLogic.DTOs.Models;
+using BusinessLogic.DTOs.Filter;
 using BusinessLogic.Entities;
 using BusinessLogic.Interfaces;
+using BusinessLogic.Models.CategoryModels;
 using BusinessLogic.Specifications;
 using DataAccess.Repostories;
 using Microsoft.AspNetCore.Authorization;
@@ -30,6 +31,13 @@ namespace Rozetka_Api.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet("getcategories")]
+        public async Task<IActionResult> GetCategories()
+        {
+            return Ok(await categoriesService.GetParentAsync());
+        }
+
+        [AllowAnonymous]
         [HttpGet("gettree")]
         public async Task<IActionResult> GetTree()
         {
@@ -45,9 +53,9 @@ namespace Rozetka_Api.Controllers
 
         [AllowAnonymous]
         [HttpPut("create")]
-        public async Task<IActionResult> Create([FromForm] CategoryCreationModel categoryCreationModel)
+        public async Task<IActionResult> Create([FromForm] CategoryCreateModel categoryCreateModel)
         {
-            return Ok(await categoriesService.CreateAsync(categoryCreationModel));
+            return Ok(await categoriesService.CreateAsync(categoryCreateModel));
         }
 
         [AllowAnonymous]

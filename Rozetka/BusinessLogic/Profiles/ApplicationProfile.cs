@@ -1,8 +1,15 @@
 ﻿using AutoMapper;
 using BusinessLogic.DTOs;
-using BusinessLogic.DTOs.Models;
+using BusinessLogic.DTOs.Advert;
+using BusinessLogic.DTOs.Category;
+using BusinessLogic.DTOs.Filter;
+using BusinessLogic.DTOs.User;
 using BusinessLogic.Entities;
 using BusinessLogic.Interfaces;
+using BusinessLogic.Models;
+using BusinessLogic.Models.AdvertModels;
+using BusinessLogic.Models.CategoryModels;
+using BusinessLogic.Models.UserModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,26 +23,6 @@ namespace BusinessLogic.Profiles
     {
         public ApplicationProfile(/*IFileService fileService*/)
         {
-            //    //CreateMap<FilmDto, Film>()
-            //    //    .ForMember(x => x.Category, opt => opt.Ignore());
-            //    //CreateMap<Film, FilmDto>();
-            //    //CreateMap<CreateFilmModel, Film>();
-            //    ////.ForMember(x => x.ImageUrl, opt => opt.MapFrom(src => fileService.SaveFilmImage(src.ImageUrl).Result));
-
-            //    //CreateMap<RegisterModel, User>()
-            //    //    .ForMember(x => x.UserName, opts => opts.MapFrom(s => s.Email));
-
-            //    //CreateMap<SessionDto, Session>()
-            //    //    .ForMember(x => x.CinemaHall, opt => opt.Ignore())
-            //    //    .ForMember(x => x.Film, opt => opt.Ignore());
-            //    //CreateMap<Session, SessionDto>();
-            //    //CreateMap<CreateSessionModel, Session>();
-
-            //    //CreateMap<Category, CategoryDto>();
-            //    //CreateMap<CategoryDto, Category>();
-
-            //    //CreateMap<Company, CompanyDto>();
-            //    //CreateMap<CompanyDto, Company>();
 
             CreateMap<Advert, AdvertDto>()
                 .ForMember(x => x.Values, opt => opt.MapFrom(z => z.Values.Select(y => y.ValueId)))
@@ -54,7 +41,7 @@ namespace BusinessLogic.Profiles
                 .ForMember(x => x.Filters, opt => opt.MapFrom(z => z.Filters.Select(y => y.FilterId))).ReverseMap()
                 .ForMember(x => x.SubCategories, opt => opt.MapFrom(x => x.SubCategories));
 
-            CreateMap<CategoryCreationModel, Category>().ForMember(x => x.Filters, opt => opt.Ignore())
+            CreateMap<CategoryCreateModel, Category>().ForMember(x => x.Filters, opt => opt.Ignore())
                 .ReverseMap();
 
             CreateMap<Filter, FilterDto>()
@@ -77,6 +64,9 @@ namespace BusinessLogic.Profiles
             CreateMap<AdvertValue, AdvertValueCreationModel>()
                 .ReverseMap();
 
+
+            CreateMap<RegisterModel, User>()
+                .ForMember(x => x.UserName, opts => opts.MapFrom(s => s.Email));
         }
     }
 }

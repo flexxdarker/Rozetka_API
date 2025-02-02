@@ -1,6 +1,7 @@
 ﻿
 using Ardalis.Specification;
 using Ardalis.Specification.EntityFrameworkCore;
+using BusinessLogic.DTOs.Advert;
 using DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -68,5 +69,39 @@ namespace DataAccess.Repostories
             return evaluator.GetQuery(dbSet, specification);
         }
         public async Task<int> CountAsync(Expression<Func<TEntity, bool>> exp) => await dbSet.CountAsync(exp);
+
+        public async Task<IEnumerable<TEntity>> GetAsync(
+        Expression<Func<TEntity, bool>> filter = null,
+        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+        params string[] includeProperties)
+        {
+            IQueryable<TEntity> query = dbSet;
+            await Task.Run
+                (
+                    () =>
+                    {
+                        if (filter != null)
+                        {
+                            query = query.Where(filter);
+                        }
+
+                        foreach (var includeProperty in includeProperties)
+                        {
+                            query = query.Include(includeProperty);
+                        }
+                    });
+            if (orderBy != null)
+            {
+                return orderBy(query).ToList();
+            }
+            else
+            {
+                return query.ToList();
+            }
+        }
+        public IQueryable<TEntity> AsQueryable()
+        {
+            return dbSet;
+        }
     }
 }
