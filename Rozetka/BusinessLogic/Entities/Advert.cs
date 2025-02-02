@@ -10,7 +10,7 @@ namespace BusinessLogic.Entities
         public int CategoryId { get; set; }
         [JsonIgnore]
         public Category Category { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime Date { get; set; } = DateTime.UtcNow;
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public decimal Price { get; set; }
