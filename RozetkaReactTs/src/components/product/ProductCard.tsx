@@ -62,10 +62,10 @@ const ProductCard = (props: { item: IProductModel }) => {
                         <div
                             className="flex w-[32px] pt-[4px] pr-[4px] pb-[4px] pl-[4px] items-center shrink-0 flex-nowrap bg-[#fff] rounded-[4px] border-solid border-[0.5px] border-[#3b3b3b] relative z-[11]">
                             <div
-                                // className="w-[24px] h-[24px] shrink-0 relative overflow-hidden z-[12]">
-                                 className="w-[23px] h-[20px] bg-cover bg-no-repeat shrink-0 relative overflow-hidden z-[12]" style={{backgroundImage:`url(${balance})`}}>
+                                className="w-[24px] h-[24px] shrink-0 relative overflow-hidden z-[12]">
+                                 {/*className="w-[23px] h-[20px] bg-cover bg-no-repeat shrink-0 relative overflow-hidden z-[12]" style={{backgroundImage:`url(${balance})`}}>*/}
                                 {/*className="w-[24px] h-[24px] shrink-0 bg-[url(./assets/icons/balance.svg)] bg-cover bg-no-repeat relative overflow-hidden z-[12]">*/}
-                                {/*<img src={balance}/>*/}
+                                <img src={balance}/>
                             </div>
 
                         </div>
