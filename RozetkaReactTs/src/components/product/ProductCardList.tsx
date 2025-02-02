@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
-import ProductCard from "./ProductCard/ProductCard.tsx";
+import ProductCard from "./ProductCard.tsx";
 import {IProductModel} from "../../models/productsModel.ts";
 import {ProductServices} from "../../services/productService.ts";
 

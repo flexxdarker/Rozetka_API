@@ -4,10 +4,13 @@
 // import CardMedia from '@mui/material/CardMedia';
 // import Button from '@mui/material/Button';
 // import Typography from '@mui/material/Typography';
-import {IProductModel} from "../../../models/productsModel.ts";
-import balance from "../../../assets/icons/balance.svg"
-import heart from "../../../assets/icons/heart.svg"
-import cart from "../../../assets/icons/cart.svg"
+import {IProductModel} from "../../models/productsModel.ts";
+import balance from "../../assets/icons/balance.svg"
+import heart from "../../assets/icons/heart.svg"
+import cart from "../../assets/icons/cart.svg"
+import Button from "@mui/material/Button";
+import {Link} from "react-router-dom";
+import React from "react";
 // import "../ProductCard/ProductCard.css"
 
 //import Typography from '../assets/contemplative-reptile.jpg';
@@ -59,9 +62,10 @@ const ProductCard = (props: { item: IProductModel }) => {
                         <div
                             className="flex w-[32px] pt-[4px] pr-[4px] pb-[4px] pl-[4px] items-center shrink-0 flex-nowrap bg-[#fff] rounded-[4px] border-solid border-[0.5px] border-[#3b3b3b] relative z-[11]">
                             <div
-                                className="w-[24px] h-[24px] shrink-0 relative overflow-hidden z-[12]">
+                                // className="w-[24px] h-[24px] shrink-0 relative overflow-hidden z-[12]">
+                                 className="w-[23px] h-[20px] bg-cover bg-no-repeat shrink-0 relative overflow-hidden z-[12]" style={{backgroundImage:`url(${balance})`}}>
                                 {/*className="w-[24px] h-[24px] shrink-0 bg-[url(./assets/icons/balance.svg)] bg-cover bg-no-repeat relative overflow-hidden z-[12]">*/}
-                                <img src={balance}/>
+                                {/*<img src={balance}/>*/}
                             </div>
 
                         </div>
@@ -70,18 +74,21 @@ const ProductCard = (props: { item: IProductModel }) => {
                         <div
                             className="flex h-[32px] pt-[4px] pr-[4px] pb-[4px] pl-[4px] flex-col justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[4px] border-solid border-[0.5px] border-[#3b3b3b] relative overflow-hidden z-[14]">
                             <div
-                                className="w-[24px] h-[24px] shrink-0 relative z-[15]">
-                                <img src={heart}/>
+                                // className="w-[24px] h-[24px] shrink-0 relative z-[15]">
+                                 className="w-[24px] h-[24px] bg-cover bg-no-repeat shrink-0 relative overflow-hidden z-[12]" style={{backgroundImage:`url(${heart})`}}>
+                                {/*<img src={heart}/>*/}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div className="flex flex-col gap-[16px] items-center self-stretch shrink-0 flex-nowrap relative z-[16]">
+                <Link to={`product-page/${item.id}`}>
                 <div
                     className="w-[220px] h-[220px] shrink-0 relative z-[17] bg-[url(./assets/69_4000.png)] bg-cover bg-no-repeat ">
                     {/*<img src={cart}/>*/}
                 </div>
+                </Link>
                 <div className="flex flex-col gap-[8px] items-start self-stretch shrink-0 flex-nowrap relative z-[18]">
                     <div
                         className="flex gap-[10px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] relative z-[19]">

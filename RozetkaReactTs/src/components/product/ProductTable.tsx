@@ -191,7 +191,7 @@ const ProductTable: React.FC = () => {
                 <Space size="middle">
                     {/* <Button>Show</Button> */}
 
-                    <Link to={`page/${record.id}`}>
+                    <Link to={`/product-page/${record.id}`}>
                         <Button>Show</Button>
                     </Link>
 

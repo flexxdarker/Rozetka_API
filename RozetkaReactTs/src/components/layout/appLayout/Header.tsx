@@ -173,6 +173,41 @@ const Header: React.FC = () => {
                 </div>
             </div>
 
+                            <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}, backgroundColor: 'blue'}}>
+
+
+
+                                    <Link to="categories">
+                                        <Button sx={{my: 2, color: 'white', display: 'block'}}>
+                                            Categories
+                                        </Button>
+                                    </Link>
+
+                                    <Link to="products">
+                                        <Button sx={{my: 2, color: 'white', display: 'block'}}>
+                                            Products
+                                        </Button>
+                                    </Link>
+
+                                    <Link to="subcategories">
+                                        <Button sx={{my: 2, color: 'white', display: 'block'}}>
+                                            Subcategories
+                                        </Button>
+                                    </Link>
+
+                                    <Link to="signin">
+                                        <Button sx={{my: 2, color: 'white', display: 'block'}}>
+                                            SignIn
+                                        </Button>
+                                    </Link>
+
+                                    <Link to="signup">
+                                        <Button sx={{my: 2, color: 'white', display: 'block'}}>
+                                            SignUp
+                                        </Button>
+                                    </Link>
+                                </Box>
+
             {/*<Box sx={{flexGrow: 1}}>*/}
             {/*    <AppBar position="static">*/}
             {/*        <Toolbar>*/}
