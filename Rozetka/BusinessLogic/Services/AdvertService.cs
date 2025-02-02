@@ -34,7 +34,6 @@ namespace BusinessLogic.Services
         public async Task<AdvertDto> CreateAsync(AdvertCreationModel advertCreationModel)
         {
             var advert = mapper.Map<Advert>(advertCreationModel);
-            advert.Date = DateTime.UtcNow;
 
             CultureInfo[] cultures = {
             new CultureInfo("uk-UA"),
