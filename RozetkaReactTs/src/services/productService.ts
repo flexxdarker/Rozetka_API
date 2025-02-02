@@ -4,7 +4,6 @@ import {ICreateProductModel, IProductModel} from "../models/productsModel.ts";
 
 const api = axios.create({
     baseURL: `${import.meta.env.VITE_ROZETKA_API}` + "Advert",
-    //baseURL: "http://localhost:5119/api/Categories/",
 });
 
 
