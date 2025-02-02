@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BusinessLogic.DTOs.Models.CategoryModels
+namespace BusinessLogic.Models.CategoryModels
 {
     public abstract class BaseCategoryModel
     {

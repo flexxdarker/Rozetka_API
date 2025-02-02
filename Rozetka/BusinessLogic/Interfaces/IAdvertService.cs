@@ -1,6 +1,6 @@
 using BusinessLogic.DTOs;
 using BusinessLogic.DTOs.Advert;
-using BusinessLogic.DTOs.Models;
+using BusinessLogic.Models.AdvertModels;
 
 namespace BusinessLogic.Interfaces
 {

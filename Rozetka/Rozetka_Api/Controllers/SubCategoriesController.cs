@@ -7,8 +7,6 @@ using DataAccess.Repostories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using BusinessLogic.DTOs.Models.CategoryModels;
-using BusinessLogic.DTOs.Models;
 
 namespace Rozetka_Api.Controllers
 {

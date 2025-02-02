@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
 using BusinessLogic.DTOs;
 using BusinessLogic.DTOs.Filter;
-using BusinessLogic.DTOs.Models;
-using BusinessLogic.DTOs.Models.CategoryModels;
 using BusinessLogic.Entities;
 using BusinessLogic.Interfaces;
+using BusinessLogic.Models.CategoryModels;
 using BusinessLogic.Specifications;
 using DataAccess.Repostories;
 using Microsoft.AspNetCore.Authorization;

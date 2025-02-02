@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BusinessLogic.DTOs.User
+namespace BusinessLogic.Models.UserModels
 {
     public class LogoutModel
     {

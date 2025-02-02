@@ -1,4 +1,4 @@
-﻿using BusinessLogic.DTOs.User;
+﻿using BusinessLogic.Models.UserModels;
 using FluentValidation;
 using System;
 using System.Collections.Generic;

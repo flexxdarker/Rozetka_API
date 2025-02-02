@@ -14,8 +14,6 @@ namespace Rozetka_Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            
-
             // Add services to the container.
             var connStr = builder.Configuration.GetConnectionString("DefaultConnection")!;
 
@@ -24,7 +22,6 @@ namespace Rozetka_Api
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddIdentity();
-            //builder.Services.AddSwaggerGen();
             builder.Services.AddSwaggerGen(c =>
             {
                 c.AddSecurityDefinition("Bearer",
@@ -35,19 +32,18 @@ namespace Rozetka_Api
                         Scheme = "bearer"
                     });
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference=new OpenApiReference
-                {
-                    Id="Bearer",
-                    Type = ReferenceType.SecurityScheme
-                }
-            }, new List<string>()
-        }
-    });
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference=new OpenApiReference
+                            {
+                                Id="Bearer",
+                                Type = ReferenceType.SecurityScheme
+                            }
+                        }, new List<string>()
+                    }
+                });
             });
-
 
             builder.Services.AddJWT(builder.Configuration);
 
@@ -59,20 +55,7 @@ namespace Rozetka_Api
 
             app.DataBaseMigrate();
             
-            using (var scope = app.Services.CreateScope())
-            {
-                scope.ServiceProvider.SeedRoles().Wait();
-                scope.ServiceProvider.SeedAdmin().Wait();
-            }
-
-            
             app.AddUploadingsFolder(Directory.GetCurrentDirectory());
-
-            //using (var scope = app.Services.CreateScope())
-            //{
-            //    var serviceProvider = scope.ServiceProvider;
-            //    serviceProvider.SeedCategories(builder.Configuration).Wait();
-            //}
 
             app.UseCors(options =>
             {
@@ -87,6 +70,12 @@ namespace Rozetka_Api
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                scope.ServiceProvider.SeedRoles().Wait();
+                scope.ServiceProvider.SeedAdmin().Wait();
+            }
 
             await app.SeedCategoriesAndFilters(builder.Configuration);
             await app.RunAsync();

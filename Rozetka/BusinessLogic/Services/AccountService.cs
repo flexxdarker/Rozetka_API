@@ -2,6 +2,7 @@
 using BusinessLogic.DTOs.User;
 using BusinessLogic.Entities;
 using BusinessLogic.Interfaces;
+using BusinessLogic.Models.UserModels;
 using BusinessLogic.Specifications;
 using DataAccess.Repostories;
 using Microsoft.AspNetCore.Identity;

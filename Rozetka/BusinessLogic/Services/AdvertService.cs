@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
 using BusinessLogic.DTOs;
-using BusinessLogic.DTOs.Models.AdvertModels;
+using BusinessLogic.DTOs.Advert;
 using BusinessLogic.Entities;
 using BusinessLogic.Interfaces;
+using BusinessLogic.Models.AdvertModels;
 using BusinessLogic.Specifications;
 using DataAccess.Repostories;
 using System;

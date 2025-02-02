@@ -1,7 +1,5 @@
-using BusinessLogic.DTOs;
 using BusinessLogic.DTOs.Category;
-using BusinessLogic.DTOs.Models;
-using BusinessLogic.DTOs.Models.CategoryModels;
+using BusinessLogic.Models.CategoryModels;
 
 namespace BusinessLogic.Interfaces
 {

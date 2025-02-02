@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BusinessLogic.DTOs
+namespace BusinessLogic.Models
 {
     public class AdvertValueCreationModel
     {
