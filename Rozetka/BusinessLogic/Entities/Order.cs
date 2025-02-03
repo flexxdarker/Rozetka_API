@@ -17,6 +17,7 @@ namespace BusinessLogic.Enities
         public OrderStatus OrderStatus { get; set; }
         public DateTime DateCrated { get; set; }
         public ICollection<OrderAdvert> OrderAdverts { get; set; }
+        //total summ
         public int Amount { get; set; }
     }
 }

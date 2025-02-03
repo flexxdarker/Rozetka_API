@@ -78,6 +78,7 @@ namespace Rozetka_Api
             }
 
             await app.SeedCategoriesAndFilters(builder.Configuration);
+            await app.SeedStatuses(builder.Configuration);
             await app.RunAsync();
         }
     }

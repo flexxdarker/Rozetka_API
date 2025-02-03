@@ -76,11 +76,11 @@ namespace Rozetka_Api.Controllers
         }
 
         [HttpPost("PushOrderWhenLogin")]
-        public async Task<IActionResult> PushOrderWhenLogin([FromRoute] List<OrderItemDto> orderItems)
+        public async Task<IActionResult> PushOrderWhenLogin(/*[FromBody] List<OrderItemDto> orderItems*/)
         {
             string userId = User.Claims.ToList()[0].Value.ToString();
 
-            await _basket.PushOrderWhenLogin(userId, orderItems);
+            await _basket.PushOrderWhenLogin(userId/*, orderItems*/);
 
             return Ok();
         }
