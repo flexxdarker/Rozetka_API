@@ -10,7 +10,7 @@ namespace BusinessLogic.Enities
     public class OrderStatus
     {
         public int Id { get; set; }
-        public bool isCompleted { get; set; }
+        public string Status { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
     }
 }

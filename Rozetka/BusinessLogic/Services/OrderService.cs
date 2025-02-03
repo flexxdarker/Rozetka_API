@@ -43,8 +43,8 @@ namespace BusinessLogic.Services
                 .Select(x => new OrderInformationDto
                 {
                     Id = x.Id,
-                    Status = x.OrderStatus.isCompleted
-                            ? "Completed" : "In Progress",
+                    //Status = x.OrderStatus.isCompleted
+                            //? "Completed" : "In Progress",
                     Names = x.OrderAdverts.Select(x=>x.Advert.Title).ToList(),
                     TotalPrice = x.Amount,
                     ImagePaths = x.OrderAdverts

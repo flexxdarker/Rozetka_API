@@ -19,13 +19,15 @@ namespace BusinessLogic.Services
         private readonly IRepository<Advert> _advert;
         private readonly IRepository<OrderStatus> _status;
         private readonly IRepository<Order> _order;
+        private readonly IRepository<OrderAdvert> _orderadvert;
 
-        public BasketService(IRepository<OrderStatus> status, IRepository<Basket> basket, IRepository<Advert> advert, IRepository<Order> order)
+        public BasketService(IRepository<OrderStatus> status, IRepository<Basket> basket, IRepository<Advert> advert, IRepository<Order> order, IRepository<OrderAdvert> orderadvert)
         {
             _basket = basket;
             _advert = advert;
             _order = order;
             _status = status;
+            _orderadvert = orderadvert;
         }
 
         public async Task pushBasketById(string userId, int advertId)
@@ -168,60 +170,97 @@ namespace BusinessLogic.Services
                     Console.WriteLine(ex.Message);
                 }
             }
-
-            List<int> array = await _basket.AsQueryable().Where(x => x.UserId == userId).Select(x => x.AdvertId).ToListAsync();
-
         }
 
-        public async Task PushOrderWhenLogin(string userId, List<OrderItemDto> orderItems)
-        {
+        public async Task PushOrderWhenLogin(string userId/*, List<OrderItemDto> orderItems*/)
+        {   
+            var orderItems = await GetBasketItems(userId);
 
-            var status = await _status.GetAsync();
-            var statusItem = status.Where(x => x.isCompleted == true).FirstOrDefault();
+            var newStatus = await _status.AsQueryable().Where(x => x.Id == 1).FirstOrDefaultAsync();
 
-            var amount = orderItems.FirstOrDefault().Amount;
+
+            int amount = orderItems.Count;
 
             var order = new Order
             {
                 UserId = userId,
-                OrderStatusId = statusItem.Id,
+                Amount = amount,
                 DateCrated = DateTime.UtcNow,
-                Amount = amount
+                OrderStatusId = newStatus.Id
             };
 
             await _order.InsertAsync(order);
             await _order.SaveAsync();
 
+            var listAdvert = new List<OrderAdvert>();
 
-            var listProduct = new List<OrderAdvert>();
-
-            foreach (var item in orderItems)
+            foreach (var advert in orderItems)
             {
-                listProduct.Add(
-                    new OrderAdvert
-                    {
-                        OrderId = order.Id,
-                        AdvertId = item.ProductId,
-                        Count = item.Count,
-                        Price = item.Price
-                    });
+                listAdvert.Add(new OrderAdvert
+                {
+                    OrderId = order.Id,
+                    AdvertId = advert.Id,
+                    Count = advert.Amount,
+                    Price = advert.Price,
+                });
             }
 
+            await _orderadvert.AddRangeAsync(listAdvert);
 
-            foreach(var item in listProduct)
+            await _orderadvert.SaveAsync();
+
+            foreach(var advert in orderItems)
             {
-                await _order.InsertAsync(item.Order);
-
+                await DeleteProductFromBasket(userId, advert.Id);
             }
 
-            await _order.SaveAsync();
+             await _basket.SaveAsync();
 
-            foreach (var item in orderItems)
-            {
-                await DeleteProductFromBasket(userId, item.ProductId);
-            }
+            //var status = await _status.GetAsync();
+            //var statusItem = status.Where(x => x.isCompleted == true).FirstOrDefault();
 
-            await _order.SaveAsync();
+            //var amount = orderItems.FirstOrDefault().Amount;
+
+            //var order = new Order
+            //{
+            //    UserId = userId,
+            //    OrderStatusId = statusItem.Id,
+            //    DateCrated = DateTime.UtcNow,
+            //    Amount = amount
+            //};
+
+            //await _order.InsertAsync(order);
+            //await _order.SaveAsync();
+
+
+            //var listProduct = new List<OrderAdvert>();
+
+            //foreach (var item in orderItems)
+            //{
+            //    listProduct.Add(
+            //        new OrderAdvert
+            //        {
+            //            OrderId = order.Id,
+            //            AdvertId = item.ProductId,
+            //            Count = item.Count,
+            //            Price = item.Price
+            //        });
+            //}
+
+
+            //foreach(var item in listProduct)
+            //{
+            //    await _order.InsertAsync(item.Order);
+            //}
+
+            //await _order.SaveAsync();
+
+            //foreach (var item in orderItems)
+            //{
+            //    await DeleteProductFromBasket(userId, item.ProductId);
+            //}
+
+            //await _order.SaveAsync();
         }
     }
 }
