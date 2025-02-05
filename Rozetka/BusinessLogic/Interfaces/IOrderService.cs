@@ -22,6 +22,6 @@ namespace BusinessLogic.Interfaces
         Task<ChangeOrderStatus> ResiveOrderById(int id);
 
         Task<List<OrderStatus>> GetAllStatus();
-        Task ChangeStatus(int Id);
+        Task ChangeStatus(int Id, int statusId);
     }
 }
