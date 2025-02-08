@@ -6,11 +6,11 @@
 // import Typography from '@mui/material/Typography';
 import {IProductModel} from "../../models/productsModel.ts";
 import balance from "../../assets/icons/balance.svg"
-import heart from "../../assets/icons/heart.svg"
 import cart from "../../assets/icons/cart.svg"
-import Button from "@mui/material/Button";
+import heart from "../../assets/icons/heart.svg"
 import {Link} from "react-router-dom";
 import React from "react";
+import {BasketService} from "../../services/basketService.ts";
 // import "../ProductCard/ProductCard.css"
 
 //import Typography from '../assets/contemplative-reptile.jpg';
@@ -145,7 +145,7 @@ const ProductCard = (props: { item: IProductModel }) => {
                                 </span>
                                     <span
                                         className="flex w-[67px] h-[12px] items-center shrink-0 basis-auto font-['Inter'] text-[16px] font-semibold leading-[12px] text-[#e11515] relative text-center whitespace-nowrap z-[39]">
-                                    {item.price-item.discount}₴
+                                    {item.price - item.discount}₴
                                 </span>
                                 </div>
                                 : <div
@@ -156,13 +156,17 @@ const ProductCard = (props: { item: IProductModel }) => {
                 </span>
                                 </div>
                             }
-                            <div
-                                className="flex w-[44px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] items-center shrink-0 flex-nowrap rounded-[8px] border-solid border-2 border-[#9cc319] relative z-40">
+                            <button type={"button"} onClick={() => {
+                                BasketService.addId(item.id)
+                            }}>
                                 <div
-                                    className="w-[24px] h-[24px] shrink-0 relative overflow-hidden z-[41] bg-[url(./assets/icons/cart.svg)] bg-cover bg-no-repeat ">
-                                    {/*<img src={cart} className="bg-cover"/>*/}
+                                    className="flex w-[44px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] items-center shrink-0 flex-nowrap rounded-[8px] border-solid border-2 border-[#9cc319] relative z-40">
+                                    <div
+                                        className="w-[24px] h-[24px] shrink-0 relative overflow-hidden z-[41]">
+                                        <img src={cart}/>
+                                    </div>
                                 </div>
-                            </div>
+                            </button>
                         </div>
                     </div>
                 </div>

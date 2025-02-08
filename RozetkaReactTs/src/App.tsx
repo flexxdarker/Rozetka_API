@@ -5,6 +5,7 @@ import MainLoader from "./components/loaders/MainLoader.tsx";
 import MainLayout from "./components/layout/mainLayout/MainLayout.tsx";
 import CategoryLayout from "./components/layout/categoryLayout/CategoryLayout.tsx";
 import ProductPage from "./components/product/ProductPage.tsx";
+import React from "react";
 // import SubCategoryTable from "./components/subCategory/SubCategoryTable.tsx";
 // import SubCategoryForm from "./components/subCategory/SubCategoryForm.tsx";
 // import Home from "./components/Home.tsx";
@@ -21,6 +22,7 @@ import ProductPage from "./components/product/ProductPage.tsx";
 // import ReturnOfGoods from "./components/layout/footer/ReturnOfGoods.tsx";
 // import CategoryTable from "./components/category/CategoryTable.tsx";
 // import CategoryForm from "./components/category/CategoryForm.tsx";
+// import Basket from "./components/basket/Basket.tsx";
 
 const Home = lazy(() => import("./components/Home.tsx"));
 const AboutUs = lazy(() => import("./components/layout/footer/AboutUs.tsx"));
@@ -38,6 +40,7 @@ const CategoryTable = lazy(() => import("./components/category/CategoryTable"));
 const CategoryForm = lazy(() => import("./components/category/CategoryForm.tsx"));
 const SubCategoryTable = lazy(() => import("./components/subCategory/SubCategoryTable.tsx"));
 const SubCategoryForm = lazy(() => import("./components/subCategory/SubCategoryForm.tsx"));
+const Basket = lazy(() => import("./components/basket/Basket.tsx"));
 
 export default function App() {
     return (
@@ -71,6 +74,8 @@ export default function App() {
                     <Route path="for-corporate-client" element={<ForCorporateClient/>}/>
 
                     <Route path="franchising" element={<Franchising/>}/>
+
+                    <Route path="basket" element={<Basket/>}/>
                 </Route>
 
                 <Route path="" element={<CategoryLayout/>}>
