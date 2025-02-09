@@ -57,9 +57,9 @@ namespace Rozetka_Api.Controllers
         }
 
         [HttpPost("GetBasketItemLogout")]
-        public async Task<IActionResult> GetBasketItemsLogout()
+        public async Task<IActionResult> GetBasketItemsLogout([FromBody] int[] array)
         {
-            var basket = await _basket.GetBasketItemsLogout();
+            var basket = await _basket.GetBasketItemsLogout(array);
 
             return Ok(basket);
         }
@@ -80,7 +80,7 @@ namespace Rozetka_Api.Controllers
         {
             string userId = User.Claims.ToList()[0].Value.ToString();
 
-            await _basket.PushOrderWhenLogin(userId/*, orderItems*/);
+            await _basket.PushOrder(userId/*, orderItems*/);
 
             return Ok();
         }

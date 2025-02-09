@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -129,26 +130,25 @@ namespace BusinessLogic.Services
 
             return basketItems;
         }
-        public async Task<List<BasketViewItem>> GetBasketItemsLogout()
+        public async Task<List<BasketViewItem>> GetBasketItemsLogout(int[] array)
         {
-            var array = _basket.GetListBySpec(new BasketSpecs.GetAll());
-            if (array == null)
+            if (array == null || array.Length == 0)
             {
                 return new List<BasketViewItem>();
             }
 
-            var items = await _basket.GetListBySpec(new BasketSpecs.GetAll());
-            var basketItems = items
+            var basketItems = await _advert.AsQueryable()
+                .Where(x=>array.Contains(x.Id))
                 .Select(x => new BasketViewItem
                 {
                     Id = x.Id,
-                    Name = x.Advert.Title,
-                    Description = x.Advert.Description,
-                    Price = x.Advert.Price,
-                    Category = x.Advert.Category.Name,
-                    Amount = x.Count,
-                    ImagePaths = x.Advert.Images.Select(pi => pi.Name).ToList()
-                }).ToList();
+                    Name = x.Title,
+                    Description = x.Description,
+                    Price = x.Price,
+                    Category = x.Category.Name,
+                    Amount = 1,
+                    ImagePaths = x.Images.Select(pi => pi.Name).ToList()
+                }).ToListAsync();
 
             return basketItems;
         }
@@ -172,7 +172,7 @@ namespace BusinessLogic.Services
             }
         }
 
-        public async Task PushOrderWhenLogin(string userId/*, List<OrderItemDto> orderItems*/)
+        public async Task PushOrder(string userId/*, List<OrderItemDto> orderItems*/)
         {   
             var orderItems = await GetBasketItems(userId);
 
@@ -215,52 +215,46 @@ namespace BusinessLogic.Services
             }
 
              await _basket.SaveAsync();
+        }
 
-            //var status = await _status.GetAsync();
-            //var statusItem = status.Where(x => x.isCompleted == true).FirstOrDefault();
+        public async Task PushOrderWhenLogin(string userId, List<OrderItemDto> orderItems)
+        {
+            var status = await _status.AsQueryable().Where(x => x.Id == 1).FirstOrDefaultAsync();
+            
+            var amount = orderItems.Count;
 
-            //var amount = orderItems.FirstOrDefault().Amount;
+            var order = new Order
+            {
+                UserId = userId,
+                OrderStatusId = status.Id,
+                DateCrated = DateTime.UtcNow,
+                Amount = amount,
+            };
+            await _order.InsertAsync(order);
+            await _order.SaveAsync();
 
-            //var order = new Order
-            //{
-            //    UserId = userId,
-            //    OrderStatusId = statusItem.Id,
-            //    DateCrated = DateTime.UtcNow,
-            //    Amount = amount
-            //};
+            var listAdvert = new List<OrderAdvert>();
 
-            //await _order.InsertAsync(order);
-            //await _order.SaveAsync();
+            foreach (var advert in orderItems)
+            {
+                listAdvert.Add(new OrderAdvert
+                {
+                    OrderId = order.Id,
+                    AdvertId = advert.AdvertId,
+                    Count = advert.Amount,
+                    Price = advert.Price,
+                });
+            }
+            await _orderadvert.AddRangeAsync(listAdvert);
 
+            await _orderadvert.SaveAsync();
 
-            //var listProduct = new List<OrderAdvert>();
+            foreach (var advert in orderItems)
+            {
+                await DeleteProductFromBasket(userId, advert.AdvertId);
+            }
 
-            //foreach (var item in orderItems)
-            //{
-            //    listProduct.Add(
-            //        new OrderAdvert
-            //        {
-            //            OrderId = order.Id,
-            //            AdvertId = item.ProductId,
-            //            Count = item.Count,
-            //            Price = item.Price
-            //        });
-            //}
-
-
-            //foreach(var item in listProduct)
-            //{
-            //    await _order.InsertAsync(item.Order);
-            //}
-
-            //await _order.SaveAsync();
-
-            //foreach (var item in orderItems)
-            //{
-            //    await DeleteProductFromBasket(userId, item.ProductId);
-            //}
-
-            //await _order.SaveAsync();
+            await _basket.SaveAsync();
         }
     }
 }

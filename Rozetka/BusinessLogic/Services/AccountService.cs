@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BusinessLogic.DTOs.User;
+using BusinessLogic.Enities;
 using BusinessLogic.Entities;
 using BusinessLogic.Interfaces;
 using BusinessLogic.Models.UserModels;
@@ -22,18 +23,24 @@ namespace BusinessLogic.Services
         private readonly IMapper mapper;
         private readonly IJwtService jwtService;
         private readonly IRepository<RefreshToken> refreshTokenR;
+        private readonly IBasketService basketService;
+        private readonly IRepository<Basket> basketRepo;
 
         public AccountsService(UserManager<User> userManager,
                                 SignInManager<User> signInManager,
                                 IMapper mapper,
                                 IJwtService jwtService,
-                                IRepository<RefreshToken> refreshTokenR)
+                                IRepository<RefreshToken> refreshTokenR,
+                                IBasketService basketService,
+                                IRepository<Basket> basketRepos)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.mapper = mapper;
             this.jwtService = jwtService;
             this.refreshTokenR = refreshTokenR;
+            this.basketService = basketService;
+            this.basketRepo = basketRepos;
         }
 
         public async Task Register(RegisterModel model)
@@ -56,6 +63,74 @@ namespace BusinessLogic.Services
 
         public async Task<LoginResponseDto> Login(LoginModel model)
         {
+
+            //LoginResponseDto loginResponse = new LoginResponseDto();
+            //var user = await userManager.FindByEmailAsync(model.Email);
+
+            //if (user == null || !await userManager.CheckPasswordAsync(user, model.Password))
+            //    throw new HttpException("Invalid user login or password.", HttpStatusCode.BadRequest);
+
+            ////await signInManager.SignInAsync(user, true);
+
+            //// generate token
+            //loginResponse.AccessToken = jwtService.CreateToken(jwtService.GetClaims(user));
+            //loginResponse.RefreshToken = CreateRefreshToken(user.Id).Token;
+
+
+            //if (model.Baskets.Count > 0)
+            //{
+
+            //    // Перетворюємо кошик у масив
+            //    var basketArray = model.Baskets.ToArray();
+
+            //    // Якщо користувач передав кошик із товарами
+            //    if (basketArray.Length > 0)
+            //    {
+            //        // Зберігаємо кошик користувача в базу даних
+            //        await basketService.pushBasketArray(user.Id, basketArray);
+
+            //        // Отримуємо поточний кошик користувача з бази
+            //        var array = await basketRepo.GetAsync();
+
+            //        // Вибираємо товари тільки для цього користувача
+            //        List<Basket> arrayUser = array.Where(x => x.UserId == user.Id).ToList();
+
+            //        // Створюємо список ID продуктів із кошика
+            //        List<int> newListIdBasket = arrayUser.Select(item => item.AdvertId).ToList();
+
+            //        // Передаємо список ID продуктів у відповідь
+            //        loginResponse.Baskets = newListIdBasket;
+            //    }
+            //    else
+            //    {
+            //        loginResponse.Baskets = null; // Якщо кошик порожній
+            //    }
+            //}
+            //else
+            //{
+
+            //    // Отримуємо поточний кошик користувача з бази
+            //    var array = await basketRepo.GetAsync();
+
+            //    // Вибираємо товари тільки для цього користувача
+            //    List<Basket> arrayUser = array.Where(x => x.UserId == user.Id).ToList();
+
+            //    // Створюємо список ID продуктів із кошика
+            //    List<int> newListIdBasket = arrayUser.Select(item => item.AdvertId).ToList();
+
+            //    // Передаємо список ID продуктів у відповідь
+            //    loginResponse.Baskets = newListIdBasket;
+            //}
+
+            //if (model.OrderItem.Count > 0)
+            //{
+
+            //    await basketService.PushOrderWhenLogin(user.Id, model.OrderItem);
+            //}
+
+            //return new LoginResponseDto();
+            
+            
             var user = await userManager.FindByEmailAsync(model.Email);
 
             if (user == null || !await userManager.CheckPasswordAsync(user, model.Password))
@@ -69,6 +144,7 @@ namespace BusinessLogic.Services
                 AccessToken = jwtService.CreateToken(jwtService.GetClaims(user)),
                 RefreshToken = CreateRefreshToken(user.Id).Token
             };
+
         }
 
         private RefreshToken CreateRefreshToken(string userId)

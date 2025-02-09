@@ -13,8 +13,9 @@ namespace BusinessLogic.Interfaces
         Task pushBasketById(string id, int user);
         Task pushBasketArray(string userId, int[] productIds);
         Task<List<BasketViewItem>> GetBasketItems(string userId/*, int[] array*/);
-        Task<List<BasketViewItem>> GetBasketItemsLogout();
+        Task<List<BasketViewItem>> GetBasketItemsLogout(int[] array);
         Task DeleteProductFromBasket(string userId, int productId);
-        Task PushOrderWhenLogin(string userId/*, List<OrderItemDto> orderItems*/);
+        Task PushOrder(string userId/*, List<OrderItemDto> orderItems*/);
+        Task PushOrderWhenLogin(string userId, List<OrderItemDto> orderItems);
     }
 }
