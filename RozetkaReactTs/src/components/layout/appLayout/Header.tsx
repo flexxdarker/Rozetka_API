@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import {Link} from "react-router-dom";
@@ -10,9 +10,22 @@ import balanceWhite from "./../../../assets/icons/balanceWhite.svg"
 import logo from "./../../../assets/icons/Logo_SVG_white 1.svg"
 import userWhite from "./../../../assets/icons/user-white.svg"
 import cartWhite from "./../../../assets/icons/cart-white.svg"
+import Basket from "../../basket/Basket.tsx";
+import Modal from "../../other/Modal.tsx";
+
 
 
 const Header = () => {
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const openModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
 
 
     return (
@@ -92,58 +105,63 @@ const Header = () => {
                             </div>
                         </button>
                     </div>
-                    <Link to={"basket"}>
-                    <div
+                    {/*<Link to={"basket"}>*/}
+                    <button onClick={openModal}
                         className="flex w-[139px] pt-[8px] pr-[20px] pb-[8px] pl-[20px] gap-[10px] items-center shrink-0 flex-nowrap bg-[#9cc319] rounded-[8px] border-none relative z-[23] pointer">
                         <div
                             className="w-[24px] h-[24px] shrink-0 relative overflow-hidden z-[24]">
                             <img src={cartWhite}/>
+
                         </div>
                         <span
                             className="flex w-[65px] h-[20px] justify-center items-center shrink-0 basis-auto font-['Inter'] text-[20px] font-medium leading-[20px] text-[#fff] relative text-center whitespace-nowrap z-[25]">
             Кошик
           </span>
-                    </div>
-                    </Link>
+                    </button>
+                    <Modal isOpen={isModalOpen} onClose={closeModal}>
+                        <Basket onClose={closeModal} />
+                    </Modal>
+                    {/*</Link>*/}
                 </div>
             </div>
 
-                            <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}, backgroundColor: 'blue'}}>
+            <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}, backgroundColor: 'blue'}}>
 
 
+                <Link to="categories">
+                    <Button sx={{my: 2, color: 'white', display: 'block'}}>
+                        Categories
+                    </Button>
+                </Link>
 
-                                    <Link to="categories">
-                                        <Button sx={{my: 2, color: 'white', display: 'block'}}>
-                                            Categories
-                                        </Button>
-                                    </Link>
+                <Link to="products">
+                    <Button sx={{my: 2, color: 'white', display: 'block'}}>
+                        Products
+                    </Button>
+                </Link>
 
-                                    <Link to="products">
-                                        <Button sx={{my: 2, color: 'white', display: 'block'}}>
-                                            Products
-                                        </Button>
-                                    </Link>
+                <Link to="subcategories">
+                    <Button sx={{my: 2, color: 'white', display: 'block'}}>
+                        Subcategories
+                    </Button>
+                </Link>
 
-                                    <Link to="subcategories">
-                                        <Button sx={{my: 2, color: 'white', display: 'block'}}>
-                                            Subcategories
-                                        </Button>
-                                    </Link>
+                <Link to="signin">
+                    <Button sx={{my: 2, color: 'white', display: 'block'}}>
+                        SignIn
+                    </Button>
+                </Link>
 
-                                    <Link to="signin">
-                                        <Button sx={{my: 2, color: 'white', display: 'block'}}>
-                                            SignIn
-                                        </Button>
-                                    </Link>
+                <Link to="signup">
+                    <Button sx={{my: 2, color: 'white', display: 'block'}}>
+                        SignUp
+                    </Button>
+                </Link>
 
-                                    <Link to="signup">
-                                        <Button sx={{my: 2, color: 'white', display: 'block'}}>
-                                            SignUp
-                                        </Button>
-                                    </Link>
-                                </Box>
+
+            </Box>
         </>
-    );
+);
 
 }
 

@@ -23,7 +23,7 @@ export const BasketService = {
         const itemString = localStorage.getItem(ProductBasket);
         let items: IBasketModel = {};
         if (itemString) {
-            items =  JSON.parse(itemString); // Перетворюємо рядок назад в масив
+            items = JSON.parse(itemString); // Перетворюємо рядок назад в масив
         }
 
         // Якщо товар є в кошику, збільшуємо його кількість
@@ -58,7 +58,33 @@ export const BasketService = {
             //const updatedIds = ids.filter((item) => item !== id);
             BasketService.saveItems(items);
         }
+    },
 
+    getCountById(id: number) {
+        const itemString = localStorage.getItem(ProductBasket);
+        if (itemString) {
+            let items: IBasketModel = {};
+            items = JSON.parse(itemString); // Перетворюємо рядок назад в масив
+            return items[id];
+        }
+        else {
+            return 0;
+        }
+    },
+
+    removeAllItems(id: number) {
+        const itemString = localStorage.getItem(ProductBasket);
+        let items: IBasketModel = {};
+
+        if (itemString) {
+            items = JSON.parse(itemString); // Перетворюємо рядок назад в масив
+        }
+
+        if (items[id] > 0) {
+            delete items[id];
+        }
+
+        BasketService.saveItems(items);
     },
 
     isExists() {

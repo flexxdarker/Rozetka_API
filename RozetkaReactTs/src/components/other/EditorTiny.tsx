@@ -1,4 +1,5 @@
 import {Editor, IAllProps} from "@tinymce/tinymce-react";
+import React from "react";
 import {FC} from "react";
 // import {FC, useRef} from "react";
 // import {Editor as TinyMCEEditorType} from 'tinymce';

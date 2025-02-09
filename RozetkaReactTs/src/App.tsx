@@ -6,6 +6,7 @@ import MainLayout from "./components/layout/mainLayout/MainLayout.tsx";
 import CategoryLayout from "./components/layout/categoryLayout/CategoryLayout.tsx";
 import ProductPage from "./components/product/ProductPage.tsx";
 import React from "react";
+// import OrderPage from "./components/order/OrderPage.tsx";
 // import SubCategoryTable from "./components/subCategory/SubCategoryTable.tsx";
 // import SubCategoryForm from "./components/subCategory/SubCategoryForm.tsx";
 // import Home from "./components/Home.tsx";
@@ -40,7 +41,7 @@ const CategoryTable = lazy(() => import("./components/category/CategoryTable"));
 const CategoryForm = lazy(() => import("./components/category/CategoryForm.tsx"));
 const SubCategoryTable = lazy(() => import("./components/subCategory/SubCategoryTable.tsx"));
 const SubCategoryForm = lazy(() => import("./components/subCategory/SubCategoryForm.tsx"));
-const Basket = lazy(() => import("./components/basket/Basket.tsx"));
+const OrderPage = lazy(() => import("./components/order/OrderPage.tsx"));
 
 export default function App() {
     return (
@@ -75,7 +76,7 @@ export default function App() {
 
                     <Route path="franchising" element={<Franchising/>}/>
 
-                    <Route path="basket" element={<Basket/>}/>
+                    <Route path="order" element={<OrderPage/>}/>
                 </Route>
 
                 <Route path="" element={<CategoryLayout/>}>
