@@ -1,5 +1,6 @@
 import axios from "axios";
-import {CategoryModel} from "../models/categoriesModel.ts";
+import {ICategoryModel, ICreateCategoryModel} from "../models/categoriesModel.ts";
+
 //import { tokensService } from "./tokensService";
 
 
@@ -27,7 +28,7 @@ const api = axios.create({
 
 export const CategoriesServices = {
     getAll: function() {
-        return api.get<CategoryModel[]>("getparentcategories");
+        return api.get<ICategoryModel[]>("getall");
         // .then((res) => res.json())
         //   .then((data) => {
         //     console.log("start data");
@@ -36,18 +37,18 @@ export const CategoriesServices = {
         //   });
     },
 
-    getById(id: number) {
-        return api.get<CategoryModel>("getbyid/" + `${id}`);
+    getById(id: string) {
+        return api.get<ICategoryModel>("getbyid/" + `${id}`);
     },
-    //
-    // create(model) {
-    //     const data = new FormData();
-    //     for (const prop in model) {
-    //         data.append(prop, model[prop]);
-    //     }
-    //
-    //     return axios.post(api, data);
-    // },
+
+    create(model: ICreateCategoryModel) {
+        const data = new FormData();
+        for (const prop in model) {
+            data.append(prop, (model as any)[prop]);
+        }
+
+        return api.put("create", data);
+    },
     //
     // delete(id) {
     //     return axios.delete(api + id);

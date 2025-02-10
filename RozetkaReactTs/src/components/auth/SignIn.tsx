@@ -1,22 +1,36 @@
 import React from 'react';
 import {LockOutlined, UserOutlined} from '@ant-design/icons';
-import {Button, Checkbox, Form, Input, Flex, type FormProps} from 'antd';
-import {Link} from "react-router-dom";
-//to marge
+// import {Button, Checkbox, Form, Input, Flex, type FormProps} from 'antd';
+import {Button, Form, Input, Flex, type FormProps, message} from 'antd';
+import {Link, useNavigate} from "react-router-dom";
+import {ILoginModel} from "../../models/accountsModel.ts";
+import {AccountsService} from "../../services/accountsService.ts";
+import {TokenService} from "../../services/tokenService.ts";
 
-type FieldTypeSignIn = {
-    username?: string;
-    password?: string;
-    remember?: string;
-};
+// type FieldTypeSignIn = {
+//     username?: string;
+//     password?: string;
+//     remember?: string;
+// };
 
 const SignIn: React.FC = () => {
 
-        const onFinish: FormProps<FieldTypeSignIn>['onFinish'] = (values) => {
+    const navigate = useNavigate();
+
+        const onFinish: FormProps<ILoginModel>['onFinish'] = async (values) => {
                 console.log('Form values:', {...values}); // Обробка відправки форми з додатковими даними редактора
+            const res = await AccountsService.login(values);
+            console.log(res);
+            TokenService.save(res.data);
+            if (res.status == 200) {
+                message.success("login success");
+                navigate(-1);
+            } else {
+                message.warning("Warning");
+            }
         };
 
-        const onFinishFailed: FormProps<FieldTypeSignIn>['onFinishFailed'] = (errorInfo) => {
+        const onFinishFailed: FormProps<ILoginModel>['onFinishFailed'] = (errorInfo) => {
             console.log('Failed:', errorInfo);
         };
 
@@ -51,10 +65,10 @@ const SignIn: React.FC = () => {
                         onFinishFailed={onFinishFailed}
                     >
                         <Form.Item
-                            name="username"
-                            rules={[{required: true, message: 'Please input your Username!'}]}
+                            name="email"
+                            rules={[{required: true, message: 'Please input your email!'}]}
                         >
-                            <Input prefix={<UserOutlined/>} placeholder="Username"/>
+                            <Input prefix={<UserOutlined/>} placeholder="Email"/>
                         </Form.Item>
 
                         <Form.Item
@@ -66,9 +80,9 @@ const SignIn: React.FC = () => {
 
                         <Form.Item>
                             <Flex justify="space-between" align="center">
-                                <Form.Item name="remember" valuePropName="checked" noStyle>
-                                    <Checkbox>Remember me</Checkbox>
-                                </Form.Item>
+                                {/*<Form.Item name="remember" valuePropName="checked" noStyle>*/}
+                                {/*    <Checkbox>Remember me</Checkbox>*/}
+                                {/*</Form.Item>*/}
                                 <a href="">Forgot password</a>
                             </Flex>
                         </Form.Item>

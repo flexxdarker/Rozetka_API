@@ -4,6 +4,11 @@ import AppLayout from "./components/layout/appLayout/AppLayout.tsx";
 import MainLoader from "./components/loaders/MainLoader.tsx";
 import MainLayout from "./components/layout/mainLayout/MainLayout.tsx";
 import CategoryLayout from "./components/layout/categoryLayout/CategoryLayout.tsx";
+import ProductPage from "./components/product/ProductPage.tsx";
+import React from "react";
+// import OrderPage from "./components/order/OrderPage.tsx";
+// import SubCategoryTable from "./components/subCategory/SubCategoryTable.tsx";
+// import SubCategoryForm from "./components/subCategory/SubCategoryForm.tsx";
 // import Home from "./components/Home.tsx";
 // import AboutUs from "./components/layout/footer/AboutUs.tsx";
 // import SignIn from "./components/auth/SignIn.tsx";
@@ -18,6 +23,7 @@ import CategoryLayout from "./components/layout/categoryLayout/CategoryLayout.ts
 // import ReturnOfGoods from "./components/layout/footer/ReturnOfGoods.tsx";
 // import CategoryTable from "./components/category/CategoryTable.tsx";
 // import CategoryForm from "./components/category/CategoryForm.tsx";
+// import Basket from "./components/basket/Basket.tsx";
 
 const Home = lazy(() => import("./components/Home.tsx"));
 const AboutUs = lazy(() => import("./components/layout/footer/AboutUs.tsx"));
@@ -33,6 +39,9 @@ const Franchising = lazy(() => import("./components/layout/footer/Franchising.ts
 const ReturnOfGoods = lazy(() => import("./components/layout/footer/ReturnOfGoods.tsx"));
 const CategoryTable = lazy(() => import("./components/category/CategoryTable"));
 const CategoryForm = lazy(() => import("./components/category/CategoryForm.tsx"));
+const SubCategoryTable = lazy(() => import("./components/subCategory/SubCategoryTable.tsx"));
+const SubCategoryForm = lazy(() => import("./components/subCategory/SubCategoryForm.tsx"));
+const OrderPage = lazy(() => import("./components/order/OrderPage.tsx"));
 
 export default function App() {
     return (
@@ -43,11 +52,18 @@ export default function App() {
                     <Route index element={<Home/>}/>
 
                     {/*Admin*/}
-                    <Route path="product-table" element={<ProductTable/>}/>
-                    <Route path="product-create" element={<ProductForm/>}/>
+                    <Route path="products" element={<ProductTable/>}/>
+                    <Route path="products/create" element={<ProductForm/>}/>
+                    <Route path="products/edit/:id" element={<ProductForm/>}/>
+                    <Route path="product-page/:id" element={<ProductPage/>}/>
 
-                    <Route path="category-table" element={<CategoryTable/>}/>
-                    <Route path="category-create" element={<CategoryForm/>}/>
+                    <Route path="categories" element={<CategoryTable/>}/>
+                    <Route path="categories/create" element={<CategoryForm/>}/>
+                    <Route path="categories/edit/:id" element={<CategoryForm/>}/>
+
+                    <Route path="subcategories" element={<SubCategoryTable/>}/>
+                    <Route path="subcategories/create" element={<SubCategoryForm/>}/>
+                    <Route path="subcategories/edit/:id" element={<SubCategoryForm/>}/>
 
                     {/*Footer*/}
                     <Route path="about-us" element={<AboutUs/>}/>
@@ -59,6 +75,8 @@ export default function App() {
                     <Route path="for-corporate-client" element={<ForCorporateClient/>}/>
 
                     <Route path="franchising" element={<Franchising/>}/>
+
+                    <Route path="order" element={<OrderPage/>}/>
                 </Route>
 
                 <Route path="" element={<CategoryLayout/>}>
