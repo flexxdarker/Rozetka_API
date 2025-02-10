@@ -65,8 +65,6 @@ namespace Rozetka_Api
                     .AllowAnyOrigin();
             });
 
- 
-
             app.UseSwagger();
             app.UseSwaggerUI();
             app.UseAuthentication();
