@@ -22,19 +22,109 @@ namespace DataAccess.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("AdvertFilterValue", b =>
+            modelBuilder.Entity("BusinessLogic.Enities.Basket", b =>
                 {
-                    b.Property<int>("AdvertsId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    b.Property<int>("FilterValuesId")
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AdvertId")
                         .HasColumnType("integer");
 
-                    b.HasKey("AdvertsId", "FilterValuesId");
+                    b.Property<int>("Count")
+                        .HasColumnType("integer");
 
-                    b.HasIndex("FilterValuesId");
+                    b.Property<DateTime>("DateAdded")
+                        .HasColumnType("timestamp with time zone");
 
-                    b.ToTable("AdvertFilterValue");
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdvertId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Baskets");
+                });
+
+            modelBuilder.Entity("BusinessLogic.Enities.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("DateCrated")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("OrderStatusId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderStatusId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("BusinessLogic.Enities.OrderAdvert", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AdvertId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Count")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("numeric");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdvertId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderAdverts");
+                });
+
+            modelBuilder.Entity("BusinessLogic.Enities.OrderStatus", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OrderStatuses");
                 });
 
             modelBuilder.Entity("BusinessLogic.Entities.Advert", b =>
@@ -48,16 +138,15 @@ namespace DataAccess.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("ContactEmail")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<decimal>("Discount")
+                        .HasColumnType("numeric");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("numeric");
@@ -71,6 +160,29 @@ namespace DataAccess.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Adverts");
+                });
+
+            modelBuilder.Entity("BusinessLogic.Entities.AdvertValue", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AdvertId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ValueId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdvertId");
+
+                    b.HasIndex("ValueId");
+
+                    b.ToTable("AdvertValue");
                 });
 
             modelBuilder.Entity("BusinessLogic.Entities.Category", b =>
@@ -411,19 +523,59 @@ namespace DataAccess.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("AdvertFilterValue", b =>
+            modelBuilder.Entity("BusinessLogic.Enities.Basket", b =>
                 {
-                    b.HasOne("BusinessLogic.Entities.Advert", null)
+                    b.HasOne("BusinessLogic.Entities.Advert", "Advert")
                         .WithMany()
-                        .HasForeignKey("AdvertsId")
+                        .HasForeignKey("AdvertId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BusinessLogic.Entities.FilterValue", null)
+                    b.HasOne("BusinessLogic.Entities.User", "User")
                         .WithMany()
-                        .HasForeignKey("FilterValuesId")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Advert");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BusinessLogic.Enities.Order", b =>
+                {
+                    b.HasOne("BusinessLogic.Enities.OrderStatus", "OrderStatus")
+                        .WithMany("Orders")
+                        .HasForeignKey("OrderStatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("BusinessLogic.Entities.User", "User")
+                        .WithMany("Orders")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("OrderStatus");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BusinessLogic.Enities.OrderAdvert", b =>
+                {
+                    b.HasOne("BusinessLogic.Entities.Advert", "Advert")
+                        .WithMany("Orders")
+                        .HasForeignKey("AdvertId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BusinessLogic.Enities.Order", "Order")
+                        .WithMany("OrderAdverts")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Advert");
+
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("BusinessLogic.Entities.Advert", b =>
@@ -431,10 +583,29 @@ namespace DataAccess.Migrations
                     b.HasOne("BusinessLogic.Entities.Category", "Category")
                         .WithMany("Adverts")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("BusinessLogic.Entities.AdvertValue", b =>
+                {
+                    b.HasOne("BusinessLogic.Entities.Advert", "Advert")
+                        .WithMany("Values")
+                        .HasForeignKey("AdvertId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BusinessLogic.Entities.FilterValue", "Value")
+                        .WithMany("Adverts")
+                        .HasForeignKey("ValueId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Advert");
+
+                    b.Navigation("Value");
                 });
 
             modelBuilder.Entity("BusinessLogic.Entities.Category", b =>
@@ -549,9 +720,23 @@ namespace DataAccess.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("BusinessLogic.Enities.Order", b =>
+                {
+                    b.Navigation("OrderAdverts");
+                });
+
+            modelBuilder.Entity("BusinessLogic.Enities.OrderStatus", b =>
+                {
+                    b.Navigation("Orders");
+                });
+
             modelBuilder.Entity("BusinessLogic.Entities.Advert", b =>
                 {
                     b.Navigation("Images");
+
+                    b.Navigation("Orders");
+
+                    b.Navigation("Values");
                 });
 
             modelBuilder.Entity("BusinessLogic.Entities.Category", b =>
@@ -570,8 +755,15 @@ namespace DataAccess.Migrations
                     b.Navigation("Values");
                 });
 
+            modelBuilder.Entity("BusinessLogic.Entities.FilterValue", b =>
+                {
+                    b.Navigation("Adverts");
+                });
+
             modelBuilder.Entity("BusinessLogic.Entities.User", b =>
                 {
+                    b.Navigation("Orders");
+
                     b.Navigation("RefreshTokens");
                 });
 #pragma warning restore 612, 618

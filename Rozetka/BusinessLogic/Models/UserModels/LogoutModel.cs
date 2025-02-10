@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BusinessLogic.Validators
+namespace BusinessLogic.Models.UserModels
 {
-    internal class Validators
+    public class LogoutModel
     {
+        public string RefreshToken { get; set; }
     }
 }

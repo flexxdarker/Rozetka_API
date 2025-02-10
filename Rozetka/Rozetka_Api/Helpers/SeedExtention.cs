@@ -1,7 +1,11 @@
-﻿
+﻿using BusinessLogic.Enities;
+using Microsoft.AspNetCore.Identity;
+using System.Reflection;
+
 using BusinessLogic.Interfaces;
 using DataAccess.Repostories;
 using Rozetka_Api.Models.CategoryConfigModels;
+using Rozetka_Api.Models.StatusModel;
 using Bogus;
 using static Rozetka_Api.Models.CategoryConfigModels.CategorySeedModel;
 using Bogus.DataSets;
@@ -14,11 +18,95 @@ using Newtonsoft.Json;
 using JsonException = Newtonsoft.Json.JsonException;
 using System.Globalization;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
 namespace Rozetka_Api.Helpers
 {
+    public static class Roles
+    {
+        public const string ADMIN = "admin";
+        public const string USER = "user";
+    }
+
     public static class Seeder
     {
+        public static async Task SeedRoles(this IServiceProvider app)
+        {
+            var roleManager = app.GetRequiredService<RoleManager<IdentityRole>>();
+
+            var roles = typeof(Roles).GetFields(
+                BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
+                .Select(x => (string)x.GetValue(null)!);
+
+            foreach (var role in roles)
+            {
+                if (!await roleManager.RoleExistsAsync(role))
+                {
+                    await roleManager.CreateAsync(new IdentityRole(role));
+                }
+            }
+        }
+
+        public static async Task SeedStatuses(this WebApplication app, IConfiguration config)
+        {
+            using var scope = app.Services.CreateScope();
+            var orderStatusRepo = scope.ServiceProvider.GetService<IRepository<OrderStatus>>()
+               ?? throw new NullReferenceException("IRepository<OrderStatus>");
+
+            if (!await orderStatusRepo.AnyAsync())
+            {
+                string statusesJsonDataFile = Path.Combine(Environment.CurrentDirectory, config.GetSection("SeederJsonDataDir").Value!, "StatusItem.json");
+                if (Path.Exists(statusesJsonDataFile))
+                {
+                    var statusesJson = File.ReadAllText(statusesJsonDataFile, Encoding.UTF8);
+                    if (!statusesJson.IsNullOrEmpty())
+                    {
+                        var statusesModels = JsonConvert.DeserializeObject<IEnumerable<StatusSeedModel>>(statusesJson)
+                                        ?? throw new JsonException("DeserializeObject<IEnumerable<StatusSeedModel>>");
+
+                        if (statusesModels.Any())
+                        {
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine("\nSeed Order statuses\n");
+                            Console.ForegroundColor = ConsoleColor.White;
+                            var statuses = statusesModels.Select(x => new OrderStatus()
+                            {
+                                Status = x.Status,
+                            });
+                            await orderStatusRepo.AddRangeAsync(statuses);
+                            await orderStatusRepo.SaveAsync();
+                        }
+                    }
+                    else Console.WriteLine($"File \"{Path.Combine(config.GetSection("SeederJsonDataDir").Value!, "Statuses.json")}\" null or empty");
+                }
+                else Console.WriteLine($"File \"{Path.Combine(config.GetSection("SeederJsonDataDir").Value!, "Statuses.json")}\" not found");
+            }
+        }
+
+        public static async Task SeedAdmin(this IServiceProvider app)
+        {
+            var userManager = app.GetRequiredService<UserManager<User>>();
+
+            const string USERNAME = "admin";
+            const string PASSWORD = "Admin1@";
+
+            var existingUser = await userManager.FindByNameAsync(USERNAME);
+
+            if (existingUser == null)
+            {
+                var user = new User
+                {
+                    UserName = USERNAME,
+                    Email = USERNAME
+                };
+
+                var result = await userManager.CreateAsync(user, PASSWORD);
+
+                if (result.Succeeded)
+                    await userManager.AddToRoleAsync(user, Roles.ADMIN);
+            }
+        }
+
         public static async Task SeedCategoriesAndFilters(this WebApplication app, IConfiguration config)
         {
             using var scope = app.Services.CreateScope();

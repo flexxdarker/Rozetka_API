@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
 using BusinessLogic.DTOs;
-using BusinessLogic.DTOs.Models;
+using BusinessLogic.DTOs.Filter;
 using BusinessLogic.Entities;
 using BusinessLogic.Interfaces;
+using BusinessLogic.Models.CategoryModels;
 using BusinessLogic.Specifications;
 using DataAccess.Repostories;
 using Microsoft.AspNetCore.Authorization;
@@ -16,35 +17,31 @@ namespace Rozetka_Api.Controllers
     public class CategoriesController : ControllerBase
     {
         private readonly ICategoryService categoriesService;
-        private readonly IFilterService filtersService;
-        private readonly IMapper mapper;
-        private readonly IRepository<Filter> filterRepo;
 
         public CategoriesController(ICategoryService categoriesService)
         {
            this.categoriesService = categoriesService;
         }
 
-
         [AllowAnonymous]
-        [HttpGet("getallcategories")]
+        [HttpGet("getall")]
         public async Task<IActionResult> GetAllCategories()
         {
             return Ok(await categoriesService.GetAllAsync());
         }
 
         [AllowAnonymous]
-        [HttpGet("getparentcategories")]
-        public async Task<IActionResult> GetParentCategories()
+        [HttpGet("getcategories")]
+        public async Task<IActionResult> GetCategories()
         {
             return Ok(await categoriesService.GetParentAsync());
         }
 
         [AllowAnonymous]
-        [HttpGet("getsubcategoriesof/{parentId:int}")]
-        public async Task<IActionResult> GetSubCategories([FromRoute] int parentId)
+        [HttpGet("gettree")]
+        public async Task<IActionResult> GetTree()
         {
-            return Ok(await categoriesService.GetSubAsync(parentId));
+            return Ok(await categoriesService.GetTreeAsync());
         }
 
         [AllowAnonymous]
@@ -54,23 +51,19 @@ namespace Rozetka_Api.Controllers
             return Ok(await categoriesService.GetByIdAsync(id));
         }
 
+        [AllowAnonymous]
         [HttpPut("create")]
-        public async Task<IActionResult> Create([FromForm] CategoryCreationModel categoryCreationModel)
+        public async Task<IActionResult> Create([FromForm] CategoryCreateModel categoryCreateModel)
         {
-            return Ok(await categoriesService.CreateAsync(categoryCreationModel));
+            return Ok(await categoriesService.CreateAsync(categoryCreateModel));
         }
 
-
         [AllowAnonymous]
-        [HttpGet("getfilters")]
-        public async Task<IActionResult> GetFilters([FromRoute] int categoryId)
+        [HttpDelete("delete/{id:int}")]
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var filters = await filterRepo.GetListBySpec(new FilterSpecs.GetAll());
-            if (filters == null)
-                return NotFound("Filters not found.");
-            return Ok(mapper.Map<IEnumerable<FilterDto>>(filters));
-
-            //return Ok(await filtersService.GetByCategoryIdAsync(categoryId));
+            await categoriesService.DeleteAsync(id);
+            return Ok();
         }
     }
 }

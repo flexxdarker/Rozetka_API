@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using BusinessLogic.DTOs;
+using BusinessLogic.DTOs.Filter;
 using BusinessLogic.Entities;
 using BusinessLogic.Interfaces;
 using BusinessLogic.Specifications;
@@ -40,6 +40,11 @@ namespace BusinessLogic.Services
         public async Task<FilterDto> GetByCategoryIdAsync(int categoryId)
         {
             return mapper.Map<FilterDto>(await filterRepo.GetItemBySpec(new FilterSpecs.GetCategoryFilters(categoryId)));
+        }
+
+        public async Task<IEnumerable<FilterValueDto>> GetValuesByIds(IEnumerable<int> ids)
+        {
+            return mapper.Map<IEnumerable<FilterValueDto>>(await values.GetListBySpec(new FilterSpecs.GetValues(ids)));
         }
     }
 }

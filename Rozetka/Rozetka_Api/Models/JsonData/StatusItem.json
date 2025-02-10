@@ -1,0 +1,15 @@
+[
+    {
+        "Status": "New Order"
+    },
+    {
+        "Status": "In progress"
+    },
+    {
+        "Status": "Completed"
+    },
+    {
+        "Status": "Canceled"
+    }
+
+]
