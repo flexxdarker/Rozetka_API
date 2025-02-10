@@ -39,10 +39,20 @@ namespace Rozetka_Api
             //    serviceProvider.SeedCategories(builder.Configuration).Wait();
             //}
 
+ 
+
             app.UseSwagger();
             app.UseSwaggerUI();
             app.UseAuthorization();
             app.MapControllers();
+
+            app.UseCors(options =>
+            {
+                options
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowAnyOrigin();
+            });
 
             await app.SeedCategoriesAndFilters(builder.Configuration);
             await app.RunAsync();
