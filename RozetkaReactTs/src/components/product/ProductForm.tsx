@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Form, type FormProps, Input, InputNumber, message, Select} from "antd";
+import {Button, Form, type FormProps, Input, message, Select} from "antd";
 import EditorTiny from "../other/EditorTiny.tsx";
 import {useParams} from "react-router-dom";
 import {ProductServices} from "../../services/productService.ts";
