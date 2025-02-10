@@ -75,6 +75,12 @@ namespace BusinessLogic.Services
         {
             var category = mapper.Map<Category>(categoryCreateModel);
 
+            if (categoryCreateModel.Image != null)
+            {
+                category.Image = await imageService.SaveImageAsync(categoryCreateModel.Image);
+            }
+
+
             await categoriesRepo.InsertAsync(category);
             await categoriesRepo.SaveAsync();
 
