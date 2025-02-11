@@ -3,7 +3,8 @@ export interface IRegisterModel {
     password: string;
     name: string;
     surname: string;
-    parentCategoryName: string;
+    birthdate: string;
+    // birthdate: dayjs.Dayjs;
 }
 
 export interface ILoginModel {

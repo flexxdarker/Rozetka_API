@@ -10,14 +10,22 @@ import balanceWhite from "./../../../assets/icons/balanceWhite.svg"
 import logo from "./../../../assets/icons/Logo_SVG_white 1.svg"
 import userWhite from "./../../../assets/icons/user-white.svg"
 import cartWhite from "./../../../assets/icons/cart-white.svg"
+import logoutWhite from "./../../../assets/icons/logoutWhite.svg"
 import Basket from "../../basket/Basket.tsx";
 import Modal from "../../other/Modal.tsx";
-
+import {TokenService} from "../../../services/tokenService.ts";
+import {AccountsService} from "../../../services/accountsService.ts";
 
 
 const Header = () => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isLogin, setIsLogin] = useState(TokenService.isExists());
+
+    const logout = () => {
+        AccountsService.logout(TokenService.getRefreshToken() || "")
+        setIsLogin(false);
+    }
 
     const openModal = () => {
         setIsModalOpen(true);
@@ -36,13 +44,13 @@ const Header = () => {
 
                     <div className="flex w-[378px] gap-[46px] items-center shrink-0 flex-nowrap relative z-[1]">
                         <Link to="/">
-                        <div
-                            className="flex w-[100px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] flex-col gap-[10px] items-start shrink-0 flex-nowrap relative z-[2]">
                             <div
-                                className="w-[80px] h-[51.202px] shrink-0 bg-cover bg-no-repeat relative overflow-hidden z-[3]">
-                                <img src={logo}/>
+                                className="flex w-[100px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] flex-col gap-[10px] items-start shrink-0 flex-nowrap relative z-[2]">
+                                <div
+                                    className="w-[80px] h-[51.202px] shrink-0 bg-cover bg-no-repeat relative overflow-hidden z-[3]">
+                                    <img src={logo}/>
+                                </div>
                             </div>
-                        </div>
                         </Link>
                         <button
                             className="flex w-[232px] pt-[8px] pr-[20px] pb-[8px] pl-[20px] gap-[10px] items-center shrink-0 flex-nowrap bg-[#9cc319] rounded-[8px] border-none relative z-[4] pointer">
@@ -97,17 +105,27 @@ const Header = () => {
                                 </div>
                             </div>
                         </button>
-                        <button
-                            className="flex w-[44px] pt-[8px] pr-[10px] pb-[8px] pl-[10px] gap-[10px] items-center shrink-0 flex-nowrap rounded-[8px] relative z-[21]">
-                            <div
-                                className="w-[24px] h-[24px] shrink-0 relative overflow-hidden z-[22]">
-                                <img src={userWhite}/>
-                            </div>
-                        </button>
+                        {isLogin ?
+                            <button onClick={logout}
+                                className="flex w-[44px] pt-[8px] pr-[10px] pb-[8px] pl-[10px] gap-[10px] items-center shrink-0 flex-nowrap rounded-[8px] relative z-[21]">
+                                <div
+                                    className="w-[24px] h-[24px] shrink-0 relative overflow-hidden z-[22]">
+                                        <img src={logoutWhite}/>
+                                </div>
+                            </button>
+                            :
+                            <Link to={"/signIn"}
+                                className="flex w-[44px] pt-[8px] pr-[10px] pb-[8px] pl-[10px] gap-[10px] items-center shrink-0 flex-nowrap rounded-[8px] relative z-[21]">
+                                <div
+                                    className="w-[24px] h-[24px] shrink-0 relative overflow-hidden z-[22]">
+                                        <img src={userWhite}/>
+                                </div>
+                            </Link>
+                        }
                     </div>
                     {/*<Link to={"basket"}>*/}
                     <button onClick={openModal}
-                        className="flex w-[139px] pt-[8px] pr-[20px] pb-[8px] pl-[20px] gap-[10px] items-center shrink-0 flex-nowrap bg-[#9cc319] rounded-[8px] border-none relative z-[23] pointer">
+                            className="flex w-[139px] pt-[8px] pr-[20px] pb-[8px] pl-[20px] gap-[10px] items-center shrink-0 flex-nowrap bg-[#9cc319] rounded-[8px] border-none relative z-[23] pointer">
                         <div
                             className="w-[24px] h-[24px] shrink-0 relative overflow-hidden z-[24]">
                             <img src={cartWhite}/>
@@ -119,7 +137,7 @@ const Header = () => {
           </span>
                     </button>
                     <Modal isOpen={isModalOpen} onClose={closeModal}>
-                        <Basket onClose={closeModal} />
+                        <Basket onClose={closeModal}/>
                     </Modal>
                     {/*</Link>*/}
                 </div>
@@ -161,7 +179,7 @@ const Header = () => {
 
             </Box>
         </>
-);
+    );
 
 }
 
