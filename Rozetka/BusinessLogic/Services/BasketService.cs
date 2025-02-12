@@ -1,4 +1,5 @@
-﻿using BusinessLogic.DTOs.Order;
+﻿using BusinessLogic.DTOs.Basket;
+using BusinessLogic.DTOs.Order;
 using BusinessLogic.Enities;
 using BusinessLogic.Entities;
 using BusinessLogic.Interfaces;
@@ -31,7 +32,7 @@ namespace BusinessLogic.Services
             _orderadvert = orderadvert;
         }
 
-        public async Task pushBasketById(string userId, int advertId)
+        public async Task pushBasketById(string userId, int advertId, int amount)//todo: add amount of product
         {
 
             var advert = await _advert.GetByIDAsync(advertId);
@@ -47,7 +48,8 @@ namespace BusinessLogic.Services
                 {
                     AdvertId = advert.Id,
                     UserId = userId,
-                    DateAdded = DateTime.UtcNow
+                    DateAdded = DateTime.UtcNow,
+                    Count = amount
                 });
 
                 await _basket.SaveAsync();
@@ -55,14 +57,19 @@ namespace BusinessLogic.Services
             else if (existingBasketItem != null)
             {
                 var item = await _basket.GetItemBySpec(new BasketSpecs.GetById(existingBasketItem.Id));
-                item.Count++;
+                item.Count += amount;
                 _basket.Update(item);
                 await _basket.SaveAsync();
             }
 
         }
-        public async Task pushBasketArray(string userId, int[] advertIds)
+        public async Task pushBasketArray(string userId, AddAdvertDto addAdvert)//todo: add amount of adverts
         {
+            if(addAdvert.AdvertsIds.Count != addAdvert.Amount.Count)
+            {
+                throw new HttpException("Invalid Value", System.Net.HttpStatusCode.BadRequest);
+            }
+
             // Отримуємо всі товари
             var items = await _advert.GetAsync();
             var adverts = items.ToArray();
@@ -77,7 +84,7 @@ namespace BusinessLogic.Services
             List<Advert> returnAdvert = new List<Advert>();
 
             // Для кожного ID продукту перевіряємо його наявність
-            foreach (var advertId in advertIds)
+            foreach (var advertId in addAdvert.AdvertsIds)
             {
                 var advert = adverts.FirstOrDefault(p => p.Id == advertId);
                 if (advert != null)
@@ -89,6 +96,7 @@ namespace BusinessLogic.Services
             foreach (var advert in returnAdvert)
             {
                 // Перевіряємо, чи вже є цей товар у кошику
+                int i = 0;
                 var existingItem = existingBasketItems.FirstOrDefault(b => b.AdvertId == advert.Id);
                 if (existingItem == null)
                 {
@@ -97,13 +105,14 @@ namespace BusinessLogic.Services
                     {
                         AdvertId = advert.Id,
                         UserId = userId,
-                        DateAdded = DateTime.UtcNow
+                        DateAdded = DateTime.UtcNow,
+                        Count = addAdvert.Amount[i]
                     });
                 }
                 else if (existingItem != null)
                 {
                     var item = await _basket.GetItemBySpec(new BasketSpecs.GetById(existingItem.Id));
-                    item.Count++;
+                    item.Count += addAdvert.Amount[i];
                     _basket.Update(item);
                     await _basket.SaveAsync();
                 }
@@ -127,28 +136,6 @@ namespace BusinessLogic.Services
                     Amount = x.Count,
                     ImagePaths = x.Advert.Images.Select(pi => pi.Name).ToList()
                 }).ToList();
-
-            return basketItems;
-        }
-        public async Task<List<BasketViewItem>> GetBasketItemsLogout(int[] array)
-        {
-            if (array == null || array.Length == 0)
-            {
-                return new List<BasketViewItem>();
-            }
-
-            var basketItems = await _advert.AsQueryable()
-                .Where(x=>array.Contains(x.Id))
-                .Select(x => new BasketViewItem
-                {
-                    Id = x.Id,
-                    Name = x.Title,
-                    Description = x.Description,
-                    Price = x.Price,
-                    Category = x.Category.Name,
-                    Amount = 1,
-                    ImagePaths = x.Images.Select(pi => pi.Name).ToList()
-                }).ToListAsync();
 
             return basketItems;
         }

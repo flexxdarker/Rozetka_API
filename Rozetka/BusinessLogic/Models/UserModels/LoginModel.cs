@@ -11,7 +11,7 @@ namespace BusinessLogic.Models.UserModels
     {
         public string Email { get; set; }
         public string Password { get; set; }
-        public List<int> Baskets { get; set; } = new List<int>();
-        public List<OrderItemDto>? OrderItem { get; set; }
+        //public List<int> Baskets { get; set; } = new List<int>();
+        //public List<OrderItemDto>? OrderItem { get; set; }
     }
 }

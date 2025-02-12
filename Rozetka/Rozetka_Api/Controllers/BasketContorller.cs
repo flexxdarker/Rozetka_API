@@ -1,5 +1,6 @@
 using AutoMapper;
 using BusinessLogic.DTOs;
+using BusinessLogic.DTOs.Basket;
 using BusinessLogic.DTOs.Order;
 using BusinessLogic.Entities;
 using BusinessLogic.Interfaces;
@@ -25,22 +26,22 @@ namespace Rozetka_Api.Controllers
 
         [Authorize]
         [HttpPost("CreateBasketId/{productId}")]
-        public async Task<IActionResult> CreateBasketId([FromRoute] int productId)
+        public async Task<IActionResult> CreateBasketId([FromRoute] int productId, int amount)
         {
             string userId = User.Claims.ToList()[0].Value.ToString();
 
-            await _basket.pushBasketById(userId, productId);
+            await _basket.pushBasketById(userId, productId, amount);
 
             return Ok();
         }
 
         [Authorize]
         [HttpPost("CreateBasketArray")]
-        public async Task<IActionResult> CreateBasketArray([FromRoute] int[] array)
+        public async Task<IActionResult> CreateBasketArray([FromForm] AddAdvertDto addAdvert)
         {
             string userId = User.Claims.ToList()[0].Value.ToString();
 
-            await _basket.pushBasketArray(userId, array);
+            await _basket.pushBasketArray(userId, addAdvert);
 
             return Ok();
         }
@@ -52,14 +53,6 @@ namespace Rozetka_Api.Controllers
             string userId = User.Claims.ToList()[0].Value.ToString();
 
             var basket = await _basket.GetBasketItems(userId);
-
-            return Ok(basket);
-        }
-
-        [HttpPost("GetBasketItemLogout")]
-        public async Task<IActionResult> GetBasketItemsLogout([FromBody] int[] array)
-        {
-            var basket = await _basket.GetBasketItemsLogout(array);
 
             return Ok(basket);
         }

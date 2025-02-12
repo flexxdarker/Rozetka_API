@@ -4,16 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BusinessLogic.DTOs.Advert;
+using BusinessLogic.DTOs.Basket;
 using BusinessLogic.DTOs.Order;
 
 namespace BusinessLogic.Interfaces
 {
     public interface IBasketService
     {
-        Task pushBasketById(string id, int user);
-        Task pushBasketArray(string userId, int[] productIds);
+        Task pushBasketById(string id, int user, int amount);
+        Task pushBasketArray(string userId, AddAdvertDto addAdvert);
         Task<List<BasketViewItem>> GetBasketItems(string userId/*, int[] array*/);
-        Task<List<BasketViewItem>> GetBasketItemsLogout(int[] array);
         Task DeleteProductFromBasket(string userId, int productId);
         Task PushOrder(string userId/*, List<OrderItemDto> orderItems*/);
         Task PushOrderWhenLogin(string userId, List<OrderItemDto> orderItems);
