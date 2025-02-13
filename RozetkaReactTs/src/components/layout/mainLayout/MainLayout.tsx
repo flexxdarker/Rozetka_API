@@ -27,7 +27,7 @@ const MainLayout: React.FC = () => {
                      }}>
                 <div
                     style={{
-                        background: colorBgContainer,
+                        // background: colorBgContainer,
                         minHeight: 800,
                         padding: 24,
                         borderRadius: borderRadiusLG,

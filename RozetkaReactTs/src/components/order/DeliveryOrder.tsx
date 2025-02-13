@@ -12,21 +12,22 @@ const DeliveryOrder: React.FC = () => {
     return (
         <>
             <h1>Delivery</h1>
-            <button onClick={handleToggle}
-                className="border-2 border-gray-500 p-4 main-container flex w-[900px] h-[100px] pt-[40px] pr-[40px] pb-[40px] pl-[40px] flex-col gap-[40px] items-start flex-nowrap bg-[#fff] rounded-[8px] relative overflow-hidden mx-auto my-0">
+            <div className="border-2 border-gray-500  rounded-[8px] bg-[#fff]">
+            <div onClick={handleToggle}
+                    className="p-4 main-container flex w-[100%] h-[100px] pt-[40px] pr-[40px] pb-[40px] pl-[40px] flex-col gap-[40px] items-start flex-nowrap  rounded-[8px] relative overflow-hidden mx-auto my-0">
                 <div className="flex w-[149px] gap-[10px] justify-center items-center shrink-0 flex-nowrap relative">
-        <span
-            className="h-[17px] shrink-0 basis-auto font-['Inter'] text-[24px] font-medium leading-[17px] text-[#9cc319] relative text-left whitespace-nowrap">
+                <span
+                    className="h-[17px] shrink-0 basis-auto font-['Inter'] text-[24px] font-medium leading-[17px] text-[#9cc319] relative text-left whitespace-nowrap">
           Доставка
         </span>
                 </div>
 
-            </button>
+            </div>
 
             {isOpen && (
                 <div
                     className="flex pt-0 pr-[60px] pb-0 pl-[60px] flex-col gap-[32px] items-start self-stretch shrink-0 flex-nowrap relative z-[2]">
-                    <div className="flex w-[500px] justify-between items-center shrink-0 flex-nowrap relative z-[3]">
+                <div className="flex w-[500px] justify-between items-center shrink-0 flex-nowrap relative z-[3]">
                         <div
                             className="flex w-[304px] flex-col gap-[32px] items-start shrink-0 flex-nowrap relative z-[4]">
                             <div className="flex w-[234px] items-center shrink-0 flex-nowrap relative z-[5]">
@@ -218,6 +219,7 @@ const DeliveryOrder: React.FC = () => {
 
                 </div>
             )}
+            </div>
         </>
     );
 };
