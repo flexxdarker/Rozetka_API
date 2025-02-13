@@ -21,15 +21,19 @@ namespace BusinessLogic.Services
         private readonly IRepository<Advert> advertRepo;
         private readonly IFilterService filterService;
         private readonly IAdvertValueService advertValueService;
+        private readonly IImageService imageService;
+
         public AdvertService(IMapper mapper, 
             IRepository<Advert> advertRepo,
             IFilterService filterService,
-            IAdvertValueService advertValueService)
+            IAdvertValueService advertValueService, 
+            IImageService imageService)
         {
             this.mapper = mapper;
             this.advertRepo = advertRepo;
             this.filterService = filterService;
             this.advertValueService = advertValueService;
+            this.imageService = imageService;
         }
 
         public async Task<AdvertDto> CreateAsync(AdvertCreationModel advertCreationModel)
@@ -68,6 +72,13 @@ namespace BusinessLogic.Services
                 Console.WriteLine("Не вдалося розпізнати культуру.");
             }
 
+            var images = advertCreationModel.ImageFiles.Select(async (x, index) => new Image()
+            {
+                Priority = index,
+                Name = await imageService.SaveImageAsync(x)
+            });
+
+            advert.Images = await Task.WhenAll(images);
             await advertRepo.InsertAsync(advert);
             await advertRepo.SaveAsync();
 

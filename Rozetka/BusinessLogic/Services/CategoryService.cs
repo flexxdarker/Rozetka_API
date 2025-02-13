@@ -77,7 +77,7 @@ namespace BusinessLogic.Services
 
             if (categoryCreateModel.Image != null)
             {
-                category.Image = await imageService.SaveImageAsync(categoryCreateModel.Image);
+                category.Image = await imageService.SaveImageAsync(categoryCreateModel.Image); 
             }
 
 

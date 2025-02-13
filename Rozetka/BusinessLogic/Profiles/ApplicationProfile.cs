@@ -25,8 +25,7 @@ namespace BusinessLogic.Profiles
         {
 
             CreateMap<Advert, AdvertDto>()
-                .ForMember(x => x.Values, opt => opt.MapFrom(z => z.Values.Select(y => y.ValueId)))
-                .ForMember(x => x.FirstImage, opt => opt.MapFrom(x => x.Images.FirstOrDefault(x => x.Priority == 0).Name ?? "Error first image"));
+                .ForMember(x => x.Values, opt => opt.MapFrom(z => z.Values.Select(y => y.ValueId)));
                 
             CreateMap<AdvertCreationModel, Advert>()
                 .ForMember(x => x.Values, opt => opt.Ignore())
