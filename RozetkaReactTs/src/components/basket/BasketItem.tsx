@@ -6,14 +6,15 @@ import plus from '../../assets/icons/plus.svg'
 import {BasketService} from "../../services/basketService.ts";
 import formatPrice from "../../functions/formatPrice.ts";
 // import "../ProductCard/ProductCard.css"
+import clsx from 'clsx';
 
 //import Typography from '../assets/contemplative-reptile.jpg';
 
 
-const BasketItem = (props: { item: IProductModel }) => {
+const BasketItem = (props: { item: IProductModel, className?: string }) => {
 
 
-     const {item} = props;
+     const {item, className} = props;
 
     const [count,setCount] = useState(BasketService.getCountById(item.id));
 
@@ -41,7 +42,7 @@ const BasketItem = (props: { item: IProductModel }) => {
         <>
             {count > 0 &&
                 <div
-                    className="flex pt-[20px] pr-[20px] pb-[20px] pl-[20px] gap-[28px] items-start self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[8px] relative">
+                    className={clsx("flex pt-[20px] pr-[20px] pb-[20px] pl-[20px] gap-[28px] items-start self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[8px] relative", className)}>
                     <div
                         className="w-[120px] h-[120px] shrink-0 bg-[url(../assets/images/fc949c96e71f6b333b628591585058d10ff16daa.png)] bg-cover bg-no-repeat relative"/>
                     <div

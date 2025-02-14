@@ -51,14 +51,13 @@ const OrderPage: React.FC = () => {
 
     return (
         <>
-            <h1>order page</h1>
             <div className="flex gap-[4px]">
-                <div className={"w-[900px]"}>
+                <div className="flex-col w-[900px]">
                     <ContactDetailsOrder/>
                     <DeliveryOrder/>
                     <PaymentOrder/>
                 </div>
-                <div className={"w-[648px]"}>
+                <div className="w-[648px]">
                     <div className="flex w-[100%] flex-col gap-[4px] items-start shrink-0 flex-nowrap relative">
                         <div
                             className="mb-[4px] flex pt-[10px] pr-[10px] pb-[10px] pl-[10px] justify-between items-start self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-tl-[8px] rounded-tr-[8px] rounded-br-none rounded-bl-none">
@@ -87,7 +86,7 @@ const OrderPage: React.FC = () => {
 
                         {
                             // productsInBasket.map(product => (<BasketItem item={product}/>))
-                            products.map(product => basket[product.id] > 0 ? <BasketItem item={product}/> : null)
+                            products.map(product => basket[product.id] > 0 ? <BasketItem item={product} className="rounded-none"/> : null)
                         }
 
                     </div>

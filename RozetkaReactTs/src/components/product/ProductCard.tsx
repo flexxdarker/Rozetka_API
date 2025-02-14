@@ -11,6 +11,7 @@ import heart from "../../assets/icons/heart.svg"
 import {Link} from "react-router-dom";
 import React from "react";
 import {BasketService} from "../../services/basketService.ts";
+import {Rate} from "antd";
 // import "../ProductCard/ProductCard.css"
 
 //import Typography from '../assets/contemplative-reptile.jpg';
@@ -101,44 +102,25 @@ const ProductCard = (props: { item: IProductModel }) => {
             </span>
                     </div>
                     <div
-                        className="flex flex-col gap-[4px] items-start self-stretch shrink-0 flex-nowrap relative">
+                        className="flex flex-col gap-[4px] items-start self-stretch shrink-0 flex-nowrap">
                         <div
-                            className="flex gap-[4px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] relative">
-                            <div className="flex w-[96px] gap-[4px] items-start shrink-0 flex-nowrap relative">
-                                <div className="w-[16px] h-[16px] shrink-0 relative">
-                                    <div
-                                        className="w-full h-full bg-[url(../assets/images/e5ff0844-291d-4c1c-813c-bf3a1331d1fa.png)] bg-[length:100%_100%] bg-no-repeat absolute top-0 left-0"/>
-                                </div>
-                                <div className="w-[16px] h-[16px] shrink-0 relative">
-                                    <div
-                                        className="w-full h-full bg-[url(../assets/images/85051587-2fff-45f7-8b82-9c38bc07b82b.png)] bg-[length:100%_100%] bg-no-repeat absolute top-0 left-0"/>
-                                </div>
-                                <div className="w-[16px] h-[16px] shrink-0 relative">
-                                    <div
-                                        className="w-full h-full bg-[url(../assets/images/721e8328-4d88-4057-9408-b49018fbe8e4.png)] bg-[length:100%_100%] bg-no-repeat absolute top-0 left-0"/>
-                                </div>
-                                <div className="w-[16px] h-[16px] shrink-0 relative">
-                                    <div
-                                        className="w-full h-full bg-[url(../assets/images/4345f84a-48d2-4c08-9e47-470beb81e624.png)] bg-[length:100%_100%] bg-no-repeat absolute top-0 left-0"/>
-                                </div>
-                                <div className="w-[16px] h-[16px] shrink-0 relative">
-                                    <div
-                                        className="w-full h-full bg-[url(../assets/images/0edfdb70-89df-4dcd-9173-902df5e1d7fc.png)] bg-[length:100%_100%] bg-no-repeat absolute top-0 left-0"/>
-                                </div>
+                            className="flex gap-[4px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff]">
+                            <div className="flex gap-[4px] items-start shrink-0 flex-nowrap">
+                                <Rate disabled defaultValue={2} />
                             </div>
-                            <div className="flex w-[46px] gap-[4px] items-start shrink-0 flex-nowrap relative">
+                            <div className="flex w-[46px] gap-[4px] items-start shrink-0 flex-nowrap">
                 <span
-                    className="h-[20px] shrink-0 basis-auto font-['Inter'] text-[10px] font-light leading-[20px] text-[#3b3b3b] relative text-left whitespace-nowrap">
+                    className="h-[20px] shrink-0 basis-auto font-['Inter'] text-[10px] font-light leading-[20px] text-[#3b3b3b] text-left whitespace-nowrap">
                   9 відгуків
                 </span>
                             </div>
                         </div>
 
                         <div
-                            className="flex justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff] relative">
+                            className="flex justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff]">
                             {item.discount > 0 ?
                                 <div
-                                    className="flex w-[66px] flex-col gap-[9px] items-start shrink-0 flex-nowrap relative">
+                                    className="flex w-[66px] flex-col gap-[9px] items-start shrink-0 flex-nowrap">
                                 <span
                                     className="h-[9px] shrink-0 font-['Inter'] text-[12px] font-medium leading-[9px] text-[#3b3b3b] relative text-left whitespace-nowrap line-through">
                                 {item.price}₴
