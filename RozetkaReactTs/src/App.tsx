@@ -55,7 +55,7 @@ export default function App() {
                     <Route path="products" element={<ProductTable/>}/>
                     <Route path="products/create" element={<ProductForm/>}/>
                     <Route path="products/edit/:id" element={<ProductForm/>}/>
-                    <Route path="product-page/:id" element={<ProductPage/>}/>
+                    {/*<Route path="product-page/:id" element={<ProductPage/>}/>*/}
 
                     <Route path="categories" element={<CategoryTable/>}/>
                     <Route path="categories/create" element={<CategoryForm/>}/>
@@ -78,6 +78,8 @@ export default function App() {
 
                     <Route path="order" element={<OrderPage/>}/>
                 </Route>
+
+                <Route path="product-page/:id" element={<ProductPage/>}/>
 
                 <Route path="" element={<CategoryLayout/>}>
                     <Route path="category-1" element={<ProductTable/>}/>

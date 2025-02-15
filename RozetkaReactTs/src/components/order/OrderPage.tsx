@@ -117,7 +117,7 @@ const OrderPage: React.FC = () => {
                             <div
                                 className="flex justify-between items-start self-stretch shrink-0 flex-nowrap bg-[#fff]">
                                 <div
-                                    className="flex w-[166px] flex-col items-start shrink-0 flex-nowrap relative">
+                                    className="flex w-[166px] flex-col items-start shrink-0 flex-nowrap">
                                     <div
                                         className="flex w-[166px] p-[10px] gap-[10px] items-center shrink-0 flex-nowrap">
                 <span
@@ -127,9 +127,9 @@ const OrderPage: React.FC = () => {
                                     </div>
                                 </div>
                                 <div
-                                    className="flex w-[127px] p-[10px] gap-[10px] justify-center items-center shrink-0 flex-nowrap">
+                                    className="flex p-[10px] gap-[10px] shrink-0 flex-nowrap">
               <span
-                  className="h-[15px] shrink-0 basis-auto font-['Inter'] text-[20px] font-semibold leading-[15px] text-[#3b3b3b] relative text-left whitespace-nowrap">
+                  className="h-[15px] shrink-0 basis-auto font-['Inter'] text-[20px] font-semibold leading-[15px] text-[#3b3b3b] text-right whitespace-nowrap">
                 {formatPrice(calculateTotalPrice())} грн
               </span>
                                 </div>
@@ -147,36 +147,36 @@ const OrderPage: React.FC = () => {
                                     </div>
                                 </div>
                                 <div
-                                    className="flex w-[147px] p-[10px] pr-[0px] gap-[10px] justify-end items-right shrink-0 flex-nowrap">
+                                    className="flex w-[147px] p-[10px] pr-[10px] gap-[10px] justify-end items-right shrink-0 flex-nowrap">
               <span
-                  className="h-[17px] shrink-0 basis-auto font-['Inter'] text-[24px] font-medium leading-[17px] text-[#3b3b3b] relative text-right whitespace-nowrap">
+                  className="h-[17px] shrink-0 basis-auto font-['Inter'] text-[24px] font-medium leading-[17px] text-[#3b3b3b] text-right whitespace-nowrap">
                 -{Math.floor(calculateTotalPrice() / 100)} грн
               </span>
                                 </div>
                             </div>
                             <div
-                                className="flex justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff] relative overflow-hidden">
-                                <div className="flex w-[164px] flex-col items-start shrink-0 flex-nowrap relative z-20">
+                                className="flex justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff] overflow-hidden">
+                                <div className="flex w-[164px] flex-col items-start shrink-0 flex-nowrap">
                                     <div
                                         className="flex pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] justify-center items-center self-stretch shrink-0 flex-nowrap">
                 <span
-                    className="h-[12px] shrink-0 font-['Inter'] text-[16px] font-medium leading-[12px] text-[#3b3b3b] relative text-left whitespace-nowrap">
+                    className="h-[12px] shrink-0 font-['Inter'] text-[16px] font-medium leading-[12px] text-[#3b3b3b] text-left whitespace-nowrap">
                   Всього до оплати:
                 </span>
                                     </div>
                                 </div>
                                 <div
-                                    className="flex w-[127px] p-[10px] gap-[10px] justify-center items-center shrink-0 flex-nowrap">
+                                    className="flex p-[10px] gap-[10px] shrink-0 flex-nowrap">
               <span
-                  className="h-[15px] shrink-0 basis-auto font-['Inter'] text-[20px] font-semibold leading-[15px] text-[#3b3b3b] relative text-left whitespace-nowrap">
+                  className="h-[15px] shrink-0 basis-auto font-['Inter'] text-[20px] font-semibold leading-[15px] text-[#3b3b3b] text-left whitespace-nowrap">
                 {formatPrice(calculateTotalPrice()-Math.floor(calculateTotalPrice() / 100))} грн
               </span>
                                 </div>
                             </div>
                             <button
-                                className="flex mt-[40px] h-[40px] flex-col gap-[20px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#9cc319] rounded-[8px] border-none relative z-[26] pointer">
+                                className="flex mt-[40px] h-[40px] flex-col gap-[20px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#9cc319] rounded-[8px] border-none pointer">
         <span
-            className="h-[12px] shrink-0 font-['Inter'] text-[16px] font-medium leading-[12px] text-[#fff] relative text-left whitespace-nowrap z-[27]">
+            className="h-[12px] shrink-0 font-['Inter'] text-[16px] font-medium leading-[12px] text-[#fff] text-left whitespace-nowrap">
           Замовлення підтверджую
         </span>
                             </button>
