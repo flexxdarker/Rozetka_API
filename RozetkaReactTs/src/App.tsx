@@ -6,6 +6,9 @@ import MainLayout from "./components/layout/mainLayout/MainLayout.tsx";
 import CategoryLayout from "./components/layout/categoryLayout/CategoryLayout.tsx";
 import ProductPage from "./components/product/ProductPage.tsx";
 import React from "react";
+import AccountLayout from "./components/layout/accountLayout/AccountLayout.tsx";
+// import AccountOrders from "./components/account/AccountOrders.tsx";
+// import AccountData from "./components/account/AccountData.tsx";
 // import OrderPage from "./components/order/OrderPage.tsx";
 // import SubCategoryTable from "./components/subCategory/SubCategoryTable.tsx";
 // import SubCategoryForm from "./components/subCategory/SubCategoryForm.tsx";
@@ -42,6 +45,8 @@ const CategoryForm = lazy(() => import("./components/category/CategoryForm.tsx")
 const SubCategoryTable = lazy(() => import("./components/subCategory/SubCategoryTable.tsx"));
 const SubCategoryForm = lazy(() => import("./components/subCategory/SubCategoryForm.tsx"));
 const OrderPage = lazy(() => import("./components/order/OrderPage.tsx"));
+const AccountData = lazy(() => import("./components/account/AccountData.tsx"));
+const AccountOrders = lazy(() => import("./components/account/AccountOrders.tsx"));
 
 export default function App() {
     return (
@@ -80,6 +85,11 @@ export default function App() {
                 </Route>
 
                 <Route path="product-page/:id" element={<ProductPage/>}/>
+
+                <Route path="account" element={<AccountLayout/>}>
+                    <Route path="data" element={<AccountData/>}/>
+                    <Route path="orders" element={<AccountOrders/>}/>
+                </Route>
 
                 <Route path="" element={<CategoryLayout/>}>
                     <Route path="category-1" element={<ProductTable/>}/>
