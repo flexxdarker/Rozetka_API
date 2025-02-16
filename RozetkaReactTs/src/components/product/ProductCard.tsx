@@ -8,10 +8,13 @@ import {IProductModel} from "../../models/productsModel.ts";
 import balance from "../../assets/icons/balance.svg"
 import cart from "../../assets/icons/cart.svg"
 import heart from "../../assets/icons/heart.svg"
+import heartRed from "../../assets/icons/heartFillRed.svg"
 import {Link} from "react-router-dom";
-import React from "react";
+import React, {useState} from "react";
 import {BasketService} from "../../services/basketService.ts";
 import {Rate} from "antd";
+import {WishListService} from "../../services/wishListService.ts";
+import formatPrice from "../../functions/formatPrice.ts";
 // import "../ProductCard/ProductCard.css"
 
 //import Typography from '../assets/contemplative-reptile.jpg';
@@ -20,6 +23,18 @@ import {Rate} from "antd";
 const ProductCard = (props: { item: IProductModel }) => {
 
     const {item} = props;
+
+    const [isWishList, setIsWishList] = useState(WishListService.checkId(item.id));
+
+    const WishListAdd = () => {
+        WishListService.addId(item.id)
+        setIsWishList(true); // Зміна стану відкриття/закриття
+    };
+
+    const WishListRemove = () => {
+        WishListService.removeId(item.id)
+        setIsWishList(false); // Зміна стану відкриття/закриття
+    };
 
     return (
 
@@ -71,16 +86,34 @@ const ProductCard = (props: { item: IProductModel }) => {
 
                         </div>
                     </div>
-                    <div className="flex w-[32px] flex-col items-start shrink-0 flex-nowrap">
+
+                    {isWishList ?
+                        (
+                            <button type="button" className="flex w-[32px] flex-col items-start shrink-0 flex-nowrap" onClick={WishListAdd}>
+                                <div
+                                    className="flex h-[32px] pt-[4px] pr-[4px] pb-[4px] pl-[4px] flex-col justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[4px] border-solid border-[0.5px] border-[#3b3b3b] overflow-hidden">
+                                    <div
+                                        // className="w-[24px] h-[24px] shrink-0">
+                                        className="w-[24px] h-[24px] bg-cover bg-no-repeat shrink-0 overflow-hidden">
+                                        <img src={heart}/>
+                                    </div>
+                                </div>
+                            </button>
+                        )
+                            :
+                        (
+                    <button type="button" className="flex w-[32px] flex-col items-start shrink-0 flex-nowrap" onClick={WishListRemove}>
                         <div
                             className="flex h-[32px] pt-[4px] pr-[4px] pb-[4px] pl-[4px] flex-col justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[4px] border-solid border-[0.5px] border-[#3b3b3b] overflow-hidden">
                             <div
                                 // className="w-[24px] h-[24px] shrink-0">
-                                 className="w-[24px] h-[24px] bg-cover bg-no-repeat shrink-0 overflow-hidden" style={{backgroundImage:`url(${heart})`}}>
-                                {/*<img src={heart}/>*/}
+                                 className="w-[24px] h-[24px] bg-cover bg-no-repeat shrink-0 overflow-hidden">
+                                <img src={heartRed}/>
                             </div>
                         </div>
-                    </div>
+                    </button>
+                    )}
+
                 </div>
             </div>
             <div className="flex flex-col gap-[16px] items-center self-stretch shrink-0 flex-nowrap">
@@ -123,18 +156,18 @@ const ProductCard = (props: { item: IProductModel }) => {
                                     className="flex w-[66px] flex-col gap-[9px] items-start shrink-0 flex-nowrap">
                                 <span
                                     className="h-[9px] shrink-0 font-['Inter'] text-[12px] font-medium leading-[9px] text-[#3b3b3b] text-left whitespace-nowrap line-through">
-                                {item.price}₴
+                                {formatPrice(item.price)}₴
                                 </span>
                                     <span
                                         className="flex w-[67px] h-[12px] items-center shrink-0 basis-auto font-['Inter'] text-[16px] font-semibold leading-[12px] text-[#e11515] text-center whitespace-nowrap">
-                                    {item.price - item.discount}₴
+                                    {formatPrice(item.price - item.discount)}₴
                                 </span>
                                 </div>
                                 : <div
                                     className="flex w-[66px] flex-col gap-[9px] items-start shrink-0 flex-nowrap">
                 <span
                     className="flex w-[68px] h-[12px] justify-center items-center shrink-0 basis-auto font-['Inter'] text-[16px] font-semibold leading-[12px] text-[#3b3b3b] text-center whitespace-nowrap">
-                  {item.price}₴
+                  {formatPrice(item.price)}₴
                 </span>
                                 </div>
                             }

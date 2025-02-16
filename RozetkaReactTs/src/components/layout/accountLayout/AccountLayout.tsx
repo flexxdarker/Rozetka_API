@@ -3,7 +3,6 @@ import {theme} from 'antd';
 import {Content} from "antd/es/layout/layout";
 import {Outlet} from "react-router-dom";
 import MainLoader from "../../loaders/MainLoader.tsx";
-import Breadcrumbs from "../../other/Breadcrumbs.tsx";
 import AccountMenu from "../../account/AccountMenu.tsx";
 
 

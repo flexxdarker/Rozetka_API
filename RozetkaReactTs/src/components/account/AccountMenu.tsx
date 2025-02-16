@@ -28,9 +28,7 @@ const AccountMenu: React.FC = () => {
           +380(97)055-55-55
         </span>
                     </div>
-
                 </Link>
-
 
                 <div
                     className="main-container flex w-[388px] pt-[32px] pr-0 pb-[32px] pl-0 flex-col gap-[16px] items-start flex-nowrap bg-[#fff] mx-auto my-0">
@@ -41,13 +39,13 @@ const AccountMenu: React.FC = () => {
           Мої замовлення
         </span>
                     </Link>
-                    <div
+                    <Link to="/account/wish-list"
                         className="flex pt-[10px] pr-[50px] pb-[10px] pl-[50px] gap-[10px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff]">
         <span
             className="h-[19px] shrink-0 basis-auto font-['Inter'] text-[16px] font-normal leading-[19px] text-[#3b3b3b] text-left whitespace-nowrap">
           Список бажань
         </span>
-                    </div>
+                    </Link>
                     <div
                         className="flex pt-[10px] pr-[50px] pb-[10px] pl-[50px] gap-[10px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff]">
         <span

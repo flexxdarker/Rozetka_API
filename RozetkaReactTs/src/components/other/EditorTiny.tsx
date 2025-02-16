@@ -18,7 +18,7 @@ const EditorTiny: FC<MyEditorProps> = ({initialValue,onEditorChange}) => {
     const handleEditorChange = (content: string) => {
         if (onEditorChange) {
             onEditorChange(content);
-            console.log(content)
+            //console.log(content)
         }
     };
 
