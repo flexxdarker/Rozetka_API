@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Form, type FormProps, Input, message, Select} from "antd";
+import {Button, Form, type FormProps, Input, message, Modal, Select, Upload, UploadFile} from "antd";
 import EditorTiny from "../other/EditorTiny.tsx";
 import {useParams} from "react-router-dom";
 import {ProductServices} from "../../services/productService.ts";
@@ -7,6 +7,8 @@ import {ICreateProductModel, IProductModel} from "../../models/productsModel.ts"
 import { useNavigate } from "react-router-dom";
 import {ICategoryName} from "../../models/categoriesModel.ts";
 import {CategoriesServices} from "../../services/categoriesService.ts";
+import { PlusOutlined } from '@ant-design/icons';
+import {RcFile, UploadChangeParam} from "antd/es/upload";
 
 
 const ProductForm: React.FC = () => {
@@ -20,12 +22,26 @@ const ProductForm: React.FC = () => {
     const [categories, setCategories] = useState<ICategoryName[]>([]);
 
     const [description, setEditorContent] = useState('');
+
     const handleEditorChange = (content: string) => {
         setEditorContent(content);
     };
 
+    const [previewOpen, setPreviewOpen] = useState<boolean>(false);
+    const [previewImage, setPreviewImage] = useState('');
+    const [previewTitle, setPreviewTitle] = useState('');
+
+    // const normFile = (e: any) => {
+    //     if (Array.isArray(e)) {
+    //         return e.map(file => file.originFileObj);  // Extract originFileObj from each file
+    //     }
+    //     return e?.fileList.map((file: any) => file.originFileObj);  // Extract originFileObj from the fileList
+    // };
+
+
     const onFinish: FormProps<ICreateProductModel>['onFinish'] = async (values) => {
-        console.log('Form values:', {...values, description}); // Обробка відправки форм
+            console.log('Form values:', {...values, description}); // Обробка відправки форм
+            // const imageFiles = values.imageFiles;
         if (editMode) {
             console.log("Success edit mode:", {...values, description});
             // values.image = values.image.originFileObj;//???????
@@ -146,6 +162,40 @@ const ProductForm: React.FC = () => {
                 </Form.Item>
 
 
+                <Form.Item name="imageFiles" label="Зображення" valuePropName="Image"
+                           rules={[{required: true, message: "Please choose a photo for the product."}]}
+                           getValueFromEvent={(e: UploadChangeParam) => {
+                               return e?.fileList.map(file => file.originFileObj);
+                           }}>
+
+                    <Upload beforeUpload={() => false} accept="image/*" maxCount={10} listType="picture-card" multiple
+                            onPreview={(file: UploadFile) => {
+                                if (!file.url && !file.preview) {
+                                    file.preview = URL.createObjectURL(file.originFileObj as RcFile);
+                                }
+
+                                setPreviewImage(file.url || (file.preview as string));
+                                setPreviewOpen(true);
+                                setPreviewTitle(file.name || file.url!.substring(file.url!.lastIndexOf('/') + 1));
+                            }}>
+
+                        <div>
+                            <PlusOutlined/>
+                            <div style={{marginTop: 8}}>Upload</div>
+                        </div>
+                    </Upload>
+                </Form.Item>
+
+                {/*<Form.Item label="Upload" valuePropName="fileList" getValueFromEvent={normFile}>*/}
+                {/*    <Upload action="/upload.do" listType="picture-card">*/}
+                {/*        <button style={{ border: 0, background: 'none' }} type="button">*/}
+                {/*            <PlusOutlined />*/}
+                {/*            <div style={{ marginTop: 8 }}>Upload</div>*/}
+                {/*        </button>*/}
+                {/*    </Upload>*/}
+                {/*</Form.Item>*/}
+
+
                 <Form.Item wrapperCol={{span: 24}} name="description">
                     <EditorTiny
                         //content={editMode && product !== null? product.description : ""}
@@ -160,6 +210,10 @@ const ProductForm: React.FC = () => {
                     </Button>
                 </Form.Item>
             </Form>
+
+            <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={() => setPreviewOpen(false)}>
+                <img alt="example" style={{width: '100%'}} src={previewImage}/>
+            </Modal>
         </>
     );
 };
