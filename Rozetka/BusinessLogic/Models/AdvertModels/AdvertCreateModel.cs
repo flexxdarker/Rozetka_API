@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace BusinessLogic.Models.CategoryModels
+namespace BusinessLogic.Models.AdvertModels
 {
-    public class CategoryCreateModel : BaseAdvertModel
+    public class AdvertCreateModel : BaseAdvertModel
     {
-        public IFormFile? Image { get; set; }
+
     }
 }

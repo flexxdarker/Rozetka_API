@@ -3,6 +3,7 @@ using BusinessLogic.DTOs;
 using BusinessLogic.DTOs.Advert;
 using BusinessLogic.Entities;
 using BusinessLogic.Interfaces;
+using BusinessLogic.Models;
 using BusinessLogic.Models.AdvertModels;
 using BusinessLogic.Specifications;
 using DataAccess.Repostories;
@@ -47,7 +48,7 @@ namespace BusinessLogic.Services
             return mapper.Map<AdvertDto>(await advertRepo.GetItemBySpec(new  AdvertSpecs.GetById(id)));
         }
 
-        public async Task<AdvertDto> CreateAsync(AdvertCreationModel advertCreationModel)
+        public async Task<AdvertDto> CreateAsync(AdvertCreateModel advertCreationModel)
         {
             var advert = mapper.Map<Advert>(advertCreationModel);
 
@@ -117,5 +118,33 @@ namespace BusinessLogic.Services
             }
         }
 
+        public async Task<AdvertDto> EditAsync(AdvertEditModel editModel)
+        {
+            var advert = await advertRepo.GetItemBySpec(new AdvertSpecs.GetById(editModel.Id));
+
+            //mapper.Map(editModel, advert);
+
+            if(editModel.ImageFiles != null)
+            {
+               var images = editModel.ImageFiles.Select(async (x, index) => new Image()
+               {
+                    Priority = index,
+                    Name = await imageService.SaveImageAsync(x)
+               });
+
+               advert.Images = await Task.WhenAll(images);
+            }
+
+
+            if (editModel.Values.Count() != 0)
+            {
+                foreach (var advertValue in editModel.Values)
+                {
+                    await advertValueService.CreateAsync(new AdvertValueCreationModel { AdvertId = editModel.Id, ValueId = advertValue });
+                }
+            }
+            await advertRepo.SaveAsync();
+            return mapper.Map<AdvertDto>(advert);
+        }
     }
 }

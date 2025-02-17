@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic.Models.CategoryModels
 {
-    public abstract class BaseCategoryModel
+    public abstract class BaseAdvertModel
     {
         public string Name { get; set; } = string.Empty;
         public int? ParentCategoryId { get; set; }

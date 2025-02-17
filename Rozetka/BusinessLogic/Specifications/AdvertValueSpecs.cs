@@ -19,6 +19,10 @@ namespace BusinessLogic.Specifications
         {
             public GetByAdvertId(int advertId) => Query.Where(x => x.AdvertId == advertId);
         }
+        public class GetByIds : Specification<AdvertValue>
+        {
+            public GetByIds(IEnumerable<int> ids) => Query.Where(x => ids.Contains(x.Id));
+        }
     }
 }
     

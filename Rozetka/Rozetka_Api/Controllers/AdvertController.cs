@@ -3,6 +3,7 @@ using BusinessLogic.DTOs;
 using BusinessLogic.Entities;
 using BusinessLogic.Interfaces;
 using BusinessLogic.Models.AdvertModels;
+using BusinessLogic.Models.CategoryModels;
 using BusinessLogic.Specifications;
 using DataAccess.Repostories;
 using Microsoft.AspNetCore.Authorization;
@@ -38,9 +39,16 @@ namespace Rozetka_Api.Controllers
 
         [AllowAnonymous]
         [HttpPut("create")]
-        public async Task<IActionResult> Create([FromForm] AdvertCreationModel advertCreationModel)
+        public async Task<IActionResult> Create([FromForm] AdvertCreateModel advertCreationModel)
         {
             return Ok(await advertService.CreateAsync(advertCreationModel));
+        }
+
+        [AllowAnonymous]
+        [HttpPost("edit")]
+        public async Task<IActionResult> Edit([FromForm] AdvertEditModel advertEditModel)
+        {
+            return Ok(await advertService.EditAsync(advertEditModel));
         }
 
         [AllowAnonymous]

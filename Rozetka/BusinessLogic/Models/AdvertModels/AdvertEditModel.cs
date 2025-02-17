@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BusinessLogic.Models.CategoryModels
+namespace BusinessLogic.Models.AdvertModels
 {
-    public class CategoryEditModel : BaseAdvertModel
+    public class AdvertEditModel : BaseAdvertModel
     {
         public int Id { get; set; }
     }

@@ -27,10 +27,14 @@ namespace BusinessLogic.Profiles
             CreateMap<Advert, AdvertDto>()
                 .ForMember(x => x.Values, opt => opt.MapFrom(z => z.Values.Select(y => y.ValueId)));
                 
-            CreateMap<AdvertCreationModel, Advert>()
+            CreateMap<AdvertCreateModel, Advert>()
                 .ForMember(x => x.Values, opt => opt.Ignore())
                 .ForMember(x => x.Price, opt => opt.Ignore())
                 .ForMember(x => x.Discount, opt => opt.Ignore())
+                .ReverseMap();
+
+            CreateMap<AdvertEditModel, Advert>()
+                .ForMember(x => x.Values, opt => opt.Ignore())
                 .ReverseMap();
 
             CreateMap<Category, CategoryDto>()
