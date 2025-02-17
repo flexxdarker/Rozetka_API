@@ -22,7 +22,6 @@ namespace Rozetka_Api.Controllers
            this.advertService = advertService;
         }
 
-
         [AllowAnonymous]
         [HttpGet("getall")]
         public async Task<IActionResult> GetAllAdverts()
@@ -42,6 +41,14 @@ namespace Rozetka_Api.Controllers
         public async Task<IActionResult> Create([FromForm] AdvertCreationModel advertCreationModel)
         {
             return Ok(await advertService.CreateAsync(advertCreationModel));
+        }
+
+        [AllowAnonymous]
+        [HttpDelete("delete/{id:int}")]
+        public async Task<IActionResult> Delete([FromRoute]int id)
+        {
+            await advertService.DeleteAsync(id);
+            return Ok();
         }
     }
 }

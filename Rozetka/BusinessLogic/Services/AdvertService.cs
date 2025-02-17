@@ -19,6 +19,7 @@ namespace BusinessLogic.Services
     {
         private readonly IMapper mapper;
         private readonly IRepository<Advert> advertRepo;
+        private readonly IRepository<Image> imageRepo;
         private readonly IFilterService filterService;
         private readonly IAdvertValueService advertValueService;
         private readonly IImageService imageService;
@@ -34,6 +35,16 @@ namespace BusinessLogic.Services
             this.filterService = filterService;
             this.advertValueService = advertValueService;
             this.imageService = imageService;
+        }
+
+        public async Task<IEnumerable<AdvertDto>> GetAllAsync()
+        {
+            return mapper.Map<IEnumerable<AdvertDto>>(await advertRepo.GetListBySpec(new AdvertSpecs.GetAll()));
+        }
+
+        public async Task<AdvertDto> GetByIdAsync(int id)
+        {
+            return mapper.Map<AdvertDto>(await advertRepo.GetItemBySpec(new  AdvertSpecs.GetById(id)));
         }
 
         public async Task<AdvertDto> CreateAsync(AdvertCreationModel advertCreationModel)
@@ -90,14 +101,21 @@ namespace BusinessLogic.Services
             return mapper.Map<AdvertDto>(advert);
         }
 
-        public async Task<IEnumerable<AdvertDto>> GetAllAsync()
+        public async Task DeleteAsync(int id)
         {
-            return mapper.Map<IEnumerable<AdvertDto>>(await advertRepo.GetListBySpec(new AdvertSpecs.GetAll()));
+            var advert = mapper.Map<AdvertDto>(await advertRepo.GetItemBySpec(new AdvertSpecs.GetById(id)));
+            if (advert != null)
+            {
+                await advertRepo.DeleteAsync(id);
+                await advertRepo.SaveAsync();
+                if (advert.Images != null) {
+                    foreach (var image in advert.Images)
+                    {
+                       imageService.DeleteImageIfExists(image.Name);
+                    }
+                }
+            }
         }
 
-        public async Task<AdvertDto> GetByIdAsync(int id)
-        {
-            return mapper.Map<AdvertDto>(await advertRepo.GetItemBySpec(new  AdvertSpecs.GetById(id)));
-        }
     }
 }
