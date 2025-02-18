@@ -10,8 +10,12 @@ namespace BusinessLogic.Entities
 {
     public class User : IdentityUser
     {
+        public string Name { get; set; }
+        public string SurName { get; set; }
         public string Image { get; set; } = string.Empty;
         public DateTime Birthdate { get; set; }
+        public int RoleId { get; set; }
+        public Role Role { get; set; }
         public ICollection<Order>? Orders { get; set; }
         public ICollection<RefreshToken>? RefreshTokens { get; set; }
     }

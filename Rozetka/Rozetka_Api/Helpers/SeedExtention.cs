@@ -90,7 +90,7 @@ namespace Rozetka_Api.Helpers
             const string USERNAME = "admin";
             const string PASSWORD = "Admin1@";
             const string IMAGE = "image";
-
+                
             var existingUser = await userManager.FindByNameAsync(USERNAME);
 
             if (existingUser == null)
@@ -99,7 +99,8 @@ namespace Rozetka_Api.Helpers
                 {
                     UserName = USERNAME,
                     Email = USERNAME,
-                    Image = IMAGE
+                    Image = IMAGE,
+                    RoleId = 1
                 };
 
                 var result = await userManager.CreateAsync(user, PASSWORD);

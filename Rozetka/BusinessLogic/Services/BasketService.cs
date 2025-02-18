@@ -243,5 +243,48 @@ namespace BusinessLogic.Services
 
             await _basket.SaveAsync();
         }
+
+        public async Task pushBasketByIds(string userId, int[] ids)
+        {
+            var items = await _advert.GetAsync();
+            var products = items.ToArray();
+
+            // Отримуємо всі товари в кошику
+            var baskets = await _basket.GetAsync();
+
+            // Фільтруємо товари в кошику для конкретного користувача
+            var existingBasketItems = baskets.Where(x => x.UserId == userId).ToList();
+
+            // Список товарів для додавання у кошик
+            List<Advert> returnAdverts = new List<Advert>();
+
+            // Для кожного ID продукту перевіряємо його наявність
+            foreach (var productId in ids)
+            {
+                var product = products.FirstOrDefault(p => p.Id == productId);
+                if (product != null)
+                {
+                    returnAdverts.Add(product);
+                }
+            }
+
+            foreach (var advert in returnAdverts)
+            {
+                // Перевіряємо, чи вже є цей товар у кошику
+                var existingItem = existingBasketItems.FirstOrDefault(b => b.AdvertId == advert.Id);
+                if (existingItem == null)
+                {
+                    // Додаємо новий товар у кошик
+                    await _basket.InsertAsync(new Basket
+                    {
+                        AdvertId = advert.Id,
+                        UserId = userId,
+                        DateAdded = DateTime.UtcNow
+                    });
+                }
+            }
+
+            await _basket.SaveAsync();
+        }
     }
 }

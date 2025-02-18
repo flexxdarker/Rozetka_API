@@ -1,5 +1,7 @@
 ﻿using BusinessLogic.DTOs.User;
+using BusinessLogic.Entities;
 using BusinessLogic.Models.UserModels;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +16,13 @@ namespace BusinessLogic.Interfaces
         Task<LoginResponseDto> Login(LoginModel model);
         Task Logout(string refreshToken);
         Task<UserTokens> RefreshTokens(UserTokens tokens);
-
+        Task<LoginResponseDto> GoogleSignInAsync(GoogleLoginDto loginDto);
+        Task EditUserAsync(UserEditDto editUserDto);
+        Task<IdentityResult> ChangePasswordAsync(ChangePasswordDto model, string idUser);
+        Task<User> GetUser(string id);
+        Task<IdentityResult> BlockUser(string userId);
+        Task<IdentityResult> UnblockUser(string userId);
+        Task<PagedResult<UserViewDto>> GetAllUsers(int pageNumber, int pageSize);
         Task RemoveExpiredRefreshTokens();
 
         //Task<ResetToken> GenerageResetToken(string email);

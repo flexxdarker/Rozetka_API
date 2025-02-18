@@ -11,6 +11,6 @@ namespace BusinessLogic.DTOs.User
     {
         public string Credential { get; set; } = null!;
         public List<int> Baskets { get; set; } = new List<int>();
-        public List<OrderItemDto>? Orders { get; set; }
+        public List<OrderItemDto>? OrderItems { get; set; }
     }
 }

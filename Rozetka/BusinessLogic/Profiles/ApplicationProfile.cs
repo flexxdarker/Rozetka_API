@@ -59,7 +59,9 @@ namespace BusinessLogic.Profiles
 
 
             CreateMap<RegisterModel, User>()
-                .ForMember(x => x.UserName, opts => opts.MapFrom(s => s.Email));
+                .ForMember(x => x.UserName, opts => opts.MapFrom(s => s.Email))
+                .ForMember(x => x.RoleId, opts => opts.MapFrom(_ => 2));
+                
         }
     }
 }

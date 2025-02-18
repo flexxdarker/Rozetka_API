@@ -4,6 +4,7 @@ using Ardalis.Specification.EntityFrameworkCore;
 using BusinessLogic.DTOs.Advert;
 using DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Repostories
 {
-   internal class Repository<TEntity> : IRepository<TEntity> where TEntity : class
+    internal class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
         internal RozetkaDbContext context;
         internal DbSet<TEntity> dbSet;
@@ -102,6 +103,21 @@ namespace DataAccess.Repostories
         public IQueryable<TEntity> AsQueryable()
         {
             return dbSet;
+        }
+
+        public async Task<IDbContextTransaction> BeginTransactionAsync()
+        {
+            return await context.Database.BeginTransactionAsync();
+        }
+
+        public async Task CommitTransactionAsync(IDbContextTransaction transaction)
+        {
+            await transaction.CommitAsync();
+        }
+
+        public async Task RollbackTransactionAsync(IDbContextTransaction transaction)
+        {
+            await transaction.RollbackAsync();
         }
     }
 }

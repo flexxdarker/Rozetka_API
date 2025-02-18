@@ -13,6 +13,7 @@ namespace BusinessLogic.Interfaces
     {
         Task pushBasketById(string id, int user, int amount);
         Task pushBasketArray(string userId, AddAdvertDto addAdvert);
+        Task pushBasketByIds(string userId, int[] ids);
         Task<List<BasketViewItem>> GetBasketItems(string userId/*, int[] array*/);
         Task DeleteProductFromBasket(string userId, int productId);
         Task PushOrder(string userId/*, List<OrderItemDto> orderItems*/);
