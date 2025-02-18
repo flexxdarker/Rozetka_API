@@ -18,26 +18,28 @@ import formatPrice from "../../functions/formatPrice.ts";
 // import "../ProductCard/ProductCard.css"
 
 //import Typography from '../assets/contemplative-reptile.jpg';
+interface ItemProps {
+    item: IProductModel;
+}
 
 
-const ProductCard = (props: { item: IProductModel }) => {
+const ProductCard: React.FC<ItemProps> = ({item}) => {
 
-    const {item} = props;
+    //const {item, updateParentState} = props;
 
     const [isWishList, setIsWishList] = useState(WishListService.checkId(item.id));
 
     const WishListAdd = () => {
         WishListService.addId(item.id)
-        setIsWishList(true); // Зміна стану відкриття/закриття
+        setIsWishList(!isWishList); // Зміна стану відкриття/закриття
     };
 
     const WishListRemove = () => {
         WishListService.removeId(item.id)
-        setIsWishList(false); // Зміна стану відкриття/закриття
+        setIsWishList(!isWishList); // Зміна стану відкриття/закриття
     };
 
     return (
-
         <div
             className="main-container flex w-[286px] pt-[20px] pr-[20px] pb-[20px] pl-[20px] flex-col items-start flex-nowrap bg-[#fff] mx-auto my-0">
             <div className="flex justify-between items-start self-stretch shrink-0 flex-nowrap">
@@ -54,13 +56,13 @@ const ProductCard = (props: { item: IProductModel }) => {
                             </div>
                         </button>
                         {item.discount > 0 ?
-                        <button
-                            className="flex w-[32px] pt-[4px] pr-[4px] pb-[4px] pl-[4px] flex-col justify-center items-center shrink-0 flex-nowrap bg-[#e11515] border-none pointer">
+                            <button
+                                className="flex w-[32px] pt-[4px] pr-[4px] pb-[4px] pl-[4px] flex-col justify-center items-center shrink-0 flex-nowrap bg-[#e11515] border-none pointer">
               <span
                   className="flex w-[24px] h-[7px] justify-center items-center shrink-0 font-['Inter'] text-[10px] font-normal leading-[10px] text-[#fff] text-center uppercase whitespace-nowrap">
-                -{Math.round(item.discount/(item.price/100))}%
+                -{Math.round(item.discount / (item.price / 100))}%
               </span>
-                        </button>
+                            </button>
                             :
                             ""
                         }
@@ -79,7 +81,7 @@ const ProductCard = (props: { item: IProductModel }) => {
                             className="flex w-[32px] pt-[4px] pr-[4px] pb-[4px] pl-[4px] items-center shrink-0 flex-nowrap bg-[#fff] rounded-[4px] border-solid border-[0.5px] border-[#3b3b3b]">
                             <div
                                 className="w-[24px] h-[24px] shrink-0 overflow-hidden">
-                                 {/*className="w-[23px] h-[20px] bg-cover bg-no-repeat shrink-0 overflow-hidden z-[12]" style={{backgroundImage:`url(${balance})`}}>*/}
+                                {/*className="w-[23px] h-[20px] bg-cover bg-no-repeat shrink-0 overflow-hidden z-[12]" style={{backgroundImage:`url(${balance})`}}>*/}
                                 {/*className="w-[24px] h-[24px] shrink-0 bg-[url(./assets/icons/balance.svg)] bg-cover bg-no-repeat overflow-hidden z-[12]">*/}
                                 <img src={balance}/>
                             </div>
@@ -87,41 +89,28 @@ const ProductCard = (props: { item: IProductModel }) => {
                         </div>
                     </div>
 
-                    {isWishList ?
-                        (
-                            <button type="button" className="flex w-[32px] flex-col items-start shrink-0 flex-nowrap" onClick={WishListAdd}>
-                                <div
-                                    className="flex h-[32px] pt-[4px] pr-[4px] pb-[4px] pl-[4px] flex-col justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[4px] border-solid border-[0.5px] border-[#3b3b3b] overflow-hidden">
-                                    <div
-                                        // className="w-[24px] h-[24px] shrink-0">
-                                        className="w-[24px] h-[24px] bg-cover bg-no-repeat shrink-0 overflow-hidden">
-                                        <img src={heart}/>
-                                    </div>
-                                </div>
-                            </button>
-                        )
-                            :
-                        (
-                    <button type="button" className="flex w-[32px] flex-col items-start shrink-0 flex-nowrap" onClick={WishListRemove}>
+
+                    <button type="button" className="flex w-[32px] flex-col items-start shrink-0 flex-nowrap"
+                            onClick={isWishList ? WishListAdd : WishListRemove}>
                         <div
                             className="flex h-[32px] pt-[4px] pr-[4px] pb-[4px] pl-[4px] flex-col justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[4px] border-solid border-[0.5px] border-[#3b3b3b] overflow-hidden">
                             <div
                                 // className="w-[24px] h-[24px] shrink-0">
-                                 className="w-[24px] h-[24px] bg-cover bg-no-repeat shrink-0 overflow-hidden">
-                                <img src={heartRed}/>
+                                className="w-[24px] h-[24px] bg-cover bg-no-repeat shrink-0 overflow-hidden">
+                                {isWishList ? <img src={heart}/> : <img src={heartRed}/>}
+                                {/*<img src={heart}/>*/}
                             </div>
                         </div>
                     </button>
-                    )}
 
                 </div>
             </div>
             <div className="flex flex-col gap-[16px] items-center self-stretch shrink-0 flex-nowrap">
                 <Link to={`product-page/${item.id}`}>
-                <div
-                    className="w-[220px] h-[220px] shrink-0 bg-[url(./assets/69_4000.png)] bg-cover bg-no-repeat ">
-                    {/*<img src={cart}/>*/}
-                </div>
+                    <div
+                        className="w-[220px] h-[220px] shrink-0 bg-[url(./assets/69_4000.png)] bg-cover bg-no-repeat ">
+                        {/*<img src={cart}/>*/}
+                    </div>
                 </Link>
                 <div className="flex flex-col gap-[8px] items-start self-stretch shrink-0 flex-nowrap">
                     <div
@@ -139,7 +128,7 @@ const ProductCard = (props: { item: IProductModel }) => {
                         <div
                             className="flex gap-[4px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff]">
                             <div className="flex gap-[4px] items-start shrink-0 flex-nowrap">
-                                <Rate disabled defaultValue={2} />
+                                <Rate disabled defaultValue={2}/>
                             </div>
                             <div className="flex w-[46px] gap-[4px] items-start shrink-0 flex-nowrap">
                 <span
@@ -320,3 +309,40 @@ const ProductCard = (props: { item: IProductModel }) => {
 };
 
 export default ProductCard;
+
+//
+// import React, { useState } from 'react';
+// import { IProductModel } from '../../models/productsModel';
+//
+// interface ProductCardProps {
+//     item: IProductModel;
+//     updateParentState: (newValue: number) => void;
+// }
+//
+// const ProductCard: React.FC<ProductCardProps> = ({ item, updateParentState }) => {
+//     const [isWishList, setIsWishList] = useState<boolean>(false);
+//
+//     // Додаємо в список бажаних
+//     const WishListAdd = () => {
+//         setIsWishList(true);
+//         updateParentState(1); // Оновлюємо стан батьківського компонента
+//     };
+//
+//     // Видаляємо зі списку бажаних
+//     const WishListRemove = () => {
+//         setIsWishList(false);
+//         updateParentState(0); // Оновлюємо стан батьківського компонента
+//     };
+//
+//     return (
+//         <div>
+//             <h2>{item.title}</h2>
+//             {isWishList ? 'In Wishlist' : 'Not in Wishlist'}
+//             <button onClick={WishListAdd}>Add to Wishlist</button>
+//             <button onClick={WishListRemove}>Remove from Wishlist</button>
+//         </div>
+//     );
+// };
+//
+// export default ProductCard;
+

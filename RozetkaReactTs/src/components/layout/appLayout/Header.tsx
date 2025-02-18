@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import {Link} from "react-router-dom";
@@ -16,9 +16,55 @@ import Basket from "../../basket/Basket.tsx";
 import Modal from "../../other/Modal.tsx";
 import {TokenService} from "../../../services/tokenService.ts";
 import {AccountsService} from "../../../services/accountsService.ts";
+import { AutoComplete, } from 'antd';
+import type { AutoCompleteProps } from 'antd';
+import {IProductModel} from "../../../models/productsModel.ts";
+import {ProductServices} from "../../../services/productService.ts";
+
 
 
 const Header = () => {
+
+    const [products,setProducts] = useState<IProductModel[]>([]);
+
+    const loadProducts = async () => {
+        const res = await ProductServices.getAll();
+        console.log(res);
+        setProducts(res.data);
+    };
+
+
+    useEffect(() => {
+        loadProducts();
+    }, []);
+
+    const searchResult = (query: string) => {
+        const filteredProducts = products.filter(
+            (product) =>
+                product.title.toLowerCase().includes(query.toLowerCase())
+                //|| product.category.toLowerCase().includes(query.toLowerCase())
+        );
+
+        return filteredProducts.map((product) => ({
+            value: product.title,
+            label: (
+                <Link to={`product-page/${product.id}`}>
+
+
+                <div
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                    }}
+                >
+                    <span>{product.title}</span>
+                    {/*<span>{product.category}</span>*/}
+                    <span>category</span>
+                </div>
+                </Link>
+            ),
+        }));
+    };
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isLogin, setIsLogin] = useState(TokenService.isExists());
@@ -34,6 +80,17 @@ const Header = () => {
 
     const closeModal = () => {
         setIsModalOpen(false);
+    };
+
+
+    const [options, setOptions] = useState<AutoCompleteProps['options']>([]);
+
+    const handleSearch = (value: string) => {
+        setOptions(value ? searchResult(value) : []);
+    };
+
+    const onSelect = (value: string) => {
+        console.log('onSelect', value);
     };
 
 
@@ -68,21 +125,40 @@ const Header = () => {
                             </button>
                         </div>
 
-                        <div className="h-[40px] flex w-[600px] pt-0 pr-0 pb-0 pl-[10px] items-center shrink-0 flex-nowrap bg-[#fff] rounded-[8px] border-solid border border-[#000] overflow-hidden">
-                            <input placeholder="Я шукаю...(наприклад, смартфон)" className="grow">
-                            </input>
-
-                            <div
-                                className="flex w-[44px] pt-[8px] pr-[10px] pb-[8px] pl-[10px] gap-[10px] items-center shrink-0 flex-nowrap">
-                                <div className="flex w-[24px] gap-[10px] items-center shrink-0 flex-nowrap">
-                                    <div
-                                        className="h-[24px] grow shrink-0 basis-0 overflow-hidden">
-                                        <img src={search}/>
-                                        {/*<search></search>*/}
-                                    </div>
-                                </div>
-                            </div>
+                        <div className="relative flex">
+                            <AutoComplete
+                                className="h-[40px] flex w-[600px] pt-0 pr-0 pb-0 pl-[10px] items-center shrink-0 flex-nowrap bg-[#fff] rounded-[8px] border-solid border border-[#000] overflow-hidden z-[1]"
+                                options={options}
+                                onSelect={onSelect}
+                                onSearch={handleSearch}
+                                allowClear={false}
+                                notFoundContent={"Товар не знайдено"}
+                                size="large"
+                            >
+                                {/*<Input.Search size="large" placeholder="input here" enterButton/>*/}
+                                <input placeholder="Я шукаю...(наприклад, смартфон)" className="grow"/>
+                            </AutoComplete>
+                            <img src={search} className="absolute right-[10px] top-[50%] transform -translate-y-1/2 z-[2]"/>
                         </div>
+
+
+
+                        {/*<div*/}
+                        {/*    className="h-[40px] flex w-[600px] pt-0 pr-0 pb-0 pl-[10px] items-center shrink-0 flex-nowrap bg-[#fff] rounded-[8px] border-solid border border-[#000] overflow-hidden">*/}
+                        {/*    <input placeholder="Я шукаю...(наприклад, смартфон)" className="grow">*/}
+                        {/*    </input>*/}
+
+                        {/*    <div*/}
+                        {/*        className="flex w-[44px] pt-[8px] pr-[10px] pb-[8px] pl-[10px] gap-[10px] items-center shrink-0 flex-nowrap">*/}
+                        {/*        <div className="flex w-[24px] gap-[10px] items-center shrink-0 flex-nowrap">*/}
+                        {/*        <div*/}
+                        {/*                className="h-[24px] grow shrink-0 basis-0 overflow-hidden">*/}
+                        {/*                <img src={search}/>*/}
+                        {/*                /!*<search></search>*!/*/}
+                        {/*            </div>*/}
+                        {/*        </div>*/}
+                        {/*    </div>*/}
+                        {/*</div>*/}
 
                         <div className="flex gap-[24px] items-center shrink-0 flex-nowrap">
                             <button
