@@ -122,22 +122,23 @@ namespace BusinessLogic.Services
         {
             var advert = await advertRepo.GetItemBySpec(new AdvertSpecs.GetById(editModel.Id));
 
-            //mapper.Map(editModel, advert);
+            mapper.Map(editModel, advert);
 
-            if(editModel.ImageFiles != null)
-            {
-               var images = editModel.ImageFiles.Select(async (x, index) => new Image()
-               {
-                    Priority = index,
-                    Name = await imageService.SaveImageAsync(x)
-               });
+            if (editModel.ImageFiles != null)
+            {                         
+                //var images = editModel.ImageFiles.Select(async (x, index) => new Image()
+                //{
+                //    Priority = index,
+                //    Name = await imageService.SaveImageAsync(x)
+                //});
 
-               advert.Images = await Task.WhenAll(images);
+                //advert.Images = await Task.WhenAll(images);
             }
 
 
             if (editModel.Values.Count() != 0)
             {
+                await advertValueService.DeleteAsync(editModel.Id);
                 foreach (var advertValue in editModel.Values)
                 {
                     await advertValueService.CreateAsync(new AdvertValueCreationModel { AdvertId = editModel.Id, ValueId = advertValue });

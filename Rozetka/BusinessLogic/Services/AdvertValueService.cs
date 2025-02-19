@@ -31,7 +31,7 @@ namespace BusinessLogic.Services
         public async Task<AdvertValueDto> CreateAsync(AdvertValueCreationModel creationModel)
         {
             var advertValue = mapper.Map<AdvertValue>(creationModel);
-            await advertValueRepo.InsertAsync(new AdvertValue { AdvertId = creationModel.AdvertId, ValueId = creationModel.ValueId });
+            await advertValueRepo.InsertAsync(advertValue);
             await advertValueRepo.SaveAsync();
             return mapper.Map<AdvertValueDto>(advertValue);
         }
@@ -49,6 +49,16 @@ namespace BusinessLogic.Services
         public async Task<IEnumerable<AdvertValueDto>> GetByIdsAsync(IEnumerable<int> ids)
         {
             return mapper.Map<IEnumerable<AdvertValueDto>>(await advertValueRepo.GetListBySpec(new AdvertValueSpecs.GetByIds(ids)));
+        }
+
+        public async Task DeleteAsync(int advertId)
+        {
+            var advertValue = mapper.Map<IEnumerable<AdvertValueDto>>(await advertValueRepo.GetListBySpec(new AdvertValueSpecs.GetByAdvertId(advertId)));
+            foreach (var value in advertValue)
+            {
+                await advertValueRepo.DeleteAsync(value.Id);
+                await advertValueRepo.SaveAsync();
+            }
         }
     }
 }
