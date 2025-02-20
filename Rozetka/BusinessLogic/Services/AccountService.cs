@@ -3,6 +3,7 @@ using BusinessLogic.DTOs.Basket;
 using BusinessLogic.DTOs.User;
 using BusinessLogic.Enities;
 using BusinessLogic.Entities;
+using BusinessLogic.Exceptions;
 using BusinessLogic.Helpers;
 using BusinessLogic.Interfaces;
 using BusinessLogic.Models.UserModels;
@@ -220,13 +221,14 @@ namespace BusinessLogic.Services
 
         private async Task<Google.Apis.Auth.GoogleJsonWebSignature.Payload> GetPayloadAsync(string credential)
         {
-            return await ValidateAsync(
-                credential,
-                new ValidationSettings
-                {
-                    Audience = [_configuration["Authentication:Google:ClientId"]]
-                }
-            );
+            throw new Exception();
+            //return await ValidateAsync(
+            //    credential,
+            //    new ValidationSettings
+            //    {
+            //        Audience = [_configuration["Authentication:Google:ClientId"]]
+            //    }
+            //);
         }
 
         public async Task<LoginResponseDto> GoogleSignInAsync(GoogleLoginDto loginDto)

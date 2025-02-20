@@ -26,6 +26,8 @@ namespace DataAccess.Data
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<User> User { get; set; }
 
+        public DbSet<Role> Role { get; set; }
+
         public RozetkaDbContext(DbContextOptions options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -91,6 +93,14 @@ namespace DataAccess.Data
 
             modelBuilder.Entity<Order>()
                 .HasKey(cf=>cf.Id);
+
+            modelBuilder.Entity<Role>().
+                HasKey(cf => cf.Id);
+
+            modelBuilder.Entity<Role>()
+                .HasMany(cf => cf.users)
+                .WithOne(cf => cf.Role)
+                .HasForeignKey(cf => cf.RoleId);
 
         }
 
