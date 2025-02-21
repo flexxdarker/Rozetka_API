@@ -14,6 +14,8 @@ namespace BusinessLogic.DTOs.User
         public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
         public string Image { get; set; } = string.Empty;
-        public string Role { get; set; }
+        public bool LockoutEnabled { get; set; } = false;
+        public DateTimeOffset? LockoutEnd { get; set; }
+        public string Roles { get; set; }
     }
 }

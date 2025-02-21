@@ -43,13 +43,14 @@ namespace Rozetka_Api.Controllers
         {
             return Ok(await accountsService.Login(model));
         }
-
+        [Authorize]
         [HttpPost("refreshTokens")]
         public async Task<IActionResult> RefreshTokens(UserTokens tokens)
         {
             return Ok(await accountsService.RefreshTokens(tokens));
         }
 
+        [Authorize]
         [HttpPost("logout")]
         public async Task<IActionResult> Logout(LogoutModel model)
         {

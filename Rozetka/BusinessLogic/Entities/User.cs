@@ -14,6 +14,7 @@ namespace BusinessLogic.Entities
         public string SurName { get; set; }
         public string Image { get; set; } = string.Empty;
         public DateTime Birthdate { get; set; }
+        public virtual ICollection<UserRole> UserRoles { get; set; }
         public ICollection<Order>? Orders { get; set; }
         public ICollection<RefreshToken>? RefreshTokens { get; set; }
     }

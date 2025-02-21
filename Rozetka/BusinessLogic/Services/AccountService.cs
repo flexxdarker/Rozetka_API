@@ -97,7 +97,7 @@ namespace BusinessLogic.Services
             loginResponse.RefreshToken = CreateRefreshToken(user.Id).Token;
 
 
-            if (model.Baskets.Count > 0)
+            if (model.Baskets == null)
             {
 
                 // Перетворюємо кошик у масив
@@ -142,11 +142,11 @@ namespace BusinessLogic.Services
                 loginResponse.Baskets = newListIdBasket;
             }
 
-            if (model.OrderItem.Count > 0)
+            if (model.OrderItem != null)
             {
-
                 await basketService.PushOrderWhenLogin(user.Id, model.OrderItem);
             }
+            loginResponse.IsSuccess = true;
 
             return loginResponse;
         }
@@ -436,27 +436,26 @@ namespace BusinessLogic.Services
 
         public async Task<PagedResult<UserViewDto>> GetAllUsers(int pageNumber, int pageSize)
         {
-            //var query = userRepo.AsQueryable().Include(x => x.Role).ThenInclude(ur => ur.Name);
+            var query = userRepo.AsQueryable().Include(x => x.UserRoles).ThenInclude(ur => ur.Role);
 
-            // Загальна кількість користувачів
-            //var totalUsers = await query.CountAsync();
+            //Загальна кількість користувачів
+            var totalUsers = await query.CountAsync();
 
-            // Повернення користувачів для конкретної сторінки
-            //var users = await query
-            //    .Skip((pageNumber - 1) * pageSize)
-            //    .Take(pageSize)
-            //    .ToListAsync();
+            //Повернення користувачів для конкретної сторінки
+            var users = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
 
-            //var userDtos = mapper.Map<List<UserViewDto>>(users);
+            var userDtos = mapper.Map<List<UserViewDto>>(users);
 
-            //return new PagedResult<UserViewDto>
-            //{
-            //    Items = userDtos,
-            //    TotalCount = totalUsers,
-            //    PageSize = pageSize,
-            //    CurrentPage = pageNumber
-            //};
-            throw new Exception();
+            return new PagedResult<UserViewDto>
+            {
+                Items = userDtos,
+                TotalCount = totalUsers,
+                PageSize = pageSize,
+                CurrentPage = pageNumber
+            };
         }
     }
 }

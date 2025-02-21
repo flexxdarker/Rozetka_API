@@ -14,6 +14,5 @@ namespace BusinessLogic.DTOs.User
         public string Email { get; set; } = string.Empty;
         public string? Birthday { get; set; }
         public string? Image { get; set; } = string.Empty;
-        public int RoleId { get; set; }
     }
 }
