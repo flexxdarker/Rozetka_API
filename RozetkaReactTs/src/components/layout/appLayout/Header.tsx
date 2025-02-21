@@ -263,6 +263,12 @@ const Header = () => {
                     </Button>
                 </Link>
 
+                <Link to="/product-filter">
+                    <Button sx={{my: 2, color: 'white', display: 'block'}}>
+                        filters
+                    </Button>
+                </Link>
+
 
             </Box>
         </>
