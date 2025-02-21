@@ -11,7 +11,7 @@ using BusinessLogic.DTOs.User;
 using BusinessLogic.Enities;
 using BusinessLogic.Interfaces;
 using BusinessLogic.Specifications;
-using DataAccess.Repostories;
+using DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace BusinessLogic.Services

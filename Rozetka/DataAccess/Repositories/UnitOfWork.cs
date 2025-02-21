@@ -6,14 +6,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DataAccess.Data;
 
 namespace DataAccess.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly DbContext _context;
+        private readonly RozetkaDbContext _context;
 
-        public UnitOfWork(DbContext context)
+        public UnitOfWork(RozetkaDbContext context)
         {
             _context = context;
         }

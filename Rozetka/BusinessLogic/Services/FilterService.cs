@@ -3,7 +3,7 @@ using BusinessLogic.DTOs.Filter;
 using BusinessLogic.Entities;
 using BusinessLogic.Interfaces;
 using BusinessLogic.Specifications;
-using DataAccess.Repostories;
+using DataAccess.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;

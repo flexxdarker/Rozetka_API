@@ -8,7 +8,7 @@ using BusinessLogic.Helpers;
 using BusinessLogic.Interfaces;
 using BusinessLogic.Models.UserModels;
 using BusinessLogic.Specifications;
-using DataAccess.Repostories;
+using DataAccess.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -436,26 +436,27 @@ namespace BusinessLogic.Services
 
         public async Task<PagedResult<UserViewDto>> GetAllUsers(int pageNumber, int pageSize)
         {
-            var query = userRepo.AsQueryable().Include(x => x.Role).ThenInclude(ur => ur.Name);
+            //var query = userRepo.AsQueryable().Include(x => x.Role).ThenInclude(ur => ur.Name);
 
             // Загальна кількість користувачів
-            var totalUsers = await query.CountAsync();
+            //var totalUsers = await query.CountAsync();
 
             // Повернення користувачів для конкретної сторінки
-            var users = await query
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
+            //var users = await query
+            //    .Skip((pageNumber - 1) * pageSize)
+            //    .Take(pageSize)
+            //    .ToListAsync();
 
-            var userDtos = mapper.Map<List<UserViewDto>>(users);
+            //var userDtos = mapper.Map<List<UserViewDto>>(users);
 
-            return new PagedResult<UserViewDto>
-            {
-                Items = userDtos,
-                TotalCount = totalUsers,
-                PageSize = pageSize,
-                CurrentPage = pageNumber
-            };
+            //return new PagedResult<UserViewDto>
+            //{
+            //    Items = userDtos,
+            //    TotalCount = totalUsers,
+            //    PageSize = pageSize,
+            //    CurrentPage = pageNumber
+            //};
+            throw new Exception();
         }
     }
 }

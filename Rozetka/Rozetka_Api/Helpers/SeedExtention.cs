@@ -19,6 +19,7 @@ using JsonException = Newtonsoft.Json.JsonException;
 using System.Globalization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using DataAccess.Repositories;
 
 namespace Rozetka_Api.Helpers
 {
@@ -50,7 +51,7 @@ namespace Rozetka_Api.Helpers
         public static async Task SeedStatuses(this WebApplication app, IConfiguration config)
         {
             using var scope = app.Services.CreateScope();
-            var orderStatusRepo = scope.ServiceProvider.GetService<IRepository<OrderStatus>>()
+            var orderStatusRepo = scope.ServiceProvider.GetService<DataAccess.Repositories.IRepository<OrderStatus>>()
                ?? throw new NullReferenceException("IRepository<OrderStatus>");
 
             if (!await orderStatusRepo.AnyAsync())
@@ -87,20 +88,22 @@ namespace Rozetka_Api.Helpers
         {
             var userManager = app.GetRequiredService<UserManager<User>>();
 
-            const string USERNAME = "admin";
+            const string USERNAME = "admin@gmail.com";
             const string PASSWORD = "Admin1@";
             const string IMAGE = "image";
                 
-            var existingUser = await userManager.FindByNameAsync(USERNAME);
+            var existingUser = await userManager.FindByEmailAsync(USERNAME);
 
             if (existingUser == null)
             {
                 var user = new User
                 {
+                    Name = "Семен",
+                    SurName = "Малько",
+                    Birthdate = DateTime.UtcNow,
                     UserName = USERNAME,
                     Email = USERNAME,
                     Image = IMAGE,
-                    RoleId = 1
                 };
 
                 var result = await userManager.CreateAsync(user, PASSWORD);

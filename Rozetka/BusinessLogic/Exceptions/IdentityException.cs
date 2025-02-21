@@ -7,13 +7,14 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic.Exceptions
 {
-    public class IdentityException(
-    IdentityResult identityResult,
-    string massage = "Identity exception"
-) : Exception(massage)
+    public class IdentityException : Exception
     {
+        public IdentityResult IdentityResult { get; }
 
-        public IdentityResult IdentityResult { get; init; } = identityResult
-                ?? throw new ArgumentNullException(nameof(identityResult));
+        public IdentityException(IdentityResult identityResult, string message = "Identity exception")
+            : base(message)
+        {
+            IdentityResult = identityResult ?? throw new ArgumentNullException(nameof(identityResult));
+        }
     }
 }

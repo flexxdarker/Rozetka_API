@@ -2,9 +2,10 @@
 using BusinessLogic.DTOs.Order;
 using BusinessLogic.Enities;
 using BusinessLogic.Entities;
+using BusinessLogic.Exceptions;
 using BusinessLogic.Interfaces;
 using BusinessLogic.Specifications;
-using DataAccess.Repostories;
+using DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

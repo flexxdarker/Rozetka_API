@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq.Expressions;
 using System.Security.Claims;
-
+using DataAccess.Repositories;
 
 namespace BusinessLogic.Exstensions
 {
@@ -19,8 +19,7 @@ namespace BusinessLogic.Exstensions
         {
            
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
-            //services.AddValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
+        
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<ICategoryService, CategoryService>();
@@ -31,6 +30,8 @@ namespace BusinessLogic.Exstensions
             services.AddScoped<IBasketService, BasketService>();
             services.AddScoped<IAccountsService, AccountsService>();
             services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IAccountsService, AccountsService>();
+            services.AddScoped<ISmtpService, SmtpService>();
         }
 
     }

@@ -4,6 +4,7 @@ using BusinessLogic.Entities;
 using BusinessLogic.Interfaces;
 using BusinessLogic.Models.UserModels;
 using BusinessLogic.Services;
+using DataAccess.Repositories;
 using DataAccess.Repostories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Shop_Api_PV221.Controllers
+namespace Rozetka_Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

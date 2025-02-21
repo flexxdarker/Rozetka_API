@@ -97,10 +97,10 @@ namespace DataAccess.Data
             modelBuilder.Entity<Role>().
                 HasKey(cf => cf.Id);
 
-            modelBuilder.Entity<Role>()
-                .HasMany(cf => cf.users)
-                .WithOne(cf => cf.Role)
-                .HasForeignKey(cf => cf.RoleId);
+            //modelBuilder.Entity<Role>()
+            //    .HasMany(cf => cf.users)
+            //    .WithOne(cf => cf.Role)
+            //    .HasForeignKey(cf => cf.RoleId);
 
         }
 

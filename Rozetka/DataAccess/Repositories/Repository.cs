@@ -3,6 +3,7 @@ using Ardalis.Specification;
 using Ardalis.Specification.EntityFrameworkCore;
 using BusinessLogic.DTOs.Advert;
 using DataAccess.Data;
+using DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;

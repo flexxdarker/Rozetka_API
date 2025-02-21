@@ -58,9 +58,9 @@ namespace BusinessLogic.Profiles
             CreateMap<AdvertValue, AdvertValueCreationModel>().ReverseMap();
 
 
-            CreateMap<RegisterModel, User>()
-                .ForMember(x => x.UserName, opts => opts.MapFrom(s => s.Email))
-                .ForMember(x => x.RoleId, opts => opts.MapFrom(_ => 2));
+            //CreateMap<RegisterModel, User>()
+            //    .ForMember(x => x.UserName, opts => opts.MapFrom(s => s.Email))
+            //    .ForMember(x => x.RoleId, opts => opts.MapFrom(_ => 2));
                 
         }
     }

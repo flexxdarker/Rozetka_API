@@ -5,7 +5,7 @@ using BusinessLogic.Entities;
 using BusinessLogic.Interfaces;
 using BusinessLogic.Models.AdvertModels;
 using BusinessLogic.Specifications;
-using DataAccess.Repostories;
+using DataAccess.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
