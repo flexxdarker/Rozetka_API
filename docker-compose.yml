@@ -25,7 +25,7 @@ services:
 
   app:
     container_name: olx_container
-    image: flexxdarker/rozetka-asp-api
+    image: api:latest
     ports:
       - "5817:80"
     networks:
@@ -39,9 +39,9 @@ services:
         condition: on-failure
         max_attempts: 5
   
-  # client:
-  #   container_name: olx_client_container
-  #   image: novakvova/storepd322-client
-  #   ports:
-  #     - "5092:80"
+  client:
+    container_name: olx_client_container
+    image: front:latest
+    ports:
+      - "5092:80"
       
