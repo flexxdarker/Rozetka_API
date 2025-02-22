@@ -84,13 +84,19 @@ namespace BusinessLogic.Services
                 Console.WriteLine("Не вдалося розпізнати культуру.");
             }
 
-            var images = advertCreationModel.ImageFiles.Select(async (x, index) => new Image()
-            {
-                Priority = index,
-                Name = await imageService.SaveImageAsync(x)
-            });
+            var savedImages = await imageService.SaveImagesAsync(advertCreationModel.ImageFiles);
 
-            advert.Images = await Task.WhenAll(images);
+            advert.Images.Clear();
+            for (int i = 0; i < savedImages.Count; i++)
+            {
+                advert.Images.Add(new Image
+                {
+                    Name = savedImages[i],
+                    AdvertId = advert.Id,
+                    Priority = i
+                });
+            }
+
             await advertRepo.InsertAsync(advert);
             await advertRepo.SaveAsync();
 
@@ -125,16 +131,22 @@ namespace BusinessLogic.Services
             mapper.Map(editModel, advert);
 
             if (editModel.ImageFiles != null)
-            {                         
-                //var images = editModel.ImageFiles.Select(async (x, index) => new Image()
-                //{
-                //    Priority = index,
-                //    Name = await imageService.SaveImageAsync(x)
-                //});
+            {
+                imageService.DeleteImagesIfExists(advert.Images.Select(i => i.Name));
 
-                //advert.Images = await Task.WhenAll(images);
+                var savedImages = await imageService.SaveImagesAsync(editModel.ImageFiles);
+
+                advert.Images.Clear();
+                for (int i = 0; i < savedImages.Count; i++) { 
+                    
+                    advert.Images.Add(new Image
+                    {
+                        Name = savedImages[i],
+                        AdvertId = advert.Id,
+                        Priority = i
+                    });
+                }
             }
-
 
             if (editModel.Values.Count() != 0)
             {
@@ -146,6 +158,7 @@ namespace BusinessLogic.Services
             }
             await advertRepo.SaveAsync();
             return mapper.Map<AdvertDto>(advert);
+
         }
     }
 }
