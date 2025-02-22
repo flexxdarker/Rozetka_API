@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Net;
 using AutoMapper;
 using BusinessLogic.DTOs;
 using BusinessLogic.DTOs.Category;
@@ -8,6 +9,7 @@ using BusinessLogic.Models;
 using BusinessLogic.Models.CategoryModels;
 using BusinessLogic.Specifications;
 using DataAccess.Repostories;
+using Microsoft.EntityFrameworkCore;
 
 namespace BusinessLogic.Services
 {
@@ -77,12 +79,17 @@ namespace BusinessLogic.Services
 
             if (categoryCreateModel.Image != null)
             {
-                category.Image = await imageService.SaveImageAsync(categoryCreateModel.Image); 
+                category.Image = await imageService.SaveImageAsync(categoryCreateModel.Image);
             }
 
+            if (category.ParentCategoryId == category.Id)
+            {
+                throw new HttpException(Errors.CategoryCannotBeItsOwnParent, HttpStatusCode.BadRequest);
+            }
 
             await categoriesRepo.InsertAsync(category);
             await categoriesRepo.SaveAsync();
+
 
             if (categoryCreateModel.Filters?.Any() ?? false) { 
                 var filters = await filtersService.GetByIds(categoryCreateModel.Filters);
@@ -118,16 +125,30 @@ namespace BusinessLogic.Services
 
             if (editModel.ParentCategoryId.HasValue)
             {
+                if (category.ParentCategoryId == category.Id)
+                    throw new HttpException(Errors.CategoryCannotBeItsOwnParent, HttpStatusCode.BadRequest);
+
                 var parentCategory = await categoriesRepo.GetItemBySpec(new CategorySpecs.GetById(editModel.ParentCategoryId.Value));
                 category.ParentCategory = parentCategory;
             }
 
+            if(editModel.Image != null)
+            {
+                if (!string.IsNullOrEmpty(category.Image))
+                {
+                    imageService.DeleteImageIfExists(category.Image);
+                }
+
+                category.Image = await imageService.SaveImageAsync(editModel.Image);
+            }
+
             if (editModel.Filters?.Any() ?? false)
             {
-               foreach(var filter in editModel.Filters) 
-               {
-                   await categoryFiltersService.CreateAsync(new CategoryFilterCreationModel { CategoryId = editModel.Id, FilterId = filter });
-               }
+                await categoryFiltersService.DeleteAsync(editModel.Id);
+                foreach (var filter in editModel.Filters) 
+                {
+                    await categoryFiltersService.CreateAsync(new CategoryFilterCreationModel { CategoryId = editModel.Id, FilterId = filter });
+                }
             }
             else category.Filters.Clear();
 

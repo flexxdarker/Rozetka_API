@@ -12,6 +12,7 @@ namespace BusinessLogic.Interfaces
          Task<CategoryFilterDto> CreateAsync(CategoryFilterCreationModel creationModel);
          Task<CategoryFilterDto> EditAsync(CategoryFilterCreationModel editModel);
          Task CreateRangeAsync(Category category, IEnumerable<FilterDto> filters);
+        Task DeleteAsync(int categoryId);
 
     }
 }

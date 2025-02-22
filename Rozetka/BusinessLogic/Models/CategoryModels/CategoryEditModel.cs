@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic.Models.CategoryModels
 {
-    public class CategoryEditModel : BaseAdvertModel
+    public class CategoryEditModel : BaseCategoryModel
     {
         public int Id { get; set; }
     }

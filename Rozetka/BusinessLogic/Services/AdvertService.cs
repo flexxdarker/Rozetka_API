@@ -123,7 +123,7 @@ namespace BusinessLogic.Services
                 }
             }
         }
-
+        //15;07   96
         public async Task<AdvertDto> EditAsync(AdvertEditModel editModel)
         {
             var advert = await advertRepo.GetItemBySpec(new AdvertSpecs.GetById(editModel.Id));

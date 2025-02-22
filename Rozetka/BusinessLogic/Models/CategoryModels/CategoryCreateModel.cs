@@ -7,8 +7,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace BusinessLogic.Models.CategoryModels
 {
-    public class CategoryCreateModel : BaseAdvertModel
+    public class CategoryCreateModel : BaseCategoryModel
     {
-        public IFormFile? Image { get; set; }
     }
 }

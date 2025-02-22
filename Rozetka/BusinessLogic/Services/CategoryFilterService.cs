@@ -63,5 +63,14 @@ namespace BusinessLogic.Services
             return mapper.Map<IEnumerable<CategoryFilterDto>>(await categoryFiltersRepo.GetListBySpec(new CategoryFilterSpecs.GetByCategoryId(categoryId)));
         }
 
+        public async Task DeleteAsync(int categoryId)
+        {
+            var categoryFilters = mapper.Map<IEnumerable<CategoryFilterDto>>(await categoryFiltersRepo.GetListBySpec(new CategoryFilterSpecs.GetByCategoryId(categoryId)));
+            foreach (var value in categoryFilters)
+            {
+                await categoryFiltersRepo.DeleteAsync(value.Id);
+                await categoryFiltersRepo.SaveAsync();
+            }
+        }
     }
 }
