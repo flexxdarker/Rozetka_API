@@ -84,18 +84,69 @@ namespace BusinessLogic.Services
         public async Task<LoginResponseDto> Login(LoginModel model)
         {
 
-            LoginResponseDto loginResponse = new LoginResponseDto();
+            //LoginResponseDto loginResponse = new LoginResponseDto();
+            //var user = await userManager.FindByEmailAsync(model.Email);
+
+            //if (user == null || !await userManager.CheckPasswordAsync(user, model.Password))
+            //    throw new HttpException("Invalid user login or password.", HttpStatusCode.BadRequest);
+
+            ////await signInManager.SignInAsync(user, true);
+
+            //// generate token
+            //loginResponse.AccessToken = jwtService.CreateToken(jwtService.GetClaims(user));
+            //loginResponse.RefreshToken = CreateRefreshToken(user.Id).Token;
+
             var user = await userManager.FindByEmailAsync(model.Email);
 
-            if (user == null || !await userManager.CheckPasswordAsync(user, model.Password))
-                throw new HttpException("Invalid user login or password.", HttpStatusCode.BadRequest);
+            LoginResponseDto loginResultDto = new LoginResponseDto();
 
-            //await signInManager.SignInAsync(user, true);
+            if (user == null)
+            {
+                loginResultDto.IsSuccess = false;
+                loginResultDto.Error = "Incorect data!";
+                return loginResultDto;
+            }
+            var isAuth = await userManager.CheckPasswordAsync(user, model.Password);
 
-            // generate token
-            loginResponse.AccessToken = jwtService.CreateToken(jwtService.GetClaims(user));
-            loginResponse.RefreshToken = CreateRefreshToken(user.Id).Token;
+            if (!isAuth)
+            {
+                loginResultDto.IsSuccess = false;
+                loginResultDto.Error = "Incorect data!";
+                return loginResultDto;
+            }
 
+            if (user.LockoutEnabled == true)
+            {
+                loginResultDto.IsSuccess = false;
+
+                string lockoutDate = user.LockoutEnd.HasValue
+                    ? user.LockoutEnd.Value.ToString("MM/dd/yyyy")
+                    : "невідомо";
+
+                loginResultDto.Error = $"Користувач {user.Name} {user.SurName} ЗАБЛОКОВАНИЙ до {lockoutDate}";
+                return loginResultDto;
+            }
+
+            var person = userRepo.AsQueryable()
+               .FirstOrDefault(x => x.Id == user.Id);
+
+            var roles = await userManager.GetRolesAsync(user);
+
+            var userTokenInfo = new UserTokenInfo
+            {
+                Id = person.Id, 
+                Name = person.Name,
+                SurName = person.SurName,
+                Email = person.Email,
+                Birthday = person.Birthdate.ToString("dd-MM-yyyy"),
+                Image = person.Image,
+                PhoneNumber = person.PhoneNumber,
+                Roles = roles.ToList(),
+            };
+
+            var token = await jwtService.CreateToken(userTokenInfo);
+
+            loginResultDto.AccessToken = token;
 
             if (model.Baskets == null)
             {
@@ -119,11 +170,11 @@ namespace BusinessLogic.Services
                     List<int> newListIdBasket = arrayUser.Select(item => item.AdvertId).ToList();
 
                     // Передаємо список ID продуктів у відповідь
-                    loginResponse.Baskets = newListIdBasket;
+                    loginResultDto.Baskets = newListIdBasket;
                 }
                 else
                 {
-                    loginResponse.Baskets = null; // Якщо кошик порожній
+                    loginResultDto.Baskets = null; // Якщо кошик порожній
                 }
             }
             else
@@ -139,16 +190,16 @@ namespace BusinessLogic.Services
                 List<int> newListIdBasket = arrayUser.Select(item => item.AdvertId).ToList();
 
                 // Передаємо список ID продуктів у відповідь
-                loginResponse.Baskets = newListIdBasket;
+                loginResultDto.Baskets = newListIdBasket;
             }
 
             if (model.OrderItem != null)
             {
                 await basketService.PushOrderWhenLogin(user.Id, model.OrderItem);
             }
-            loginResponse.IsSuccess = true;
+            loginResultDto.IsSuccess = true;
 
-            return loginResponse;
+            return loginResultDto;
         }
 
         private RefreshToken CreateRefreshToken(string userId)
@@ -168,31 +219,31 @@ namespace BusinessLogic.Services
             return refreshTokenEntity;
         }
 
-        public async Task<UserTokens> RefreshTokens(UserTokens userTokens)
-        {
-            var refrestToken = await refreshTokenR.GetItemBySpec(new RefreshTokenSpecs.ByToken(userTokens.RefreshToken));
+        //public async Task<UserTokens> RefreshTokens(UserTokens userTokens)
+        //{
+        //    var refrestToken = await refreshTokenR.GetItemBySpec(new RefreshTokenSpecs.ByToken(userTokens.RefreshToken));
 
-            if (refrestToken == null)
-                throw new HttpException(Errors.InvalidToken, HttpStatusCode.BadRequest);
+        //    if (refrestToken == null)
+        //        throw new HttpException(Errors.InvalidToken, HttpStatusCode.BadRequest);
 
-            var claims = jwtService.GetClaimsFromExpiredToken(userTokens.AccessToken);
-            var newAccessToken = jwtService.CreateToken(claims);
-            var newRefreshToken = jwtService.CreateRefreshToken();
+        //    var claims = jwtService.GetClaimsFromExpiredToken(userTokens.AccessToken);
+        //    var newAccessToken = claims;
+        //    var newRefreshToken = jwtService.CreateRefreshToken();
 
-            refrestToken.Token = newRefreshToken;
+        //    refrestToken.Token = newRefreshToken;
 
-            // TODO: update creation time
-            refreshTokenR.Update(refrestToken);
-            await refreshTokenR.SaveAsync();
+        //    // TODO: update creation time
+        //    refreshTokenR.Update(refrestToken);
+        //    await refreshTokenR.SaveAsync();
 
-            var tokens = new UserTokens()
-            {
-                AccessToken = newAccessToken,
-                RefreshToken = newRefreshToken
-            };
+        //    var tokens = new UserTokens()
+        //    {
+        //        AccessToken = newAccessToken,
+        //        RefreshToken = newRefreshToken
+        //    };
 
-            return tokens;
-        }
+        //    return tokens;
+        //}
 
         public async Task Logout(string refreshToken)
         {
@@ -249,8 +300,25 @@ namespace BusinessLogic.Services
                 return loginResponse;
             }
 
-            loginResponse.AccessToken = jwtService.CreateToken(jwtService.GetClaims(user));
-            loginResponse.RefreshToken = CreateRefreshToken(user.Id).Token;
+            var roles = await userManager.GetRolesAsync(user);
+
+            // Створюємо DTO для токена
+            var userTokenInfo = new UserTokenInfo
+            {
+                Id = user.Id,
+                Name = user.Name,
+                SurName = user.SurName,
+                Email = user.Email,
+                Birthday = user.Birthdate.ToString("dd-MM-yyyy"),
+                Image = user.Image,
+                PhoneNumber = user.PhoneNumber,
+                Roles = roles.ToList()
+            };
+
+            // Створюємо токен на основі DTO
+            loginResponse.AccessToken = await jwtService.CreateToken(userTokenInfo);
+
+            
 
             if (loginDto.Baskets.Count > 0)
             {
@@ -434,28 +502,22 @@ namespace BusinessLogic.Services
             return result;
         }
 
-        public async Task<PagedResult<UserViewDto>> GetAllUsers(int pageNumber, int pageSize)
+        public async Task<List<UserViewDto>> GetAllUsers()
         {
             var query = userRepo.AsQueryable().Include(x => x.UserRoles).ThenInclude(ur => ur.Role);
 
-            //Загальна кількість користувачів
-            var totalUsers = await query.CountAsync();
-
-            //Повернення користувачів для конкретної сторінки
-            var users = await query
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-
-            var userDtos = mapper.Map<List<UserViewDto>>(users);
-
-            return new PagedResult<UserViewDto>
+            var users = await query.Select(x => new UserViewDto
             {
-                Items = userDtos,
-                TotalCount = totalUsers,
-                PageSize = pageSize,
-                CurrentPage = pageNumber
-            };
+                Id = x.Id,
+                FirstName = x.Name,
+                LastName = x.SurName,
+                Email = x.Email,
+                PhoneNumber = x.PhoneNumber,
+                Image = x.Image,
+                BirthDate = x.Birthdate,
+                Roles = string.Join(", ", x.UserRoles.Select(ur => ur.Role.Name).ToList())
+            }).ToListAsync();
+            return users;
         }
     }
 }

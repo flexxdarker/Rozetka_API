@@ -43,12 +43,13 @@ namespace Rozetka_Api.Controllers
         {
             return Ok(await accountsService.Login(model));
         }
-        [Authorize]
-        [HttpPost("refreshTokens")]
-        public async Task<IActionResult> RefreshTokens(UserTokens tokens)
-        {
-            return Ok(await accountsService.RefreshTokens(tokens));
-        }
+
+        //[Authorize]
+        //[HttpPost("refreshTokens")]
+        //public async Task<IActionResult> RefreshTokens(UserTokens tokens)
+        //{
+        //    return Ok(await accountsService.RefreshTokens(tokens));
+        //}
 
         [Authorize]
         [HttpPost("logout")]
@@ -68,11 +69,11 @@ namespace Rozetka_Api.Controllers
 
                 if (result.Baskets != null)
                 {
-                    return Ok(new { token = result.AccessToken, refreshToken = result.RefreshToken , baskets = result.Baskets });
+                    return Ok(new { token = result.AccessToken/*, refreshToken = result.RefreshToken */, baskets = result.Baskets });
                 }
                 else
                 {
-                    return Ok(new { token = result.AccessToken, refreshToken = result.RefreshToken });
+                    return Ok(new { token = result.AccessToken/*, refreshToken = result.RefreshToken */});
                 }
 
             }
@@ -91,13 +92,26 @@ namespace Rozetka_Api.Controllers
             var user = userRepo.AsQueryable()
                 .FirstOrDefault(x => x.Id == userId);
 
+            var roles = await userManager.GetRolesAsync(user);
 
-            var token = jwtService.CreateToken(jwtService.GetClaims(user));
+            var userTokenInfo = new UserTokenInfo
+            {
+                Id = user.Id,
+                Name = user.Name,
+                SurName = user.SurName,
+                Email = user.Email,
+                Birthday = user.Birthdate.ToString("dd-MM-yyyy"),
+                Image = user.Image,
+                PhoneNumber = user.PhoneNumber,
+                Roles = roles.ToList(),
+            };
+
+            var token = await jwtService.CreateToken(userTokenInfo);
 
             return Ok(new { token });
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPost("change-password")]
         public async Task<IActionResult> ChangePassword([FromForm] ChangePasswordDto model)
         {
@@ -118,10 +132,10 @@ namespace Rozetka_Api.Controllers
         }
 
         [HttpGet("GetAllUsers")]
-        public async Task<IActionResult> GetAllUsers([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        public async Task<IActionResult> GetAllUsers()
         {
             // Отримання користувачів із пагінацією через сервіс
-            var result = await accountsService.GetAllUsers(pageNumber, pageSize);
+            var result = await accountsService.GetAllUsers();
 
             // Повернення результату з даними та інформацією про пагінацію
             return Ok(result);

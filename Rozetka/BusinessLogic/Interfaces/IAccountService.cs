@@ -15,14 +15,14 @@ namespace BusinessLogic.Interfaces
         Task Register(RegisterModel model);
         Task<LoginResponseDto> Login(LoginModel model);
         Task Logout(string refreshToken);
-        Task<UserTokens> RefreshTokens(UserTokens tokens);
+        //Task<UserTokens> RefreshTokens(UserTokens tokens);
         Task<LoginResponseDto> GoogleSignInAsync(GoogleLoginDto loginDto);
         Task EditUserAsync(UserEditDto editUserDto);
         Task<IdentityResult> ChangePasswordAsync(ChangePasswordDto model, string idUser);
         Task<User> GetUser(string id);
         Task<IdentityResult> BlockUser(string userId);
         Task<IdentityResult> UnblockUser(string userId);
-        Task<PagedResult<UserViewDto>> GetAllUsers(int pageNumber, int pageSize);
+        Task<List<UserViewDto>> GetAllUsers();
         Task RemoveExpiredRefreshTokens();
 
         //Task<ResetToken> GenerageResetToken(string email);
