@@ -9,7 +9,8 @@ import AccountMenu from "../../account/AccountMenu.tsx";
 const AccountLayout: React.FC = () => {
 
     const {
-        token: {colorBgContainer, borderRadiusLG},
+        token: {borderRadiusLG},
+        // token: {colorBgContainer, borderRadiusLG},
     } = theme.useToken();
 
 

@@ -44,8 +44,6 @@ const Franchising = lazy(() => import("./components/layout/footer/Franchising.ts
 const ReturnOfGoods = lazy(() => import("./components/layout/footer/ReturnOfGoods.tsx"));
 const CategoryTable = lazy(() => import("./components/category/CategoryTable"));
 const CategoryForm = lazy(() => import("./components/category/CategoryForm.tsx"));
-const SubCategoryTable = lazy(() => import("./components/subCategory/SubCategoryTable.tsx"));
-const SubCategoryForm = lazy(() => import("./components/subCategory/SubCategoryForm.tsx"));
 const OrderPage = lazy(() => import("./components/order/OrderPage.tsx"));
 const AccountData = lazy(() => import("./components/account/AccountData.tsx"));
 const AccountOrders = lazy(() => import("./components/account/AccountOrders.tsx"));
@@ -69,10 +67,6 @@ export default function App() {
                     <Route path="categories" element={<CategoryTable/>}/>
                     <Route path="categories/create" element={<CategoryForm/>}/>
                     <Route path="categories/edit/:id" element={<CategoryForm/>}/>
-
-                    <Route path="subcategories" element={<SubCategoryTable/>}/>
-                    <Route path="subcategories/create" element={<SubCategoryForm/>}/>
-                    <Route path="subcategories/edit/:id" element={<SubCategoryForm/>}/>
 
                     {/*Footer*/}
                     <Route path="about-us" element={<AboutUs/>}/>

@@ -245,12 +245,6 @@ const Header = () => {
                     </Button>
                 </Link>
 
-                <Link to="subcategories">
-                    <Button sx={{my: 2, color: 'white', display: 'block'}}>
-                        Subcategories
-                    </Button>
-                </Link>
-
                 <Link to="signin">
                     <Button sx={{my: 2, color: 'white', display: 'block'}}>
                         SignIn

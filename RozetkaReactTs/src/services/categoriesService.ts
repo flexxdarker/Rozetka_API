@@ -49,10 +49,10 @@ export const CategoriesServices = {
 
         return api.put("create", data);
     },
-    //
-    // delete(id) {
-    //     return axios.delete(api + id);
-    // },
+
+    delete(id: number) {
+        return api.delete("delete/" + `${id}`);
+    },
     //
     // edit(model) {
     //     return axios.put(api, model);

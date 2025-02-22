@@ -7,6 +7,7 @@ import {IRegisterModel} from "../../models/accountsModel.ts";
 import {AccountsService} from "../../services/accountsService.ts";
 import utc from 'dayjs/plugin/utc';
 import dayjs from 'dayjs';
+import {TokenService} from "../../services/tokenService.ts";
 
 dayjs.extend(utc);
 
@@ -28,6 +29,7 @@ const SignUp: React.FC = () => {
         console.log('Form values:', {...values, birthdate: utcDate});
 
         const res = await AccountsService.register({...values, birthdate: utcDate});
+        TokenService.save(res.data);
         if (res.status == 200) {
             message.success("register success");
             navigate('/');
@@ -43,14 +45,6 @@ const SignUp: React.FC = () => {
     const GoogleSignUp = () => {
         console.log('Google SignUp');
     };
-
-    // const prefixSelector = (
-    //     <Form.Item name="prefix" noStyle>
-    //         <Select style={{ width: 100 }}>
-    //             <Option value="380">+380</Option>
-    //         </Select>
-    //     </Form.Item>
-    // );
 
 
     return (
@@ -117,7 +111,8 @@ const SignUp: React.FC = () => {
 
                     <Form.Item
                         name="password"
-                        rules={[{required: true, message: 'Please input your Password!'}]}
+                        rules={[{required: true, message: 'Please input your Password!'},
+                            {min: 8, message: 'Password must be at least 8 characters long!'}]}
                     >
                         <Input prefix={<LockOutlined/>} type="password" placeholder="Password"/>
                     </Form.Item>

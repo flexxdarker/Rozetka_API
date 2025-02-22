@@ -208,8 +208,6 @@ const ProductTable: React.FC = () => {
                     >
                         <Button>Delete</Button>
                     </Popconfirm>
-
-                    {/* <a>Delete</a> */}
                 </Space>
             )
         },

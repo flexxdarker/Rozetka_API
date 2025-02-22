@@ -76,10 +76,10 @@ const ProductForm: React.FC = () => {
     useEffect(() => {
         loadProduct();
 
-        loadSubCategories();
+        loadCategories();
     }, []);
 
-    const loadSubCategories = async () => {
+    const loadCategories = async () => {
         const res = await  CategoriesServices.getAll();
         setCategories(res.data);
     }
@@ -127,7 +127,7 @@ const ProductForm: React.FC = () => {
                     <Input placeholder="Product name"/>
                 </Form.Item>
 
-                <Form.Item name="categoryId" label="Category" hasFeedback
+                <Form.Item name="categoryId" label="Категорія" hasFeedback
                            rules={[{required: true, message: 'Please choose the category.'}]}>
                     <Select placeholder="Select a category">
                         {categories.map(c => (

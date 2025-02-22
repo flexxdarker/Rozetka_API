@@ -23,7 +23,7 @@ const SignIn: React.FC = () => {
             TokenService.save(res.data);
             if (res.status == 200) {
                 message.success("login success");
-                navigate(-1);
+                navigate("/");
             } else {
                 message.warning("Warning");
             }
