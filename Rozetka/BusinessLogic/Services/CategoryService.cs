@@ -4,6 +4,7 @@ using AutoMapper;
 using BusinessLogic.DTOs;
 using BusinessLogic.DTOs.Category;
 using BusinessLogic.Entities;
+using BusinessLogic.Exceptions;
 using BusinessLogic.Interfaces;
 using BusinessLogic.Models;
 using BusinessLogic.Models.CategoryModels;
