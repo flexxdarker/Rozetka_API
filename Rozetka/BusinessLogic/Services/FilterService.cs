@@ -81,9 +81,14 @@ namespace BusinessLogic.Services
             throw new NotImplementedException();
         }
 
-        public Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var filter = mapper.Map<FilterDto>(await filterRepo.GetItemBySpec(new FilterSpecs.GetById(id)));
+            if(filter != null)
+            {
+                await filterRepo.DeleteAsync(filter.Id);
+                await filterRepo.SaveAsync();
+            }
         }
     }
 }
