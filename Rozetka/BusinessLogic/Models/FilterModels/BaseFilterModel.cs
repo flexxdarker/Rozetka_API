@@ -10,6 +10,6 @@ namespace BusinessLogic.Models.FilterModels
     public class BaseFilterModel
     {
         public string Name { get; set; } = string.Empty;
-        public IEnumerable<int> FilerValues { get; set; } = new HashSet<int>();
+        public IEnumerable<string> FilerValues { get; set; } = new HashSet<string>();
     }
 }

@@ -64,14 +64,13 @@ namespace BusinessLogic.Services
             await filterRepo.InsertAsync(filter);
             await filterRepo.SaveAsync();
 
-            //if (createModel.FilerValues.Any()) 
-            //{
-            //    foreach(var filterValueId in createModel.FilerValues)
-            //    {
-            //        var filterValue = await filterValueService.GetByIdAsync(filterValueId);
-            //        await filterValueService.CreateAsync(new FilterValueCreationModel { FilterId = filter.Id, Value = filterValue.Value });
-            //    }
-            //}
+            if (createModel.FilerValues.Any())
+            {
+                foreach (var filterValue in createModel.FilerValues)
+                {
+                    await filterValueService.CreateAsync(new FilterValueCreationModel { FilterId = filter.Id, Value = filterValue });
+                }
+            }
 
             return mapper.Map<FilterDto>(filter);
         }

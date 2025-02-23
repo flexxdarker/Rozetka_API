@@ -69,7 +69,8 @@ namespace BusinessLogic.Profiles
                 .ToArray()));
 
             CreateMap<FilterValue, FilterValueDto>()
-                .ForMember(x => x.FilterName, opt => opt.MapFrom(z => z.Filter.Name));
+                .ForMember(x => x.FilterName, opt => opt.MapFrom(z => z.Filter.Name))
+                .ReverseMap();
 
             CreateMap<FilterValueCreationModel, FilterValue>()
                 .ReverseMap();
