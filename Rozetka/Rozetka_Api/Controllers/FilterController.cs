@@ -39,12 +39,12 @@ namespace Rozetka_Api.Controllers
             return Ok(await filterService.CreateAsync(filterCreateModel));
         }
 
-        [AllowAnonymous]
-        [HttpPost("edit")]
-        public async Task<IActionResult> Edit([FromForm] FilterEditModel filterEditModel)
-        {
-            return Ok(await filterService.EditAsync(filterEditModel));
-        }
+        //[AllowAnonymous]
+        //[HttpPost("edit")]
+        //public async Task<IActionResult> Edit([FromForm] FilterEditModel filterEditModel)
+        //{
+        //    return Ok(await filterService.EditAsync(filterEditModel));
+        //}
 
         [AllowAnonymous]
         [HttpDelete("delete/{id:int}")]
