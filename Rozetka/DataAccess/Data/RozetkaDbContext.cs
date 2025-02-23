@@ -25,6 +25,8 @@ namespace DataAccess.Data
         public DbSet<Image> Images { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<User> User { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
+        public DbSet<Role> Role { get; set; }
 
         public RozetkaDbContext(DbContextOptions options) : base(options) { }
 
@@ -92,6 +94,31 @@ namespace DataAccess.Data
             modelBuilder.Entity<Order>()
                 .HasKey(cf=>cf.Id);
 
+            modelBuilder.Entity<Role>()
+                .HasMany(cf => cf.UserRoles)
+                .WithOne(cf => cf.Role)
+                .HasForeignKey(cf=>cf.RoleId);
+
+            modelBuilder.Entity<User>()
+                .HasKey(cf => cf.Id);
+
+            modelBuilder.Entity<User>()
+                .HasMany(cf => cf.UserRoles)
+                .WithOne(cf => cf.User)
+                .HasForeignKey(cf => cf.UserId);
+
+            modelBuilder.Entity<User>()
+                .HasMany(cf => cf.Orders)
+                .WithOne(cf => cf.User)
+                .HasForeignKey(cf => cf.UserId);
+
+            modelBuilder.Entity<User>()
+                .HasMany(cf => cf.RefreshTokens)
+                .WithOne(cf => cf.User)
+                .HasForeignKey(cf => cf.UserId);
+
+            modelBuilder.Entity<UserRole>()
+                .HasKey(cf => new {cf.RoleId, cf.UserId});
         }
 
 

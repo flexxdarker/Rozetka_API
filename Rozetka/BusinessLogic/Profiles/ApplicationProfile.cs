@@ -22,7 +22,7 @@ namespace BusinessLogic.Profiles
 {
     public class ApplicationProfile : Profile
     {
-        public ApplicationProfile(/*IFileService fileService*/)
+        public ApplicationProfile()
         {
 
             CreateMap<Advert, AdvertDto>()
@@ -88,8 +88,43 @@ namespace BusinessLogic.Profiles
             CreateMap<AdvertValue, AdvertValueCreationModel>()
                 .ReverseMap();
 
-            CreateMap<RegisterModel, User>()
-                .ForMember(x => x.UserName, opts => opts.MapFrom(s => s.Email));
+
+            //CreateMap<RegisterModel, User>()
+            //    .ForMember(x => x.UserName, opts => opts.MapFrom(s => s.Email))
+            //    .ForMember(x => x.RoleId, opts => opts.MapFrom(_ => 2));
+
+            CreateMap<User, UserViewDto>()
+            .ForMember(dest => dest.LockoutEnabled, opt => opt.MapFrom(src => src.LockoutEnabled))
+            .ForMember(dest => dest.LockoutEnd, opt => opt.MapFrom(src => src.LockoutEnd))
+            .ForMember(dest => dest.Roles, opt => opt.MapFrom(src => GetRoleFromUserEntity(src)));
+
+            CreateMap<UserViewDto, User>()
+            .ForMember(dest => dest.UserRoles, opt => opt.MapFrom(src => src.Roles));
+
+
+            CreateMap<UserEditDto, User>()
+           .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email))
+           .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
+           .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.FirstName))
+           .ForMember(dest => dest.SurName, opt => opt.MapFrom(src => src.LastName))
+           .ForMember(dest => dest.UserRoles, opt => opt.Ignore());
+
+            CreateMap<User, UserEditDto>()
+            .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.Name))
+            .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.SurName))
+            .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email));
+        }
+
+        private string GetRoleFromUserEntity(User userEntity)
+        {
+            string result = "";
+            foreach (var role in userEntity.UserRoles)
+            {
+                result += role.Role.Name + " ";
+            }
+
+            // Отримання ролі з UserEntity         
+            return result;
         }
     }
 }

@@ -5,7 +5,7 @@ using BusinessLogic.Interfaces;
 using BusinessLogic.Models;
 using BusinessLogic.Models.FilterModels;
 using BusinessLogic.Specifications;
-using DataAccess.Repostories;
+using DataAccess.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;

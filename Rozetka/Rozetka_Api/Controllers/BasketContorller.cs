@@ -1,5 +1,6 @@
 using AutoMapper;
 using BusinessLogic.DTOs;
+using BusinessLogic.DTOs.Basket;
 using BusinessLogic.DTOs.Order;
 using BusinessLogic.Entities;
 using BusinessLogic.Interfaces;
@@ -25,22 +26,22 @@ namespace Rozetka_Api.Controllers
 
         [Authorize]
         [HttpPost("CreateBasketId/{productId}")]
-        public async Task<IActionResult> CreateBasketId([FromRoute] int productId)
+        public async Task<IActionResult> CreateBasketId([FromRoute] int productId, int amount)
         {
             string userId = User.Claims.ToList()[0].Value.ToString();
 
-            await _basket.pushBasketById(userId, productId);
+            await _basket.pushBasketById(userId, productId, amount);
 
             return Ok();
         }
 
         [Authorize]
         [HttpPost("CreateBasketArray")]
-        public async Task<IActionResult> CreateBasketArray([FromRoute] int[] array)
+        public async Task<IActionResult> CreateBasketArray([FromForm] AddAdvertDto addAdvert)
         {
             string userId = User.Claims.ToList()[0].Value.ToString();
 
-            await _basket.pushBasketArray(userId, array);
+            await _basket.pushBasketArray(userId, addAdvert);
 
             return Ok();
         }
@@ -56,14 +57,6 @@ namespace Rozetka_Api.Controllers
             return Ok(basket);
         }
 
-        [HttpPost("GetBasketItemLogout")]
-        public async Task<IActionResult> GetBasketItemsLogout()
-        {
-            var basket = await _basket.GetBasketItemsLogout();
-
-            return Ok(basket);
-        }
-
         [Authorize]
         [HttpDelete("DeleteBasket/{productId}")]
         public async Task<IActionResult> DeleteProductWithBaset([FromRoute] int productId)
@@ -75,12 +68,12 @@ namespace Rozetka_Api.Controllers
             return Ok();
         }
 
-        [HttpPost("PushOrderWhenLogin")]
-        public async Task<IActionResult> PushOrderWhenLogin(/*[FromBody] List<OrderItemDto> orderItems*/)
+        [HttpPost("PushOrder")]
+        public async Task<IActionResult> PushOrder(/*[FromBody] List<OrderItemDto> orderItems*/)
         {
             string userId = User.Claims.ToList()[0].Value.ToString();
 
-            await _basket.PushOrderWhenLogin(userId/*, orderItems*/);
+            await _basket.PushOrder(userId/*, orderItems*/);
 
             return Ok();
         }

@@ -3,7 +3,7 @@ using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Rozetka_Api.Helpers;
-using Shop_Api_PV221;
+using Rozetka_Api;
 using System;
 
 namespace Rozetka_Api
