@@ -63,22 +63,66 @@ namespace BusinessLogic.Services
             this.userRepo = userRepo;
         }
 
-        public async Task Register(RegisterModel model)
+        public async Task<RegisterResultDto> Register(RegisterModel model)
         {
-            // TODO: validation
+            RegisterResultDto registerResultDto = new RegisterResultDto();
 
-            // check user
-            var user = await userManager.FindByEmailAsync(model.Email);
+            // Маппінг об'єкта dto на об'єкт UserEntity за допомогою _mapper
+            User user = mapper.Map<User>(model);
 
-            if (user != null)
-                throw new HttpException("Email is already exists.", HttpStatusCode.BadRequest);
+            // Перевірка, чи такий email вже зареєстрований
+            var existingUser = await userManager.FindByEmailAsync(model.Email);
 
-            // create user
-            var newUser = mapper.Map<User>(model);
-            var result = await userManager.CreateAsync(newUser, model.Password);
+            if (existingUser == null)
+            {
+                // Асинхронне створення нового користувача з паролем
+                var resultCreated = await userManager.CreateAsync(user, model.Password);
 
-            if (!result.Succeeded)
-                throw new HttpException(string.Join(" ", result.Errors.Select(x => x.Description)), HttpStatusCode.BadRequest);
+                // Перевірка результату створення користувача
+                if (!resultCreated.Succeeded)
+                {
+                    registerResultDto.IsSuccess = false;
+                    // Логування помилок створення користувача
+                    registerResultDto.Error = string.Join($"Не вдалося створити користувача", ",", resultCreated.Errors.Select(e => e.Description));
+                    return registerResultDto;
+                }
+
+                if (resultCreated.Succeeded)
+                {
+                    try
+                    {
+                        smtpService.SuccessfulLogin(model.Name + " " + model.Surname, model.Email);
+                    }
+                    catch (Exception ex)
+                    {
+                        registerResultDto.IsSuccess = false;
+                        registerResultDto.Error = $"Лист на пошту відправити не вдалося";
+                        return registerResultDto;
+                    }
+                }
+            }
+            else
+            {
+                registerResultDto.IsSuccess = false;
+                registerResultDto.Error = $"Така пошта уже зареєстрована";
+                return registerResultDto;
+            }
+
+            // Асинхронне додавання створеного користувача до певної ролі
+            var resultRole = await userManager.AddToRoleAsync(user, Roles.User);
+
+            // Перевірка результату додавання до ролі
+            if (!resultRole.Succeeded)
+            {
+                registerResultDto.IsSuccess = false;
+                registerResultDto.Error = string.Join($"Не вдалося додати роль користувачу:", ", ", resultRole.Errors.Select(e => e.Description));
+                return registerResultDto;
+            }
+            else
+            {
+                registerResultDto.IsSuccess = true;
+                return registerResultDto;
+            }
         }
 
         public async Task<LoginResponseDto> Login(LoginModel model)

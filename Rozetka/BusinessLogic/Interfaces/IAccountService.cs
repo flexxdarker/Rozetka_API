@@ -12,7 +12,7 @@ namespace BusinessLogic.Interfaces
 {
     public interface IAccountsService
     {
-        Task Register(RegisterModel model);
+        Task<RegisterResultDto> Register(RegisterModel model);
         Task<LoginResponseDto> Login(LoginModel model);
         Task Logout(string refreshToken);
         //Task<UserTokens> RefreshTokens(UserTokens tokens);
