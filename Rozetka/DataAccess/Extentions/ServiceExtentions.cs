@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using System;
 
 namespace DataAccess
@@ -62,6 +63,12 @@ namespace DataAccess
             {
                 Directory.CreateDirectory(imagesDirPath);
             }
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(imagesDirPath),
+                RequestPath = "/"+ app.Configuration["DirImages"]
+            });
         }
     }
 }
