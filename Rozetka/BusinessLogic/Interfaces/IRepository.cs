@@ -1,5 +1,6 @@
 ﻿using Ardalis.Specification;
 using BusinessLogic.DTOs.Advert;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccess.Repostories
+namespace DataAccess.Repositories
 {
     public interface IRepository<TEntity> where TEntity : class
     {
@@ -29,5 +30,8 @@ namespace DataAccess.Repostories
         Task<TEntity?> GetItemBySpec(ISpecification<TEntity> specification);
         Task<IEnumerable<TEntity>> GetListBySpec(ISpecification<TEntity> specification);
         IQueryable<TEntity> AsQueryable();
+        Task<IDbContextTransaction> BeginTransactionAsync();
+        Task CommitTransactionAsync(IDbContextTransaction transaction);
+        Task RollbackTransactionAsync(IDbContextTransaction transaction);
     }
 }

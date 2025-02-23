@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
+using BusinessLogic.Exceptions;
 using BusinessLogic.Interfaces;
-using DataAccess.Repostories;
+using DataAccess.Repositories;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;

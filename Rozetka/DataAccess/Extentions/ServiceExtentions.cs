@@ -1,5 +1,7 @@
 ﻿using BusinessLogic.Entities;
+using BusinessLogic.Interfaces;
 using DataAccess.Data;
+using DataAccess.Repositories;
 using DataAccess.Repostories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -19,6 +21,7 @@ namespace DataAccess
         public static void AddRepositories(this IServiceCollection services)
         {
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
         }
 
         public static void AddIdentity(this IServiceCollection services)

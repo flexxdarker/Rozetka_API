@@ -5,13 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BusinessLogic.Models.UserModels
+namespace BusinessLogic.DTOs.User
 {
-    public class LoginModel
+    public class GoogleLoginDto
     {
-        public string Email { get; set; }
-        public string Password { get; set; }
+        public string Credential { get; set; } = null!;
         public List<int> Baskets { get; set; } = new List<int>();
-        public List<OrderItemDto>? OrderItem { get; set; }
+        public List<OrderItemDto>? OrderItems { get; set; }
     }
 }
