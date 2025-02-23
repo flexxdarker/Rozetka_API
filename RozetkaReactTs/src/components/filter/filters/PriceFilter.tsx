@@ -1,15 +1,30 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import arrowUp from '../../../assets/icons/nav-arrow-up.svg'
 
 interface IPriceFilterProps {
-    minPriceValue: number;
-    maxPriceValue: number;
-    onChange?: (minPrice: number | null, maxPrice: number | null) => void;
+    minPriceValueInit: number;
+    maxPriceValueInit: number;
+    onChange?: (minPrice: number, maxPrice: number) => void;
 }
 
-const PriceFilter: React.FC<IPriceFilterProps> = ({ minPriceValue, maxPriceValue, onChange }) => {
-    const minPriceInitValue = minPriceValue;
-    const maxPriceInitValue = maxPriceValue;
+const PriceFilter: React.FC<IPriceFilterProps> = ({ minPriceValueInit, maxPriceValueInit, onChange }) => {
+
+    const [minPrice, setMinPrice] = useState(minPriceValueInit);
+    const [maxPrice, setMaxPrice] = useState(maxPriceValueInit);
+
+
+
+    const [minPriceInitValue, setMinPriceInitValue] = useState(minPriceValueInit);
+    const [maxPriceInitValue, setMaxPriceInitValue] = useState(maxPriceValueInit);
+    useEffect(() => {
+        setMinPriceInitValue(minPriceValueInit);
+        setMaxPriceInitValue(maxPriceValueInit);
+
+        setMinPrice(minPriceValueInit);
+        setMaxPrice(maxPriceValueInit);
+    }, [minPriceValueInit,maxPriceValueInit]);
+
+
 
     const [isRotated, setIsRotated] = useState(false);
     const [isOpen, setIsOpen] = useState(false); // Стан для відкриття/закриття списку
@@ -19,8 +34,7 @@ const PriceFilter: React.FC<IPriceFilterProps> = ({ minPriceValue, maxPriceValue
         setIsOpen(!isOpen); // перемикаємо стан обертання
     };
 
-    const [minPrice, setMinPrice] = useState(minPriceValue);
-    const [maxPrice, setMaxPrice] = useState(maxPriceValue);
+
 
     const handleMinPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         let value = Number(e.target.value);
@@ -80,6 +94,7 @@ const PriceFilter: React.FC<IPriceFilterProps> = ({ minPriceValue, maxPriceValue
                 <div className="flex h-[40px] pt-0 pr-[20px] pb-0 pl-[20px] gap-[27px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#fff]">
                     <input
                         type="number"
+                        placeholder={minPriceInitValue.toString()}
                         value={minPrice}
                         onChange={handleMinPriceChange}
                         onBlur={handleMinPriceBlur}
@@ -90,6 +105,7 @@ const PriceFilter: React.FC<IPriceFilterProps> = ({ minPriceValue, maxPriceValue
                     </span>
                     <input
                         type="number"
+                        placeholder={maxPriceInitValue.toString()}
                         value={maxPrice}
                         onChange={handleMaxPriceChange}
                         onBlur={handleMaxPriceBlur}

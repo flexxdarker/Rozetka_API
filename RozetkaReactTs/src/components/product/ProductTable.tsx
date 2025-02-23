@@ -6,10 +6,9 @@ import {ProductServices} from "../../services/productService.ts";
 import {InputRef, TableColumnType, Input, Button, Space, Table, Popconfirm} from "antd";
 import Highlighter from 'react-highlight-words';
 //npm install @types/react-highlight-words --save-dev
-import { SearchOutlined } from '@ant-design/icons';
-import type { FilterDropdownProps } from 'antd/es/table/interface';
+import {SearchOutlined} from '@ant-design/icons';
+import type {FilterDropdownProps} from 'antd/es/table/interface';
 // import {Highlight} from "@mui/icons-material";
-
 
 
 type DataIndex = keyof IProductModel;
@@ -47,30 +46,30 @@ const ProductTable: React.FC = () => {
     };
 
     const getColumnSearchProps = (dataIndex: DataIndex): TableColumnType<IProductModel> => ({
-        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
-            <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+        filterDropdown: ({setSelectedKeys, selectedKeys, confirm, clearFilters, close}) => (
+            <div style={{padding: 8}} onKeyDown={(e) => e.stopPropagation()}>
                 <Input
                     ref={searchInput}
                     placeholder={`Search ${dataIndex}`}
                     value={selectedKeys[0]}
                     onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
                     onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
-                    style={{ marginBottom: 8, display: 'block' }}
+                    style={{marginBottom: 8, display: 'block'}}
                 />
                 <Space>
                     <Button
                         type="primary"
                         onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
-                        icon={<SearchOutlined />}
+                        icon={<SearchOutlined/>}
                         size="small"
-                        style={{ width: 90 }}
+                        style={{width: 90}}
                     >
                         Search
                     </Button>
                     <Button
                         onClick={() => clearFilters && handleReset(clearFilters)}
                         size="small"
-                        style={{ width: 90 }}
+                        style={{width: 90}}
                     >
                         Reset
                     </Button>
@@ -78,7 +77,7 @@ const ProductTable: React.FC = () => {
                         type="link"
                         size="small"
                         onClick={() => {
-                            confirm({ closeDropdown: false });
+                            confirm({closeDropdown: false});
                             setSearchText((selectedKeys as string[])[0]);
                             setSearchedColumn(dataIndex);
                         }}
@@ -98,7 +97,7 @@ const ProductTable: React.FC = () => {
             </div>
         ),
         filterIcon: (filtered: boolean) => (
-            <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />
+            <SearchOutlined style={{color: filtered ? '#1677ff' : undefined}}/>
         ),
         onFilter: (value, record) =>
             record[dataIndex]
@@ -115,7 +114,7 @@ const ProductTable: React.FC = () => {
         render: (text) =>
             searchedColumn === dataIndex ? (
                 <Highlighter
-                    highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+                    highlightStyle={{backgroundColor: '#ffc069', padding: 0}}
                     searchWords={[searchText]}
                     autoEscape
                     textToHighlight={text ? text.toString() : ''}
@@ -228,8 +227,20 @@ const ProductTable: React.FC = () => {
                 columns={columns}
                 dataSource={products.map((product) => ({...product, key: product.id}))}
                 expandable={{
-                    expandedRowRender: (record) => <p style={{ margin: 0 }}>{record.description}</p>,
-                    rowExpandable: (record) => record.title !== 'Not Expandable',
+                    expandedRowRender: (record) => {
+                        // Якщо description існує, не є порожнім і не дорівнює "undefined", відобразимо його
+                        if (record.description && record.description.trim().length > 0 && record.description !== "undefined") {
+                            return <p style={{ margin: 0 }}>{record.description}</p>;
+                        }
+                        // Якщо description відсутній або порожній, нічого не передаватимемо
+                        else {
+                            return null;
+                        }
+                    },
+                    rowExpandable: (record: IProductModel) => {
+                        // Повертаємо лише булеве значення
+                        return !!(record.description && record.description !== "undefined" && record.description.trim().length > 0);
+                    },
                 }}
             />
         </>

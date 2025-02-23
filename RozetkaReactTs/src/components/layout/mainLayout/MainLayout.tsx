@@ -10,7 +10,8 @@ import Breadcrumbs from "../../other/Breadcrumbs.tsx";
 const MainLayout: React.FC = () => {
 
     const {
-        token: {colorBgContainer, borderRadiusLG},
+        token: {borderRadiusLG},
+        //token: {colorBgContainer, borderRadiusLG},
     } = theme.useToken();
 
 
