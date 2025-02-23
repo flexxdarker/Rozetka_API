@@ -13,7 +13,12 @@ namespace BusinessLogic.Specifications
 
         public class GetAll : Specification<Filter>
         {
-            public GetAll() => Query.Where(x => true);
+            public GetAll() => Query.Where(x => true)
+                .Include(x => x.Values);
+        }
+        public class SeederGetAll : Specification<Filter>
+        {
+            public SeederGetAll() => Query.Where(x => true);
         }
         public class GetById : Specification<Filter>
         {

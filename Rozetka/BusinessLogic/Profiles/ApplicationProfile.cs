@@ -9,6 +9,7 @@ using BusinessLogic.Interfaces;
 using BusinessLogic.Models;
 using BusinessLogic.Models.AdvertModels;
 using BusinessLogic.Models.CategoryModels;
+using BusinessLogic.Models.FilterModels;
 using BusinessLogic.Models.UserModels;
 using System;
 using System.Collections.Generic;
@@ -54,6 +55,14 @@ namespace BusinessLogic.Profiles
                 .ForMember(x => x.Filters, opt => opt.Ignore())
                 .ReverseMap();
 
+            CreateMap<FilterCreateModel, Filter>()
+                .ForMember(x => x.Values, opt => opt.Ignore())
+                .ReverseMap();
+
+            CreateMap<FilterEditModel, Filter>()
+                .ForMember(x => x.Values, opt => opt.Ignore())
+                .ReverseMap();
+
             CreateMap<Filter, FilterDto>()
                 .ForMember(x => x.Values, opt =>
                 opt.MapFrom(z => z.Values.Select(y => new FilterValueDto { Id = y.Id, FilterId = y.FilterId, Value = y.Value })
@@ -61,6 +70,9 @@ namespace BusinessLogic.Profiles
 
             CreateMap<FilterValue, FilterValueDto>()
                 .ForMember(x => x.FilterName, opt => opt.MapFrom(z => z.Filter.Name));
+
+            CreateMap<FilterValueCreationModel, FilterValue>()
+                .ReverseMap();
 
             CreateMap<Image, ImageDto>()
                 .ReverseMap();

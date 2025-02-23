@@ -30,6 +30,7 @@ namespace BusinessLogic.Exstensions
             services.AddScoped<IAdvertValueService, AdvertValueService>();
             services.AddScoped<IBasketService, BasketService>();
             services.AddScoped<IAccountsService, AccountsService>();
+            services.AddScoped<IFilterValueService, FilterValueService>();
 
         }
 

@@ -102,7 +102,7 @@ namespace BusinessLogic.Services
 
             if (advertCreationModel.Values?.Any() ?? false)
             {
-                var values = await filterService.GetValuesByIds(advertCreationModel.Values);
+                var values = await filterService.GetValuesByIdsAsync(advertCreationModel.Values);
                 await advertValueService.CreateRangeAsync(advert, values);
             }
             return mapper.Map<AdvertDto>(advert);

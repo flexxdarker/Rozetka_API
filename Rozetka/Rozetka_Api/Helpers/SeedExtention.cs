@@ -152,7 +152,7 @@ namespace Rozetka_Api.Helpers
                 else Console.WriteLine($"File \"{Path.Combine(config.GetSection("SeederJsonDataDir").Value!, "Filters.json")}\" not found");
             }
 
-            var allFilters = await filtersRepo.GetListBySpec(new FilterSpecs.GetAll())
+            var allFilters = await filtersRepo.GetListBySpec(new FilterSpecs.SeederGetAll())
                 ?? throw new Exception("Filters are not seeded correctly or empty.");
 
             if (!await categoriesRepo.AnyAsync())

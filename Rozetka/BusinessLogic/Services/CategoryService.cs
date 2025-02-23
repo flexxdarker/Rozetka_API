@@ -92,7 +92,7 @@ namespace BusinessLogic.Services
 
 
             if (categoryCreateModel.Filters?.Any() ?? false) { 
-                var filters = await filtersService.GetByIds(categoryCreateModel.Filters);
+                var filters = await filtersService.GetByIdsAsync(categoryCreateModel.Filters);
                 await categoryFiltersService.CreateRangeAsync(category, filters);
             }
             return mapper.Map<CategoryDto>(category);
