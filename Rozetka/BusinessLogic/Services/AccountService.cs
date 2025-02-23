@@ -87,6 +87,9 @@ namespace BusinessLogic.Services
                     return registerResultDto;
                 }
 
+                await userManager.SetLockoutEnabledAsync(user, false);
+                await userManager.SetLockoutEndDateAsync(user, DateTimeOffset.UtcNow - TimeSpan.FromMinutes(1));
+
                 if (resultCreated.Succeeded)
                 {
                     try
@@ -111,6 +114,8 @@ namespace BusinessLogic.Services
             // Асинхронне додавання створеного користувача до певної ролі
             var resultRole = await userManager.AddToRoleAsync(user, Roles.User);
 
+            var createdUser = await userManager.FindByEmailAsync(model.Email);
+
             // Перевірка результату додавання до ролі
             if (!resultRole.Succeeded)
             {
@@ -120,6 +125,7 @@ namespace BusinessLogic.Services
             }
             else
             {
+                
                 registerResultDto.IsSuccess = true;
                 return registerResultDto;
             }
