@@ -93,6 +93,21 @@ namespace BusinessLogic.Profiles
             //    .ForMember(x => x.UserName, opts => opts.MapFrom(s => s.Email))
             //    .ForMember(x => x.RoleId, opts => opts.MapFrom(_ => 2));
 
+            CreateMap<User, LoginModel>().ReverseMap();
+
+            CreateMap<RegisterModel, User>()
+            .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email))
+            .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+            .ForMember(dest => dest.SurName, opt => opt.MapFrom(src => src.Surname))
+            .ForMember(dest => dest.UserRoles, opt => opt.Ignore()); // Assuming UserRoles will be handled separately
+
+            CreateMap<User, RegisterModel>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.Surname, opt => opt.MapFrom(src => src.SurName))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
+                .ForMember(dest => dest.Password, opt => opt.Ignore());
+
             CreateMap<User, UserViewDto>()
             .ForMember(dest => dest.LockoutEnabled, opt => opt.MapFrom(src => src.LockoutEnabled))
             .ForMember(dest => dest.LockoutEnd, opt => opt.MapFrom(src => src.LockoutEnd))
