@@ -16,10 +16,6 @@ namespace BusinessLogic.Specifications
             public GetAll() => Query.Where(x => true)
                 .Include(x => x.Values);
         }
-        public class SeederGetAll : Specification<Filter>
-        {
-            public SeederGetAll() => Query.Where(x => true);
-        }
         public class GetById : Specification<Filter>
         {
             public GetById(int id) => Query.Where(x => x.Id == id);
@@ -32,13 +28,6 @@ namespace BusinessLogic.Specifications
         public class GetByIds : Specification<Filter>
         {
             public GetByIds(IEnumerable<int> ids) => Query.Where(x => ids.Contains(x.Id));
-        }
-
-        public class GetCategoryFilters : Specification<Filter>
-        {
-            public GetCategoryFilters(int categoryId) =>
-                Query.Where(x => x.Categories.Where(x => x.CategoryId == categoryId) != null);
-               
         }
     }
 }

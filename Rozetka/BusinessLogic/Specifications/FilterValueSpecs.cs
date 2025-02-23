@@ -16,10 +16,6 @@ namespace BusinessLogic.Specifications
             public GetAll() => Query.Where(x => true)
                 .Include(x => x.Filter); 
         }
-        public class GetByFilterId : Specification<FilterValue>
-        {
-            public GetByFilterId(int filterId) => Query.Where(x => x.FilterId == filterId);
-        }
         public class GetById : Specification<FilterValue>
         {
             public GetById(int id) => Query.Where(x => x.Id == id);

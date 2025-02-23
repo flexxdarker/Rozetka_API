@@ -18,7 +18,6 @@ namespace BusinessLogic.Interfaces
         Task<FilterDto> EditAsync(FilterEditModel editModel);
         Task<IEnumerable<FilterDto>> GetByIdsAsync(IEnumerable<int> ids);
         Task<IEnumerable<FilterValueDto>> GetValuesByIdsAsync(IEnumerable<int> ids);
-        Task<FilterDto> GetByCategoryIdAsync(int categoryId);
         Task<FilterDto> GetByIdAsync(int Id);
         Task DeleteAsync(int id);
     }
