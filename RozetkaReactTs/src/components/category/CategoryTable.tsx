@@ -1,57 +1,57 @@
 import React, {useEffect, useState} from "react";
 import {Popconfirm, Space, Table} from "antd";
 import Button from "@mui/material/Button";
-import { Resizable } from "react-resizable";
-import {CategoryModel} from "../../models/categoriesModel.ts";
+// import { Resizable } from "react-resizable";
+import {ICategoryModel} from "../../models/categoriesModel.ts";
 import {CategoriesServices} from "../../services/categoriesService.ts";
 import {Link} from "react-router-dom";
 
-const style = {
-    // position: "absolute",
-    right: "-5px",
-    bottom: 0,
-    zIndex: 1,
-    width: "10px",
-    height: "100%",
-    cursor: "ew-resize",
-    display: "grid",
-    placeContent: "center"
-}
+// const style = {
+//     // position: "absolute",
+//     right: "-5px",
+//     bottom: 0,
+//     zIndex: 1,
+//     width: "10px",
+//     height: "100%",
+//     cursor: "ew-resize",
+//     display: "grid",
+//     placeContent: "center"
+// }
 
-const ResizableTitle = (props: { [x: string]: any; onResize: any; width: any; }) => {
-    const { onResize, width, ...restProps } = props;
-
-    if (!width) {
-        return <th {...restProps} />;
-    }
-
-    return (
-        <Resizable
-            width={width}
-            height={0}
-            handle={
-                <span
-                    style={{...style,...{position: "absolute"}}}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                    }}
-                />
-            }
-            onResize={onResize}
-            draggableOpts={{ enableUserSelectHack: false }}
-        >
-            <th {...restProps} />
-        </Resizable>
-    );
-};
+// const ResizableTitle = (props: { [x: string]: any; onResize: any; width: any; }) => {
+//     const { onResize, width, ...restProps } = props;
+//
+//     if (!width) {
+//         return <th {...restProps} />;
+//     }
+//
+//     return (
+//         <Resizable
+//             width={width}
+//             height={0}
+//             handle={
+//                 <span
+//                     style={{...style,...{position: "absolute"}}}
+//                     onClick={(e) => {
+//                         e.stopPropagation();
+//                     }}
+//                 />
+//             }
+//             onResize={onResize}
+//             draggableOpts={{ enableUserSelectHack: false }}
+//         >
+//             <th {...restProps} />
+//         </Resizable>
+//     );
+// };
 
 const CategoryTable : React.FC = () => {
 
-    const [categories, setCategories] = useState<CategoryModel[]>([]);
-    const [item, setItem] = useState("");
-    const [CategoriesId, setCategoriesId] = useState<CategoryModel>();
-
-
+    const [categories, setCategories] = useState<ICategoryModel[]>([]);
+    // // const [item, setItem] = useState("");
+    // const [CategoriesId, setCategoriesId] = useState<CategoryModel>();
+    //
+    //
     const loadCategories = async () => {
         const res = await CategoriesServices.getAll();
         console.log(res);
@@ -65,31 +65,32 @@ const CategoryTable : React.FC = () => {
         //         setCategories(data);
         //     });
     };
-
-    const loadCategoriesId = (async (id: number) => {
-        const res = await CategoriesServices.getById(id);
-        setCategoriesId(res.data);
-        console.log(res);
-    });
-
+    //
+    // const loadCategoriesId = (async (id: number) => {
+    //     const res = await CategoriesServices.getById(id);
+    //     setCategoriesId(res.data);
+    //     console.log(res);
+    // });
+    //
     useEffect(() => {
         loadCategories();
-        loadCategoriesId(1);
+        // loadCategoriesId(1);
     }, []);
-
-    const listItems = categories.map((cat) =>
-        <li key={cat.id}>
-            {cat.name}
-        </li>
-    );
-
-    useEffect(() => {
-        if (CategoriesId != undefined) {
-            setItem(CategoriesId.name)
-        }
-    }, [CategoriesId]);
-
-    const [columns, setColumns] = useState([
+    //
+    // // const listItems = categories.map((cat) =>
+    // //     <li key={cat.id}>
+    // //         {cat.name}
+    // //     </li>
+    // // );
+    //
+    // // useEffect(() => {
+    // //     if (CategoriesId != undefined) {
+    // //         setItem(CategoriesId.name)
+    // //     }
+    // // }, [CategoriesId]);
+    //
+    // const [columns, setColumns] = useState([
+     const [columns] = useState([
         {
             title: "Id",
             dataIndex: "id",
@@ -126,71 +127,96 @@ const CategoryTable : React.FC = () => {
             key: "action",
             width: 150,
             // render: () => <a>Delete</a>
-            render: (_, record) => (
-                <Space size="middle">
-                    {/* <Button>Show</Button> */}
+             render: (record:any) => (
+                 <Space size="middle">
+                              {/* <Button>Show</Button> */}
 
-                    <Link to={`../show/${record.id}`}>
-                        <Button>Show</Button>
-                    </Link>
+                              <Link to={`show/${record.id}`}>
+                                  <Button>Show</Button>
+                              </Link>
 
-                    <Link to={`edit/${record.id}`}>
-                        <Button>Edit</Button>
-                    </Link>
+                              <Link to={`edit/${record.id}`}>
+                                  <Button>Edit</Button>
+                              </Link>
 
-                    <Popconfirm
-                        title="Delete the hotel room"
-                        description={`Are you sure to delete this ${record.name}?`}
-                        // onConfirm={() => deleteHandler(record.id)}
-                        okText="Yes"
-                        cancelText="No"
-                    >
-                        <Button>Delete</Button>
-                    </Popconfirm>
+                              <Popconfirm
+                                  title="Delete the category"
+                                  description={`Are you sure to delete this ${record.name}?`}
+                                  // onConfirm={() => deleteHandler(record.id)}
+                                  okText="Yes"
+                                  cancelText="No"
+                              >
+                                 <Button>Delete</Button>
+                              </Popconfirm>
 
-                    {/* <a>Delete</a> */}
-                </Space>
-            ),
+                              {/* <a>Delete</a> */}
+                          </Space>
+             )
+            // render: (_, record) => (
+            //     <Space size="middle">
+            //         {/* <Button>Show</Button> */}
+            //
+            //         <Link to={`../show/${record.id}`}>
+            //             <Button>Show</Button>
+            //         </Link>
+            //
+            //         <Link to={`edit/${record.id}`}>
+            //             <Button>Edit</Button>
+            //         </Link>
+            //
+            //         <Popconfirm
+            //             title="Delete the hotel room"
+            //             description={`Are you sure to delete this ${record.name}?`}
+            //             // onConfirm={() => deleteHandler(record.id)}
+            //             okText="Yes"
+            //             cancelText="No"
+            //         >
+            //             <Button>Delete</Button>
+            //         </Popconfirm>
+            //
+            //         {/* <a>Delete</a> */}
+            //     </Space>
+            // ),
         }
     ]);
-
-    const components = {
-        header: {
-            cell: ResizableTitle
-        }
-    };
-
-
-    const handleResize =
-        (index: number) =>
-            (e, { size }) => {
-                setColumns((prevColumns) => {
-                    const nextColumns = [...prevColumns];
-                    nextColumns[index] = {...nextColumns[index], width: size.width};
-                    return nextColumns;
-                });
-            };
+    //
+    // const components = {
+    //     header: {
+    //         cell: ResizableTitle
+    //     }
+    // };
+    //
+    //
+    // const handleResize =
+    //     (index: number) =>
+    //         (e, { size }) => {
+    //             setColumns((prevColumns) => {
+    //                 const nextColumns = [...prevColumns];
+    //                 nextColumns[index] = {...nextColumns[index], width: size.width};
+    //                 return nextColumns;
+    //             });
+    //         };
 
     return (
         <>
             <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                 <h1>Category Table for admin</h1>
-                <Link to="/category-create">
+                <Link to="create">
                     <Button variant="contained" style={{maxHeight: "25px"}}>Add</Button>
                 </Link>
             </div>
 
             <Table
                 bordered
-                components={components}
-                columns={columns.map((col, index) => ({
-                    ...col,
-                    onHeaderCell: (column: { width: number; }) => ({
-                        width: column.width,
-                        onResize: handleResize(index)
-                    })
-                }))}
-                // columns={columns2}
+                // components={components}
+                // columns={columns.map((col, index) => ({
+                //     ...col,
+                //     onHeaderCell: (column: { width: number; }) => ({
+                //         width: column.width,
+                //         onResize: handleResize(index)
+                //     })
+                // }))}
+                columns={columns}
                 dataSource={categories.map((category) => ({...category,key: category.id}))}
             />
         </>

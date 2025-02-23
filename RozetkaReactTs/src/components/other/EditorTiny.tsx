@@ -1,14 +1,16 @@
 import {Editor, IAllProps} from "@tinymce/tinymce-react";
+import React from "react";
 import {FC} from "react";
 // import {FC, useRef} from "react";
 // import {Editor as TinyMCEEditorType} from 'tinymce';
 
 interface MyEditorProps extends IAllProps {
+    initialValue?: string;
     onEditorChange: (content: string) => void;
 }
 
 
-const EditorTiny: FC<MyEditorProps> = ({onEditorChange}) => {
+const EditorTiny: FC<MyEditorProps> = ({initialValue,onEditorChange}) => {
 
     // const editorRef = useRef<Editor | null>(null);
     // const editorRef = useRef<TinyMCEEditorType | null>(null);
@@ -53,7 +55,8 @@ const EditorTiny: FC<MyEditorProps> = ({onEditorChange}) => {
                     tinymceScriptSrc='/src/components/tinymce/js/tinymce/tinymce.min.js'
                     // onInit={(_evt, editor) => editorRef.current = editor}
                     //onInit={(editor) => handleInit(editor)}
-                    // initialValue='<p class="placeholder">Enter your text here...</p>'
+                    initialValue={initialValue}
+                    //value={content}
                     init={{
                         placeholder: "Enter your text here...",
                         height: 500, //висота самого інтупа
