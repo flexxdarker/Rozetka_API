@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BusinessLogic.Specifications
+namespace BusinessLogic.Models.FilterModels
 {
-    internal class Specs
+    public class FilterEditModel : BaseFilterModel
     {
+        public int Id { get; set; }
+
     }
 }

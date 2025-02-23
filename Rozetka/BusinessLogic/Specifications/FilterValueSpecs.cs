@@ -9,17 +9,18 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace BusinessLogic.Specifications
 {
-    public class AdvertValueSpecs
+    public class FilterValueSpecs
     {
-        public class GetAll : Specification<AdvertValue>
+        public class GetAll : Specification<FilterValue>
         {
-            public GetAll() => Query.Where(x => true); 
+            public GetAll() => Query.Where(x => true)
+                .Include(x => x.Filter); 
         }
-        public class GetByAdvertId : Specification<AdvertValue>
+        public class GetById : Specification<FilterValue>
         {
-            public GetByAdvertId(int advertId) => Query.Where(x => x.AdvertId == advertId);
+            public GetById(int id) => Query.Where(x => x.Id == id);
         }
-        public class GetByIds : Specification<AdvertValue>
+        public class GetByIds : Specification<FilterValue>
         {
             public GetByIds(IEnumerable<int> ids) => Query.Where(x => ids.Contains(x.Id));
         }

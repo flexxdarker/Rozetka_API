@@ -5,9 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace BusinessLogic.Models.CategoryModels
+namespace BusinessLogic.Models.AdvertModels
 {
-    public class CategoryCreateModel : BaseCategoryModel
+    public class AdvertCreateModel : BaseAdvertModel
     {
+
     }
 }

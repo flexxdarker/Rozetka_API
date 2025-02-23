@@ -2,6 +2,8 @@
 using BusinessLogic.DTOs.Filter;
 using BusinessLogic.Entities;
 using BusinessLogic.Interfaces;
+using BusinessLogic.Models;
+using BusinessLogic.Models.FilterModels;
 using BusinessLogic.Specifications;
 using DataAccess.Repositories;
 using System;
@@ -16,35 +18,70 @@ namespace BusinessLogic.Services
     {
         private readonly IRepository<Filter> filterRepo;
         private readonly IRepository<FilterValue> values;
+        private readonly IFilterValueService filterValueService;
         private readonly IMapper mapper;
 
         public FilterService(IRepository<Filter> filterRepo,
                              IRepository<FilterValue> values,
-                             IMapper mapper)
+                             IMapper mapper,
+                             IFilterValueService filterValueService)
         {
             this.filterRepo = filterRepo;
             this.values = values;
             this.mapper = mapper;
+            this.filterValueService = filterValueService;
         }
 
-        public async Task<IEnumerable<FilterDto>> GetAll()
+        public async Task<IEnumerable<FilterDto>> GetAllAsync()
         {
             return mapper.Map<IEnumerable<FilterDto>> (await filterRepo.GetListBySpec(new FilterSpecs.GetAll()));
         }
 
-        public async Task<IEnumerable<FilterDto>> GetByIds(IEnumerable<int> ids)
+        public async Task<IEnumerable<FilterDto>> GetByIdsAsync(IEnumerable<int> ids)
         {
             return mapper.Map<IEnumerable<FilterDto>>(await filterRepo.GetListBySpec(new FilterSpecs.GetByIds(ids)));
         }
-
-        public async Task<FilterDto> GetByCategoryIdAsync(int categoryId)
-        {
-            return mapper.Map<FilterDto>(await filterRepo.GetItemBySpec(new FilterSpecs.GetCategoryFilters(categoryId)));
-        }
-
-        public async Task<IEnumerable<FilterValueDto>> GetValuesByIds(IEnumerable<int> ids)
+        public async Task<IEnumerable<FilterValueDto>> GetValuesByIdsAsync(IEnumerable<int> ids)
         {
             return mapper.Map<IEnumerable<FilterValueDto>>(await values.GetListBySpec(new FilterSpecs.GetValues(ids)));
+        }
+
+        public async Task<FilterDto> GetByIdAsync(int Id)
+        {
+            return mapper.Map<FilterDto>(await filterRepo.GetItemBySpec(new FilterSpecs.GetById(Id)));
+        }
+
+        public async Task<FilterDto> CreateAsync(FilterCreateModel createModel)
+        {
+            var filter = mapper.Map<Filter>(createModel);
+
+            await filterRepo.InsertAsync(filter);
+            await filterRepo.SaveAsync();
+
+            if (createModel.FilerValues.Any())
+            {
+                foreach (var filterValue in createModel.FilerValues)
+                {
+                    await filterValueService.CreateAsync(new FilterValueCreationModel { FilterId = filter.Id, Value = filterValue });
+                }
+            }
+
+            return mapper.Map<FilterDto>(filter);
+        }
+
+        public Task<FilterDto> EditAsync(FilterEditModel editModel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var filter = mapper.Map<FilterDto>(await filterRepo.GetItemBySpec(new FilterSpecs.GetById(id)));
+            if(filter != null)
+            {
+                await filterRepo.DeleteAsync(filter.Id);
+                await filterRepo.SaveAsync();
+            }
         }
     }
 }

@@ -123,6 +123,9 @@
   <data name="IdMustBePositive" xml:space="preserve">
     <value>Id must be more than zero</value>
   </data>
+  <data name="CategoryCannotBeItsOwnParent" xml:space="preserve">
+    <value>Category cannot be its own parent</value>
+  </data>
   <data name="InvalidToken" xml:space="preserve">
     <value>Token is invalid</value>
   </data>

@@ -59,6 +59,13 @@ namespace Rozetka_Api.Controllers
         }
 
         [AllowAnonymous]
+        [HttpPost("edit")]
+        public async Task<IActionResult> Edit([FromForm] CategoryEditModel categorEditModel)
+        {
+            return Ok(await categoriesService.EditAsync(categorEditModel));
+        }
+
+        [AllowAnonymous]
         [HttpDelete("delete/{id:int}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {

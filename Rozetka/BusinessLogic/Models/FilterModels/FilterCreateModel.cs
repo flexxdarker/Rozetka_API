@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 
-namespace BusinessLogic.Models.CategoryModels
+namespace BusinessLogic.Models.FilterModels
 {
-    public class CategoryCreateModel : BaseCategoryModel
+    public class FilterCreateModel : BaseFilterModel
     {
+
     }
 }

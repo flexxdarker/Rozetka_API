@@ -70,6 +70,15 @@ namespace BusinessLogic {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Category cannot be its own parent.
+        /// </summary>
+        internal static string CategoryCannotBeItsOwnParent {
+            get {
+                return ResourceManager.GetString("CategoryCannotBeItsOwnParent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Id must be more than zero.
         /// </summary>
         internal static string IdMustBePositive {
