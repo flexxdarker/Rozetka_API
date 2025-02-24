@@ -14,9 +14,10 @@ namespace BusinessLogic.Specifications
         public class GetAll : Specification<Advert>
         {
             public GetAll() => Query
-                .Include(c => c.Values)
-                .ThenInclude(f => f.Value)
-                .Include(c => c.Images)
+                .Include(a => a.Values)
+                .ThenInclude(av => av.Value)
+                .ThenInclude(fv => fv.Filter)
+                .Include(a => a.Images)
                 .Where(x => true);
         }
         public class GetById : Specification<Advert>
