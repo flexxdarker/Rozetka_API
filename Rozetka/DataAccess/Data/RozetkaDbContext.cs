@@ -21,6 +21,7 @@ namespace DataAccess.Data
         public DbSet<OrderStatus> OrderStatuses { get; set; }
         public DbSet<FilterValue> FilterValues { get; set; }
         public DbSet<Advert> Adverts { get; set; }
+        public DbSet<AdvertRating> AdvertRatings { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Image> Images { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }

@@ -33,6 +33,7 @@ namespace BusinessLogic.Exstensions
             services.AddScoped<IAccountsService, AccountsService>();
             services.AddScoped<ISmtpService, SmtpService>();
             services.AddScoped<IFilterValueService, FilterValueService>();
+            services.AddScoped<IAdvertRatingService, AdvertRatingService>();
 
         }
 
