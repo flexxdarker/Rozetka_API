@@ -92,7 +92,7 @@ namespace BusinessLogic.Profiles
 
             CreateMap<AdvertValue, AdvertValuePrintDto>()
                 .ForMember(x => x.FilterName, opt => opt.MapFrom(z => z.Value.Filter.Name))
-                .ForMember(x => x.ValueNames, opt => opt.MapFrom(z => new List<string> { z.Value.Value }))
+                .ForMember(x => x.ValueName, opt => opt.MapFrom(z => z.Value.Value))
                 .ReverseMap();
 
             CreateMap<AdvertValue, AdvertValueCreationModel>()

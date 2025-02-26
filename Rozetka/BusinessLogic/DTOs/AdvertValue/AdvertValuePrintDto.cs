@@ -10,6 +10,6 @@ namespace BusinessLogic.DTOs.AdvertValue
     public class AdvertValuePrintDto
     {
         public string FilterName { get; set; } = string.Empty;
-        public IEnumerable<string>? ValueNames { get; set; } = new HashSet<string>();
+        public string ValueName { get; set; } = string.Empty;
     }
 }
