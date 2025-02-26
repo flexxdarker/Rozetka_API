@@ -106,7 +106,6 @@
       "Apple",
       "MediaTek",
       "Qualcomm",
-      "Samsung",
       "Unisoc"
     ]
   },
@@ -215,23 +214,22 @@
       "Понад 16"
     ]
   },
- 
-  {
-    "Name": "Бренд ноутбуку",
-    "Values": [
-      "Acer",
-      "Asus",
-      "Lenovo",
-      "HP",
-      "Dell",
-      "MSI",
-      "Apple",
-      "Xiaomi",
-      "Huawei",
-      "Samsung",
-      "Gigabyte"
-    ]
-  },
+  //{
+  //  "Name": "Бренд ноутбуку",
+  //  "Values": [
+  //    "Acer",
+  //    "Asus",
+  //    "Lenovo",
+  //    "HP",
+  //    "Dell",
+  //    "MSI",
+  //    "Apple",
+  //    "Xiaomi",
+  //    "Huawei",
+  //    "Samsung",
+  //    "Gigabyte"
+  //  ]
+  //},
   {
     "Name": "Процесор",
     "Values": [
