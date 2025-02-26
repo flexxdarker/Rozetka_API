@@ -9,8 +9,8 @@
         public string Description { get; set; } = string.Empty;
         public decimal Price { get; set; }
         public decimal Discount { get; set; }
+        public double AverageRating { get; set; }
         public IEnumerable<int>? Values { get; set; } = new HashSet<int>();
         public ICollection<ImageDto> Images { get; set; } = new HashSet<ImageDto>();
-        public double AverageRating { get; set; }
     }
 }

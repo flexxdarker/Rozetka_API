@@ -33,7 +33,11 @@ namespace BusinessLogic.Services
         public async Task<AdvertRatingDto> CreateAsync(AdvertRatingCreateModel advertRatingCreateModel, string currentUserId)
         {
             var advertRating = mapper.Map<AdvertRating>(advertRatingCreateModel);
-            throw new NotImplementedException();
+            advertRating.UserId = currentUserId;
+            await advertRatingRepo.InsertAsync(advertRating);
+            await advertRatingRepo.SaveAsync();
+
+            return mapper.Map<AdvertRatingDto>(advertRating);
         }
         public async Task<IEnumerable<AdvertRatingDto>> GetAllAsync()
         {

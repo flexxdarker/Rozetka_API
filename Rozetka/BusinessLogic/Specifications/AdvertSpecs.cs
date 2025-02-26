@@ -17,6 +17,7 @@ namespace BusinessLogic.Specifications
                 .Include(c => c.Values)
                 .ThenInclude(f => f.Value)
                 .Include(c => c.Images)
+                .Include(a => a.AdvertRatings)
                 .Where(x => true);
         }
         public class GetById : Specification<Advert>
@@ -25,6 +26,7 @@ namespace BusinessLogic.Specifications
                 .Where(x => x.Id == id)
                 .Include(c => c.Values)
                 .ThenInclude(f => f.Value)
+                .Include(a => a.AdvertRatings)
                 .Include(c => c.Images);
         }
     }

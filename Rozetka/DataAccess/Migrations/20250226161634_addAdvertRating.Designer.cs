@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(RozetkaDbContext))]
-    [Migration("20250225130848_addAdvertRating")]
+    [Migration("20250226161634_addAdvertRating")]
     partial class addAdvertRating
     {
         /// <inheritdoc />
