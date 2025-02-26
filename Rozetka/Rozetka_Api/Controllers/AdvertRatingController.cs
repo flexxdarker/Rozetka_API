@@ -37,7 +37,7 @@ namespace Rozetka_Api.Controllers
             return Ok(await advertRatingService.GetByIdAsync(id));
         }
 
-        [AllowAnonymous]
+        [Authorize]
         [HttpPut("create")]
         public async Task<IActionResult> Create([FromForm] AdvertRatingCreateModel advertCreationModel)
         {
