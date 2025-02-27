@@ -101,7 +101,7 @@ namespace Rozetka_Api.Controllers
                 SurName = user.SurName,
                 Email = user.Email,
                 Birthday = user.Birthdate.ToString("dd-MM-yyyy"),
-                Image = user.Image,
+                Image = user.Image.Name,
                 PhoneNumber = user.PhoneNumber,
                 Roles = roles.ToList(),
             };

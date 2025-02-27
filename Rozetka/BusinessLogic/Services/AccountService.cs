@@ -37,6 +37,7 @@ namespace BusinessLogic.Services
         private readonly ISmtpService smtpService;
         private readonly IUnitOfWork UoW;
         private readonly IRepository<User> userRepo;
+        private readonly IImageService imageService;
 
         public AccountsService(UserManager<User> userManager,
                                 SignInManager<User> signInManager,
@@ -48,7 +49,8 @@ namespace BusinessLogic.Services
                                 IConfiguration configuration,
                                 ISmtpService smtpService,
                                 IUnitOfWork UoW,
-                                IRepository<User> userRepo)
+                                IRepository<User> userRepo,
+                                IImageService imageService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
@@ -61,6 +63,7 @@ namespace BusinessLogic.Services
             this.smtpService = smtpService;
             this.UoW = UoW;
             this.userRepo = userRepo;
+            this.imageService = imageService;
         }
 
         public async Task<RegisterResultDto> Register(RegisterModel model)
@@ -75,6 +78,8 @@ namespace BusinessLogic.Services
 
             if (existingUser == null)
             {
+                var avatar = await imageService.SaveImageAsync(model.Image);
+                user.Image.Name = avatar;
                 // Асинхронне створення нового користувача з паролем
                 var resultCreated = await userManager.CreateAsync(user, model.Password);
 
@@ -90,19 +95,19 @@ namespace BusinessLogic.Services
                 await userManager.SetLockoutEnabledAsync(user, false);
                 await userManager.SetLockoutEndDateAsync(user, DateTimeOffset.UtcNow - TimeSpan.FromMinutes(1));
 
-                if (resultCreated.Succeeded)
-                {
-                    try
-                    {
-                        smtpService.SuccessfulLogin(model.Name + " " + model.Surname, model.Email);
-                    }
-                    catch (Exception ex)
-                    {
-                        registerResultDto.IsSuccess = false;
-                        registerResultDto.Error = $"Лист на пошту відправити не вдалося";
-                        return registerResultDto;
-                    }
-                }
+                //if (resultCreated.Succeeded)
+                //{
+                //    try
+                //    {
+                //        smtpService.SuccessfulLogin(model.Name + " " + model.Surname, model.Email);
+                //    }
+                //    catch (Exception ex)
+                //    {
+                //        registerResultDto.IsSuccess = false;
+                //        registerResultDto.Error = $"Лист на пошту відправити не вдалося";
+                //        return registerResultDto;
+                //    }
+                //}
             }
             else
             {
@@ -189,7 +194,7 @@ namespace BusinessLogic.Services
                 SurName = person.SurName,
                 Email = person.Email,
                 Birthday = person.Birthdate.ToString("dd-MM-yyyy"),
-                Image = person.Image,
+                Image = person.Image.Name,
                 PhoneNumber = person.PhoneNumber,
                 Roles = roles.ToList(),
             };
@@ -360,7 +365,7 @@ namespace BusinessLogic.Services
                 SurName = user.SurName,
                 Email = user.Email,
                 Birthday = user.Birthdate.ToString("dd-MM-yyyy"),
-                Image = user.Image,
+                Image = user.Image.Name,
                 PhoneNumber = user.PhoneNumber,
                 Roles = roles.ToList()
             };
@@ -495,7 +500,9 @@ namespace BusinessLogic.Services
             user.Email = editUserDto.Email;
             if (editUserDto.Image != null)
             {
-                user.Image = editUserDto.Image;
+                imageService.DeleteImage(user.Image.Name);
+                var newAvatar = await imageService.SaveImageAsync(editUserDto.Image);
+                user.Image.Name = newAvatar;
             }
 
             if (!string.IsNullOrEmpty(editUserDto.Birthday))
@@ -563,7 +570,7 @@ namespace BusinessLogic.Services
                 LastName = x.SurName,
                 Email = x.Email,
                 PhoneNumber = x.PhoneNumber,
-                Image = x.Image,
+                Image = x.Image.Name,
                 BirthDate = x.Birthdate,
                 Roles = string.Join(", ", x.UserRoles.Select(ur => ur.Role.Name).ToList())
             }).ToListAsync();

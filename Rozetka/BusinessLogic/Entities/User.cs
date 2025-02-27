@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.Enities;
 using Microsoft.AspNetCore.Identity;
+using Org.BouncyCastle.Bcpg.OpenPgp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +13,10 @@ namespace BusinessLogic.Entities
     {
         public string Name { get; set; }
         public string SurName { get; set; }
-        public string Image { get; set; } = string.Empty;
+        public string PhoneNumber { get; set; }
         public DateTime Birthdate { get; set; }
+        public int ImageId { get; set; }
+        public Image Image { get; set; }
         public virtual ICollection<UserRole> UserRoles { get; set; }
         public ICollection<Order>? Orders { get; set; }
         public ICollection<RefreshToken>? RefreshTokens { get; set; }

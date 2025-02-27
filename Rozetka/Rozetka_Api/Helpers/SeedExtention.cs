@@ -87,13 +87,15 @@ namespace Rozetka_Api.Helpers
         public static async Task SeedAdmin(this IServiceProvider app)
         {
             var userManager = app.GetRequiredService<UserManager<User>>();
+            var imageService = app.GetRequiredService<IImageService>();
 
             const string USERNAME = "admin@gmail.com";
             const string PASSWORD = "Admin1@";
-            const string IMAGE = "image";
+            const string IMAGE = "1200_image.webp";
                 
             var existingUser = await userManager.FindByEmailAsync(USERNAME);
-
+            
+            var image = await imageService.SaveImageAsync(IMAGE);
             if (existingUser == null)
             {
                 var user = new User
@@ -101,10 +103,12 @@ namespace Rozetka_Api.Helpers
                     Name = "Семен",
                     SurName = "Малько",
                     Birthdate = DateTime.UtcNow,
+                    PhoneNumber = "+380123456789",
                     UserName = USERNAME,
-                    Email = USERNAME,
-                    Image = IMAGE,
+                    Email = USERNAME
                 };
+
+                user.Image.Name = image;
 
                 var result = await userManager.CreateAsync(user, PASSWORD);
 
