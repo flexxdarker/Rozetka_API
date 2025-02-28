@@ -1,8 +1,10 @@
 import { combineReducers } from '@reduxjs/toolkit';
-import exampleReducer from './Slice/exampleSlice';
+import { basketReducer } from './reducers/basketReducer';
 
 const rootReducer = combineReducers({
-    example: exampleReducer,
+    basket: basketReducer,
 });
+
+export type RootState = ReturnType<typeof rootReducer>;
 
 export default rootReducer;

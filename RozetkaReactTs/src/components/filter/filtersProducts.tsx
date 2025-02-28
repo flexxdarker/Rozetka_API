@@ -1,5 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import PriceFilter from "./filters/PriceFilter.tsx";
+import MultipleSelect from "./filters/MultipleSelect.tsx";
+import {IFilterModel} from "../../models/filterModel.ts";
+import {ProductServices} from "../../services/productService.ts";
+import {FilterServices} from "../../services/filterService.ts";
 
 // export interface IFilter {
 //     prices?: {
@@ -17,6 +21,8 @@ interface IFilterHotelsSectionProps {
 
 
 const FiltersProducts:React.FC<IFilterHotelsSectionProps> = (props) => {
+
+    const [filters, setFilters] = useState<IFilterModel[]>();
 
     const [minPriceInit, setMinPriceInit] = useState<number>(props.minPriceInit);
     const [maxPriceInit, setMaxPriceInit] = useState<number>(props.maxPriceInit);
@@ -38,9 +44,21 @@ const FiltersProducts:React.FC<IFilterHotelsSectionProps> = (props) => {
         props.onChange!(minPrice,maxPrice);
     }, [minPrice, maxPrice]); // Оновлюємо стан, коли пропси змінюються
 
+    const loadFilters = async () => {
+        const res = await FilterServices.getAll();
+        console.log(res);
+        setFilters(res.data);
+    };
+
+    useEffect(() => {
+        loadFilters();
+    }, []);
+
     return (
         <>
             <PriceFilter maxPriceValueInit={maxPriceInit} minPriceValueInit={minPriceInit} onChange={priceValue}/>
+
+            {/*<MultipleSelect title={} options={}/>*/}
         </>
     );
 };

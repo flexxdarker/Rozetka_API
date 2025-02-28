@@ -4,6 +4,7 @@ import Grid from '@mui/material/Grid2';
 import ProductCard from "./ProductCard.tsx";
 import {IProductModel} from "../../models/productsModel.ts";
 import {ProductServices} from "../../services/productService.ts";
+// import {TokenService} from "../../services/tokenService.ts";
 
 interface ProductCardListProps {
     productsProps ?: IProductModel[];
@@ -21,6 +22,7 @@ const ProductCardList: React.FC<ProductCardListProps> = ({productsProps}) => {
     };
 
 
+
     useEffect(() => {
         if (productsProps === undefined) {
             loadProducts(); // Завантажуємо продукти, якщо пропси не передано
@@ -28,6 +30,9 @@ const ProductCardList: React.FC<ProductCardListProps> = ({productsProps}) => {
             setProducts(productsProps); // Якщо пропси передано, використовуємо їх
 
         }
+
+        // const jwtDecode = TokenService.getAccessTokenPayload();
+        // console.log("jwtDecode:" ,jwtDecode);
     }, [productsProps]); // Додаємо залежність від пропсів
 
     // Перевіряємо, чи є продукти перед рендером

@@ -21,15 +21,32 @@ const CategoryForm: React.FC = () => {
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
 
-    const onFinish: FormProps['onFinish'] = async (values:ICreateCategoryModel) => {
-        console.log('Form values:', {...values}); // Обробка відправки форми з додатковими даними редактора
-        const res = await CategoriesServices.create(values);
-        console.log(res);
-        if (res.status == 200) {
-            message.success("Created");
-            navigate(-1);
+    const onFinish: FormProps['onFinish'] = async (values: ICreateCategoryModel) => {
+        // Якщо parentCategoryId не вибраний, не додаємо його до values
+        if (!values.parentCategoryId) {
+            delete values.parentCategoryId;
+        }
+
+        if (editMode) {
+            console.log('Form values:', {...values}); // Обробка відправки форми з додатковими даними редактора
+            const res = await CategoriesServices.edit(values);
+            console.log(res);
+            if (res.status == 200) {
+                message.success("Edited");
+                navigate(-1);
+            } else {
+                message.warning("Warning");
+            }
         } else {
-            message.warning("Warning");
+            console.log('Form values:', {...values}); // Обробка відправки форми з додатковими даними редактора
+            const res = await CategoriesServices.create(values);
+            console.log(res);
+            if (res.status == 200) {
+                message.success("Create");
+                navigate(-1);
+            } else {
+                message.warning("Warning");
+            }
         }
     };
 
@@ -55,7 +72,7 @@ const CategoryForm: React.FC = () => {
     }, []);
 
     const loadCategories = async () => {
-        const res = await  CategoriesServices.getAll();
+        const res = await CategoriesServices.getAll();
         setCategories(res.data);
     }
 
@@ -66,8 +83,8 @@ const CategoryForm: React.FC = () => {
             <h1>Category form</h1>
             <Form
                 form={form}
-                labelCol={{ span: 6 }}
-                wrapperCol={{ span: 18 }}
+                labelCol={{span: 6}}
+                wrapperCol={{span: 18}}
                 name="login"
                 initialValues={{remember: true}}
                 style={{margin: "20px", width: "auto"}}
@@ -75,14 +92,14 @@ const CategoryForm: React.FC = () => {
                 onFinishFailed={onFinishFailed}
             >
                 {editMode && (
-                <Form.Item
+                    <Form.Item
 
-                    name="id"
-                    label={"Id"}
-                    rules={[{required: true, message: 'Please input id!'}]}
-                >
-                    <Input disabled={true}/>
-                </Form.Item>
+                        name="id"
+                        label={"Id"}
+                        rules={[{required: true, message: 'Please input id!'}]}
+                    >
+                        <Input disabled={true}/>
+                    </Form.Item>
                 )}
 
                 <Form.Item
@@ -94,12 +111,14 @@ const CategoryForm: React.FC = () => {
                 </Form.Item>
 
                 <Form.Item name="parentCategoryId" label="Категорія" hasFeedback
-                           rules={[{required: false, message: 'Please choose the category.'}]}>
-                    <Select placeholder="Select a category">
-                        {categories.map(c => (
-                            <Select.Option key={c.id} value={c.id}> {c.name}</Select.Option>
-                        ))}
-                    </Select>
+                    // rules={[{required: false, message: 'Please choose the category.'}]}
+                >
+                        <Select placeholder="Select a category">
+                            <Select.Option value={undefined}>None</Select.Option> {/* Додано опцію None */}
+                            {categories.map(c => (
+                                <Select.Option key={c.id} value={c.id}>{c.name}</Select.Option>
+                            ))}
+                        </Select>
                 </Form.Item>
 
                 <Form.Item name="image" label="Зображення" valuePropName="Image"
@@ -123,16 +142,16 @@ const CategoryForm: React.FC = () => {
                         }}
                     >
                         <div>
-                            <PlusOutlined />
-                            <div style={{ marginTop: 8 }}>Upload</div>
+                            <PlusOutlined/>
+                            <div style={{marginTop: 8}}>Upload</div>
                         </div>
                     </Upload>
 
                 </Form.Item>
 
 
-                <Form.Item wrapperCol={{ span: 24 }}>
-                    <Button block type="primary" htmlType="submit" disabled={editMode}>
+                <Form.Item wrapperCol={{span: 24}}>
+                    <Button block type="primary" htmlType="submit">
                         {editMode ? `Змінити категорію ${category?.name}` : "Створити категорію"}
                     </Button>
                 </Form.Item>

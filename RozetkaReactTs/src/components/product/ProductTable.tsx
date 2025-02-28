@@ -3,11 +3,12 @@ import {Link} from "react-router-dom";
 import ButtonMui from "@mui/material/Button";
 import {IProductModel} from "../../models/productsModel.ts";
 import {ProductServices} from "../../services/productService.ts";
-import {InputRef, TableColumnType, Input, Button, Space, Table, Popconfirm} from "antd";
+import {InputRef, TableColumnType, Input, Button, Space, Table, Popconfirm, message} from "antd";
 import Highlighter from 'react-highlight-words';
 //npm install @types/react-highlight-words --save-dev
 import {SearchOutlined} from '@ant-design/icons';
 import type {FilterDropdownProps} from 'antd/es/table/interface';
+import dayjs from "dayjs";
 // import {Highlight} from "@mui/icons-material";
 
 
@@ -159,6 +160,13 @@ const ProductTable: React.FC = () => {
             dataIndex: "date",
             key: "date",
             ...getColumnSearchProps('date'),
+            render: (text: string) =>{
+                const formattedDate = dayjs(text).format('DD-MM-YYYY'); // Форматуємо дату до "рік-місяць-день"
+                return <p>{formattedDate}</p>;
+                // <div>{dayjs(text).format('YYYY-MM-DD')}</div>
+                }
+            ,
+
         },
         // {
         //     title: "Description",
@@ -201,7 +209,7 @@ const ProductTable: React.FC = () => {
                     <Popconfirm
                         title="Delete the product"
                         description={`Are you sure to delete this ${record.name}?`}
-                        // onConfirm={() => deleteHandler(record.id)}
+                        onConfirm={() => deleteHandler(record.id)}
                         okText="Yes"
                         cancelText="No"
                     >
@@ -211,6 +219,16 @@ const ProductTable: React.FC = () => {
             )
         },
     ]);
+
+    const deleteHandler = async (id: number) => {
+        const res = await ProductServices.delete(id);
+        if (res.status === 200) {
+            message.success("Product deleted");
+            setProducts(prevProducts => prevProducts.filter(product => product.id !== id));
+        } else {
+            message.error("Something wrong");
+        }
+    };
 
     return (
         <>

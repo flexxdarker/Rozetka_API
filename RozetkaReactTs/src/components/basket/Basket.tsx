@@ -9,12 +9,16 @@ import {Link} from "react-router-dom";
 import getWordForm from "../../functions/getWordForm.ts";
 import formatPrice from "../../functions/formatPrice.ts";
 import navArrowLeft from "../../assets/icons/nav-arrow-left.svg"
+import {useDispatch} from "react-redux";
+import {setTotalPrice} from "../../store/actions/basketActions.ts";
 
 interface BasketProps {
     onClose?: () => void;  // Приймаємо функцію закриття через пропс
 }
 
 const Basket: React.FC<BasketProps> = ({onClose}) => {
+
+    const dispatch = useDispatch();
 
     const [products, setProducts] = useState<IProductModel[]>([]);
     const [basket, setBasket] = useState<IBasketModel>({});
@@ -44,11 +48,17 @@ const Basket: React.FC<BasketProps> = ({onClose}) => {
         };
     }, []);
 
+    // Розрахунок загальної вартості замовлення та збереження її в Redux
     const calculateTotalPrice = () => {
-        return products.reduce((total, product) => {
+        const total = products.reduce((total, product) => {
             const quantity = basket[product.id.toString()] || 0;
             return total + (product.price - product.discount) * quantity;
         }, 0);
+
+        // Оновлюємо загальну ціну в Redux
+        dispatch(setTotalPrice(total));
+
+        return total;
     };
 
     return (

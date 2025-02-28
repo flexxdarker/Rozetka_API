@@ -20,12 +20,16 @@ import { AutoComplete, } from 'antd';
 import type { AutoCompleteProps } from 'antd';
 import {IProductModel} from "../../../models/productsModel.ts";
 import {ProductServices} from "../../../services/productService.ts";
+import { useSelector } from 'react-redux';
+import {RootState} from "../../../store";
+
 
 
 
 const Header = () => {
 
     const [products,setProducts] = useState<IProductModel[]>([]);
+    const totalPrice = useSelector((state: RootState) => state.basket.totalPrice);
 
     const loadProducts = async () => {
         const res = await ProductServices.getAll();
@@ -218,7 +222,7 @@ const Header = () => {
                                 </div>
                                 <span
                                     className="flex w-[65px] h-[20px] justify-center items-center shrink-0 basis-auto font-['Inter'] text-[20px] font-medium leading-[20px] text-[#fff] text-center whitespace-nowrap">
-            Кошик
+            Кошик {totalPrice}
           </span>
                             </button>
                         </div>

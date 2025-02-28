@@ -4,10 +4,15 @@ import { jwtDecode } from "jwt-decode";
 interface ITokenPayload {
     [key: string]: string | number | undefined;
     id: string;
+    name:string;
+    surName:string;
     email: string;
-    dateOfBirth: string;
-    role: string;
-    mobilePhone: string;
+    phoneNumber: string;
+    image?: string;
+    birthdate: string;
+    exp: number;
+    role?: string;
+
 }
 
 
@@ -55,23 +60,40 @@ export const TokenService = {
             return {
                 id:
                     payload[
-                        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+                        "id"
+                        ] as string,
+                name:
+                    payload[
+                        "Name"
+                        ] as string,
+                surName:
+                    payload[
+                        "SurName"
                         ] as string,
                 email:
                     payload[
-                        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
+                        "email"
                         ] as string,
-                dateOfBirth:
+                phoneNumber:
                     payload[
-                        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/dateofbirth"
+                        "phoneNumber"
                         ] as string,
-                role: payload[
-                    "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
-                    ] as string,
-                mobilePhone:
+                image:
+                    payload[
+                        "birthdate"
+                        ] as string,
+                birthdate:
+                    payload[
+                        "birthdate"
+                        ] as string,
+                exp:
                     payload[
                         "exp"
-                        ] as string,
+                        ] as number,
+                role: payload[
+                    "role"
+                    ] as string,
+
                 // mobilePhone:
                 //     payload[
                 //         "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/mobilephone"

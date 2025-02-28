@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Form, type FormProps, Input, message, Modal, Select, Upload, UploadFile} from "antd";
+import {Button, Card, Form, type FormProps, Input, message, Modal, Select, Space, Upload, UploadFile} from "antd";
 import EditorTiny from "../other/EditorTiny.tsx";
 import {useParams} from "react-router-dom";
 import {ProductServices} from "../../services/productService.ts";
@@ -9,6 +9,10 @@ import {ICategoryName} from "../../models/categoriesModel.ts";
 import {CategoriesServices} from "../../services/categoriesService.ts";
 import { PlusOutlined } from '@ant-design/icons';
 import {RcFile, UploadChangeParam} from "antd/es/upload";
+import FilterForm from "./form.tsx";
+import {IFilterModel} from "../../models/filterModel.ts";
+import {FilterServices} from "../../services/filterService.ts";
+import {CloseOutlined} from "@mui/icons-material";
 
 
 const ProductForm: React.FC = () => {
@@ -16,6 +20,10 @@ const ProductForm: React.FC = () => {
     const params = useParams();
     const [editMode, setEditeMode] = useState(false);
     const [product, setProduct] = useState<IProductModel | null>(null);
+    const [filters, setFilters] = useState<IFilterModel[]>([]);
+
+    const [filterValue, setFilterValue] = useState<{ filterId: number, valueId: number }[]>([]);
+
     const [form] = Form.useForm();
     const navigate = useNavigate();
 
@@ -43,28 +51,37 @@ const ProductForm: React.FC = () => {
             console.log('Form values:', {...values, description}); // Обробка відправки форм
             // const imageFiles = values.imageFiles;
         if (editMode) {
+            // if (!values.price) {
+            //     values.price = parseFloat(values.price.toString().replace(".",","));
+            // }
+            //
+            // if (!values.discount) {
+            //     values.discount = parseFloat(values.discount.toString().replace(".",","));
+            // }
+
             console.log("Success edit mode:", {...values, description});
             // values.image = values.image.originFileObj;//???????
 
-            // const res = await ProductServices.edit(values);
-            // console.log(res);
-            // if (res.status == 200) {
-            //     message.success("Update");
-            //     navigate(-1);
-            // } else {
-            //     message.alert("Wrong");
-            // }
-        } else {
-            console.log("Success create:", {...values, description});
-            // values.image = values.image.originFileObj;
-            const res = await ProductServices.create(values);
+            const res = await ProductServices.edit({...values, description});
             console.log(res);
             if (res.status == 200) {
-                message.success("Created");
+                message.success("Update");
                 navigate(-1);
             } else {
                 message.warning("Warning");
-            }// и
+            }
+        } else {
+            console.log("Success create:", {...values, description,filterValue});
+            // values.image = values.image.originFileObj;
+
+            // const res = await ProductServices.create({...values, description});
+            // console.log(res);
+            // if (res.status == 200) {
+            //     message.success("Created");
+            //     navigate(-1);
+            // } else {
+            //     message.warning("Warning");
+            // }
         }// з додатковими даними редактора
     };
 
@@ -75,9 +92,15 @@ const ProductForm: React.FC = () => {
 
     useEffect(() => {
         loadProduct();
-
+        loadFilters();
         loadCategories();
     }, []);
+
+    const loadFilters = async () => {
+        const res = await FilterServices.getAll();
+        console.log(res);
+        setFilters(res.data);
+    };
 
     const loadCategories = async () => {
         const res = await  CategoriesServices.getAll();
@@ -91,10 +114,17 @@ const ProductForm: React.FC = () => {
             console.log(params.id);
             console.log(res.data);
             setProduct(res.data);
+            setEditorContent(res.data.description);
             form.setFieldsValue(res.data);
             //form.setFieldsValue({ name: "name", value: "name" });
         }
     }
+
+    const handleFilterChange = (updatedFilterRows: { filterId: number, valueId: number }[]) => {
+        console.log('Updated Filter Rows:', updatedFilterRows);
+        setFilterValue(updatedFilterRows);
+        // Оновлюємо масив filterRows, який зберігає вибрані значення
+    };
 
 
     return (
@@ -137,28 +167,21 @@ const ProductForm: React.FC = () => {
                 </Form.Item>
 
                 <Form.Item
-                    name="categoryId"
-                    label={"Катеорія:"}
-                    rules={[{required: true, message: 'Please input your product category!'}]}
-                >
-                    <Input placeholder="Category" type={"number"}/>
-                </Form.Item>
-
-                <Form.Item
                     name="price"
                     label={"Ціна:"}
                     rules={[{required: true, message: 'Please input your product price!'}]}
                 >
                     {/*<InputNumber decimalSeparator={","} placeholder='0,00'/>*/}
                     <Input type={"double"} placeholder='0,00'/>
+                    {/*<Input type={"number"} placeholder='0,00'/>*/}
                 </Form.Item>
 
                 <Form.Item
                     name="discount"
                     label={"Знижка:"}
-                    rules={[{required: true, message: 'Please input your product discount!'}]}
                 >
-                    <Input placeholder="Discount" type={"number"}/>
+                    {/*<Input placeholder="Discount" type={"number"}/>*/}
+                    <Input type={"double"} placeholder='0,00'/>
                 </Form.Item>
 
 
@@ -195,8 +218,56 @@ const ProductForm: React.FC = () => {
                 {/*    </Upload>*/}
                 {/*</Form.Item>*/}
 
+                {/*<Form.Item>*/}
+                {/*<FilterForm filters={filters} onChange={handleFilterChange} />*/}
+                <FilterForm filters={filters} onChange={handleFilterChange}/>
+                {/*</Form.Item>*/}
 
-                <Form.Item wrapperCol={{span: 24}} name="description">
+
+
+
+                {/*<Form.List name="items">*/}
+                {/*    {(fields, { add, remove }) => (*/}
+                {/*        <div style={{ display: 'flex', rowGap: 16, flexDirection: 'column' }}>*/}
+                {/*            {fields.map((field) => (*/}
+                {/*                    <Form.Item label="List">*/}
+                {/*                        <Form.List name={[field.name, 'list']}>*/}
+                {/*                            {(subFields, subOpt) => (*/}
+                {/*                                <div style={{ display: 'flex', flexDirection: 'column', rowGap: 16 }}>*/}
+                {/*                                    {subFields.map((subField) => (*/}
+                {/*                                        <Space key={subField.key}>*/}
+                {/*                                            <Form.Item noStyle name={[subField.name, 'first']}>*/}
+                {/*                                                <Input placeholder="first" />*/}
+                {/*                                            </Form.Item>*/}
+                {/*                                            <Form.Item noStyle name={[subField.name, 'second']}>*/}
+                {/*                                                <Input placeholder="second" />*/}
+                {/*                                            </Form.Item>*/}
+                {/*                                            <CloseOutlined*/}
+                {/*                                                onClick={() => {*/}
+                {/*                                                    subOpt.remove(subField.name);*/}
+                {/*                                                }}*/}
+                {/*                                            />*/}
+                {/*                                        </Space>*/}
+                {/*                                    ))}*/}
+                {/*                                    <Button type="dashed" onClick={() => subOpt.add()} block>*/}
+                {/*                                        + Add Sub Item*/}
+                {/*                                    </Button>*/}
+                {/*                                </div>*/}
+                {/*                            )}*/}
+                {/*                        </Form.List>*/}
+                {/*                    </Form.Item>*/}
+                {/*            ))}*/}
+
+                {/*            <Button type="dashed" onClick={() => add()} block>*/}
+                {/*                + Add Item*/}
+                {/*            </Button>*/}
+                {/*        </div>*/}
+                {/*    )}*/}
+                {/*</Form.List>*/}
+
+
+
+                               <Form.Item wrapperCol={{span: 24}} name="description">
                     <EditorTiny
                         //content={editMode && product !== null? product.description : ""}
                         initialValue={editMode && product !== null ? product.description : ""}
@@ -206,7 +277,7 @@ const ProductForm: React.FC = () => {
 
                 <Form.Item wrapperCol={{span: 24}}>
                     <Button block type="primary" htmlType="submit">
-                        Створити оголошення
+                        { editMode ? `Змінити продукт ${product?.title}` : "Створити оголошення"}
                     </Button>
                 </Form.Item>
             </Form>

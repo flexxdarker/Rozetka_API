@@ -31,4 +31,17 @@ export const ProductServices = {
         return api.put("create", data);
     },
 
+    edit(model: ICreateProductModel) {
+        const data = new FormData();
+        for (const prop in model) {
+            data.append(prop, (model as any)[prop]);
+        }
+
+        return api.post("edit", data);
+    },
+
+    delete(id: number) {
+        return api.delete("delete/" + `${id}`);
+    },
+
 };

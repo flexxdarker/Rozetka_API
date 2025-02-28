@@ -53,10 +53,15 @@ export const CategoriesServices = {
     delete(id: number) {
         return api.delete("delete/" + `${id}`);
     },
-    //
-    // edit(model) {
-    //     return axios.put(api, model);
-    // },
+
+    edit(model:ICreateCategoryModel) {
+        const data = new FormData();
+        for (const prop in model) {
+            data.append(prop, (model as any)[prop]);
+        }
+console.log(data);
+        return api.post("edit", data);
+    },
     //
     // getTypeRoom() {
     //     return axios.get(api + "typeroom");
