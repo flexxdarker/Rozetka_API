@@ -31,6 +31,7 @@ namespace BusinessLogic.Profiles
                 .ForMember(x => x.AverageRating, opt => opt.MapFrom(z => z.AdvertRatings.Any() ? Math.Round(z.AdvertRatings.Select(x => x.Rating).Average(), 1) : 0));            
 
             CreateMap<Advert, AdvertPrintDto>()
+                .ForMember(x => x.AverageRating, opt => opt.MapFrom(z => z.AdvertRatings.Any() ? Math.Round(z.AdvertRatings.Select(x => x.Rating).Average(), 1) : 0)) 
                 .ReverseMap();
 
             CreateMap<AdvertCreateModel, Advert>()
