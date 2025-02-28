@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace Rozetka_Api
 {
@@ -11,8 +12,8 @@ namespace Rozetka_Api
         public static void AddJWT(this IServiceCollection services, IConfiguration configuration)
         {
             //var jwtOpts = configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>()!;
-
-            var singinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("adlfjalUIYUuihafy34987432lNLJLhfasify93shfRQR##%^#&&^%@#$!sljdfl33"));
+            var jwtSecretKey = configuration.GetSection("JwtSecretKey").Value!;
+            var singinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecretKey));
 
             services.AddAuthentication(options =>
             {
