@@ -27,7 +27,8 @@ namespace BusinessLogic.Profiles
         {
 
             CreateMap<Advert, AdvertDto>()
-                .ForMember(x => x.Values, opt => opt.MapFrom(z => z.Values.Select(y => y.ValueId)));
+                .ForMember(x => x.Values, opt => opt.MapFrom(z => z.Values.Select(y => y.ValueId)))
+                .ForMember(x => x.AverageRating, opt => opt.MapFrom(z => z.AdvertRatings.Any() ? Math.Round(z.AdvertRatings.Select(x => x.Rating).Average(), 1) : 0));            
 
             CreateMap<Advert, AdvertPrintDto>()
                 .ReverseMap();
@@ -36,6 +37,7 @@ namespace BusinessLogic.Profiles
                 .ForMember(x => x.Values, opt => opt.Ignore())
                 .ForMember(x => x.Price, opt => opt.Ignore())
                 .ForMember(x => x.Discount, opt => opt.Ignore())
+                .ForMember(x => x.AdvertRatings, opt => opt.Ignore())
                 .ReverseMap();
 
             CreateMap<AdvertEditModel, Advert>()
@@ -98,6 +100,11 @@ namespace BusinessLogic.Profiles
             CreateMap<AdvertValue, AdvertValueCreationModel>()
                 .ReverseMap();
 
+            CreateMap<AdvertRating, AdvertRatingCreateModel>()
+                .ReverseMap();
+
+            CreateMap<AdvertRating, AdvertRatingDto>()
+                .ReverseMap();
 
             //CreateMap<RegisterModel, User>()
             //    .ForMember(x => x.UserName, opts => opts.MapFrom(s => s.Email))
