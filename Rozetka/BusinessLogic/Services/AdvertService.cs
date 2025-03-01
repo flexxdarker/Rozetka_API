@@ -38,14 +38,14 @@ namespace BusinessLogic.Services
             this.imageService = imageService;
         }
 
-        public async Task<IEnumerable<AdvertDto>> GetAllAsync()
+        public async Task<IEnumerable<AdvertPrintDto>> GetAllAsync()
         {
-            return mapper.Map<IEnumerable<AdvertDto>>(await advertRepo.GetListBySpec(new AdvertSpecs.GetAll()));
+            return mapper.Map<IEnumerable<AdvertPrintDto>>(await advertRepo.GetListBySpec(new AdvertSpecs.GetAll()));
         }
 
-        public async Task<AdvertDto> GetByIdAsync(int id)
+        public async Task<AdvertPrintDto> GetByIdAsync(int id)
         {
-            return mapper.Map<AdvertDto>(await advertRepo.GetItemBySpec(new  AdvertSpecs.GetById(id)));
+            return mapper.Map<AdvertPrintDto>(await advertRepo.GetItemBySpec(new  AdvertSpecs.GetById(id)));
         }
 
         public async Task<AdvertDto> CreateAsync(AdvertCreateModel advertCreationModel)

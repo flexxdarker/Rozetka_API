@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusinessLogic.DTOs;
 using BusinessLogic.DTOs.Advert;
+using BusinessLogic.DTOs.AdvertValue;
 using BusinessLogic.DTOs.Category;
 using BusinessLogic.DTOs.Filter;
 using BusinessLogic.DTOs.User;
@@ -27,8 +28,12 @@ namespace BusinessLogic.Profiles
 
             CreateMap<Advert, AdvertDto>()
                 .ForMember(x => x.Values, opt => opt.MapFrom(z => z.Values.Select(y => y.ValueId)))
-                .ForMember(x => x.AverageRating, opt => opt.MapFrom(z => z.AdvertRatings.Any() ? Math.Round(z.AdvertRatings.Select(x => x.Rating).Average(), 1) : 0));
-                
+                .ForMember(x => x.AverageRating, opt => opt.MapFrom(z => z.AdvertRatings.Any() ? Math.Round(z.AdvertRatings.Select(x => x.Rating).Average(), 1) : 0));            
+
+            CreateMap<Advert, AdvertPrintDto>()
+                .ForMember(x => x.AverageRating, opt => opt.MapFrom(z => z.AdvertRatings.Any() ? Math.Round(z.AdvertRatings.Select(x => x.Rating).Average(), 1) : 0)) 
+                .ReverseMap();
+
             CreateMap<AdvertCreateModel, Advert>()
                 .ForMember(x => x.Values, opt => opt.Ignore())
                 .ForMember(x => x.Price, opt => opt.Ignore())
@@ -87,6 +92,12 @@ namespace BusinessLogic.Profiles
 
             CreateMap<AdvertValue, AdvertValueDto>()
                 .ReverseMap();
+
+            CreateMap<AdvertValue, AdvertValuePrintDto>()
+                .ForMember(x => x.FilterName, opt => opt.MapFrom(z => z.Value.Filter.Name))
+                .ForMember(x => x.ValueName, opt => opt.MapFrom(z => z.Value.Value))
+                .ReverseMap();
+
             CreateMap<AdvertValue, AdvertValueCreationModel>()
                 .ReverseMap();
 

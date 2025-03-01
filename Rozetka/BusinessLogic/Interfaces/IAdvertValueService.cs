@@ -1,4 +1,4 @@
-using BusinessLogic.DTOs;
+using BusinessLogic.DTOs.AdvertValue;
 using BusinessLogic.DTOs.Filter;
 using BusinessLogic.Entities;
 using BusinessLogic.Models;
