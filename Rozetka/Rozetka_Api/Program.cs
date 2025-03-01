@@ -79,8 +79,12 @@ namespace Rozetka_Api
                 scope.ServiceProvider.SeedAdmin().Wait();
             }
 
-            await app.SeedCategoriesAndFilters(builder.Configuration);
             await app.SeedStatuses(builder.Configuration);
+            await app.SeedFilters(builder.Configuration);
+            await app.SeedCategories(builder.Configuration);
+            await app.SeedCategoryFilters(builder.Configuration);
+            await app.SeedAdverts(builder.Configuration);
+            await app.SeedAdvertValues(builder.Configuration);
             await app.RunAsync();
         }
     }

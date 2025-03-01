@@ -1,6 +1,4 @@
-﻿using static Rozetka_Api.Models.CategoryConfigModels.CategorySeedModel;
-
-namespace Rozetka_Api.Models.CategoryConfigModels
+﻿namespace Rozetka_Api.Models.CategorySeedModels
 {
     public partial class CategorySeedModel
     {
