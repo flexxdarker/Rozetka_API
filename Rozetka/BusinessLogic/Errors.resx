@@ -141,4 +141,13 @@
   <data name="InvalidPropertyId" xml:space="preserve">
     <value>{PropertyName} is invalid!</value>
   </data>
+  <data name="RatingLessThanOrEqualTo5" xml:space="preserve">
+    <value>Advert rating must be less or equal than 5</value>
+  </data>
+  <data name="InvalidCategoryId" xml:space="preserve">
+    <value>Category Id is invalid</value>
+  </data>
+  <data name="InvalidAdvertId" xml:space="preserve">
+    <value>Advert Id is invalid</value>
+  </data>
 </root>

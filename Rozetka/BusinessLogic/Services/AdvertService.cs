@@ -63,8 +63,10 @@ namespace BusinessLogic.Services
         public async Task<AdvertDto> CreateAsync(AdvertCreateModel advertCreationModel)
         {
             advertCreateModelValidator.ValidateAndThrow(advertCreationModel);
-            if(!await categorytRepo.AnyAsync(x => x.Id == advertCreationModel.CategoryId))
-                throw new HttpException(Errors.InvalidPropertyId, HttpStatusCode.BadRequest);
+            if (!await categorytRepo.AnyAsync(x => x.Id == advertCreationModel.CategoryId))
+            {
+                throw new HttpException(Errors.InvalidCategoryId, HttpStatusCode.BadRequest);
+            }
 
             var advert = mapper.Map<Advert>(advertCreationModel);
 

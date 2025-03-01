@@ -106,6 +106,24 @@ namespace BusinessLogic {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Advert Id is invalid.
+        /// </summary>
+        internal static string InvalidAdvertId {
+            get {
+                return ResourceManager.GetString("InvalidAdvertId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Category Id is invalid.
+        /// </summary>
+        internal static string InvalidCategoryId {
+            get {
+                return ResourceManager.GetString("InvalidCategoryId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {PropertyName} not recognized.
         /// </summary>
         internal static string InvalidPriceError {
@@ -129,6 +147,15 @@ namespace BusinessLogic {
         internal static string InvalidToken {
             get {
                 return ResourceManager.GetString("InvalidToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Advert rating must be less or equal than 5.
+        /// </summary>
+        internal static string RatingLessThanOrEqualTo5 {
+            get {
+                return ResourceManager.GetString("RatingLessThanOrEqualTo5", resourceCulture);
             }
         }
     }
