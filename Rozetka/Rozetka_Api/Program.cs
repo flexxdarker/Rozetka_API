@@ -50,6 +50,7 @@ namespace Rozetka_Api
 
             builder.Services.AddDbContext(connStr); 
             builder.Services.AddCustomServices();
+            builder.Services.AddValidationServices();
             builder.Services.AddRepositories();
 
             var app = builder.Build();
