@@ -8,6 +8,7 @@ using System.Security.Claims;
 using DataAccess.Repositories;
 using BusinessLogic.Models.AdvertModels;
 using BusinessLogic.Validators;
+using BusinessLogic.Entities;
 
 namespace BusinessLogic.Exstensions
 {
@@ -40,6 +41,8 @@ namespace BusinessLogic.Exstensions
         public static void AddValidationServices(this IServiceCollection services)
         { 
             services.AddScoped<IValidator<AdvertRatingCreateModel>, AdvertRatingCreateModelValidator>();
+            services.AddScoped<IValidator<AdvertCreateModel>, AdvertCreateModelValidator>();
+            services.AddScoped<IValidator<Advert>, AdvertValidator>();
             
         }
     }

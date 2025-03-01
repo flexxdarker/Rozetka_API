@@ -2,15 +2,19 @@
 using BusinessLogic.DTOs;
 using BusinessLogic.DTOs.Advert;
 using BusinessLogic.Entities;
+using BusinessLogic.Exceptions;
 using BusinessLogic.Interfaces;
 using BusinessLogic.Models;
 using BusinessLogic.Models.AdvertModels;
 using BusinessLogic.Specifications;
+using BusinessLogic.Validators;
 using DataAccess.Repositories;
+using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,22 +24,30 @@ namespace BusinessLogic.Services
     {
         private readonly IMapper mapper;
         private readonly IRepository<Advert> advertRepo;
-        private readonly IRepository<Image> imageRepo;
         private readonly IFilterService filterService;
+        private readonly IRepository<Category> categorytRepo;
         private readonly IAdvertValueService advertValueService;
         private readonly IImageService imageService;
+        private readonly IValidator<AdvertCreateModel> advertCreateModelValidator;
+        private readonly IValidator<Advert> advertValidator;
 
         public AdvertService(IMapper mapper, 
             IRepository<Advert> advertRepo,
             IFilterService filterService,
             IAdvertValueService advertValueService, 
-            IImageService imageService)
+            IImageService imageService, 
+            IValidator<AdvertCreateModel> advertCreateModelValidator,
+            IValidator<Advert> advertValidator,
+            IRepository<Category> categorytRepo)
         {
             this.mapper = mapper;
             this.advertRepo = advertRepo;
             this.filterService = filterService;
             this.advertValueService = advertValueService;
             this.imageService = imageService;
+            this.advertCreateModelValidator = advertCreateModelValidator;
+            this.advertValidator = advertValidator;
+            this.categorytRepo = categorytRepo;
         }
 
         public async Task<IEnumerable<AdvertPrintDto>> GetAllAsync()
@@ -50,6 +62,10 @@ namespace BusinessLogic.Services
 
         public async Task<AdvertDto> CreateAsync(AdvertCreateModel advertCreationModel)
         {
+            advertCreateModelValidator.ValidateAndThrow(advertCreationModel);
+            if(!await categorytRepo.AnyAsync(x => x.Id == advertCreationModel.CategoryId))
+                throw new HttpException(Errors.InvalidPropertyId, HttpStatusCode.BadRequest);
+
             var advert = mapper.Map<Advert>(advertCreationModel);
 
             CultureInfo[] cultures = {
@@ -63,15 +79,13 @@ namespace BusinessLogic.Services
 
             foreach (var culture in cultures)
             {
-                if (Decimal.TryParse(advertCreationModel.Price, NumberStyles.Number, culture, out price) && !priceParsed) {
-                    Console.WriteLine($"\n\n\n\nРозпізнано культуру: {culture.Name}");
-                    Console.WriteLine($"\n\n\n\nЦіна: {price}\n\n");
+                if (Decimal.TryParse(advertCreationModel.Price, NumberStyles.Number, culture, out price) && !priceParsed)
+                {
                     advert.Price = price;
                     priceParsed = true;
                 }
-                if (Decimal.TryParse(advertCreationModel.Discount, NumberStyles.Number, culture, out discount) && !discountParsed) {
-                    Console.WriteLine($"\n\n\n\nРозпізнано культуру: {culture.Name}");
-                    Console.WriteLine($"Знижка: {discount}\n\n");
+                if (Decimal.TryParse(advertCreationModel.Discount, NumberStyles.Number, culture, out discount) && !discountParsed)
+                {
                     advert.Discount = discount;
                     discountParsed = true;
                 }
@@ -79,11 +93,9 @@ namespace BusinessLogic.Services
                     break;
             }
 
-            if (!priceParsed || !discountParsed)
-            {
-                Console.WriteLine("Не вдалося розпізнати культуру.");
-            }
-
+            advertValidator.ValidateAndThrow(advert);
+            
+                
             var savedImages = await imageService.SaveImagesAsync(advertCreationModel.ImageFiles);
 
             advert.Images.Clear();
@@ -123,7 +135,6 @@ namespace BusinessLogic.Services
                 }
             }
         }
-        //15;07   96
         public async Task<AdvertDto> EditAsync(AdvertEditModel editModel)
         {
             var advert = await advertRepo.GetItemBySpec(new AdvertSpecs.GetById(editModel.Id));

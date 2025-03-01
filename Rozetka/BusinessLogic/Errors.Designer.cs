@@ -61,15 +61,6 @@ namespace BusinessLogic {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Advert is not found.
-        /// </summary>
-        internal static string AdvertNotFound {
-            get {
-                return ResourceManager.GetString("AdvertNotFound", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Category cannot be its own parent.
         /// </summary>
         internal static string CategoryCannotBeItsOwnParent {
@@ -79,11 +70,56 @@ namespace BusinessLogic {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Discount can&apos;t be greater or equal than price .
+        /// </summary>
+        internal static string DiscountGreaterOrEqualPrice {
+            get {
+                return ResourceManager.GetString("DiscountGreaterOrEqualPrice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {PropertyName} must be greater or equal to zero.
+        /// </summary>
+        internal static string GreaterEqualZeroError {
+            get {
+                return ResourceManager.GetString("GreaterEqualZeroError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {PropertyName} must be greater than zero.
+        /// </summary>
+        internal static string GreaterZeroError {
+            get {
+                return ResourceManager.GetString("GreaterZeroError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Id must be more than zero.
         /// </summary>
         internal static string IdMustBePositive {
             get {
                 return ResourceManager.GetString("IdMustBePositive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {PropertyName} not recognized.
+        /// </summary>
+        internal static string InvalidPriceError {
+            get {
+                return ResourceManager.GetString("InvalidPriceError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {PropertyName} is invalid!.
+        /// </summary>
+        internal static string InvalidPropertyId {
+            get {
+                return ResourceManager.GetString("InvalidPropertyId", resourceCulture);
             }
         }
         
