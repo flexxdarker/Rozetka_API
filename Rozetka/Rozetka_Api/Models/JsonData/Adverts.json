@@ -5,7 +5,7 @@
     "Price": "32999",
     "Discount": "4000",
     "CategoryId": "2",
-    "AdvertValues": []
+    "AdvertValues": [ "Від 4.01\" до 5.0\"", "AMOLED", "144", "Алюміній", "Intel Core i7"]
   },
   {
     "Title": "Смартфон One Plus Nord CE3 Light 5G 8/128Gb Chromatic Gray",
@@ -13,7 +13,14 @@
     "Price": "1234",
     "Discount": "12",
     "CategoryId": "11",
-    "AdvertValues": []
+    "AdvertValues": [
+        "Від 4.01\" до 5.0\"",
+        "AMOLED",
+        "120",
+        "Алюміній",
+        "Від 14 до 19 мп",
+        "128 ГБ"
+    ]
   },
   {
     "Title": "Смартфон Refurbished Apple iPhone 13 Pro 128GB Graphite",
@@ -21,7 +28,7 @@
     "Price": "1234",
     "Discount": "12",
     "CategoryId": "11",
-    "AdvertValues": []
+    "AdvertValues": [ "Apple", "Від 4.01\" до 5.0\"", "128 ГБ", "60", "AMOLED", "Скло", "Сірий" ]
   },
   {
     "Title": "Смартфон Apple iPhone 15 Plus 256GB Green",
@@ -29,7 +36,7 @@
     "Price": "1234",
     "Discount": "12",
     "CategoryId": "11",
-    "AdvertValues": []
+    "AdvertValues": [ "Apple", "Від 4.01\" до 5.0\"", "256 ГБ", "60", "AMOLED", "Скло", "Лайм" ]
   },
   {
     "Title": "Ноутбук ACER Nitro V 15 ANV15-51 (NH.QNCEU.009)",
@@ -37,6 +44,6 @@
     "Price": "1234",
     "Discount": "12",
     "CategoryId": "2",
-    "AdvertValues": []
+    "AdvertValues": [ "ACER", "OLED", "240", "Алюміній", "512 ГБ", "Intel Core i5", "GeForce RTX 4090" ]
   }
 ]
