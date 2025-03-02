@@ -109,7 +109,7 @@ namespace Rozetka_Api.Controllers
             return Ok(new { token });
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpPost("change-password")]
         public async Task<IActionResult> ChangePassword([FromForm] ChangePasswordDto model)
         {
