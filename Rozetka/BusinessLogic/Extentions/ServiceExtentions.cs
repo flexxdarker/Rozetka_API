@@ -6,6 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Linq.Expressions;
 using System.Security.Claims;
 using DataAccess.Repositories;
+using BusinessLogic.Models.AdvertModels;
+using BusinessLogic.Validators;
 
 namespace BusinessLogic.Exstensions
 {
@@ -33,8 +35,12 @@ namespace BusinessLogic.Exstensions
             services.AddScoped<IAccountsService, AccountsService>();
             services.AddScoped<ISmtpService, SmtpService>();
             services.AddScoped<IFilterValueService, FilterValueService>();
-
+            services.AddScoped<IAdvertRatingService, AdvertRatingService>();
         }
-
+        public static void AddValidationServices(this IServiceCollection services)
+        { 
+            services.AddScoped<IValidator<AdvertRatingCreateModel>, AdvertRatingCreateModelValidator>();
+            
+        }
     }
 }

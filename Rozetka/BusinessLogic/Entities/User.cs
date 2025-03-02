@@ -20,5 +20,7 @@ namespace BusinessLogic.Entities
         public virtual ICollection<UserRole> UserRoles { get; set; }
         public ICollection<Order>? Orders { get; set; }
         public ICollection<RefreshToken>? RefreshTokens { get; set; }
+        public ICollection<AdvertRating> AdvertRatings { get; set; } = new HashSet<AdvertRating>();
+
     }
 }
