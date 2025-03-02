@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Card, Form, type FormProps, Input, message, Modal, Select, Space, Upload, UploadFile} from "antd";
+// import {Button, Card, Form, type FormProps, Input, message, Modal, Select, Space, Upload, UploadFile} from "antd";
+import {Button, Form, type FormProps, Input, message, Modal, Select, Upload, UploadFile} from "antd";
 import EditorTiny from "../other/EditorTiny.tsx";
 import {useParams} from "react-router-dom";
 import {ProductServices} from "../../services/productService.ts";
@@ -12,7 +13,7 @@ import {RcFile, UploadChangeParam} from "antd/es/upload";
 import FilterForm from "./form.tsx";
 import {IFilterModel} from "../../models/filterModel.ts";
 import {FilterServices} from "../../services/filterService.ts";
-import {CloseOutlined} from "@mui/icons-material";
+// import {CloseOutlined} from "@mui/icons-material";
 
 
 const ProductForm: React.FC = () => {
@@ -49,7 +50,7 @@ const ProductForm: React.FC = () => {
 
     const onFinish: FormProps<ICreateProductModel>['onFinish'] = async (values) => {
             console.log('Form values:', {...values, description}); // Обробка відправки форм
-            // const imageFiles = values.imageFiles;
+            //const imageFiles = values.imageFiles;
         if (editMode) {
             // if (!values.price) {
             //     values.price = parseFloat(values.price.toString().replace(".",","));
@@ -60,7 +61,7 @@ const ProductForm: React.FC = () => {
             // }
 
             console.log("Success edit mode:", {...values, description});
-            // values.image = values.image.originFileObj;//???????
+             //values.imageFiles = values.imageFiles.originFileObj;//???????
 
             const res = await ProductServices.edit({...values, description});
             console.log(res);
@@ -71,17 +72,18 @@ const ProductForm: React.FC = () => {
                 message.warning("Warning");
             }
         } else {
+            // console.log("Success create:", {...values, description,filterValue});
             console.log("Success create:", {...values, description,filterValue});
-            // values.image = values.image.originFileObj;
+            //values.imageFiles = values.imageFiles.originFileObj;
 
-            // const res = await ProductServices.create({...values, description});
-            // console.log(res);
-            // if (res.status == 200) {
-            //     message.success("Created");
-            //     navigate(-1);
-            // } else {
-            //     message.warning("Warning");
-            // }
+            const res = await ProductServices.create({...values, description});
+            console.log(res);
+            if (res.status == 200) {
+                message.success("Created");
+                navigate(-1);
+            } else {
+                message.warning("Warning");
+            }
         }// з додатковими даними редактора
     };
 

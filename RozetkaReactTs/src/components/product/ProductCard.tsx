@@ -24,6 +24,7 @@ interface ItemProps {
     item: IProductModel;
 }
 
+const uploadings = import.meta.env.VITE_ROZETKA_UPLOADINGS;
 
 const ProductCard: React.FC<ItemProps> = ({item}) => {
 
@@ -110,8 +111,10 @@ const ProductCard: React.FC<ItemProps> = ({item}) => {
             <div className="flex flex-col gap-[16px] items-center self-stretch shrink-0 flex-nowrap">
                 <Link to={`product-page/${item.id}`}>
                     <div
-                        className="w-[220px] h-[220px] shrink-0 bg-[url(./assets/69_4000.png)] bg-cover bg-no-repeat ">
+                        className={`w-[220px] h-[220px] shrink-0 bg-[url(${uploadings + "400_" + item.images[0]?.name})] bg-cover bg-no-repeat `}>
                         {/*<img src={cart}/>*/}
+                        <img src={`${uploadings + "400_" + item.images[0]?.name}`} alt="no image"/>
+                        {/*<img src="http://13.60.254.142:5817/uploadings/400_32d1lza2.c13.webp" alt="vcv"/>*/}
                     </div>
                 </Link>
                 <div className="flex flex-col gap-[8px] items-start self-stretch shrink-0 flex-nowrap">
