@@ -145,11 +145,11 @@ namespace Rozetka_Api.Controllers
             return Ok(await accountsService.BlockUser(model.UserId));
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpGet("UserById")]
-        public async Task<IActionResult> GetUser(string id)
+        public async Task<IActionResult> GetUser()
         {
-            //string id = User.Claims.ToList()[0].Value.ToString();
+            string id = User.Claims.ToList()[0].Value.ToString();
 
             var user = await accountsService.GetUser(id);
 

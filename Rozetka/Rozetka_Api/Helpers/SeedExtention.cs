@@ -175,6 +175,9 @@ namespace Rozetka_Api.Helpers
 
                     // 4. Додаємо користувача в роль
                     await userManager.AddToRoleAsync(user, Roles.ADMIN);
+
+                    await userManager.SetLockoutEnabledAsync(user, false);
+                    await userManager.SetLockoutEndDateAsync(user, DateTimeOffset.UtcNow - TimeSpan.FromMinutes(1));
                 }
             }
 
