@@ -1,5 +1,9 @@
 # React + TypeScript + Vite
 
+docker build -t rozetka-client .
+
+docker run -d --restart=always --name rozetka_container -p 6543:80 rozetka-client
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:

@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import PriceFilter from "./filters/PriceFilter.tsx";
-import MultipleSelect from "./filters/MultipleSelect.tsx";
+// import MultipleSelect from "./filters/MultipleSelect.tsx";
 import {IFilterModel} from "../../models/filterModel.ts";
-import {ProductServices} from "../../services/productService.ts";
+// import {ProductServices} from "../../services/productService.ts";
 import {FilterServices} from "../../services/filterService.ts";
 
 // export interface IFilter {
@@ -22,6 +22,7 @@ interface IFilterHotelsSectionProps {
 
 const FiltersProducts:React.FC<IFilterHotelsSectionProps> = (props) => {
 
+    //@ts-ignore
     const [filters, setFilters] = useState<IFilterModel[]>();
 
     const [minPriceInit, setMinPriceInit] = useState<number>(props.minPriceInit);

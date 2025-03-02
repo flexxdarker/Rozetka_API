@@ -1,7 +1,3 @@
-#FROM ubuntu:latest
-#LABEL authors="Borys"
-#
-#ENTRYPOINT ["top", "-b"]
 # Виберіть базовий образ
 FROM node:18 AS build
 
@@ -15,7 +11,7 @@ COPY package*.json ./
 RUN npm install
 
 # Скопіюйте весь код
-COPY src .
+COPY . .
 
 # Побудуйте проект
 RUN npm run build
@@ -28,7 +24,7 @@ COPY --from=build /app/dist /usr/share/nginx/html
 RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx/nginx.conf /etc/nginx/conf.d
 # Відкрийте порт для сервера
-EXPOSE 6543
+EXPOSE 80
 
 # Запустіть Nginx
 CMD ["nginx", "-g", "daemon off;"]
