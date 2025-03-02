@@ -17,5 +17,6 @@ namespace BusinessLogic.Entities
         public ICollection<Image> Images { get; set; } = new HashSet<Image>();
         public ICollection<AdvertValue> Values { get; set; } = new HashSet<AdvertValue>();
         public ICollection<OrderAdvert> Orders { get; set; } = new HashSet<OrderAdvert>();
+        public ICollection<AdvertRating> AdvertRatings { get; set; } = new HashSet<AdvertRating>();
     }
 }

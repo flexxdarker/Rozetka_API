@@ -15,7 +15,7 @@ namespace BusinessLogic.DTOs.User
         public string PhoneNumber { get; set; } = string.Empty;
         public DateTime BirthDate { get; set; }
         public string Password { get; set; } = string.Empty;
-        public string Image { get; set; } = string.Empty;
+        public string Avatar { get; set; } = string.Empty;
         public bool LockoutEnabled { get; set; } = false;
         public DateTimeOffset? LockoutEnd { get; set; }
         public string Roles { get; set; }

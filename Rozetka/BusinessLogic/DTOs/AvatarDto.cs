@@ -1,5 +1,4 @@
-﻿using BusinessLogic.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic.DTOs
 {
-    public class AdvertValueDto
+    public class AvatarDto
     {
         public int Id { get; set; }
-        public int AdvertId { get; set; }
-        public int ValueId { get; set; }
+        public string Name { get; set; }
+        public string UserId { get; set; }
     }
 }

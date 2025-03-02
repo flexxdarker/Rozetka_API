@@ -12,6 +12,7 @@ using BusinessLogic.Entities;
 using BusinessLogic.Exceptions;
 using BusinessLogic.Helpers;
 using BusinessLogic.Interfaces;
+using DataAccess.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -26,40 +27,50 @@ namespace BusinessLogic.Services
         private readonly IConfiguration configuration;
         private readonly UserManager<User> userManager;
         private readonly JwtOptions jwtOptions;
+        private readonly IRepository<Avatar> avatarRepository;
 
-        public JwtService(IConfiguration configuration, UserManager<User> userManager, IConfiguration config)
+        public JwtService(IConfiguration configuration, UserManager<User> userManager, IConfiguration config, IRepository<Avatar> avatarRepository)
         {
             this.configuration = configuration;
             this.userManager = userManager;
             this.jwtOptions = configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>()!;
             _config = config;
+            this.avatarRepository = avatarRepository;
         }
 
         public async Task<string> CreateToken(UserTokenInfo user)
         {
-            // TODO: make separate method
-            var userDb = await userManager.FindByIdAsync(user.Id);
+            if (user == null)
+                throw new ArgumentNullException(nameof(user), "User cannot be null");
 
-            var roles = await userManager.GetRolesAsync(userDb);
+            var userDb = await userManager.FindByIdAsync(user.Id);
+            if (userDb == null)
+                throw new Exception($"User with ID {user.Id} not found");
+
+            var roles = await userManager.GetRolesAsync(userDb) ?? new List<string>();
 
             // Формуємо список клеймів
             List<Claim> claims = new()
-            {
-              new Claim("id", user.Id.ToString()),
-              new Claim("Name", user.Name),
-              new Claim("SurName", user.SurName),
-              new Claim("email", user.Email),
-              new Claim("phoneNumber", user.PhoneNumber ?? string.Empty),
-              new Claim("image", user.Image ?? string.Empty),
-              new Claim("birthdate", user.Birthday ?? string.Empty),
-             };
+    {
+        new Claim("id", user.Id.ToString()),
+        new Claim("Name", user.Name ?? string.Empty),
+        new Claim("SurName", user.SurName ?? string.Empty),
+        new Claim("email", user.Email ?? string.Empty),
+        new Claim("phoneNumber", user.PhoneNumber ?? string.Empty),
+        new Claim("avatar", user.AvatarPath), // Перевірка на null
+        new Claim("birthdate", user.Birthday ?? string.Empty),  // Перевірка на null
+    };
 
             foreach (var role in roles)
             {
                 claims.Add(new Claim("roles", role));
             }
 
-            var signinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetValue<System.String>("JwtSecretKey")));
+            var secretKey = _config.GetValue<string>("JwtSecretKey");
+            if (string.IsNullOrEmpty(secretKey))
+                throw new Exception("JWT Secret Key is missing in configuration");
+
+            var signinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
             var signinCredentials = new SigningCredentials(signinKey, SecurityAlgorithms.HmacSha256);
 
             var jwt = new JwtSecurityToken(
@@ -67,6 +78,7 @@ namespace BusinessLogic.Services
                 expires: DateTime.Now.AddDays(10),
                 claims: claims
             );
+
             return new JwtSecurityTokenHandler().WriteToken(jwt);
         }
 

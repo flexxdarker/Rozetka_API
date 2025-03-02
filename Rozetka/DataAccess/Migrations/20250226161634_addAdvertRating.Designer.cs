@@ -3,6 +3,7 @@ using System;
 using DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(RozetkaDbContext))]
-    partial class RozetkaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250226161634_addAdvertRating")]
+    partial class addAdvertRating
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -212,27 +215,6 @@ namespace DataAccess.Migrations
                     b.ToTable("AdvertValue");
                 });
 
-            modelBuilder.Entity("BusinessLogic.Entities.Avatar", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Avatars");
-                });
-
             modelBuilder.Entity("BusinessLogic.Entities.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -402,9 +384,6 @@ namespace DataAccess.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("AvatarId")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime>("Birthdate")
                         .HasColumnType("timestamp with time zone");
 
@@ -418,6 +397,10 @@ namespace DataAccess.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("boolean");
+
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("boolean");
@@ -441,7 +424,6 @@ namespace DataAccess.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("PhoneNumber")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("PhoneNumberConfirmed")
@@ -462,9 +444,6 @@ namespace DataAccess.Migrations
                         .HasColumnType("character varying(256)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AvatarId")
-                        .IsUnique();
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -788,15 +767,6 @@ namespace DataAccess.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("BusinessLogic.Entities.User", b =>
-                {
-                    b.HasOne("BusinessLogic.Entities.Avatar", "Avatar")
-                        .WithOne("User")
-                        .HasForeignKey("BusinessLogic.Entities.User", "AvatarId");
-
-                    b.Navigation("Avatar");
-                });
-
             modelBuilder.Entity("BusinessLogic.Entities.UserRole", b =>
                 {
                     b.HasOne("BusinessLogic.Entities.Role", "Role")
@@ -886,12 +856,6 @@ namespace DataAccess.Migrations
                     b.Navigation("Orders");
 
                     b.Navigation("Values");
-                });
-
-            modelBuilder.Entity("BusinessLogic.Entities.Avatar", b =>
-                {
-                    b.Navigation("User")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("BusinessLogic.Entities.Category", b =>

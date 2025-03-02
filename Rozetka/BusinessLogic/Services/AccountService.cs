@@ -37,6 +37,8 @@ namespace BusinessLogic.Services
         private readonly ISmtpService smtpService;
         private readonly IUnitOfWork UoW;
         private readonly IRepository<User> userRepo;
+        private readonly IImageService imageService;
+        private readonly IRepository<Avatar> avatarRepository;
 
         public AccountsService(UserManager<User> userManager,
                                 SignInManager<User> signInManager,
@@ -48,7 +50,9 @@ namespace BusinessLogic.Services
                                 IConfiguration configuration,
                                 ISmtpService smtpService,
                                 IUnitOfWork UoW,
-                                IRepository<User> userRepo)
+                                IRepository<User> userRepo,
+                                IImageService imageService,
+                                IRepository<Avatar> avatarRepository)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
@@ -61,6 +65,8 @@ namespace BusinessLogic.Services
             this.smtpService = smtpService;
             this.UoW = UoW;
             this.userRepo = userRepo;
+            this.imageService = imageService;
+            this.avatarRepository = avatarRepository;
         }
 
         public async Task<RegisterResultDto> Register(RegisterModel model)
@@ -75,6 +81,11 @@ namespace BusinessLogic.Services
 
             if (existingUser == null)
             {
+                var avatar = await imageService.SaveImageAsync(model.Avatar);
+                user.Avatar.Name = avatar;
+                user.Avatar.UserId = user.Id;
+                user.Birthdate = DateTime.SpecifyKind(model.Birthdate, DateTimeKind.Utc);
+                //user.Birthdate = DateTime.UtcNow;
                 // Асинхронне створення нового користувача з паролем
                 var resultCreated = await userManager.CreateAsync(user, model.Password);
 
@@ -90,19 +101,19 @@ namespace BusinessLogic.Services
                 await userManager.SetLockoutEnabledAsync(user, false);
                 await userManager.SetLockoutEndDateAsync(user, DateTimeOffset.UtcNow - TimeSpan.FromMinutes(1));
 
-                if (resultCreated.Succeeded)
-                {
-                    try
-                    {
-                        smtpService.SuccessfulLogin(model.Name + " " + model.Surname, model.Email);
-                    }
-                    catch (Exception ex)
-                    {
-                        registerResultDto.IsSuccess = false;
-                        registerResultDto.Error = $"Лист на пошту відправити не вдалося";
-                        return registerResultDto;
-                    }
-                }
+                //if (resultCreated.Succeeded)
+                //{
+                //    try
+                //    {
+                //        smtpService.SuccessfulLogin(model.Name + " " + model.Surname, model.Email);
+                //    }
+                //    catch (Exception ex)
+                //    {
+                //        registerResultDto.IsSuccess = false;
+                //        registerResultDto.Error = $"Лист на пошту відправити не вдалося";
+                //        return registerResultDto;
+                //    }
+                //}
             }
             else
             {
@@ -182,6 +193,8 @@ namespace BusinessLogic.Services
 
             var roles = await userManager.GetRolesAsync(user);
 
+            var avatar = avatarRepository.AsQueryable().FirstOrDefault(x => x.UserId == user.Id).Name;
+
             var userTokenInfo = new UserTokenInfo
             {
                 Id = person.Id, 
@@ -189,7 +202,7 @@ namespace BusinessLogic.Services
                 SurName = person.SurName,
                 Email = person.Email,
                 Birthday = person.Birthdate.ToString("dd-MM-yyyy"),
-                Image = person.Image,
+                AvatarPath = avatar,
                 PhoneNumber = person.PhoneNumber,
                 Roles = roles.ToList(),
             };
@@ -250,54 +263,54 @@ namespace BusinessLogic.Services
             loginResultDto.IsSuccess = true;
 
             return loginResultDto;
-        }
+        }   
 
-        private RefreshToken CreateRefreshToken(string userId)
-        {
-            var refeshToken = jwtService.CreateRefreshToken();
-
-            var refreshTokenEntity = new RefreshToken
-            {
-                Token = refeshToken,
-                UserId = userId,
-                CreationDate = DateTime.UtcNow // Now vs UtcNow
-            };
-
-            refreshTokenR.InsertAsync(refreshTokenEntity);
-            refreshTokenR.SaveAsync();
-
-            return refreshTokenEntity;
-        }
-
-        //public async Task<UserTokens> RefreshTokens(UserTokens userTokens)
+        //private RefreshToken CreateRefreshToken(string userId)
         //{
-        //    var refrestToken = await refreshTokenR.GetItemBySpec(new RefreshTokenSpecs.ByToken(userTokens.RefreshToken));
+        //    var refeshToken = jwtService.CreateRefreshToken();
 
-        //    if (refrestToken == null)
-        //        throw new HttpException(Errors.InvalidToken, HttpStatusCode.BadRequest);
-
-        //    var claims = jwtService.GetClaimsFromExpiredToken(userTokens.AccessToken);
-        //    var newAccessToken = claims;
-        //    var newRefreshToken = jwtService.CreateRefreshToken();
-
-        //    refrestToken.Token = newRefreshToken;
-
-        //    // TODO: update creation time
-        //    refreshTokenR.Update(refrestToken);
-        //    await refreshTokenR.SaveAsync();
-
-        //    var tokens = new UserTokens()
+        //    var refreshTokenEntity = new RefreshToken
         //    {
-        //        AccessToken = newAccessToken,
-        //        RefreshToken = newRefreshToken
+        //        Token = refeshToken,
+        //        UserId = userId,
+        //        CreationDate = DateTime.UtcNow // Now vs UtcNow
         //    };
 
-        //    return tokens;
+        //    refreshTokenR.InsertAsync(refreshTokenEntity);
+        //    refreshTokenR.SaveAsync();
+
+        //    return refreshTokenEntity;
         //}
+
+        ////public async Task<UserTokens> RefreshTokens(UserTokens userTokens)
+        ////{
+        ////    var refrestToken = await refreshTokenR.GetItemBySpec(new RefreshTokenSpecs.ByToken(userTokens.RefreshToken));
+
+        ////    if (refrestToken == null)
+        ////        throw new HttpException(Errors.InvalidToken, HttpStatusCode.BadRequest);
+
+        ////    var claims = jwtService.GetClaimsFromExpiredToken(userTokens.AccessToken);
+        ////    var newAccessToken = claims;
+        ////    var newRefreshToken = jwtService.CreateRefreshToken();
+
+        ////    refrestToken.Token = newRefreshToken;
+
+        ////    // TODO: update creation time
+        ////    refreshTokenR.Update(refrestToken);
+        ////    await refreshTokenR.SaveAsync();
+
+        ////    var tokens = new UserTokens()
+        ////    {
+        ////        AccessToken = newAccessToken,
+        ////        RefreshToken = newRefreshToken
+        ////    };
+
+        ////    return tokens;
+        ////}
 
         public async Task Logout(string refreshToken)
         {
-            //await signInManager.SignOutAsync();
+            await signInManager.SignOutAsync();
 
             var refrestTokenEntity = await refreshTokenR.GetItemBySpec(new RefreshTokenSpecs.ByToken(refreshToken));
 
@@ -322,14 +335,13 @@ namespace BusinessLogic.Services
 
         private async Task<Google.Apis.Auth.GoogleJsonWebSignature.Payload> GetPayloadAsync(string credential)
         {
-            throw new Exception();
-            //return await ValidateAsync(
-            //    credential,
-            //    new ValidationSettings
-            //    {
-            //        Audience = [_configuration["Authentication:Google:ClientId"]]
-            //    }
-            //);
+            return await ValidateAsync(
+                credential,
+                new ValidationSettings
+                {
+                    Audience = new List<string> {_configuration["Authentication:Google:ClientId"] }
+                }
+            );
         }
 
         public async Task<LoginResponseDto> GoogleSignInAsync(GoogleLoginDto loginDto)
@@ -352,6 +364,8 @@ namespace BusinessLogic.Services
 
             var roles = await userManager.GetRolesAsync(user);
 
+            var avatar = avatarRepository.AsQueryable().FirstOrDefault(x => x.UserId == user.Id).Name;
+
             // Створюємо DTO для токена
             var userTokenInfo = new UserTokenInfo
             {
@@ -360,7 +374,7 @@ namespace BusinessLogic.Services
                 SurName = user.SurName,
                 Email = user.Email,
                 Birthday = user.Birthdate.ToString("dd-MM-yyyy"),
-                Image = user.Image,
+                AvatarPath = avatar,
                 PhoneNumber = user.PhoneNumber,
                 Roles = roles.ToList()
             };
@@ -493,9 +507,11 @@ namespace BusinessLogic.Services
             user.Name = editUserDto.FirstName;
             user.SurName = editUserDto.LastName;
             user.Email = editUserDto.Email;
-            if (editUserDto.Image != null)
+            if (editUserDto.Avatar != null)
             {
-                user.Image = editUserDto.Image;
+                imageService.DeleteImage(user.Avatar.Name);
+                var newAvatar = await imageService.SaveImageAsync(editUserDto.Avatar);
+                user.Avatar.Name = newAvatar;
             }
 
             if (!string.IsNullOrEmpty(editUserDto.Birthday))
@@ -563,7 +579,7 @@ namespace BusinessLogic.Services
                 LastName = x.SurName,
                 Email = x.Email,
                 PhoneNumber = x.PhoneNumber,
-                Image = x.Image,
+                Avatar = x.Avatar.Name,
                 BirthDate = x.Birthdate,
                 Roles = string.Join(", ", x.UserRoles.Select(ur => ur.Role.Name).ToList())
             }).ToListAsync();

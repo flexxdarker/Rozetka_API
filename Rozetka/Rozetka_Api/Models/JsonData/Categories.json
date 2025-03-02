@@ -1,26 +1,112 @@
 [
-  {
-    "Name": "Ноутбуки та комп'ютери",
-    "Filters": [],
-    "Subcategories": [
-      {
-        "Name": "Ноутбуки",
-        "Filters": [ "Бренд ноутбуку", "Процесор", "Діагональ екрану", "Обсяг оперативної пам'яті" ]
-      },
-      {
-        "Name": "Планшети",
-        "Filters": [ "Обсяг оперативної пам'яті" ],
+    {
+        "Name": "Смартфони та планшети",
+        "Filters": [],
         "Subcategories": [
-          {
-            "Name": "Чохли для планшетів",
-            "Filters": []
-          },
-          {
-            "Name": "Захисні плівки та скло",
-            "Filters": []
-          }
+            {
+                "Name": "Смартфони та телефони",
+                "Filters": [ "Бренд ноутбуку", "Процесор", "Діагональ екрану", "Обсяг оперативної пам'яті" ]
+            },
+            {
+                "Name": "Планшети",
+                "Filters": [],
+                "Subcategories": []
+            },
+            {
+                "Name": "Мобільні телефони",
+                "Filters": [],
+                "Subcategories": []
+            },
+            {
+                "Name": "Зарядні пристрої",
+                "Filters": [],
+                "Subcategories": []
+            },
+            {
+                "Name": "Кабелі для телефонів і планшетів",
+                "Filters": [],
+                "Subcategories": []
+            },
+            {
+                "Name": "Захисні плівки та скло",
+                "Filters": [],
+                "Subcategories": []
+            },
+            {
+                "Name": "Чохли",
+                "Filters": [],
+                "Subcategories": []
+            },
+            {
+                "Name": "Навушники",
+                "Filters": [],
+                "Subcategories": []
+            },
+            {
+                "Name": "Стартові пакети",
+                "Filters": [],
+                "Subcategories": []
+            },
+            {
+                "Name": "Модеми",
+                "Filters": [],
+                "Subcategories": []
+            },
+            {
+                "Name": "Зовніші акумулятори (Powerbanks)",
+                "Filters": [],
+                "Subcategories": []
+            },
+            {
+                "Name": "Ваучери",
+                "Filters": [],
+                "Subcategories": []
+            }
         ]
-      }
-    ]
-  }
+    },
+    {
+        "Name": "Ноутбуки та ПК",
+        "Filters": [],
+        "Subcategories": []
+    },
+    {
+        "Name": "Комп’ютерна техніка",
+        "Filters": [],
+        "Subcategories": []
+    },
+    {
+        "Name": "Телевізори",
+        "Filters": [],
+        "Subcategories": []
+    },
+    {
+        "Name": "Фото та відео",
+        "Filters": [],
+        "Subcategories": []
+    },
+    {
+        "Name": "Аудіотехніка",
+        "Filters": [],
+        "Subcategories": []
+    },
+    {
+        "Name": "Ігрові консолі та геймінг",
+        "Filters": [],
+        "Subcategories": []
+    },
+    {
+        "Name": "Техніка для дому",
+        "Filters": [],
+        "Subcategories": []
+    },
+    {
+        "Name": "Техніка для кухні",
+        "Filters": [],
+        "Subcategories": []
+    },
+    {
+        "Name": "Гаджети та аксесуари",
+        "Filters": [],
+        "Subcategories": []
+    }
 ]

@@ -16,6 +16,8 @@ namespace BusinessLogic.Specifications
             public GetAll() => Query
                 .Include(c => c.Values)
                 .ThenInclude(f => f.Value)
+                .ThenInclude(fv => fv.Filter)
+                .Include(a => a.AdvertRatings)
                 .Include(c => c.Images)
                 .Where(x => true);
         }
@@ -25,6 +27,8 @@ namespace BusinessLogic.Specifications
                 .Where(x => x.Id == id)
                 .Include(c => c.Values)
                 .ThenInclude(f => f.Value)
+                .ThenInclude(fv => fv.Filter)
+                .Include(a => a.AdvertRatings)
                 .Include(c => c.Images);
         }
     }
