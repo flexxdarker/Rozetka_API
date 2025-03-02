@@ -98,7 +98,7 @@ namespace BusinessLogic.Profiles
                 .ForMember(dest => dest.SurName, opt => opt.MapFrom(src => src.Surname))
                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
                 .ForMember(dest => dest.Birthdate, opt => opt.MapFrom(src => src.Birthdate))
-                .ForMember(dest => dest.Image, opt => opt.Ignore())
+                .ForMember(dest => dest.Avatar, opt => opt.MapFrom(src => new Avatar()))
                 .ForMember(dest => dest.UserRoles, opt => opt.Ignore());
 
             CreateMap<User, RegisterModel>()
@@ -107,7 +107,7 @@ namespace BusinessLogic.Profiles
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
                 .ForMember(dest => dest.Birthdate, opt => opt.MapFrom(src => src.Birthdate))
-                .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Image))
+                .ForMember(dest => dest.Avatar, opt => opt.MapFrom(src => src.Avatar))
                 .ForMember(dest => dest.Password, opt => opt.Ignore());
 
             CreateMap<User, UserViewDto>()
@@ -126,7 +126,7 @@ namespace BusinessLogic.Profiles
                 .ForMember(dest => dest.SurName, opt => opt.MapFrom(src => src.LastName))
                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
                 .ForMember(dest => dest.Birthdate, opt => opt.MapFrom(src => src.Birthday))
-                .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Image))
+                .ForMember(dest => dest.Avatar, opt => opt.MapFrom(src => src.Avatar))
                 .ForMember(dest => dest.UserRoles, opt => opt.Ignore());
 
             CreateMap<User, UserEditDto>()
@@ -134,7 +134,7 @@ namespace BusinessLogic.Profiles
                 .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.SurName))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
                 .ForMember(dest => dest.Birthday, opt => opt.MapFrom(src => src.Birthdate))
-                .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Image))
+                .ForMember(dest => dest.Avatar, opt => opt.MapFrom(src => src.Avatar))
                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber));
         }
 

@@ -15,6 +15,6 @@ namespace BusinessLogic.Models.UserModels
         public string Name { get; set; }
         public string Surname { get; set; }
         public DateTime Birthdate { get; set; }
-        public IFormFile Image { get; set; }
+        public IFormFile Avatar { get; set; }
     }
 }

@@ -14,7 +14,7 @@ namespace BusinessLogic.Interfaces
     {
         Task<RegisterResultDto> Register(RegisterModel model);
         Task<LoginResponseDto> Login(LoginModel model);
-        Task Logout(string refreshToken);
+        //Task Logout(string refreshToken);
         //Task<UserTokens> RefreshTokens(UserTokens tokens);
         Task<LoginResponseDto> GoogleSignInAsync(GoogleLoginDto loginDto);
         Task EditUserAsync(UserEditDto editUserDto);
