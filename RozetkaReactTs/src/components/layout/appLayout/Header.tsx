@@ -16,20 +16,24 @@ import Basket from "../../basket/Basket.tsx";
 import Modal from "../../other/Modal.tsx";
 import {TokenService} from "../../../services/tokenService.ts";
 import {AccountsService} from "../../../services/accountsService.ts";
-import { AutoComplete, } from 'antd';
-import type { AutoCompleteProps } from 'antd';
+import {AutoComplete,} from 'antd';
+import type {AutoCompleteProps} from 'antd';
 import {IProductModel} from "../../../models/productsModel.ts";
 import {ProductServices} from "../../../services/productService.ts";
-import { useSelector } from 'react-redux';
-import {RootState} from "../../../store";
-
-
+import {useDispatch, useSelector} from 'react-redux';
+import {AppDispatch, RootState} from "../../../store";
+import {calculateTotalPrice} from "../../../store/actions/basketActions.ts";
+import {IBasketModel} from "../../../models/basketModel.ts";
+import {BasketService} from "../../../services/basketService.ts";
+import formatPrice from "../../../functions/formatPrice.ts";
 
 
 const Header = () => {
 
-    const [products,setProducts] = useState<IProductModel[]>([]);
+    const dispatch = useDispatch<AppDispatch>();
     const totalPrice = useSelector((state: RootState) => state.basket.totalPrice);
+    const [basket, setBasket] = useState<IBasketModel>({});
+    const [products, setProducts] = useState<IProductModel[]>([]);
 
     const loadProducts = async () => {
         const res = await ProductServices.getAll();
@@ -40,13 +44,28 @@ const Header = () => {
 
     useEffect(() => {
         loadProducts();
+        handleBasketUpdate();
     }, []);
+
+    const handleBasketUpdate = () => {
+        const savedBasket = BasketService.getItems();
+        if (savedBasket) {
+            setBasket(savedBasket);
+        }
+    };
+
+
+    useEffect(() => {
+        if (products.length > 0) {
+            dispatch(calculateTotalPrice(products, basket));
+        }
+    }, [products, basket, dispatch]);
 
     const searchResult = (query: string) => {
         const filteredProducts = products.filter(
             (product) =>
                 product.title.toLowerCase().includes(query.toLowerCase())
-                //|| product.category.toLowerCase().includes(query.toLowerCase())
+            //|| product.category.toLowerCase().includes(query.toLowerCase())
         );
 
         return filteredProducts.map((product) => ({
@@ -55,16 +74,16 @@ const Header = () => {
                 <Link to={`product-page/${product.id}`}>
 
 
-                <div
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                    }}
-                >
-                    <span>{product.title}</span>
-                    {/*<span>{product.category}</span>*/}
-                    <span>category</span>
-                </div>
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                        }}
+                    >
+                        <span>{product.title}</span>
+                        {/*<span>{product.category}</span>*/}
+                        <span>category</span>
+                    </div>
                 </Link>
             ),
         }));
@@ -142,9 +161,9 @@ const Header = () => {
                                 {/*<Input.Search size="large" placeholder="input here" enterButton/>*/}
                                 <input placeholder="Я шукаю...(наприклад, смартфон)" className="grow"/>
                             </AutoComplete>
-                            <img src={search} className="absolute right-[10px] top-[50%] transform -translate-y-1/2 z-[2]"/>
+                            <img src={search}
+                                 className="absolute right-[10px] top-[50%] transform -translate-y-1/2 z-[2]"/>
                         </div>
-
 
 
                         {/*<div*/}
@@ -214,15 +233,23 @@ const Header = () => {
                         {/*<Link to={"basket"}>*/}
                         <div>
                             <button onClick={openModal}
-                                    className="flex w-[139px] pt-[8px] pr-[20px] pb-[8px] pl-[20px] gap-[10px] items-center shrink-0 flex-nowrap bg-[#9cc319] rounded-[8px] border-none pointer">
+                                    className="flex pt-[8px] pr-[20px] pb-[8px] pl-[20px] gap-[10px] items-center shrink-0 flex-nowrap bg-[#9cc319] rounded-[8px] border-none pointer">
                                 <div
                                     className="w-[24px] h-[24px] shrink-0 overflow-hidden">
                                     <img src={cartWhite}/>
 
                                 </div>
                                 <span
-                                    className="flex w-[65px] h-[20px] justify-center items-center shrink-0 basis-auto font-['Inter'] text-[20px] font-medium leading-[20px] text-[#fff] text-center whitespace-nowrap">
-            Кошик {totalPrice}
+                                    className="flex h-[20px] justify-center items-center shrink-0 basis-auto font-['Inter'] text-[20px] font-medium leading-[20px] text-[#fff] text-center whitespace-nowrap">
+            {totalPrice <= 0 ?
+                "Кошик"
+                :
+                (<div
+                    className="main-container h-[32px] font-['Inter'] text-[12px] font-medium leading-[16px] text-[#fff] relative mx-auto my-0 flex flex-col justify-center items-start">
+                    <div>Сума</div>
+                    <div>{formatPrice(totalPrice)} грн</div>
+                </div>)
+            }
           </span>
                             </button>
                         </div>

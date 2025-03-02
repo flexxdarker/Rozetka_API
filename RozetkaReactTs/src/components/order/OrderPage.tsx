@@ -9,9 +9,16 @@ import {ProductServices} from "../../services/productService.ts";
 import {BasketService} from "../../services/basketService.ts";
 import BasketItem from "../basket/BasketItem.tsx";
 import formatPrice from "../../functions/formatPrice.ts";
+import {useDispatch, useSelector} from "react-redux";
+import {AppDispatch, RootState} from "../../store";
+import {calculateTotalPrice} from "../../store/actions/basketActions.ts";
+import {Link} from "react-router-dom";
 
 
 const OrderPage: React.FC = () => {
+
+    const dispatch = useDispatch<AppDispatch>();
+    const totalPrice = useSelector((state: RootState) => state.basket.totalPrice);
 
     const [products, setProducts] = useState<IProductModel[]>([]);
     const [basket, setBasket] = useState<IBasketModel>({});
@@ -41,12 +48,11 @@ const OrderPage: React.FC = () => {
         };
     }, []);
 
-    const calculateTotalPrice = () => {
-        return products.reduce((total, product) => {
-            const quantity = basket[product.id.toString()] || 0;
-            return total + (product.price - product.discount) * quantity;
-        }, 0);
-    };
+    useEffect(() => {
+        if (products.length > 0) {
+            dispatch(calculateTotalPrice(products, basket));
+        }
+    }, [products, basket, dispatch]);
 
 
     return (
@@ -85,7 +91,8 @@ const OrderPage: React.FC = () => {
                     <div className="flex w-[100%] flex-col gap-[4px] items-start shrink-0 flex-nowrap relative">
 
                         {
-                            // productsInBasket.map(product => (<BasketItem item={product}/>))
+                            Object.keys(basket).length === 0 ?
+                                <Link to="/" className="w-full flex h-[40px] bg-[white] items-center justify-center">За покупками!</Link> :
                             products.map(product => basket[product.id] > 0 ? <BasketItem item={product} className="rounded-none"/> : null)
                         }
 
@@ -130,7 +137,7 @@ const OrderPage: React.FC = () => {
                                     className="flex p-[10px] gap-[10px] shrink-0 flex-nowrap">
               <span
                   className="h-[15px] shrink-0 basis-auto font-['Inter'] text-[20px] font-semibold leading-[15px] text-[#3b3b3b] text-right whitespace-nowrap">
-                {formatPrice(calculateTotalPrice())} грн
+                {formatPrice(totalPrice)} грн
               </span>
                                 </div>
                             </div>
@@ -150,7 +157,7 @@ const OrderPage: React.FC = () => {
                                     className="flex w-[147px] p-[10px] pr-[10px] gap-[10px] justify-end items-right shrink-0 flex-nowrap">
               <span
                   className="h-[17px] shrink-0 basis-auto font-['Inter'] text-[24px] font-medium leading-[17px] text-[#3b3b3b] text-right whitespace-nowrap">
-                -{Math.floor(calculateTotalPrice() / 100)} грн
+                -{Math.floor(totalPrice / 100)} грн
               </span>
                                 </div>
                             </div>
@@ -169,12 +176,12 @@ const OrderPage: React.FC = () => {
                                     className="flex p-[10px] gap-[10px] shrink-0 flex-nowrap">
               <span
                   className="h-[15px] shrink-0 basis-auto font-['Inter'] text-[20px] font-semibold leading-[15px] text-[#3b3b3b] text-left whitespace-nowrap">
-                {formatPrice(calculateTotalPrice()-Math.floor(calculateTotalPrice() / 100))} грн
+                {formatPrice(totalPrice-Math.floor(totalPrice / 100))} грн
               </span>
                                 </div>
                             </div>
                             <button
-                                className="flex mt-[40px] h-[40px] flex-col gap-[20px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#9cc319] rounded-[8px] border-none pointer">
+                                className={`${Object.keys(basket).length === 0 ? "pointer opacity-50 pointer-events-none" : ""} flex mt-[40px] h-[40px] flex-col gap-[20px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#9cc319] rounded-[8px] border-none pointer`}>
         <span
             className="h-[12px] shrink-0 font-['Inter'] text-[16px] font-medium leading-[12px] text-[#fff] text-left whitespace-nowrap">
           Замовлення підтверджую

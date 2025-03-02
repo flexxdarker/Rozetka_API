@@ -2,10 +2,14 @@ import React from 'react';
 import Paper from '@mui/material/Paper';
 import userIcon from "../../assets/icons/user.svg"
 import {Link} from "react-router-dom";
+import {TokenService} from "../../services/tokenService.ts";
 
 
 
 const AccountMenu: React.FC = () => {
+
+    const tokenPayload = TokenService.getAccessTokenPayload();
+
     return (
         <>
             <Paper sx={{maxWidth: '100%',backgroundColor: "blue"}} className="flex flex-col gap-[4px]">
@@ -20,12 +24,12 @@ const AccountMenu: React.FC = () => {
                         className="flex w-[143px] p-[4px] flex-col gap-[12px] items-start shrink-0 flex-nowrap">
         <span
             className="h-[12px] self-stretch shrink-0 basis-auto font-['Inter'] text-[16px] font-normal leading-[12px] text-left whitespace-nowrap">
-          Леся Українка
+          {tokenPayload?.name} {tokenPayload?.surName}
         </span>
                         {/*text-[#9140d3]*/}
                         <span
                             className="h-[10px] self-stretch shrink-0 basis-auto font-['Inter'] text-[14px] font-normal leading-[10px] text-left whitespace-nowrap">
-          +380(97)055-55-55
+          +380(97)055-55-55 {tokenPayload?.phoneNumber}
         </span>
                     </div>
                 </Link>

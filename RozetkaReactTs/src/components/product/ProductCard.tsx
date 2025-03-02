@@ -15,6 +15,8 @@ import {BasketService} from "../../services/basketService.ts";
 import {Rate} from "antd";
 import {WishListService} from "../../services/wishListService.ts";
 import formatPrice from "../../functions/formatPrice.ts";
+import {useDispatch} from "react-redux";
+import {incrementTotalPrice} from "../../store/actions/basketActions.ts";
 // import "../ProductCard/ProductCard.css"
 
 //import Typography from '../assets/contemplative-reptile.jpg';
@@ -26,7 +28,7 @@ interface ItemProps {
 const ProductCard: React.FC<ItemProps> = ({item}) => {
 
     //const {item, updateParentState} = props;
-
+    const dispatch = useDispatch();
     const [isWishList, setIsWishList] = useState(WishListService.checkId(item.id));
 
     const WishListAdd = () => {
@@ -161,7 +163,10 @@ const ProductCard: React.FC<ItemProps> = ({item}) => {
                                 </div>
                             }
                             <button type={"button"} onClick={() => {
-                                BasketService.addId(item.id)
+                                if(!BasketService.checkId(item.id)) {
+                                    BasketService.addId(item.id);
+                                    dispatch(incrementTotalPrice(Number(formatPrice(item.price - item.discount))));
+                                }
                             }}>
                                 <div
                                     className="flex w-[44px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] items-center shrink-0 flex-nowrap rounded-[8px] border-solid border-2 border-[#9cc319]">

@@ -12,7 +12,6 @@ interface ITokenPayload {
     birthdate: string;
     exp: number;
     role?: string;
-
 }
 
 
@@ -93,11 +92,6 @@ export const TokenService = {
                 role: payload[
                     "role"
                     ] as string,
-
-                // mobilePhone:
-                //     payload[
-                //         "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/mobilephone"
-                //         ] as string,
             };
         } catch (error) {
             console.error("Error decoding token", error);
