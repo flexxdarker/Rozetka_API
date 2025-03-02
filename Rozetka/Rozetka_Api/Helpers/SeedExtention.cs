@@ -277,33 +277,35 @@ namespace Rozetka_Api.Helpers
                 else Console.WriteLine($"File \"{Path.Combine(config.GetSection("SeederJsonDataDir").Value!, "Categories.json")}\" not found");
             }
         }
-        
+
         public static async Task SeedCategoryFilters(this WebApplication app, IConfiguration config)
         {
             using var scope = app.Services.CreateScope();
             var filtersRepo = scope.ServiceProvider.GetService<IRepository<Filter>>()
                 ?? throw new NullReferenceException("IRepository<Filter>");
             var categoryFiltersRepo = scope.ServiceProvider.GetService<IRepository<CategoryFilter>>()
-                ?? throw new NullReferenceException("IRepository<CategoryFilter>"); 
+                ?? throw new NullReferenceException("IRepository<CategoryFilter>");
             var categoriesRepo = scope.ServiceProvider.GetService<IRepository<Category>>()
                 ?? throw new NullReferenceException("IRepository<Category>");
 
             var allFilters = await filtersRepo.GetListBySpec(new FilterSpecs.GetAll())
                 ?? throw new Exception("Filters are not seeded correctly or empty.");
-            var allCategories = await categoriesRepo.GetListBySpec(new CategorySpecs.GetAll());
+            var allCategories = await categoriesRepo.GetListBySpec(new CategorySpecs.GetAll())
+                ?? throw new Exception("Categories are not found in the database.");
 
             string categoriessJsonDataFile = Path.Combine(Environment.CurrentDirectory, config.GetSection("SeederJsonDataDir").Value!, "Categories.json");
             if (Path.Exists(categoriessJsonDataFile))
             {
                 var categoriesJson = File.ReadAllText(categoriessJsonDataFile, Encoding.UTF8);
-                if (!categoriesJson.IsNullOrEmpty())
+                if (!string.IsNullOrEmpty(categoriesJson))
                 {
                     var categoriesModels = JsonConvert.DeserializeObject<IEnumerable<CategorySeedModel>>(categoriesJson)
-                                    ?? throw new JsonException("DeserializeObject<IEnumerable<CategorySeedModel>>");
+                                    ?? throw new JsonException("DeserializeObject<IEnumerable<CategorySeedModel>> failed.");
 
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("\nSeed CategoryFilters\n");
                     Console.ForegroundColor = ConsoleColor.White;
+
                     async Task CreateCategoryFiltersAsync(CategorySeedModel config, List<CategoryFilter> categoryFiltersList)
                     {
                         var categoryFilters = allFilters
@@ -311,18 +313,27 @@ namespace Rozetka_Api.Helpers
                             .Select(filter => new CategoryFilter { Filter = filter, FilterId = filter.Id })
                             .ToList();
 
-                        var category = allCategories.Where(x => x.Name.ToLower() == config.Name.ToLower()).Select(x => x).FirstOrDefault();
+                        // Search for the category by name in a case-insensitive way
+                        var category = allCategories.FirstOrDefault(x => string.Equals(x.Name, config.Name, StringComparison.OrdinalIgnoreCase));
+                        if (category == null)
+                        {
+                            Console.WriteLine($"Category with name \"{config.Name}\" not found.");
+                            return; // Skip this category if it's not found.
+                        }
+
+                        // Add the matching filters to the list
                         foreach (var filter in categoryFilters)
                         {
                             categoryFiltersList.Add(new CategoryFilter
                             {
                                 Filter = filter.Filter,
                                 FilterId = filter.FilterId,
-                                Category = category!,
-                                CategoryId = category!.Id + 1
+                                Category = category,
+                                CategoryId = category.Id + 1 // Use the correct category ID
                             });
                         }
 
+                        // Process subcategories if present
                         if (config.SubCategories != null)
                         {
                             foreach (var subCategory in config.SubCategories)
@@ -331,18 +342,27 @@ namespace Rozetka_Api.Helpers
                             }
                         }
                     }
+
                     List<CategoryFilter> categoryFiltersList = new List<CategoryFilter>();
                     foreach (var categorySeedModel in categoriesModels)
                     {
                         await CreateCategoryFiltersAsync(categorySeedModel, categoryFiltersList);
                     }
+
                     await categoryFiltersRepo.AddRangeAsync(categoryFiltersList);
                     await categoryFiltersRepo.SaveAsync();
                 }
-                else Console.WriteLine($"File \"{Path.Combine(config.GetSection("SeederJsonDataDir").Value!, "Categories.json")}\" null or empty");
+                else
+                {
+                    Console.WriteLine($"File \"{categoriessJsonDataFile}\" is null or empty.");
+                }
             }
-            else Console.WriteLine($"File \"{Path.Combine(config.GetSection("SeederJsonDataDir").Value!, "Categories.json")}\" not found");
+            else
+            {
+                Console.WriteLine($"File \"{categoriessJsonDataFile}\" not found.");
+            }
         }
+
 
         public static async Task SeedAdverts(this WebApplication app, IConfiguration config)
         {

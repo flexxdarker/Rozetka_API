@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(RozetkaDbContext))]
-    [Migration("20250302112915_inti")]
+    [Migration("20250302141445_inti")]
     partial class inti
     {
         /// <inheritdoc />
@@ -163,6 +163,33 @@ namespace DataAccess.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Adverts");
+                });
+
+            modelBuilder.Entity("BusinessLogic.Entities.AdvertRating", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AdvertId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdvertId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AdvertRatings");
                 });
 
             modelBuilder.Entity("BusinessLogic.Entities.AdvertValue", b =>
@@ -665,6 +692,25 @@ namespace DataAccess.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("BusinessLogic.Entities.AdvertRating", b =>
+                {
+                    b.HasOne("BusinessLogic.Entities.Advert", "Advert")
+                        .WithMany("AdvertRatings")
+                        .HasForeignKey("AdvertId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BusinessLogic.Entities.User", "User")
+                        .WithMany("AdvertRatings")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Advert");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("BusinessLogic.Entities.AdvertValue", b =>
                 {
                     b.HasOne("BusinessLogic.Entities.Advert", "Advert")
@@ -836,6 +882,8 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("BusinessLogic.Entities.Advert", b =>
                 {
+                    b.Navigation("AdvertRatings");
+
                     b.Navigation("Images");
 
                     b.Navigation("Orders");
@@ -877,6 +925,8 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("BusinessLogic.Entities.User", b =>
                 {
+                    b.Navigation("AdvertRatings");
+
                     b.Navigation("Orders");
 
                     b.Navigation("RefreshTokens");
