@@ -76,13 +76,13 @@ const ImageSliderProductImages: React.FC<ImageSliderProductImagesProps> = ({imag
                         style={{
                             backgroundImage: `url(${image})`,
                             backgroundSize: 'contain',
-                            backgroundRepeat: 'no-repeat',
+                            backgroundRepeat: 'no-repeat'
                         }}
                     ></div>
                 ))}
             </div>
         </div>
     );
-};
+}
 
 export default ImageSliderProductImages;

@@ -22,7 +22,7 @@ export const WishListService = {
         if (itemString) {
             let items:number[] = [];
             items = JSON.parse(itemString); // Перетворюємо рядок назад в масив
-            if (!items.includes(id)) {
+            if (items.includes(id)) {
                 return true;
             }
         }

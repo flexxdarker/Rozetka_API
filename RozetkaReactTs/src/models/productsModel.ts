@@ -1,5 +1,10 @@
 import {IImageModel} from "./imageModel.ts";
 
+export interface values {
+    filterName:string;
+    valueName:string;
+}
+
 export interface IProductModel {
     id: number;
     categoryId: number;
@@ -9,7 +14,7 @@ export interface IProductModel {
     price: number;
     discount?: number;
     // firstImage: string;
-    values?: number[];
+    values?: values[];
     images?: IImageModel[];
 }
 

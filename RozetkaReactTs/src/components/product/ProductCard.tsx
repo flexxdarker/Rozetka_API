@@ -34,12 +34,12 @@ const ProductCard: React.FC<ItemProps> = ({item}) => {
 
     const WishListAdd = () => {
         WishListService.addId(item.id)
-        setIsWishList(!isWishList); // Зміна стану відкриття/закриття
+        setIsWishList(true); // Зміна стану відкриття/закриття
     };
 
     const WishListRemove = () => {
         WishListService.removeId(item.id)
-        setIsWishList(!isWishList); // Зміна стану відкриття/закриття
+        setIsWishList(false); // Зміна стану відкриття/закриття
     };
 
     return (
@@ -94,7 +94,7 @@ const ProductCard: React.FC<ItemProps> = ({item}) => {
 
 
                     <button type="button" className="flex w-[32px] flex-col items-start shrink-0 flex-nowrap"
-                            onClick={isWishList ? WishListAdd : WishListRemove}>
+                            onClick={isWishList ? WishListRemove : WishListAdd}>
                         <div
                             className="flex h-[32px] pt-[4px] pr-[4px] pb-[4px] pl-[4px] flex-col justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[4px] border-solid border-[0.5px] border-[#3b3b3b] overflow-hidden">
                             <div
@@ -113,9 +113,7 @@ const ProductCard: React.FC<ItemProps> = ({item}) => {
                     <div
                         //className={`w-[220px] h-[220px] shrink-0 bg-[url(${uploadings + "400_" + item.images[0]?.name})] bg-cover bg-no-repeat `}>
                         className={`w-[220px] h-[220px] shrink-0`}>
-                        {/*<img src={cart}/>*/}
                         <img src={`${uploadings + "400_" + item.images![0]?.name}`} alt="no image"/>
-                        {/*<img src="http://13.60.254.142:5817/uploadings/400_32d1lza2.c13.webp" alt="vcv"/>*/}
                     </div>
                 </Link>
                 <div className="flex flex-col gap-[8px] items-start self-stretch shrink-0 flex-nowrap">
@@ -123,9 +121,6 @@ const ProductCard: React.FC<ItemProps> = ({item}) => {
                         className="flex gap-[10px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff]">
             <span
                 className="flex w-[203px] h-[26px] justify-start items-center shrink-0 font-['Inter'] text-[14px] font-normal leading-[26px] text-[#3b3b3b] text-left">
-              {/*Ноутбук DREAM MACHINES*/}
-                {/*<br/>*/}
-                {/*RG2050-15 (RG2050-15UA30)*/}
                 {item.title}
             </span>
                     </div>
