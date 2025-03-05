@@ -22,17 +22,19 @@ namespace Rozetka_Api.Controllers
         private readonly IRepository<User> userRepo;
         private readonly UserManager<User> userManager;
         private readonly IJwtService jwtService;
+        private readonly IRepository<Avatar> avatarRepository;
 
-        public AccountsController(IAccountsService accountsService, IRepository<User> userRepo, UserManager<User> userManager, IJwtService jwtService)
+        public AccountsController(IAccountsService accountsService, IRepository<User> userRepo, UserManager<User> userManager, IJwtService jwtService, IRepository<Avatar> avatarRepository)
         {
             this.accountsService = accountsService;
             this.userRepo = userRepo;
             this.userManager = userManager;
             this.jwtService = jwtService;
+            this.avatarRepository = avatarRepository;
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterModel model)
+        public async Task<IActionResult> Register([FromForm] RegisterModel model)
         {
             await accountsService.Register(model);
             return Ok();
@@ -51,15 +53,8 @@ namespace Rozetka_Api.Controllers
         //    return Ok(await accountsService.RefreshTokens(tokens));
         //}
 
-        [Authorize]
-        [HttpPost("logout")]
-        public async Task<IActionResult> Logout(LogoutModel model)
-        {
-            await accountsService.Logout(model.RefreshToken);
-            return Ok();
-        }
         [HttpPost("GoogleSignIn")]
-        public async Task<IActionResult> GoogleSignIn([FromBody] GoogleLoginDto model)
+        public async Task<IActionResult> GoogleSignIn([FromForm] GoogleLoginDto model)
         {
 
             var result = await accountsService.GoogleSignInAsync(model);
@@ -94,6 +89,9 @@ namespace Rozetka_Api.Controllers
 
             var roles = await userManager.GetRolesAsync(user);
 
+            var avatar = avatarRepository.AsQueryable()
+                .FirstOrDefault(x => x.UserId == userId)?.Name;
+
             var userTokenInfo = new UserTokenInfo
             {
                 Id = user.Id,
@@ -101,7 +99,7 @@ namespace Rozetka_Api.Controllers
                 SurName = user.SurName,
                 Email = user.Email,
                 Birthday = user.Birthdate.ToString("dd-MM-yyyy"),
-                Image = user.Image,
+                AvatarPath = avatar,
                 PhoneNumber = user.PhoneNumber,
                 Roles = roles.ToList(),
             };
@@ -111,7 +109,7 @@ namespace Rozetka_Api.Controllers
             return Ok(new { token });
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpPost("change-password")]
         public async Task<IActionResult> ChangePassword([FromForm] ChangePasswordDto model)
         {

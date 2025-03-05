@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(RozetkaDbContext))]
-    [Migration("20250223161600_inti")]
+    [Migration("20250302141445_inti")]
     partial class inti
     {
         /// <inheritdoc />
@@ -165,6 +165,33 @@ namespace DataAccess.Migrations
                     b.ToTable("Adverts");
                 });
 
+            modelBuilder.Entity("BusinessLogic.Entities.AdvertRating", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AdvertId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdvertId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AdvertRatings");
+                });
+
             modelBuilder.Entity("BusinessLogic.Entities.AdvertValue", b =>
                 {
                     b.Property<int>("Id")
@@ -186,6 +213,27 @@ namespace DataAccess.Migrations
                     b.HasIndex("ValueId");
 
                     b.ToTable("AdvertValue");
+                });
+
+            modelBuilder.Entity("BusinessLogic.Entities.Avatar", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Avatars");
                 });
 
             modelBuilder.Entity("BusinessLogic.Entities.Category", b =>
@@ -357,6 +405,9 @@ namespace DataAccess.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("AvatarId")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("Birthdate")
                         .HasColumnType("timestamp with time zone");
 
@@ -370,10 +421,6 @@ namespace DataAccess.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("boolean");
-
-                    b.Property<string>("Image")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("boolean");
@@ -397,6 +444,7 @@ namespace DataAccess.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("PhoneNumber")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("PhoneNumberConfirmed")
@@ -417,6 +465,9 @@ namespace DataAccess.Migrations
                         .HasColumnType("character varying(256)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AvatarId")
+                        .IsUnique();
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -641,6 +692,25 @@ namespace DataAccess.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("BusinessLogic.Entities.AdvertRating", b =>
+                {
+                    b.HasOne("BusinessLogic.Entities.Advert", "Advert")
+                        .WithMany("AdvertRatings")
+                        .HasForeignKey("AdvertId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BusinessLogic.Entities.User", "User")
+                        .WithMany("AdvertRatings")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Advert");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("BusinessLogic.Entities.AdvertValue", b =>
                 {
                     b.HasOne("BusinessLogic.Entities.Advert", "Advert")
@@ -719,6 +789,15 @@ namespace DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BusinessLogic.Entities.User", b =>
+                {
+                    b.HasOne("BusinessLogic.Entities.Avatar", "Avatar")
+                        .WithOne("User")
+                        .HasForeignKey("BusinessLogic.Entities.User", "AvatarId");
+
+                    b.Navigation("Avatar");
                 });
 
             modelBuilder.Entity("BusinessLogic.Entities.UserRole", b =>
@@ -803,11 +882,19 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("BusinessLogic.Entities.Advert", b =>
                 {
+                    b.Navigation("AdvertRatings");
+
                     b.Navigation("Images");
 
                     b.Navigation("Orders");
 
                     b.Navigation("Values");
+                });
+
+            modelBuilder.Entity("BusinessLogic.Entities.Avatar", b =>
+                {
+                    b.Navigation("User")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BusinessLogic.Entities.Category", b =>
@@ -838,6 +925,8 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("BusinessLogic.Entities.User", b =>
                 {
+                    b.Navigation("AdvertRatings");
+
                     b.Navigation("Orders");
 
                     b.Navigation("RefreshTokens");

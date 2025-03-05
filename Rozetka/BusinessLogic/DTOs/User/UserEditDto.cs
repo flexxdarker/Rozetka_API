@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,8 @@ namespace BusinessLogic.DTOs.User
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
+        public string PhoneNumber { get; set; } = string.Empty;
         public string? Birthday { get; set; }
-        public string? Image { get; set; } = string.Empty;
+        public IFormFile Avatar { get; set; }
     }
 }

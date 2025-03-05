@@ -28,6 +28,7 @@ namespace DataAccess.Data
         public DbSet<User> User { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<Role> Role { get; set; }
+        public DbSet<Avatar> Avatars { get; set; }
 
         public RozetkaDbContext(DbContextOptions options) : base(options) { }
 
@@ -144,6 +145,15 @@ namespace DataAccess.Data
             //userRole
             modelBuilder.Entity<UserRole>()
                 .HasKey(cf => new {cf.RoleId, cf.UserId});
+
+            modelBuilder.Entity<Avatar>()
+                .HasKey(cf => cf.Id);
+
+            modelBuilder.Entity<Avatar>()
+                .HasOne(cf => cf.User)
+                .WithOne(cf => cf.Avatar)
+                .HasForeignKey<User>(cf => cf.AvatarId);
+                
         }
 
 

@@ -67,7 +67,7 @@ namespace BusinessLogic.Services
                 .SelectMany(op => op.Advert.Images)
                 .Select(img => img.Name)
                 .ToList(),
-            ImageUser = o.User.Image
+            ImageUser = o.User.Avatar.Name
         }).ToListAsync();
 
             return orders;
@@ -166,7 +166,7 @@ namespace BusinessLogic.Services
                 .SelectMany(op => op.Advert.Images)
                 .Select(img => img.Name)
                 .ToList(),
-            ImageUser = o.User.Image
+            ImageUser = o.User.Avatar.Name
         }).FirstOrDefaultAsync();
 
             return order;
