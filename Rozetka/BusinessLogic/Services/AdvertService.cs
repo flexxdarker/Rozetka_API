@@ -2,6 +2,7 @@
 using BusinessLogic.DTOs;
 using BusinessLogic.DTOs.Advert;
 using BusinessLogic.Entities;
+using BusinessLogic.Exceptions;
 using BusinessLogic.Interfaces;
 using BusinessLogic.Models;
 using BusinessLogic.Models.AdvertModels;
@@ -11,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -48,41 +50,38 @@ namespace BusinessLogic.Services
             return mapper.Map<AdvertPrintDto>(await advertRepo.GetItemBySpec(new  AdvertSpecs.GetById(id)));
         }
 
-        public async Task<AdvertDto> CreateAsync(AdvertCreateModel advertCreationModel)
+        private decimal ValidatePriceByCulture(string price)
         {
-            var advert = mapper.Map<Advert>(advertCreationModel);
-
             CultureInfo[] cultures = {
             new CultureInfo("uk-UA"),
             new CultureInfo("en-US"),
             new CultureInfo("de-DE")
             };
 
-            decimal price, discount;
-            bool priceParsed = false, discountParsed = false;
+            decimal _price;
+            bool priceParsed = false;
 
             foreach (var culture in cultures)
             {
-                if (Decimal.TryParse(advertCreationModel.Price, NumberStyles.Number, culture, out price) && !priceParsed) {
+                if (Decimal.TryParse(price, NumberStyles.Number, culture, out _price) && !priceParsed)
+                {
                     Console.WriteLine($"\n\n\n\nРозпізнано культуру: {culture.Name}");
-                    Console.WriteLine($"\n\n\n\nЦіна: {price}\n\n");
-                    advert.Price = price;
+                    Console.WriteLine($"\n\n\n\nЦіна: {_price}\n\n");
                     priceParsed = true;
-                }
-                if (Decimal.TryParse(advertCreationModel.Discount, NumberStyles.Number, culture, out discount) && !discountParsed) {
-                    Console.WriteLine($"\n\n\n\nРозпізнано культуру: {culture.Name}");
-                    Console.WriteLine($"Знижка: {discount}\n\n");
-                    advert.Discount = discount;
-                    discountParsed = true;
-                }
-                if (priceParsed && discountParsed)
+                    return _price;
+                }    
+                if (priceParsed)
                     break;
             }
+            throw new HttpException(Errors.IdMustBePositive, HttpStatusCode.BadRequest);
+        }
 
-            if (!priceParsed || !discountParsed)
-            {
-                Console.WriteLine("Не вдалося розпізнати культуру.");
-            }
+        public async Task<AdvertDto> CreateAsync(AdvertCreateModel advertCreationModel)
+        {
+            var advert = mapper.Map<Advert>(advertCreationModel);
+
+            advert.Price = ValidatePriceByCulture(advertCreationModel.Price);
+            advert.Discount = ValidatePriceByCulture(advertCreationModel.Discount);
 
             var savedImages = await imageService.SaveImagesAsync(advertCreationModel.ImageFiles);
 
@@ -129,6 +128,9 @@ namespace BusinessLogic.Services
             var advert = await advertRepo.GetItemBySpec(new AdvertSpecs.GetById(editModel.Id));
 
             mapper.Map(editModel, advert);
+
+            advert.Price = ValidatePriceByCulture(editModel.Price);
+            advert.Discount = ValidatePriceByCulture(editModel.Discount);
 
             if (editModel.ImageFiles != null)
             {
