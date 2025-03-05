@@ -14,12 +14,10 @@ namespace BusinessLogic.Validators
         public AdvertRatingCreateModelValidator() 
         {
             RuleFor(x => x.AdvertId)
-                .NotEmpty()
-                .GreaterThan(0);
+                .GreaterThan(0).WithMessage(Errors.GreaterZeroError);
             RuleFor(x => x.Rating)
-                .NotEmpty()
-                .GreaterThanOrEqualTo(0)
-                .LessThanOrEqualTo(5);
+                .GreaterThanOrEqualTo(0).WithMessage(Errors.GreaterEqualZeroError)
+                .LessThanOrEqualTo(5).WithMessage(Errors.RatingLessThanOrEqualTo5);
         }
     }
 }

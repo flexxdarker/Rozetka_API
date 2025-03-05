@@ -61,20 +61,38 @@ namespace BusinessLogic {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Advert is not found.
-        /// </summary>
-        internal static string AdvertNotFound {
-            get {
-                return ResourceManager.GetString("AdvertNotFound", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Category cannot be its own parent.
         /// </summary>
         internal static string CategoryCannotBeItsOwnParent {
             get {
                 return ResourceManager.GetString("CategoryCannotBeItsOwnParent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Discount can&apos;t be greater or equal than price .
+        /// </summary>
+        internal static string DiscountGreaterOrEqualPrice {
+            get {
+                return ResourceManager.GetString("DiscountGreaterOrEqualPrice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {PropertyName} must be greater or equal to zero.
+        /// </summary>
+        internal static string GreaterEqualZeroError {
+            get {
+                return ResourceManager.GetString("GreaterEqualZeroError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {PropertyName} must be greater than zero.
+        /// </summary>
+        internal static string GreaterZeroError {
+            get {
+                return ResourceManager.GetString("GreaterZeroError", resourceCulture);
             }
         }
         
@@ -88,11 +106,56 @@ namespace BusinessLogic {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Advert Id is invalid.
+        /// </summary>
+        internal static string InvalidAdvertId {
+            get {
+                return ResourceManager.GetString("InvalidAdvertId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Category Id is invalid.
+        /// </summary>
+        internal static string InvalidCategoryId {
+            get {
+                return ResourceManager.GetString("InvalidCategoryId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {PropertyName} not recognized.
+        /// </summary>
+        internal static string InvalidPriceError {
+            get {
+                return ResourceManager.GetString("InvalidPriceError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {PropertyName} is invalid!.
+        /// </summary>
+        internal static string InvalidPropertyId {
+            get {
+                return ResourceManager.GetString("InvalidPropertyId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Token is invalid.
         /// </summary>
         internal static string InvalidToken {
             get {
                 return ResourceManager.GetString("InvalidToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Advert rating must be less or equal than 5.
+        /// </summary>
+        internal static string RatingLessThanOrEqualTo5 {
+            get {
+                return ResourceManager.GetString("RatingLessThanOrEqualTo5", resourceCulture);
             }
         }
     }

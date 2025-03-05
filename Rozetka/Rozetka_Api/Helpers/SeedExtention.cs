@@ -291,78 +291,80 @@ namespace Rozetka_Api.Helpers
             var categoriesRepo = scope.ServiceProvider.GetService<IRepository<Category>>()
                 ?? throw new NullReferenceException("IRepository<Category>");
 
-            var allFilters = await filtersRepo.GetListBySpec(new FilterSpecs.GetAll())
-                ?? throw new Exception("Filters are not seeded correctly or empty.");
-            var allCategories = await categoriesRepo.GetListBySpec(new CategorySpecs.GetAll())
-                ?? throw new Exception("Categories are not found in the database.");
-
-            string categoriessJsonDataFile = Path.Combine(Environment.CurrentDirectory, config.GetSection("SeederJsonDataDir").Value!, "Categories.json");
-            if (Path.Exists(categoriessJsonDataFile))
+            if (!await categoryFiltersRepo.AnyAsync())
             {
-                var categoriesJson = File.ReadAllText(categoriessJsonDataFile, Encoding.UTF8);
-                if (!string.IsNullOrEmpty(categoriesJson))
+                var allFilters = await filtersRepo.GetListBySpec(new FilterSpecs.GetAll())
+                    ?? throw new Exception("Filters are not seeded correctly or empty.");
+                var allCategories = await categoriesRepo.GetListBySpec(new CategorySpecs.GetAll())
+                    ?? throw new Exception("Categories are not found in the database.");
+
+                string categoriessJsonDataFile = Path.Combine(Environment.CurrentDirectory, config.GetSection("SeederJsonDataDir").Value!, "Categories.json");
+                if (Path.Exists(categoriessJsonDataFile))
                 {
-                    var categoriesModels = JsonConvert.DeserializeObject<IEnumerable<CategorySeedModel>>(categoriesJson)
-                                    ?? throw new JsonException("DeserializeObject<IEnumerable<CategorySeedModel>> failed.");
-
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("\nSeed CategoryFilters\n");
-                    Console.ForegroundColor = ConsoleColor.White;
-
-                    async Task CreateCategoryFiltersAsync(CategorySeedModel config, List<CategoryFilter> categoryFiltersList)
+                    var categoriesJson = File.ReadAllText(categoriessJsonDataFile, Encoding.UTF8);
+                    if (!string.IsNullOrEmpty(categoriesJson))
                     {
-                        var categoryFilters = allFilters
-                            .Where(filter => config.Filters != null && config.Filters.Any(filterName => filterName == filter.Name))
-                            .Select(filter => new CategoryFilter { Filter = filter, FilterId = filter.Id })
-                            .ToList();
+                        var categoriesModels = JsonConvert.DeserializeObject<IEnumerable<CategorySeedModel>>(categoriesJson)
+                                ?? throw new JsonException("DeserializeObject<IEnumerable<CategorySeedModel>> failed.");
 
-                        // Search for the category by name in a case-insensitive way
-                        var category = allCategories.FirstOrDefault(x => string.Equals(x.Name, config.Name, StringComparison.OrdinalIgnoreCase));
-                        if (category == null)
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("\nSeed CategoryFilters\n");
+                        Console.ForegroundColor = ConsoleColor.White;
+                        async Task CreateCategoryFiltersAsync(CategorySeedModel config, List<CategoryFilter> categoryFiltersList)
                         {
-                            Console.WriteLine($"Category with name \"{config.Name}\" not found.");
-                            return; // Skip this category if it's not found.
-                        }
+                            var categoryFilters = allFilters
+                                .Where(filter => config.Filters != null && config.Filters.Any(filterName => filterName == filter.Name))
+                                .Select(filter => new CategoryFilter { Filter = filter, FilterId = filter.Id })
+                                .ToList();
 
-                        // Add the matching filters to the list
-                        foreach (var filter in categoryFilters)
-                        {
-                            categoryFiltersList.Add(new CategoryFilter
+                            // Search for the category by name in a case-insensitive way
+                            var category = allCategories.FirstOrDefault(x => string.Equals(x.Name, config.Name, StringComparison.OrdinalIgnoreCase));
+                            if (category == null)
                             {
-                                Filter = filter.Filter,
-                                FilterId = filter.FilterId,
-                                Category = category,
-                                CategoryId = category.Id + 1 // Use the correct category ID
-                            });
-                        }
+                                Console.WriteLine($"Category with name \"{config.Name}\" not found.");
+                                return; // Skip this category if it's not found.
+                            }
 
-                        // Process subcategories if present
-                        if (config.SubCategories != null)
-                        {
-                            foreach (var subCategory in config.SubCategories)
+                            // Add the matching filters to the list
+                            foreach (var filter in categoryFilters)
                             {
-                                await CreateCategoryFiltersAsync(subCategory, categoryFiltersList);
+                                categoryFiltersList.Add(new CategoryFilter
+                                {
+                                    Filter = filter.Filter,
+                                    FilterId = filter.FilterId,
+                                    Category = category,
+                                    CategoryId = category.Id + 1 // Use the correct category ID
+                                });
+                            }
+
+                            // Process subcategories if present
+                            if (config.SubCategories != null)
+                            {
+                                foreach (var subCategory in config.SubCategories)
+                                {
+                                    await CreateCategoryFiltersAsync(subCategory, categoryFiltersList);
+                                }
                             }
                         }
-                    }
 
-                    List<CategoryFilter> categoryFiltersList = new List<CategoryFilter>();
-                    foreach (var categorySeedModel in categoriesModels)
+                        List<CategoryFilter> categoryFiltersList = new List<CategoryFilter>();
+                        foreach (var categorySeedModel in categoriesModels)
+                        {
+                            await CreateCategoryFiltersAsync(categorySeedModel, categoryFiltersList);
+                        }
+
+                        await categoryFiltersRepo.AddRangeAsync(categoryFiltersList);
+                        await categoryFiltersRepo.SaveAsync();
+                    }
+                    else
                     {
-                        await CreateCategoryFiltersAsync(categorySeedModel, categoryFiltersList);
+                        Console.WriteLine($"File \"{categoriessJsonDataFile}\" is null or empty.");
                     }
-
-                    await categoryFiltersRepo.AddRangeAsync(categoryFiltersList);
-                    await categoryFiltersRepo.SaveAsync();
                 }
                 else
                 {
-                    Console.WriteLine($"File \"{categoriessJsonDataFile}\" is null or empty.");
+                    Console.WriteLine($"File \"{categoriessJsonDataFile}\" not found.");
                 }
-            }
-            else
-            {
-                Console.WriteLine($"File \"{categoriessJsonDataFile}\" not found.");
             }
         }
 
@@ -430,52 +432,55 @@ namespace Rozetka_Api.Helpers
                 ?? throw new NullReferenceException("IRepository<FilterValue>");
             var advertValuesRepo = scope.ServiceProvider.GetService<IRepository<AdvertValue>>()
                 ?? throw new NullReferenceException("IRepository<AdvertValue>");
-
-            string adversJsonDataFile = Path.Combine(Environment.CurrentDirectory, config.GetSection("SeederJsonDataDir").Value!, "Adverts.json");
-            if (Path.Exists(adversJsonDataFile))
-            {
-                var advertsJson = File.ReadAllText(adversJsonDataFile, Encoding.UTF8);
-                if (!advertsJson.IsNullOrEmpty())
+            if (!await advertValuesRepo.AnyAsync())
+            { 
+                string adversJsonDataFile = Path.Combine(Environment.CurrentDirectory, config.GetSection("SeederJsonDataDir").Value!, "Adverts.json");
+                if (Path.Exists(adversJsonDataFile))
                 {
-                    var advertsModels = JsonConvert.DeserializeObject<IEnumerable<AdvertSeedModel>>(advertsJson)
-                                    ?? throw new JsonException("DeserializeObject<IEnumerable<AdvertSeedModel>>");
-
-                    var allAdverts = await adversRepo.GetListBySpec(new AdvertSpecs.GetAll());
-                    var allFilterValues = await filterValuesRepo.GetListBySpec(new FilterValueSpecs.GetAll());
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("\nSeed AdvertValues\n");
-                    Console.ForegroundColor = ConsoleColor.White;
-                    async Task CreateAdvertValueAsync(AdvertSeedModel config, List<AdvertValue> advertValuesList)
+                    var advertsJson = File.ReadAllText(adversJsonDataFile, Encoding.UTF8);
+                    if (!advertsJson.IsNullOrEmpty())
                     {
-                        var advertValues = allFilterValues
-                            .Where(filterValue => config.AdvertValues != null && config.AdvertValues.Any(filterValueName => filterValueName == filterValue.Value))
-                            .Select(filterValue => new AdvertValue { Value = filterValue, ValueId = filterValue.Id })
-                            .ToList();
+                        var advertsModels = JsonConvert.DeserializeObject<IEnumerable<AdvertSeedModel>>(advertsJson)
+                                        ?? throw new JsonException("DeserializeObject<IEnumerable<AdvertSeedModel>>");
 
-                        var advert = allAdverts.Where(x => x.Title.ToLower() == config.Title.ToLower()).Select(x => x).FirstOrDefault();
-                        foreach (var advertValue in advertValues)
+                        var allAdverts = await adversRepo.GetListBySpec(new AdvertSpecs.GetAll());
+                        var allFilterValues = await filterValuesRepo.GetListBySpec(new FilterValueSpecs.GetAll());
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("\nSeed AdvertValues\n");
+                        Console.ForegroundColor = ConsoleColor.White;
+                        async Task CreateAdvertValueAsync(AdvertSeedModel config, List<AdvertValue> advertValuesList)
                         {
-                            advertValuesList.Add(new AdvertValue
-                            {
-                                Value = advertValue.Value,
-                                ValueId = advertValue.ValueId,
-                                Advert = advert!,
-                                AdvertId = advert!.Id + 1
-                            });
-                        }
-                    }
-                    List<AdvertValue> advertValuesList = new List<AdvertValue>();
-                    foreach (var advertSeedModel in advertsModels)
-                    {
-                        await CreateAdvertValueAsync(advertSeedModel, advertValuesList);
-                    }
-                    await advertValuesRepo.AddRangeAsync(advertValuesList);
-                    await advertValuesRepo.SaveAsync();
+                            var advertValues = allFilterValues
+                                .Where(filterValue => config.AdvertValues != null && config.AdvertValues.Any(filterValueName => filterValueName == filterValue.Value))
+                                .Select(filterValue => new AdvertValue { Value = filterValue, ValueId = filterValue.Id })
+                                .ToList();
 
+                            var advert = allAdverts.Where(x => x.Title.ToLower() == config.Title.ToLower()).Select(x => x).FirstOrDefault();
+                            foreach (var advertValue in advertValues)
+                            {
+                                advertValuesList.Add(new AdvertValue
+                                {
+                                    Value = advertValue.Value,
+                                    ValueId = advertValue.ValueId,
+                                    Advert = advert!,
+                                    AdvertId = advert!.Id + 1
+                                });
+                            }
+                        }
+                        List<AdvertValue> advertValuesList = new List<AdvertValue>();
+                        foreach (var advertSeedModel in advertsModels)
+                        {
+                            await CreateAdvertValueAsync(advertSeedModel, advertValuesList);
+                        }
+                        await advertValuesRepo.AddRangeAsync(advertValuesList);
+                        await advertValuesRepo.SaveAsync();
+
+                    }
+                    else Console.WriteLine($"File \"{Path.Combine(config.GetSection("SeederJsonDataDir").Value!, "Adverts.json")}\" null or empty");
                 }
-                else Console.WriteLine($"File \"{Path.Combine(config.GetSection("SeederJsonDataDir").Value!, "Adverts.json")}\" null or empty");
+                else Console.WriteLine($"File \"{Path.Combine(config.GetSection("SeederJsonDataDir").Value!, "Adverts.json")}\" not found");
+            
             }
-            else Console.WriteLine($"File \"{Path.Combine(config.GetSection("SeederJsonDataDir").Value!, "Adverts.json")}\" not found");
         }
     }
 }
