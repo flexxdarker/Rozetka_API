@@ -23,11 +23,19 @@ export const ProductServices = {
     },
 
     create(model: ICreateProductModel) {
+        //console.log("model: ",model);
         const data = new FormData();
         for (const prop in model) {
             data.append(prop, (model as any)[prop]);
         }
 
+        if (model.imageFiles) {
+            model.imageFiles.forEach((file: File) => {
+                data.append('imageFiles', file); // додаємо кожен файл
+            });
+        }
+
+        //console.log("data: ",data);
         return api.put("create", data);
     },
 
@@ -35,6 +43,12 @@ export const ProductServices = {
         const data = new FormData();
         for (const prop in model) {
             data.append(prop, (model as any)[prop]);
+        }
+
+        if (model.imageFiles) {
+            model.imageFiles.forEach((file: File) => {
+                data.append('imageFiles', file); // додаємо кожен файл
+            });
         }
 
         return api.post("edit", data);

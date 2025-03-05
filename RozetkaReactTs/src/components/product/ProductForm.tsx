@@ -5,10 +5,10 @@ import EditorTiny from "../other/EditorTiny.tsx";
 import {useParams} from "react-router-dom";
 import {ProductServices} from "../../services/productService.ts";
 import {ICreateProductModel, IProductModel} from "../../models/productsModel.ts";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {ICategoryName} from "../../models/categoriesModel.ts";
 import {CategoriesServices} from "../../services/categoriesService.ts";
-import { PlusOutlined } from '@ant-design/icons';
+import {PlusOutlined} from '@ant-design/icons';
 import {RcFile, UploadChangeParam} from "antd/es/upload";
 import FilterForm from "./form.tsx";
 import {IFilterModel} from "../../models/filterModel.ts";
@@ -49,8 +49,8 @@ const ProductForm: React.FC = () => {
 
 
     const onFinish: FormProps<ICreateProductModel>['onFinish'] = async (values) => {
-            console.log('Form values:', {...values, description}); // Обробка відправки форм
-            //const imageFiles = values.imageFiles;
+        console.log('Form values:', {...values, description}); // Обробка відправки форм
+        //const imageFiles = values.imageFiles;
         if (editMode) {
             // if (!values.price) {
             //     values.price = parseFloat(values.price.toString().replace(".",","));
@@ -59,10 +59,7 @@ const ProductForm: React.FC = () => {
             // if (!values.discount) {
             //     values.discount = parseFloat(values.discount.toString().replace(".",","));
             // }
-
-            console.log("Success edit mode:", {...values, description});
-             //values.imageFiles = values.imageFiles.originFileObj;//???????
-
+            //values.imageFiles = values.imageFiles.originFileObj;//???????
             const res = await ProductServices.edit({...values, description});
             console.log(res);
             if (res.status == 200) {
@@ -73,7 +70,7 @@ const ProductForm: React.FC = () => {
             }
         } else {
             // console.log("Success create:", {...values, description,filterValue});
-            console.log("Success create:", {...values, description,filterValue});
+            console.log("Success create:", {...values, description});
             //values.imageFiles = values.imageFiles.originFileObj;
 
             const res = await ProductServices.create({...values, description});
@@ -105,7 +102,7 @@ const ProductForm: React.FC = () => {
     };
 
     const loadCategories = async () => {
-        const res = await  CategoriesServices.getAll();
+        const res = await CategoriesServices.getAll();
         setCategories(res.data);
     }
 
@@ -225,51 +222,7 @@ const ProductForm: React.FC = () => {
                 <FilterForm filters={filters} onChange={handleFilterChange}/>
                 {/*</Form.Item>*/}
 
-
-
-
-                {/*<Form.List name="items">*/}
-                {/*    {(fields, { add, remove }) => (*/}
-                {/*        <div style={{ display: 'flex', rowGap: 16, flexDirection: 'column' }}>*/}
-                {/*            {fields.map((field) => (*/}
-                {/*                    <Form.Item label="List">*/}
-                {/*                        <Form.List name={[field.name, 'list']}>*/}
-                {/*                            {(subFields, subOpt) => (*/}
-                {/*                                <div style={{ display: 'flex', flexDirection: 'column', rowGap: 16 }}>*/}
-                {/*                                    {subFields.map((subField) => (*/}
-                {/*                                        <Space key={subField.key}>*/}
-                {/*                                            <Form.Item noStyle name={[subField.name, 'first']}>*/}
-                {/*                                                <Input placeholder="first" />*/}
-                {/*                                            </Form.Item>*/}
-                {/*                                            <Form.Item noStyle name={[subField.name, 'second']}>*/}
-                {/*                                                <Input placeholder="second" />*/}
-                {/*                                            </Form.Item>*/}
-                {/*                                            <CloseOutlined*/}
-                {/*                                                onClick={() => {*/}
-                {/*                                                    subOpt.remove(subField.name);*/}
-                {/*                                                }}*/}
-                {/*                                            />*/}
-                {/*                                        </Space>*/}
-                {/*                                    ))}*/}
-                {/*                                    <Button type="dashed" onClick={() => subOpt.add()} block>*/}
-                {/*                                        + Add Sub Item*/}
-                {/*                                    </Button>*/}
-                {/*                                </div>*/}
-                {/*                            )}*/}
-                {/*                        </Form.List>*/}
-                {/*                    </Form.Item>*/}
-                {/*            ))}*/}
-
-                {/*            <Button type="dashed" onClick={() => add()} block>*/}
-                {/*                + Add Item*/}
-                {/*            </Button>*/}
-                {/*        </div>*/}
-                {/*    )}*/}
-                {/*</Form.List>*/}
-
-
-
-                               <Form.Item wrapperCol={{span: 24}} name="description">
+                <Form.Item wrapperCol={{span: 24}} name="description">
                     <EditorTiny
                         //content={editMode && product !== null? product.description : ""}
                         initialValue={editMode && product !== null ? product.description : ""}
@@ -279,7 +232,7 @@ const ProductForm: React.FC = () => {
 
                 <Form.Item wrapperCol={{span: 24}}>
                     <Button block type="primary" htmlType="submit">
-                        { editMode ? `Змінити продукт ${product?.title}` : "Створити оголошення"}
+                        {editMode ? `Змінити продукт ${product?.title}` : "Створити оголошення"}
                     </Button>
                 </Form.Item>
             </Form>

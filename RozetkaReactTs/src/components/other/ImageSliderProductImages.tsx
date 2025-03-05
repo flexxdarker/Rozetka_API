@@ -2,14 +2,17 @@ import React, {useState} from "react";
 import arrowLeftCircle from "../../assets/icons/arrow-left-circle.svg";
 import arrowRightCircle from "../../assets/icons/arrow-right-circle.svg";
 
+interface ImageSliderProductImagesProps {
+    images: string[]; // Масив рядків
+}
 
 
-const ImageSlider: React.FC = () => {
-    const images = [
-        './assets/contemplative-reptile1.jpg',
-        './assets/contemplative-reptile2.jpg',
-
-    ];
+const ImageSliderProductImages: React.FC<ImageSliderProductImagesProps> = ({images}) => {
+    // const images = [
+    //     './assets/contemplative-reptile1.jpg',
+    //     './assets/contemplative-reptile2.jpg',
+    //
+    // ];
 
     //slider
 
@@ -82,4 +85,4 @@ const ImageSlider: React.FC = () => {
     );
 };
 
-export default ImageSlider;
+export default ImageSliderProductImages;

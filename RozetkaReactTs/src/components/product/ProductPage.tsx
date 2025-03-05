@@ -2,12 +2,12 @@ import React, {useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
 import {IProductModel} from "../../models/productsModel.ts";
 import {ProductServices} from "../../services/productService.ts";
-import ImageSlider from "../other/ImageSlider.tsx";
+import ImageSliderProductImages from "../other/ImageSliderProductImages.tsx";
+
+const uploadings = import.meta.env.VITE_ROZETKA_UPLOADINGS;
 
 
 const ProductPage: React.FC = () => {
-
-
 
 
     const params = useParams();
@@ -24,6 +24,10 @@ const ProductPage: React.FC = () => {
         }
     }
 
+    const images: string[] = Array.isArray(product?.images)
+        ? product.images.map(image => `${uploadings}`+ "1200_" + image.name)
+        : [];
+console.log("image: ", images)
 
     useEffect(() => {
         loadProduct();
@@ -66,7 +70,7 @@ const ProductPage: React.FC = () => {
 
                     <div className="flex">
                         <div className="flex-col">
-                            <ImageSlider/>
+                            <ImageSliderProductImages images={images}/>
                             <div
                                 className="main-container flex w-[740px] pt-[24px] pr-[40px] pb-[24px] pl-[40px] gap-[40px] justify-center items-center flex-nowrap bg-[#fff] border-solid border-b border-b-[#f0f0f0] mx-auto my-0 mt-[4px]">
                                 <div

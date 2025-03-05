@@ -58,12 +58,12 @@ const ProductCard: React.FC<ItemProps> = ({item}) => {
                 </span>
                             </div>
                         </button>
-                        {item.discount > 0 ?
+                        {item.discount! > 0 ?
                             <button
                                 className="flex w-[32px] pt-[4px] pr-[4px] pb-[4px] pl-[4px] flex-col justify-center items-center shrink-0 flex-nowrap bg-[#e11515] border-none pointer">
               <span
                   className="flex w-[24px] h-[7px] justify-center items-center shrink-0 font-['Inter'] text-[10px] font-normal leading-[10px] text-[#fff] text-center uppercase whitespace-nowrap">
-                -{Math.round(item.discount / (item.price / 100))}%
+                -{Math.round(item.discount! / (item.price / 100))}%
               </span>
                             </button>
                             :
@@ -100,7 +100,7 @@ const ProductCard: React.FC<ItemProps> = ({item}) => {
                             <div
                                 // className="w-[24px] h-[24px] shrink-0">
                                 className="w-[24px] h-[24px] bg-cover bg-no-repeat shrink-0 overflow-hidden">
-                                {isWishList ? <img src={heart}/> : <img src={heartRed}/>}
+                                {isWishList ? <img src={heartRed}/> : <img src={heart}/>}
                                 {/*<img src={heart}/>*/}
                             </div>
                         </div>
@@ -111,9 +111,10 @@ const ProductCard: React.FC<ItemProps> = ({item}) => {
             <div className="flex flex-col gap-[16px] items-center self-stretch shrink-0 flex-nowrap">
                 <Link to={`product-page/${item.id}`}>
                     <div
-                        className={`w-[220px] h-[220px] shrink-0 bg-[url(${uploadings + "400_" + item.images[0]?.name})] bg-cover bg-no-repeat `}>
+                        //className={`w-[220px] h-[220px] shrink-0 bg-[url(${uploadings + "400_" + item.images[0]?.name})] bg-cover bg-no-repeat `}>
+                        className={`w-[220px] h-[220px] shrink-0`}>
                         {/*<img src={cart}/>*/}
-                        <img src={`${uploadings + "400_" + item.images[0]?.name}`} alt="no image"/>
+                        <img src={`${uploadings + "400_" + item.images![0]?.name}`} alt="no image"/>
                         {/*<img src="http://13.60.254.142:5817/uploadings/400_32d1lza2.c13.webp" alt="vcv"/>*/}
                     </div>
                 </Link>
@@ -145,7 +146,7 @@ const ProductCard: React.FC<ItemProps> = ({item}) => {
 
                         <div
                             className="flex justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff]">
-                            {item.discount > 0 ?
+                            {item.discount! > 0 ?
                                 <div
                                     className="flex w-[66px] flex-col gap-[9px] items-start shrink-0 flex-nowrap">
                                 <span
@@ -154,7 +155,7 @@ const ProductCard: React.FC<ItemProps> = ({item}) => {
                                 </span>
                                     <span
                                         className="flex w-[67px] h-[12px] items-center shrink-0 basis-auto font-['Inter'] text-[16px] font-semibold leading-[12px] text-[#e11515] text-center whitespace-nowrap">
-                                    {formatPrice(item.price - item.discount)}₴
+                                    {formatPrice(item.price - item.discount!)}₴
                                 </span>
                                 </div>
                                 : <div
@@ -168,7 +169,7 @@ const ProductCard: React.FC<ItemProps> = ({item}) => {
                             <button type={"button"} onClick={() => {
                                 if(!BasketService.checkId(item.id)) {
                                     BasketService.addId(item.id);
-                                    dispatch(incrementTotalPrice(Number(formatPrice(item.price - item.discount))));
+                                    dispatch(incrementTotalPrice(Number(formatPrice(item.price - item.discount!))));
                                 }
                             }}>
                                 <div

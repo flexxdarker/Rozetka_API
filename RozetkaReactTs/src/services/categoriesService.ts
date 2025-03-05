@@ -47,6 +47,10 @@ export const CategoriesServices = {
             data.append(prop, (model as any)[prop]);
         }
 
+        if (model.image) {
+            data.append('imageFiles', model.image as File); // додаємо кожен файл
+        }
+
         return api.put("create", data);
     },
 
@@ -59,19 +63,11 @@ export const CategoriesServices = {
         for (const prop in model) {
             data.append(prop, (model as any)[prop]);
         }
-console.log(data);
+
+        if (model.image) {
+            data.append('imageFiles', model.image as File); // додаємо кожен файл
+        }
+
         return api.post("edit", data);
     },
-    //
-    // getTypeRoom() {
-    //     return axios.get(api + "typeroom");
-    // },
-    //
-    // getNumberOfBeds() {
-    //     return axios.get(api + "numberofbeds");
-    // },
-    //
-    // getNumberOfSeats() {
-    //     return axios.get(api + "numberofseats");
-    // },
 };

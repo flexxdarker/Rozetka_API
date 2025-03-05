@@ -7,10 +7,10 @@ export interface IProductModel {
     title: string;
     description: string;
     price: number;
-    discount: number;
+    discount?: number;
     // firstImage: string;
-    values: number[];
-    images: IImageModel[];
+    values?: number[];
+    images?: IImageModel[];
 }
 
 

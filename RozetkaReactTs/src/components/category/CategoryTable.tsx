@@ -5,6 +5,8 @@ import {ICategoryModel} from "../../models/categoriesModel.ts";
 import {CategoriesServices} from "../../services/categoriesService.ts";
 import {Link} from "react-router-dom";
 
+const uploadings = import.meta.env.VITE_ROZETKA_UPLOADINGS;
+
 const CategoryTable: React.FC = () => {
 
     const [categories, setCategories] = useState<ICategoryModel[]>([]);
@@ -33,15 +35,11 @@ const CategoryTable: React.FC = () => {
         {
             title: "Image",
             dataIndex: "image",
-            key: "image"
-        },
-        {
-            title: "Category ID",
-            dataIndex: "parentCategoryId",
-            key: "parentCategoryId"
-            // ,
-            // sorter: (a: ICategoryModel, b: ICategoryModel) =>
-            //     a.parentCategoryId! - b.parentCategoryId!,
+            key: "image",
+            render: (item:string) =>
+        (
+            <img src={`${uploadings + "200_" + item}`} alt="no image" width="100px"/>
+        )
         },
         {
             title: "Action",

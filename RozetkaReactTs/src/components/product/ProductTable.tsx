@@ -9,10 +9,13 @@ import Highlighter from 'react-highlight-words';
 import {SearchOutlined} from '@ant-design/icons';
 import type {FilterDropdownProps} from 'antd/es/table/interface';
 import dayjs from "dayjs";
+import {IImageModel} from "../../models/imageModel.ts";
 // import {Highlight} from "@mui/icons-material";
 
 
 type DataIndex = keyof IProductModel;
+
+const uploadings = import.meta.env.VITE_ROZETKA_UPLOADINGS;
 
 const ProductTable: React.FC = () => {
 
@@ -101,7 +104,7 @@ const ProductTable: React.FC = () => {
             <SearchOutlined style={{color: filtered ? '#1677ff' : undefined}}/>
         ),
         onFilter: (value, record) =>
-            record[dataIndex]
+            record[dataIndex]!
                 .toString()
                 .toLowerCase()
                 .includes((value as string).toLowerCase()),
@@ -187,8 +190,12 @@ const ProductTable: React.FC = () => {
         },
         {
             title: "FirstImage",
-            dataIndex: "firstImage",
-            key: "firstImage",
+            dataIndex: "images",
+            key: "images",
+            render: (record: IImageModel[]) => {
+                const imageUrl = `${uploadings + "200_" + record[0]?.name}`;
+                return <img src={imageUrl} alt="no image" />;
+            }
         },
         {
             title: "Action",
