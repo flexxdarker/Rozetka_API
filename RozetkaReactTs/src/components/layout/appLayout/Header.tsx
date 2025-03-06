@@ -16,7 +16,7 @@ import Basket from "../../basket/Basket.tsx";
 import Modal from "../../other/Modal.tsx";
 import {TokenService} from "../../../services/tokenService.ts";
 import {AccountsService} from "../../../services/accountsService.ts";
-import {AutoComplete,} from 'antd';
+import {AutoComplete, Badge,} from 'antd';
 import type {AutoCompleteProps} from 'antd';
 import {IProductModel} from "../../../models/productsModel.ts";
 import {ProductServices} from "../../../services/productService.ts";
@@ -32,6 +32,7 @@ const Header = () => {
 
     const dispatch = useDispatch<AppDispatch>();
     const totalPrice = useSelector((state: RootState) => state.basket.totalPrice);
+    const comparisonCount = useSelector((state: RootState) => state.comparison.comparisonCount);
     const [basket, setBasket] = useState<IBasketModel>({});
     const [products, setProducts] = useState<IProductModel[]>([]);
 
@@ -193,7 +194,8 @@ const Header = () => {
                                     </div>
                                 </div>
                             </button>
-                            <button
+                            <Badge count={comparisonCount} size={"small"}>  {/*✓*/}
+                            <Link to={"/comparison-list"}
                                 className="flex w-[40px] h-[40px] flex-col justify-center items-center shrink-0 flex-nowrap">
                                 <div
                                     className="flex h-[40px] pt-[4px] pr-[4px] pb-[4px] pl-[4px] flex-col justify-center items-center self-stretch shrink-0 flex-nowrap rounded-[4px] overflow-hidden">
@@ -202,7 +204,8 @@ const Header = () => {
                                         <img src={balanceWhite}/>
                                     </div>
                                 </div>
-                            </button>
+                            </Link>
+                            </Badge>
                             {isLogin ?
                                 <>
                                     <Link to="account/data"

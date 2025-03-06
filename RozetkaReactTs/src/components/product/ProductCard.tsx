@@ -12,11 +12,15 @@ import heartRed from "../../assets/icons/heartFillRed.svg"
 import {Link} from "react-router-dom";
 import React, {useState} from "react";
 import {BasketService} from "../../services/basketService.ts";
-import {Rate} from "antd";
+import {Badge, Rate} from "antd";
 import {WishListService} from "../../services/wishListService.ts";
 import formatPrice from "../../functions/formatPrice.ts";
 import {useDispatch} from "react-redux";
+// import {useDispatch, useSelector} from "react-redux";
 import {incrementTotalPrice} from "../../store/actions/basketActions.ts";
+import {addToComparison, removeFromComparison} from "../../store/actions/comparisonActions.ts";
+import {isProductInComparison} from "../../store/reducers/comparisonReducer.ts";
+//import {RootState} from "../../store";
 // import "../ProductCard/ProductCard.css"
 
 //import Typography from '../assets/contemplative-reptile.jpg';
@@ -31,6 +35,8 @@ const ProductCard: React.FC<ItemProps> = ({item}) => {
     //const {item, updateParentState} = props;
     const dispatch = useDispatch();
     const [isWishList, setIsWishList] = useState(WishListService.checkId(item.id));
+    //const comparisonCount = useSelector((state: RootState) => state.comparison.comparisonCount);
+    const [isComparison, setIsComparison] = useState<boolean>(isProductInComparison(item.id));
 
     const WishListAdd = () => {
         WishListService.addId(item.id)
@@ -41,6 +47,18 @@ const ProductCard: React.FC<ItemProps> = ({item}) => {
         WishListService.removeId(item.id)
         setIsWishList(false); // Зміна стану відкриття/закриття
     };
+
+    const ComparisonListAdd = () => {
+        dispatch(addToComparison(item.id));
+        setIsComparison(isProductInComparison(item.id));
+    };
+
+    const ComparisonListRemove = () => {
+        dispatch(removeFromComparison(item.id));
+        setIsComparison(isProductInComparison(item.id));
+    };
+
+
 
     return (
         <div
@@ -79,7 +97,10 @@ const ProductCard: React.FC<ItemProps> = ({item}) => {
                     </div>
                 </div>
                 <div className="flex w-[32px] flex-col gap-[4px] items-start shrink-0 flex-nowrap">
-                    <div className="flex w-[32px] items-start shrink-0 flex-nowrap">
+
+                    { isComparison ? (
+                    <Badge count={"✓"} size={"small"} color={"green"}>
+                    <button type={"button"} className="flex w-[32px] items-start shrink-0 flex-nowrap" onClick={ComparisonListRemove}>
                         <div
                             className="flex w-[32px] pt-[4px] pr-[4px] pb-[4px] pl-[4px] items-center shrink-0 flex-nowrap bg-[#fff] rounded-[4px] border-solid border-[0.5px] border-[#3b3b3b]">
                             <div
@@ -90,7 +111,21 @@ const ProductCard: React.FC<ItemProps> = ({item}) => {
                             </div>
 
                         </div>
-                    </div>
+                    </button>
+                    </Badge>
+                        ) : (
+                        <button type={"button"} className="flex w-[32px] items-start shrink-0 flex-nowrap"
+                                onClick={ComparisonListAdd}>
+                            <div
+                                className="flex w-[32px] pt-[4px] pr-[4px] pb-[4px] pl-[4px] items-center shrink-0 flex-nowrap bg-[#fff] rounded-[4px] border-solid border-[0.5px] border-[#3b3b3b]">
+                                <div
+                                    className="w-[24px] h-[24px] shrink-0 overflow-hidden">
+                                    <img src={balance}/>
+                                </div>
+
+                            </div>
+                        </button>
+                    )}
 
 
                     <button type="button" className="flex w-[32px] flex-col items-start shrink-0 flex-nowrap"

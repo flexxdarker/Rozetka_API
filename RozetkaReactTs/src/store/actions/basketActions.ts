@@ -20,7 +20,11 @@ export const calculateTotalPrice = (products: IProductModel[], basket: IBasketMo
     return (dispatch: Dispatch<BasketActionTypes>) => {
         const total = products.reduce((total, product) => {
             const quantity = basket[product.id.toString()] || 0;
-            return total + (product.price - product.discount) * quantity;
+            if(product.discount!) {
+                return total + (product.price - product.discount) * quantity;
+            } else {
+                return total + product.price * quantity;
+            }
         }, 0);
 
         dispatch({

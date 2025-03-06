@@ -5,7 +5,6 @@ import minus from '../../assets/icons/minus.svg'
 import plus from '../../assets/icons/plus.svg'
 import {BasketService} from "../../services/basketService.ts";
 import formatPrice from "../../functions/formatPrice.ts";
-// import "../ProductCard/ProductCard.css"
 import clsx from 'clsx';
 
 //import Typography from '../assets/contemplative-reptile.jpg';
@@ -116,7 +115,7 @@ const BasketItem = (props: { item: IProductModel, className?: string }) => {
                                         className="shrink-0 font-['Inter'] text-[20px] font-semibold leading-[15px] text-center whitespace-nowrap">
                       <span
                           className="font-['Inter'] text-[20px] font-semibold leading-[20px] text-[#3b3b3b] text-center">
-                        {formatPrice((item.price-item.discount)*count)}
+                        {formatPrice((item.price-item.discount!)*count)}
                       </span>
                                         <span
                                             className="font-['Inter'] text-[20px] font-semibold leading-[20px] text-[#3b3b3b] text-center lowercase">
@@ -128,7 +127,7 @@ const BasketItem = (props: { item: IProductModel, className?: string }) => {
                                     className="flex gap-[10px] justify-center items-end shrink-0 flex-nowrap">
                     <span
                         className="flex h-[9px] justify-center items-center shrink-0 font-['Inter'] text-[12px] font-medium leading-[9px] text-[#3b3b3b] text-center whitespace-nowrap">
-                      +{Math.floor(((item.price-item.discount)/100)*count)} грн бонуси
+                      +{Math.floor(((item.price-item.discount!)/100)*count)} грн бонуси
                     </span>
                                 </div>
                             </div>

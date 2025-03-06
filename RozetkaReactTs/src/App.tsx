@@ -7,6 +7,8 @@ import CategoryLayout from "./components/layout/categoryLayout/CategoryLayout.ts
 import ProductPage from "./components/product/ProductPage.tsx";
 import React from "react";
 import AccountLayout from "./components/layout/accountLayout/AccountLayout.tsx";
+// import ComparisonListPage from "./components/comparison/ComparisonListPage.tsx";
+// import ComparisonProductsPage from "./components/comparison/ComparisonProductsPage.tsx";
 // import FilterProductPage from "./components/filter/filterProductPage.tsx";
 //import WishList from "./components/account/WishList.tsx";
 // import AccountOrders from "./components/account/AccountOrders.tsx";
@@ -49,6 +51,8 @@ const AccountData = lazy(() => import("./components/account/AccountData.tsx"));
 const AccountOrders = lazy(() => import("./components/account/AccountOrders.tsx"));
 const WishList = lazy(() => import("./components/account/WishList.tsx"));
 const FilterProductPage = lazy(() => import("./components/filter/filterProductPage.tsx"));
+const ComparisonListPage = lazy(() => import("./components/comparison/ComparisonListPage.tsx"));
+const ComparisonProductsPage = lazy(() => import("./components/comparison/ComparisonProductsPage.tsx"));
 
 export default function App() {
     return (
@@ -84,6 +88,9 @@ export default function App() {
 
                 <Route path="product-page/:id" element={<ProductPage/>}/>
                 <Route path="product-filter" element={<FilterProductPage/>}/>
+
+                <Route path="comparison-list" element={<ComparisonListPage/>}/>
+                <Route path="comparison-products" element={<ComparisonProductsPage/>}/>
 
                 <Route path="account" element={<AccountLayout/>}>
                     <Route path="data" element={<AccountData/>}/>
