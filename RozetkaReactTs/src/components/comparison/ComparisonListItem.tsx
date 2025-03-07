@@ -7,7 +7,7 @@ const uploadings = import.meta.env.VITE_ROZETKA_UPLOADINGS;
 const ComparisonListItem: React.FC<{ products: IProductModel[] }> = ({products}) => {
     return (
         <div
-            className="main-container flex w-[1160px] flex-col gap-[2px] items-start flex-nowrap mx-auto my-0">
+            className="main-container flex w-full flex-col gap-[2px] items-start flex-nowrap mx-auto my-0">
             <div
                 className="flex pt-[20px] pr-[20px] pb-[20px] pl-[20px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff]">
                 <div
@@ -23,7 +23,7 @@ const ComparisonListItem: React.FC<{ products: IProductModel[] }> = ({products})
                 </div>
                 {/*<Link to={{pathname:"/comparison-products", state:{ products }}}*/}
                 <Link to={"/comparison-products"} state={ products }
-                    className={`flex w-[141px] pt-[8px] pr-[20px] pb-[8px] pl-[20px] gap-[10px] items-center shrink-0 flex-nowrap bg-[#9cc319] rounded-[8px] ${products.length <= 2 ? "pointer opacity-50 pointer-events-none" : ""}`}>
+                    className={`flex w-[141px] pt-[8px] pr-[20px] pb-[8px] pl-[20px] gap-[10px] items-center shrink-0 flex-nowrap bg-[#9cc319] rounded-[8px] ${products.length <= 1 ? "pointer opacity-50 pointer-events-none" : ""}`}>
           <span
               className="flex w-[101px] h-[20px] justify-center items-center shrink-0 basis-auto font-['Inter'] text-[20px] font-medium leading-[20px] text-[#fff] text-center whitespace-nowrap">
             Порівняти

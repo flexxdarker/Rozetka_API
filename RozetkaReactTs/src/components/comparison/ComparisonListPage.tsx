@@ -5,6 +5,7 @@ import {ProductServices} from "../../services/productService.ts";
 import {getComparisonListFromLocalStorage} from "../../store/reducers/comparisonReducer.ts";
 import deleteBin from "../../assets/icons/deleteBin.svg";
 
+
 const ComparisonListPage: React.FC = () => {
 
     const [products, setProducts] = useState<IProductModel[]>([]);
@@ -37,7 +38,7 @@ const ComparisonListPage: React.FC = () => {
     return (
         <div className={"flex flex-col gap-[4px]"}>
             <div
-                className="main-container flex w-[1160px] h-[82px] pt-[20px] pr-[20px] pb-[20px] pl-[20px] justify-between items-center flex-nowrap bg-[#fff] rounded-[8px] mx-auto my-0">
+                className="main-container flex min-w-[1160px] h-[82px] pt-[20px] pr-[20px] pb-[20px] pl-[20px] justify-between items-center flex-nowrap bg-[#fff] rounded-[8px] mx-auto my-0">
                 <div
                     className="flex w-[233px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] justify-center items-center shrink-0 flex-nowrap">
         <span
