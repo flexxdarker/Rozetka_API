@@ -12,11 +12,14 @@ using DataAccess.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlTypes;
 using System.Linq;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using static Google.Apis.Auth.GoogleJsonWebSignature;
@@ -333,40 +336,82 @@ namespace BusinessLogic.Services
             await refreshTokenR.SaveAsync();
         }
 
-        private async Task<Google.Apis.Auth.GoogleJsonWebSignature.Payload> GetPayloadAsync(string credential)
-        {
-            return await ValidateAsync(
-                credential,
-                new ValidationSettings
-                {
-                    Audience = new List<string> {_configuration["Authentication:Google:ClientId"] }
-                }
-            );
-        }
+        //private async Task<Google.Apis.Auth.GoogleJsonWebSignature.Payload> GetPayloadAsync(string credential)
+        //{
+        //    return await ValidateAsync(
+        //        credential,
+        //        new ValidationSettings
+        //        {
+        //            Audience = new List<string> {_configuration["Authentication:Google:ClientId"] }
+        //        }
+        //    );
+        //}
 
         public async Task<LoginResponseDto> GoogleSignInAsync(GoogleLoginDto loginDto)
         {
-            Google.Apis.Auth.GoogleJsonWebSignature.Payload payload = await GetPayloadAsync(loginDto.Credential);
+            //Google.Apis.Auth.GoogleJsonWebSignature.Payload payload = await GetPayloadAsync(loginDto.Credential);
+            //LoginResponseDto loginResponse = new LoginResponseDto();
+
+            //var user = userRepo.AsQueryable().FirstOrDefault(x => x.Email == payload.Email);
+
+            //user ??= await CreateGoogleUserAsync(payload);
+
+            //if(user.LockoutEnabled == true)
+            //{
+            //    string lockoutDate = user.LockoutEnd.Value.ToString("MM/dd/yyyy");
+            //    loginResponse.Error = $"User {user.Name} {user.SurName} locked to {lockoutDate}";
+            //    loginResponse.AccessToken = "";
+            //    loginResponse.Baskets = null;
+            //    return loginResponse;
+            //}
+
+            //var roles = await userManager.GetRolesAsync(user);
+
+            //var avatar = avatarRepository.AsQueryable().FirstOrDefault(x => x.UserId == user.Id).Name;
+
+
+
+
+
+            // Створюємо DTO для токена
+            //var userTokenInfo = new UserTokenInfo
+            //{
+            //    Id = user.Id,
+            //    Name = user.Name,
+            //    SurName = user.SurName,
+            //    Email = user.Email,
+            //    Birthday = user.Birthdate.ToString("dd-MM-yyyy"),
+            //    AvatarPath = avatar,
+            //    PhoneNumber = user.PhoneNumber,
+            //    Roles = roles.ToList()
+            //};
+
+            //// Створюємо токен на основі DTO
+            //loginResponse.AccessToken = await jwtService.CreateToken(userTokenInfo);
+
             LoginResponseDto loginResponse = new LoginResponseDto();
 
-            var user = userRepo.AsQueryable().FirstOrDefault(x => x.Email == payload.Email);
-
-            user ??= await CreateGoogleUserAsync(payload);
-
-            if(user.LockoutEnabled == true)
+            using HttpClient httpClient = new();
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",loginDto.GoogleAccessToken);
+            HttpResponseMessage response = await httpClient.GetAsync(_configuration["GoogleUserInfoUrl"]);
+            response.EnsureSuccessStatusCode();
+            string responseBody = await response.Content.ReadAsStringAsync();
+            var userInfo = JsonConvert.DeserializeObject<GoogleUserInfo>(responseBody)!;
+            User user = await userManager.FindByEmailAsync(userInfo.Email) ?? mapper.Map<User>(userInfo);
+            if (user.Id == null)
             {
-                string lockoutDate = user.LockoutEnd.Value.ToString("MM/dd/yyyy");
-                loginResponse.Error = $"User {user.Name} {user.SurName} locked to {lockoutDate}";
-                loginResponse.AccessToken = "";
-                loginResponse.Baskets = null;
-                return loginResponse;
+                if (!String.IsNullOrEmpty(userInfo.Picture))
+                {
+                    user.Avatar.Name = await imageService.SaveImageFromUrlAsync(userInfo.Picture);
+                    user.Avatar.UserId = user.Id;
+                }
+                await CreateUserAsync(user);
             }
-
-            var roles = await userManager.GetRolesAsync(user);
 
             var avatar = avatarRepository.AsQueryable().FirstOrDefault(x => x.UserId == user.Id).Name;
 
-            // Створюємо DTO для токена
+            var roles = await userManager.GetRolesAsync(user);
+
             var userTokenInfo = new UserTokenInfo
             {
                 Id = user.Id,
@@ -378,11 +423,6 @@ namespace BusinessLogic.Services
                 PhoneNumber = user.PhoneNumber,
                 Roles = roles.ToList()
             };
-
-            // Створюємо токен на основі DTO
-            loginResponse.AccessToken = await jwtService.CreateToken(userTokenInfo);
-
-            
 
             if (loginDto.Baskets.Count > 0)
             {
@@ -439,88 +479,63 @@ namespace BusinessLogic.Services
 
         }
 
-        private async Task<User> CreateGoogleUserAsync(Google.Apis.Auth.GoogleJsonWebSignature.Payload payload)
+        private async Task CreateUserAsync(User user, string? password = null, bool isAdmin = false)
         {
-            using var httpClient = new HttpClient();
-
-            var user = new User
+            var result = password is not null
+                ? await userManager.CreateAsync(user, password)
+                : await userManager.CreateAsync(user);
+            if (!result.Succeeded)
             {
-                Name = payload.GivenName,
-                SurName = payload.FamilyName,
-                Email = payload.Email,
-                UserName = payload.Email,
-
-            };
-
-
-            try
-            {
-                await CreateUserAsync(user);
-
-                // Використовуйте властивості з об'єкта user замість dto
-                smtpService.SuccessfulLogin(user.Name + " " + user.SurName, user.Email);
-
+                throw new HttpException(Errors.UserCreateError, HttpStatusCode.InternalServerError);
             }
-            catch
-            {
-
-                throw;
-            }
-
-            return user;
-        }
-        public async Task CreateUserAsync(User user, string? password = null)
-        {
-            using var transaction = await UoW.BeginTransactionAsync();
-
-            try
-            {
-                IdentityResult identityResult = await CreateUserInDatabaseAsync(user, password);
-                if (!identityResult.Succeeded)
-                    throw new IdentityException(identityResult, "User creating error");
-
-                identityResult = await userManager.AddToRoleAsync(user, Roles.User);
-                if (!identityResult.Succeeded)
-                    throw new IdentityException(identityResult, "Role assignment error");
-
-                await transaction.CommitAsync();
-            }
-            catch
-            {
-                await transaction.RollbackAsync();
-                throw;
-            }
+            await userManager.AddToRoleAsync(user, isAdmin ? Roles.Admin : Roles.User);
         }
 
-        private async Task<IdentityResult> CreateUserInDatabaseAsync(User user, string? password)
+        public async Task EditUserAsync(UserEditDto editUserDto, string userId)
         {
-            if (password is null)
-                return await userManager.CreateAsync(user);
 
-            return await userManager.CreateAsync(user, password);
-        }
+            var user = await userManager.Users
+         .Include(u => u.Avatar) // Ensure Avatar is loaded
+         .FirstOrDefaultAsync(u => u.Id == userId);
 
-        public async Task EditUserAsync(UserEditDto editUserDto)
-        {
-            string userId = editUserDto.Id;
-            var user = await userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                throw new Exception("User not found.");
+            }
+
+            // Update basic user details
             user.Name = editUserDto.FirstName;
             user.SurName = editUserDto.LastName;
             user.Email = editUserDto.Email;
+
+            // Handle Avatar update
             if (editUserDto.Avatar != null)
             {
-                imageService.DeleteImage(user.Avatar.Name);
+                // Ensure user.Avatar is initialized
+                if (user.Avatar == null)
+                {
+                    user.Avatar = new Avatar(); // Assuming Avatar is the correct class
+                }
+
                 var newAvatar = await imageService.SaveImageAsync(editUserDto.Avatar);
+                user.Avatar.UserId = user.Id;
                 user.Avatar.Name = newAvatar;
             }
 
+            // Handle birthday conversion
             if (!string.IsNullOrEmpty(editUserDto.Birthday))
             {
-                DateTime localDateTime = DateTime.Parse(editUserDto.Birthday);
-                DateTime utcDateTime = localDateTime.ToUniversalTime();
-                user.Birthdate = utcDateTime;
+                if (DateTime.TryParse(editUserDto.Birthday, out DateTime localDateTime))
+                {
+                    user.Birthdate = localDateTime.ToUniversalTime();
+                }
+                else
+                {
+                    throw new Exception("Invalid birthday format.");
+                }
             }
 
+            // Save changes
             await userManager.UpdateAsync(user);
         }
 
@@ -533,10 +548,27 @@ namespace BusinessLogic.Services
             return result;
         }
 
-        public async Task<User> GetUser(string id)
+        public async Task<UserViewDto> GetUser(string id)
         {
             var user = await userManager.FindByIdAsync(id);
-            return user;
+            
+            var roles = await userManager.GetRolesAsync(user);
+
+            var avatar = avatarRepository.AsQueryable().FirstOrDefault(x => x.UserId == user.Id).Name;
+
+            var userView = new UserViewDto
+            {
+                Id = user.Id,
+                FirstName = user.Name,
+                LastName = user.SurName,
+                Password = user.PasswordHash,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                Avatar = avatar,
+                BirthDate = user.Birthdate,
+                Roles = string.Join(", ", roles.ToList())
+            };
+            return userView;
         }
 
         public async Task<IdentityResult> BlockUser(string userId)

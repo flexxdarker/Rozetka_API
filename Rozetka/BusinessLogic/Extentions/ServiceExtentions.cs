@@ -8,6 +8,8 @@ using System.Security.Claims;
 using DataAccess.Repositories;
 using BusinessLogic.Models.AdvertModels;
 using BusinessLogic.Validators;
+using BusinessLogic.Entities;
+using Google;
 
 namespace BusinessLogic.Exstensions
 {
@@ -36,6 +38,10 @@ namespace BusinessLogic.Exstensions
             services.AddScoped<ISmtpService, SmtpService>();
             services.AddScoped<IFilterValueService, FilterValueService>();
             services.AddScoped<IAdvertRatingService, AdvertRatingService>();
+            //services.AddIdentity<User, Role>()
+            //        .AddEntityFrameworkStores<ApplicationDbContext>()
+            //        .AddDefaultTokenProviders();
+
         }
         public static void AddValidationServices(this IServiceCollection services)
         { 

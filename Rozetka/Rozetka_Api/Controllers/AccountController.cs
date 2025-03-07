@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Rozetka_Api.Helpers;
 
 namespace Rozetka_Api.Controllers
 {
@@ -77,12 +78,14 @@ namespace Rozetka_Api.Controllers
                 return BadRequest(result);
             }
         }
+
+        [Authorize]
         [HttpPut("edit-user")]
         public async Task<IActionResult> EditUser([FromForm] UserEditDto editUserDto)
         {
-            await accountsService.EditUserAsync(editUserDto);
-
             string userId = User.Claims.ToList()[0].Value.ToString();
+
+            await accountsService.EditUserAsync(editUserDto, userId);
 
             var user = userRepo.AsQueryable()
                 .FirstOrDefault(x => x.Id == userId);
@@ -129,6 +132,7 @@ namespace Rozetka_Api.Controllers
 
         }
 
+        //[Authorize(Roles = "Admin")]
         [HttpGet("GetAllUsers")]
         public async Task<IActionResult> GetAllUsers()
         {
@@ -139,6 +143,7 @@ namespace Rozetka_Api.Controllers
             return Ok(result);
         }
 
+        ///[Authorize(Roles = "Admin")]
         [HttpPost("BlockUser")]
         public async Task<IActionResult> BlockUser([FromBody] BlockUserDto model)
         {
@@ -156,6 +161,7 @@ namespace Rozetka_Api.Controllers
             return Ok(user);
         }
 
+        //[Authorize(Roles = Roles.ADMIN)]
         [HttpPost("UnBlockUser")]
         public async Task<IActionResult> UnBlockUser([FromBody] BlockUserDto model)
         {

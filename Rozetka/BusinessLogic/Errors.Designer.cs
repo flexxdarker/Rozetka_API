@@ -95,5 +95,14 @@ namespace BusinessLogic {
                 return ResourceManager.GetString("InvalidToken", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User is not created.
+        /// </summary>
+        internal static string UserCreateError {
+            get {
+                return ResourceManager.GetString("UserCreateError", resourceCulture);
+            }
+        }
     }
 }

@@ -3,6 +3,7 @@ using BusinessLogic.Interfaces;
 using DataAccess.Data;
 using DataAccess.Repositories;
 using DataAccess.Repostories;
+using Google;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +28,6 @@ namespace DataAccess
 
         public static void AddIdentity(this IServiceCollection services)
         {
-
             services.AddIdentity<User, IdentityRole>(options =>
             {
                 options.Stores.MaxLengthForKeys = 128;
