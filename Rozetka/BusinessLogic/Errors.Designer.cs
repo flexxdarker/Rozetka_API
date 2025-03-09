@@ -124,6 +124,15 @@ namespace BusinessLogic {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Filter Id is invalid.
+        /// </summary>
+        internal static string InvalidFilterId {
+            get {
+                return ResourceManager.GetString("InvalidFilterId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {PropertyName} not recognized.
         /// </summary>
         internal static string InvalidPriceError {
@@ -147,6 +156,42 @@ namespace BusinessLogic {
         internal static string InvalidToken {
             get {
                 return ResourceManager.GetString("InvalidToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {PropertyName} length must be less than.
+        /// </summary>
+        internal static string MaxSymbolsCountError {
+            get {
+                return ResourceManager.GetString("MaxSymbolsCountError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {PropertyName}length must be greater than.
+        /// </summary>
+        internal static string MinSymbolsCountError {
+            get {
+                return ResourceManager.GetString("MinSymbolsCountError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {PropertyName} can`t be empty.
+        /// </summary>
+        internal static string NotEmpty {
+            get {
+                return ResourceManager.GetString("NotEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {PropertyName} can`t be null.
+        /// </summary>
+        internal static string NotNull {
+            get {
+                return ResourceManager.GetString("NotNull", resourceCulture);
             }
         }
         

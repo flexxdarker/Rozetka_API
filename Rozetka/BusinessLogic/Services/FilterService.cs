@@ -3,9 +3,12 @@ using BusinessLogic.DTOs.Filter;
 using BusinessLogic.Entities;
 using BusinessLogic.Interfaces;
 using BusinessLogic.Models;
+using BusinessLogic.Models.AdvertModels;
 using BusinessLogic.Models.FilterModels;
 using BusinessLogic.Specifications;
+using BusinessLogic.Validators;
 using DataAccess.Repositories;
+using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,18 +21,21 @@ namespace BusinessLogic.Services
     {
         private readonly IRepository<Filter> filterRepo;
         private readonly IRepository<FilterValue> values;
+        private readonly IValidator<FilterCreateModel> filterCreateModelValidator;
         private readonly IFilterValueService filterValueService;
         private readonly IMapper mapper;
 
         public FilterService(IRepository<Filter> filterRepo,
                              IRepository<FilterValue> values,
                              IMapper mapper,
-                             IFilterValueService filterValueService)
+                             IFilterValueService filterValueService,
+                             IValidator<FilterCreateModel> filterCreateModelValidator)
         {
             this.filterRepo = filterRepo;
             this.values = values;
             this.mapper = mapper;
             this.filterValueService = filterValueService;
+            this.filterCreateModelValidator = filterCreateModelValidator;
         }
 
         public async Task<IEnumerable<FilterDto>> GetAllAsync()
@@ -53,6 +59,7 @@ namespace BusinessLogic.Services
 
         public async Task<FilterDto> CreateAsync(FilterCreateModel createModel)
         {
+            filterCreateModelValidator.ValidateAndThrow(createModel);
             var filter = mapper.Map<Filter>(createModel);
 
             await filterRepo.InsertAsync(filter);

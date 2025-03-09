@@ -43,6 +43,8 @@ namespace BusinessLogic.Profiles
 
             CreateMap<AdvertEditModel, Advert>()
                 .ForMember(x => x.Values, opt => opt.Ignore())
+                .ForMember(x => x.Price, opt => opt.Ignore())
+                .ForMember(x => x.Discount, opt => opt.Ignore())
                 .ReverseMap();
 
             CreateMap<Category, CategoryDto>()

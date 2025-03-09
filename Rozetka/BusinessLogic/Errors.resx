@@ -150,4 +150,19 @@
   <data name="InvalidAdvertId" xml:space="preserve">
     <value>Advert Id is invalid</value>
   </data>
+  <data name="MaxSymbolsCountError" xml:space="preserve">
+    <value>{PropertyName} length must be less than</value>
+  </data>
+  <data name="MinSymbolsCountError" xml:space="preserve">
+    <value>{PropertyName}length must be greater than</value>
+  </data>
+  <data name="NotNull" xml:space="preserve">
+    <value>{PropertyName} can`t be null</value>
+  </data>
+  <data name="InvalidFilterId" xml:space="preserve">
+    <value>Filter Id is invalid</value>
+  </data>
+  <data name="NotEmpty" xml:space="preserve">
+    <value>{PropertyName} can`t be empty</value>
+  </data>
 </root>
