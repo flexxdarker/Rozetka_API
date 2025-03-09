@@ -27,7 +27,7 @@ namespace BusinessLogic.Services
     {
         private readonly IRepository<Filter> filterRepo;
         private readonly IRepository<FilterValue> values;
-        private readonly IValidator<FilterCreateModel> filterCreateModelValidator;
+        private readonly IValidator<BaseFilterModel> baseFilterModelValidator;
         private readonly IFilterValueService filterValueService;
         private readonly IMapper mapper;
 
@@ -35,13 +35,13 @@ namespace BusinessLogic.Services
                              IRepository<FilterValue> values,
                              IMapper mapper,
                              IFilterValueService filterValueService,
-                             IValidator<FilterCreateModel> filterCreateModelValidator)
+                             IValidator<BaseFilterModel> baseFilterModelValidator)
         {
             this.filterRepo = filterRepo;
             this.values = values;
             this.mapper = mapper;
             this.filterValueService = filterValueService;
-            this.filterCreateModelValidator = filterCreateModelValidator;
+            this.baseFilterModelValidator = baseFilterModelValidator;
         }
 
         public async Task<IEnumerable<FilterDto>> GetAllAsync()
@@ -65,7 +65,7 @@ namespace BusinessLogic.Services
 
         public async Task<FilterDto> CreateAsync(FilterCreateModel createModel)
         {
-            filterCreateModelValidator.ValidateAndThrow(createModel);
+            baseFilterModelValidator.ValidateAndThrow(createModel);
             var filter = mapper.Map<Filter>(createModel);
 
             await filterRepo.InsertAsync(filter);
@@ -84,7 +84,11 @@ namespace BusinessLogic.Services
 
         public async Task<FilterDto> EditAsync(FilterEditModel editModel)
         {
-            
+            baseFilterModelValidator.ValidateAndThrow(editModel);
+            if (!await filterRepo.AnyAsync(x => x.Id == editModel.Id))
+            {
+                throw new HttpException(Errors.InvalidFilterId, HttpStatusCode.BadRequest);
+            }
             var filter = await filterRepo.GetItemBySpec(new FilterSpecs.GetById(editModel.Id));
 
             mapper.Map(editModel, filter);
