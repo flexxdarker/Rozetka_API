@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Ardalis.Specification;
+using AutoMapper;
 using BusinessLogic.DTOs.Basket;
 using BusinessLogic.DTOs.User;
 using BusinessLogic.Enities;
@@ -8,7 +9,9 @@ using BusinessLogic.Helpers;
 using BusinessLogic.Interfaces;
 using BusinessLogic.Models.UserModels;
 using BusinessLogic.Specifications;
+using BusinessLogic.Validators;
 using DataAccess.Repositories;
+using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -42,6 +45,7 @@ namespace BusinessLogic.Services
         private readonly IRepository<User> userRepo;
         private readonly IImageService imageService;
         private readonly IRepository<Avatar> avatarRepository;
+        private readonly IValidator<RegisterModel> registerModelValidator;
 
         public AccountsService(UserManager<User> userManager,
                                 SignInManager<User> signInManager,
@@ -55,7 +59,8 @@ namespace BusinessLogic.Services
                                 IUnitOfWork UoW,
                                 IRepository<User> userRepo,
                                 IImageService imageService,
-                                IRepository<Avatar> avatarRepository)
+                                IRepository<Avatar> avatarRepository,
+                                IValidator<RegisterModel> registerModelValidator)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
@@ -70,10 +75,12 @@ namespace BusinessLogic.Services
             this.userRepo = userRepo;
             this.imageService = imageService;
             this.avatarRepository = avatarRepository;
+            this.registerModelValidator = registerModelValidator;
         }
 
         public async Task<RegisterResultDto> Register(RegisterModel model)
         {
+            registerModelValidator.ValidateAndThrow(model);
             RegisterResultDto registerResultDto = new RegisterResultDto();
 
             // Маппінг об'єкта dto на об'єкт UserEntity за допомогою _mapper

@@ -13,6 +13,7 @@ using Google;
 using BusinessLogic.Models.CategoryModels;
 using BusinessLogic.Models.FilterModels;
 using BusinessLogic.Models.FilterValueModels;
+using BusinessLogic.Models.UserModels;
 
 namespace BusinessLogic.Exstensions
 {
@@ -49,11 +50,12 @@ namespace BusinessLogic.Exstensions
         public static void AddValidationServices(this IServiceCollection services)
         { 
             services.AddScoped<IValidator<AdvertRatingCreateModel>, AdvertRatingCreateModelValidator>();
-            services.AddScoped<IValidator<AdvertCreateModel>, AdvertCreateModelValidator>();
+            services.AddScoped<IValidator<BaseAdvertModel>, BaseAdvertModelValidator>();
             services.AddScoped<IValidator<Advert>, AdvertValidator>();
-            services.AddScoped<IValidator<CategoryCreateModel>, CategoryCreateModelValidator>();
-            services.AddScoped<IValidator<FilterCreateModel>, FilterCreateModelValidator>();
-            services.AddScoped<IValidator<FilterValueCreationModel>, FilterValueCreationModelValidator>();
+            services.AddScoped<IValidator<BaseCategoryModel>, BaseCategoryModelValidator>();
+            services.AddScoped<IValidator<BaseFilterModel>, BaseFilterModelValidator>();
+            services.AddScoped<IValidator<BaseFilterValueModel>, BaseFilterValueModelValidator>();
+            services.AddScoped<IValidator<RegisterModel>, RegisterModelValidator>();
             
         }
     }

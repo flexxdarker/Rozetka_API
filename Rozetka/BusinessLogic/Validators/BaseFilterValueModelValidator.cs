@@ -11,15 +11,22 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic.Validators
 {
-    public class FilterValueCreationModelValidator : AbstractValidator<FilterValueCreationModel>
+    public class BaseFilterValueModelValidator : AbstractValidator<BaseFilterValueModel>
     {
-        public FilterValueCreationModelValidator()
+        public BaseFilterValueModelValidator()
         {
             RuleFor(x => x.FilterId)
                 .GreaterThan(0).WithMessage(Errors.GreaterZeroError);
             RuleFor(x => x.Value)
+                .NotEmpty().WithMessage(Errors.NotEmpty)
                 .NotNull().WithMessage(Errors.NotNull)
                 .MaximumLength(30).WithMessage(Errors.MaxSymbolsCountError + " 30 symbols");
+
+            When(x => x is FilterValueEditModel, () =>
+            {
+                RuleFor(x => ((FilterValueEditModel)x!).Id)
+                    .GreaterThan(0).WithMessage(Errors.GreaterZeroError);
+            });
         }
     }
 }

@@ -70,6 +70,24 @@ namespace BusinessLogic {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {PropertyName} must be greater than.
+        /// </summary>
+        internal static string DateTooBig {
+            get {
+                return ResourceManager.GetString("DateTooBig", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {PropertyName} must be less than.
+        /// </summary>
+        internal static string DateTooSmall {
+            get {
+                return ResourceManager.GetString("DateTooSmall", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Discount can&apos;t be greater or equal than price .
         /// </summary>
         internal static string DiscountGreaterOrEqualPrice {
@@ -124,11 +142,38 @@ namespace BusinessLogic {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {PropertyName} is invalid.
+        /// </summary>
+        internal static string InvalidEmail {
+            get {
+                return ResourceManager.GetString("InvalidEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Filter Id is invalid.
         /// </summary>
         internal static string InvalidFilterId {
             get {
                 return ResourceManager.GetString("InvalidFilterId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filter Value Id is invalid.
+        /// </summary>
+        internal static string InvalidFilterValueId {
+            get {
+                return ResourceManager.GetString("InvalidFilterValueId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {PropertyName} is in the invalid format (Example: +380XXXXXXXX).
+        /// </summary>
+        internal static string InvalidPhoneNumber {
+            get {
+                return ResourceManager.GetString("InvalidPhoneNumber", resourceCulture);
             }
         }
         
