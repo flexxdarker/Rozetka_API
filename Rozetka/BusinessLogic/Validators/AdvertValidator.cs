@@ -1,4 +1,5 @@
-﻿using BusinessLogic.DTOs.Advert;
+﻿using BusinessLogic.DTOs.Cart;
+using BusinessLogic.Entities;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -8,21 +9,17 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic.Validators
 {
-    public class AdvertValidator: AbstractValidator<AdvertDto>
+    public class AdvertValidator : AbstractValidator<Advert>
     {
         public AdvertValidator() 
         {
             RuleFor(x => x.Price)
-                .NotEmpty()
-                .GreaterThan(1);
-            RuleFor(x => x.Title)
-                .NotEmpty()
-                .MinimumLength(6).WithMessage("Title must be more that 6 symbols");
-            RuleFor(x => x.Description)
-                .NotEmpty()
-                .MinimumLength(100).WithMessage("Description must be more than 100 symbols");
-            RuleFor(x => x.Date)
-                .NotEmpty();
+                .NotEmpty().WithMessage(Errors.InvalidPriceError)
+                .GreaterThan(0).WithMessage(Errors.GreaterZeroError);
+            RuleFor(x => x.Discount)
+                .NotEmpty().WithMessage(Errors.InvalidPriceError)
+                .GreaterThanOrEqualTo(0).WithMessage(Errors.GreaterEqualZeroError)
+                .LessThanOrEqualTo(x => x.Price).WithMessage(Errors.DiscountGreaterOrEqualPrice);
         }
     }
 }

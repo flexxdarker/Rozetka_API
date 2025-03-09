@@ -1,6 +1,7 @@
 ﻿using BusinessLogic.Interfaces;
 using BusinessLogic.Models.AdvertModels;
 using BusinessLogic.Models.FilterModels;
+using BusinessLogic.Models.FilterValueModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -30,6 +31,20 @@ namespace Rozetka_Api.Controllers
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
             return Ok(await filterValueService.GetByIdAsync(id));
+        }
+
+        [AllowAnonymous]
+        [HttpPut("create")]
+        public async Task<IActionResult> Create([FromForm] FilterValueCreationModel createModel)
+        {
+            return Ok(await filterValueService.CreateAsync(createModel));
+        }
+
+        [AllowAnonymous]
+        [HttpPost("edit")]
+        public async Task<IActionResult> Edit([FromForm] FilterValueEditModel editModel)
+        {
+            return Ok(await filterValueService.EditAsync(editModel));
         }
 
         [AllowAnonymous]

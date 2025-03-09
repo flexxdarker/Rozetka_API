@@ -13,16 +13,25 @@ namespace BusinessLogic.Specifications
     {
         public class GetAll : Specification<FilterValue>
         {
-            public GetAll() => Query.Where(x => true)
+            public GetAll() => Query
+                .Where(x => true)
                 .Include(x => x.Filter); 
         }
         public class GetById : Specification<FilterValue>
         {
-            public GetById(int id) => Query.Where(x => x.Id == id);
+            public GetById(int id) => Query
+                .Where(x => x.Id == id)
+                .Include(x => x.Filter); 
+        }
+        public class GetByFilterId : Specification<FilterValue>
+        {
+            public GetByFilterId(int filterId) => Query
+                .Where(x => x.FilterId == filterId);
         }
         public class GetByIds : Specification<FilterValue>
         {
-            public GetByIds(IEnumerable<int> ids) => Query.Where(x => ids.Contains(x.Id));
+            public GetByIds(IEnumerable<int> ids) => Query
+                .Where(x => ids.Contains(x.Id));
         }
     }
 }

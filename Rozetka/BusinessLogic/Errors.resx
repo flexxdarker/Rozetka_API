@@ -117,9 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AdvertNotFound" xml:space="preserve">
-    <value>Advert is not found</value>
-  </data>
   <data name="IdMustBePositive" xml:space="preserve">
     <value>Id must be more than zero</value>
   </data>
@@ -131,5 +128,43 @@
   </data>
   <data name="UserCreateError" xml:space="preserve">
     <value>User is not created</value>
+  <data name="GreaterZeroError" xml:space="preserve">
+    <value>{PropertyName} must be greater than zero</value>
+  </data>
+  <data name="InvalidPriceError" xml:space="preserve">
+    <value>{PropertyName} not recognized</value>
+  </data>
+  <data name="DiscountGreaterOrEqualPrice" xml:space="preserve">
+    <value>Discount can't be greater or equal than price </value>
+  </data>
+  <data name="GreaterEqualZeroError" xml:space="preserve">
+    <value>{PropertyName} must be greater or equal to zero</value>
+  </data>
+  <data name="InvalidPropertyId" xml:space="preserve">
+    <value>{PropertyName} is invalid!</value>
+  </data>
+  <data name="RatingLessThanOrEqualTo5" xml:space="preserve">
+    <value>Advert rating must be less or equal than 5</value>
+  </data>
+  <data name="InvalidCategoryId" xml:space="preserve">
+    <value>Category Id is invalid</value>
+  </data>
+  <data name="InvalidAdvertId" xml:space="preserve">
+    <value>Advert Id is invalid</value>
+  </data>
+  <data name="MaxSymbolsCountError" xml:space="preserve">
+    <value>{PropertyName} length must be less than</value>
+  </data>
+  <data name="MinSymbolsCountError" xml:space="preserve">
+    <value>{PropertyName}length must be greater than</value>
+  </data>
+  <data name="NotNull" xml:space="preserve">
+    <value>{PropertyName} can`t be null</value>
+  </data>
+  <data name="InvalidFilterId" xml:space="preserve">
+    <value>Filter Id is invalid</value>
+  </data>
+  <data name="NotEmpty" xml:space="preserve">
+    <value>{PropertyName} can`t be empty</value>
   </data>
 </root>

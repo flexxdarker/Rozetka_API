@@ -2,15 +2,19 @@
 using BusinessLogic.DTOs;
 using BusinessLogic.DTOs.Advert;
 using BusinessLogic.Entities;
+using BusinessLogic.Exceptions;
 using BusinessLogic.Interfaces;
 using BusinessLogic.Models;
 using BusinessLogic.Models.AdvertModels;
 using BusinessLogic.Specifications;
+using BusinessLogic.Validators;
 using DataAccess.Repositories;
+using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,22 +24,30 @@ namespace BusinessLogic.Services
     {
         private readonly IMapper mapper;
         private readonly IRepository<Advert> advertRepo;
-        private readonly IRepository<Image> imageRepo;
         private readonly IFilterService filterService;
+        private readonly IRepository<Category> categorytRepo;
         private readonly IAdvertValueService advertValueService;
         private readonly IImageService imageService;
+        private readonly IValidator<AdvertCreateModel> advertCreateModelValidator;
+        private readonly IValidator<Advert> advertValidator;
 
         public AdvertService(IMapper mapper, 
             IRepository<Advert> advertRepo,
             IFilterService filterService,
             IAdvertValueService advertValueService, 
-            IImageService imageService)
+            IImageService imageService, 
+            IValidator<AdvertCreateModel> advertCreateModelValidator,
+            IValidator<Advert> advertValidator,
+            IRepository<Category> categorytRepo)
         {
             this.mapper = mapper;
             this.advertRepo = advertRepo;
             this.filterService = filterService;
             this.advertValueService = advertValueService;
             this.imageService = imageService;
+            this.advertCreateModelValidator = advertCreateModelValidator;
+            this.advertValidator = advertValidator;
+            this.categorytRepo = categorytRepo;
         }
 
         public async Task<IEnumerable<AdvertPrintDto>> GetAllAsync()
@@ -48,41 +60,43 @@ namespace BusinessLogic.Services
             return mapper.Map<AdvertPrintDto>(await advertRepo.GetItemBySpec(new  AdvertSpecs.GetById(id)));
         }
 
-        public async Task<AdvertDto> CreateAsync(AdvertCreateModel advertCreationModel)
+        private decimal ValidatePriceByCulture(string price, string propertyName)
         {
-            var advert = mapper.Map<Advert>(advertCreationModel);
-
             CultureInfo[] cultures = {
             new CultureInfo("uk-UA"),
             new CultureInfo("en-US"),
             new CultureInfo("de-DE")
             };
 
-            decimal price, discount;
-            bool priceParsed = false, discountParsed = false;
+            decimal _price = -1;
+            bool priceParsed = false;
 
             foreach (var culture in cultures)
             {
-                if (Decimal.TryParse(advertCreationModel.Price, NumberStyles.Number, culture, out price) && !priceParsed) {
+                if (Decimal.TryParse(price, NumberStyles.Number, culture, out _price) && !priceParsed)
+                {
                     Console.WriteLine($"\n\n\n\nРозпізнано культуру: {culture.Name}");
-                    Console.WriteLine($"\n\n\n\nЦіна: {price}\n\n");
-                    advert.Price = price;
+                    Console.WriteLine($"\n\n\n\nЦіна: {_price}\n\n");
                     priceParsed = true;
-                }
-                if (Decimal.TryParse(advertCreationModel.Discount, NumberStyles.Number, culture, out discount) && !discountParsed) {
-                    Console.WriteLine($"\n\n\n\nРозпізнано культуру: {culture.Name}");
-                    Console.WriteLine($"Знижка: {discount}\n\n");
-                    advert.Discount = discount;
-                    discountParsed = true;
-                }
-                if (priceParsed && discountParsed)
+                    return _price;
+                }    
+                if (priceParsed)
                     break;
             }
+            return _price;
+        }
 
-            if (!priceParsed || !discountParsed)
+        public async Task<AdvertDto> CreateAsync(AdvertCreateModel advertCreationModel)
+        {
+            advertCreateModelValidator.ValidateAndThrow(advertCreationModel);
+            var advert = mapper.Map<Advert>(advertCreationModel);
+            if (!await categorytRepo.AnyAsync(x => x.Id == advertCreationModel.CategoryId))
             {
-                Console.WriteLine("Не вдалося розпізнати культуру.");
+                throw new HttpException(Errors.InvalidCategoryId, HttpStatusCode.BadRequest);
             }
+            advert.Price = ValidatePriceByCulture(advertCreationModel.Price, nameof(advertCreationModel.Price));
+            advert.Discount = ValidatePriceByCulture(advertCreationModel.Discount, nameof(advertCreationModel.Discount));
+            advertValidator.ValidateAndThrow(advert);
 
             var savedImages = await imageService.SaveImagesAsync(advertCreationModel.ImageFiles);
 
@@ -123,12 +137,14 @@ namespace BusinessLogic.Services
                 }
             }
         }
-        //15;07   96
         public async Task<AdvertDto> EditAsync(AdvertEditModel editModel)
         {
             var advert = await advertRepo.GetItemBySpec(new AdvertSpecs.GetById(editModel.Id));
 
             mapper.Map(editModel, advert);
+
+            advert.Price = ValidatePriceByCulture(editModel.Price, nameof(editModel.Price));
+            advert.Discount = ValidatePriceByCulture(editModel.Discount, nameof(editModel.Discount));
 
             if (editModel.ImageFiles != null)
             {

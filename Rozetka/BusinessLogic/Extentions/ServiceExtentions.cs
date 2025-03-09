@@ -10,6 +10,9 @@ using BusinessLogic.Models.AdvertModels;
 using BusinessLogic.Validators;
 using BusinessLogic.Entities;
 using Google;
+using BusinessLogic.Models.CategoryModels;
+using BusinessLogic.Models.FilterModels;
+using BusinessLogic.Models.FilterValueModels;
 
 namespace BusinessLogic.Exstensions
 {
@@ -46,6 +49,11 @@ namespace BusinessLogic.Exstensions
         public static void AddValidationServices(this IServiceCollection services)
         { 
             services.AddScoped<IValidator<AdvertRatingCreateModel>, AdvertRatingCreateModelValidator>();
+            services.AddScoped<IValidator<AdvertCreateModel>, AdvertCreateModelValidator>();
+            services.AddScoped<IValidator<Advert>, AdvertValidator>();
+            services.AddScoped<IValidator<CategoryCreateModel>, CategoryCreateModelValidator>();
+            services.AddScoped<IValidator<FilterCreateModel>, FilterCreateModelValidator>();
+            services.AddScoped<IValidator<FilterValueCreationModel>, FilterValueCreationModelValidator>();
             
         }
     }
