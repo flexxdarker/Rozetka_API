@@ -15,5 +15,7 @@ namespace BusinessLogic.Interfaces
         Task<FilterValueDto> CreateAsync(FilterValueCreationModel creationModel);
         Task<FilterValueDto> GetByIdAsync(int id);
         Task DeleteAsync(int id);
+        Task DeleteByFilterId(int filterId);
+
     }
 }

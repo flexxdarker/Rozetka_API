@@ -23,6 +23,11 @@ namespace BusinessLogic.Specifications
                 .Where(x => x.Id == id)
                 .Include(x => x.Filter); 
         }
+        public class GetByFilterId : Specification<FilterValue>
+        {
+            public GetByFilterId(int filterId) => Query
+                .Where(x => x.FilterId == filterId);
+        }
         public class GetByIds : Specification<FilterValue>
         {
             public GetByIds(IEnumerable<int> ids) => Query

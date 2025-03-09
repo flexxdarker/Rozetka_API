@@ -1,17 +1,22 @@
 ﻿using AutoMapper;
+using BusinessLogic.DTOs.Category;
 using BusinessLogic.DTOs.Filter;
 using BusinessLogic.Entities;
+using BusinessLogic.Exceptions;
 using BusinessLogic.Interfaces;
 using BusinessLogic.Models;
 using BusinessLogic.Models.AdvertModels;
+using BusinessLogic.Models.CategoryModels;
 using BusinessLogic.Models.FilterModels;
 using BusinessLogic.Specifications;
 using BusinessLogic.Validators;
 using DataAccess.Repositories;
 using FluentValidation;
+using MailKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -76,9 +81,25 @@ namespace BusinessLogic.Services
             return mapper.Map<FilterDto>(filter);
         }
 
-        public Task<FilterDto> EditAsync(FilterEditModel editModel)
+        public async Task<FilterDto> EditAsync(FilterEditModel editModel)
         {
-            throw new NotImplementedException();
+            
+            var filter = await filterRepo.GetItemBySpec(new FilterSpecs.GetById(editModel.Id));
+
+            mapper.Map(editModel, filter);
+
+            if (editModel.FilerValues?.Any() ?? false)
+            {
+                await filterValueService.DeleteByFilterId(editModel.Id);
+                foreach (var value in editModel.FilerValues)
+                {
+                    await filterValueService.CreateAsync(new FilterValueCreationModel { Value = value, FilterId = filter.Id });
+                }
+            }
+            else filter.Values.Clear();
+
+            await filterRepo.SaveAsync();
+            return mapper.Map<FilterDto>(filter);
         }
 
         public async Task DeleteAsync(int id)
