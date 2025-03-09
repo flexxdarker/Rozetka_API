@@ -23,21 +23,21 @@ namespace BusinessLogic.Services
         private readonly IFilterService filtersService;
         private readonly IImageService imageService;
         private readonly ICategoryFilterService categoryFiltersService;
-        private readonly IValidator<CategoryCreateModel> categoryCreateModelValidator;
+        private readonly IValidator<BaseCategoryModel> baseCategoryModelValidator;
 
         public CategoryService(IMapper mapper,
         IRepository<Category> categoriesRepo,
         IFilterService filtersService,
         ICategoryFilterService categoryFiltersService,
         IImageService imageService,
-        IValidator<CategoryCreateModel> categoryCreateModelValidator)
+        IValidator<BaseCategoryModel> baseCategoryModelValidator)
         {
             this.mapper = mapper;
             this.categoriesRepo = categoriesRepo;
             this.filtersService = filtersService;
             this.categoryFiltersService = categoryFiltersService;
             this.imageService = imageService;
-            this.categoryCreateModelValidator = categoryCreateModelValidator;
+            this.baseCategoryModelValidator = baseCategoryModelValidator;
         }
 
         public async Task<IEnumerable<CategoryDto>> GetAllAsync()
@@ -82,7 +82,7 @@ namespace BusinessLogic.Services
 
         public async Task<CategoryDto> CreateAsync(CategoryCreateModel categoryCreateModel)
         {
-            categoryCreateModelValidator.ValidateAndThrow(categoryCreateModel);
+            baseCategoryModelValidator.ValidateAndThrow(categoryCreateModel);
             var category = mapper.Map<Category>(categoryCreateModel);
 
             if (categoryCreateModel.Image != null)
@@ -130,6 +130,8 @@ namespace BusinessLogic.Services
 
         public async Task<CategoryDto> EditAsync(CategoryEditModel editModel)
         {
+            baseCategoryModelValidator.ValidateAndThrow(editModel);
+
             var category = await categoriesRepo.GetItemBySpec(new CategorySpecs.GetById(editModel.Id));
 
             mapper.Map(editModel, category);
