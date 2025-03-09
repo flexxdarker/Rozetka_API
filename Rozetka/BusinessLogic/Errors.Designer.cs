@@ -160,11 +160,6 @@ namespace BusinessLogic {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to User is not created.
-        /// </summary>
-        internal static string UserCreateError {
-            get {
-                return ResourceManager.GetString("UserCreateError", resourceCulture);
         ///   Looks up a localized string similar to {PropertyName} length must be less than.
         /// </summary>
         internal static string MaxSymbolsCountError {
@@ -206,6 +201,15 @@ namespace BusinessLogic {
         internal static string RatingLessThanOrEqualTo5 {
             get {
                 return ResourceManager.GetString("RatingLessThanOrEqualTo5", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User is not created.
+        /// </summary>
+        internal static string UserCreateError {
+            get {
+                return ResourceManager.GetString("UserCreateError", resourceCulture);
             }
         }
     }
