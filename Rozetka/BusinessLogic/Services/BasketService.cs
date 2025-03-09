@@ -50,7 +50,7 @@ namespace BusinessLogic.Services
                     AdvertId = advert.Id,
                     UserId = userId,
                     DateAdded = DateTime.UtcNow,
-                    Count = amount
+                    Count = amount,
                 });
 
                 await _basket.SaveAsync();
@@ -247,16 +247,13 @@ namespace BusinessLogic.Services
 
         public async Task pushBasketByIds(string userId, int[] ids)
         {
-            var items = await _advert.GetAsync();
-            var products = items.ToArray();
+            var products = (await _advert.GetAsync()).ToArray();
 
-            // Отримуємо всі товари в кошику
-            var baskets = await _basket.GetAsync();
+            // Отримуємо всі товари в кошику для конкретного користувача
+            var existingBasketItems = (await _basket.GetAsync())
+                .Where(x => x.UserId == userId)
+                .ToList();
 
-            // Фільтруємо товари в кошику для конкретного користувача
-            var existingBasketItems = baskets.Where(x => x.UserId == userId).ToList();
-
-            // Список товарів для додавання у кошик
             List<Advert> returnAdverts = new List<Advert>();
 
             // Для кожного ID продукту перевіряємо його наявність
@@ -273,19 +270,84 @@ namespace BusinessLogic.Services
             {
                 // Перевіряємо, чи вже є цей товар у кошику
                 var existingItem = existingBasketItems.FirstOrDefault(b => b.AdvertId == advert.Id);
+
                 if (existingItem == null)
                 {
-                    // Додаємо новий товар у кошик
+                    // Додаємо новий товар у кошик з початковою кількістю 1
                     await _basket.InsertAsync(new Basket
                     {
                         AdvertId = advert.Id,
                         UserId = userId,
-                        DateAdded = DateTime.UtcNow
+                        DateAdded = DateTime.UtcNow,
+                        Count = 1
                     });
+                }
+                else
+                {
+                    var item = await _basket.GetItemBySpec(new BasketSpecs.GetById(existingItem.Id));
+                    item.Count += 1; // Збільшуємо кількість на 1 (замініть, якщо потрібно інше значення)
+                    _basket.Update(item);
                 }
             }
 
             await _basket.SaveAsync();
         }
+
     }
 }
+
+
+//if (addAdvert.AdvertsIds.Count != addAdvert.Amount.Count)
+//{
+//    throw new HttpException("Invalid Value", System.Net.HttpStatusCode.BadRequest);
+//}
+
+//// Отримуємо всі товари
+//var items = await _advert.GetAsync();
+//var adverts = items.ToArray();
+
+//// Отримуємо всі товари в кошику
+//var baskets = await _basket.GetAsync();
+
+//// Фільтруємо товари в кошику для конкретного користувача
+//var existingBasketItems = baskets.Where(x => x.UserId == userId).ToList();
+
+//// Список товарів для додавання у кошик
+//List<Advert> returnAdvert = new List<Advert>();
+
+//// Для кожного ID продукту перевіряємо його наявність
+//foreach (var advertId in addAdvert.AdvertsIds)
+//{
+//    var advert = adverts.FirstOrDefault(p => p.Id == advertId);
+//    if (advert != null)
+//    {
+//        returnAdvert.Add(advert);
+//    }
+//}
+
+//foreach (var advert in returnAdvert)
+//{
+//    // Перевіряємо, чи вже є цей товар у кошику
+//    int i = 0;
+//    var existingItem = existingBasketItems.FirstOrDefault(b => b.AdvertId == advert.Id);
+//    if (existingItem == null)
+//    {
+//        // Додаємо новий товар у кошик
+//        await _basket.InsertAsync(new Basket
+//        {
+//            AdvertId = advert.Id,
+//            UserId = userId,
+//            DateAdded = DateTime.UtcNow,
+//            Count = addAdvert.Amount[i]
+//        });
+//    }
+//    else if (existingItem != null)
+//    {
+//        var item = await _basket.GetItemBySpec(new BasketSpecs.GetById(existingItem.Id));
+//        item.Count += addAdvert.Amount[i];
+//        _basket.Update(item);
+//        await _basket.SaveAsync();
+//    }
+//}
+
+//await _basket.SaveAsync();

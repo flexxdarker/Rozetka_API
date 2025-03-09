@@ -148,18 +148,6 @@ namespace BusinessLogic.Services
         public async Task<LoginResponseDto> Login(LoginModel model)
         {
 
-            //LoginResponseDto loginResponse = new LoginResponseDto();
-            //var user = await userManager.FindByEmailAsync(model.Email);
-
-            //if (user == null || !await userManager.CheckPasswordAsync(user, model.Password))
-            //    throw new HttpException("Invalid user login or password.", HttpStatusCode.BadRequest);
-
-            ////await signInManager.SignInAsync(user, true);
-
-            //// generate token
-            //loginResponse.AccessToken = jwtService.CreateToken(jwtService.GetClaims(user));
-            //loginResponse.RefreshToken = CreateRefreshToken(user.Id).Token;
-
             var user = await userManager.FindByEmailAsync(model.Email);
 
             LoginResponseDto loginResultDto = new LoginResponseDto();
@@ -214,17 +202,17 @@ namespace BusinessLogic.Services
 
             loginResultDto.AccessToken = token;
 
-            if (model.Baskets == null)
+            if (model.Baskets != null)
             {
 
                 // Перетворюємо кошик у масив
-                var basketArray = model.Baskets.ToArray();
+                //var basketArray = model.Baskets.ToArray();
 
                 // Якщо користувач передав кошик із товарами
-                if (basketArray.Length > 0)
+                if (model.Baskets. > 0)
                 {
                     // Зберігаємо кошик користувача в базу даних
-                    await  basketService.pushBasketByIds(user.Id, basketArray);
+                    await  basketService.pushBasketByIds(user.Id,);
 
                     // Отримуємо поточний кошик користувача з бази
                     var array = await basketRepo.GetAsync();
