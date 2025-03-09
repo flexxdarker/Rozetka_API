@@ -151,6 +151,24 @@ namespace BusinessLogic {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {PropertyName} length must be less than.
+        /// </summary>
+        internal static string MaxSymbolsCountError {
+            get {
+                return ResourceManager.GetString("MaxSymbolsCountError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {PropertyName}length must be greater than.
+        /// </summary>
+        internal static string MinSymbolsCountError {
+            get {
+                return ResourceManager.GetString("MinSymbolsCountError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Advert rating must be less or equal than 5.
         /// </summary>
         internal static string RatingLessThanOrEqualTo5 {
