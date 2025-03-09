@@ -1,7 +1,7 @@
 ﻿using BusinessLogic.DTOs.Advert;
-using BusinessLogic.Models;
 using BusinessLogic.Models.AdvertModels;
 using BusinessLogic.Models.FilterModels;
+using BusinessLogic.Models.FilterValueModels;
 using FluentValidation;
 using System;
 using System.Collections.Generic;

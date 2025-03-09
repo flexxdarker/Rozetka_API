@@ -11,7 +11,7 @@ using BusinessLogic.Validators;
 using BusinessLogic.Entities;
 using BusinessLogic.Models.CategoryModels;
 using BusinessLogic.Models.FilterModels;
-using BusinessLogic.Models;
+using BusinessLogic.Models.FilterValueModels;
 
 namespace BusinessLogic.Exstensions
 {

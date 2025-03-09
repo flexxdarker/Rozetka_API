@@ -11,6 +11,7 @@ using BusinessLogic.Models;
 using BusinessLogic.Models.AdvertModels;
 using BusinessLogic.Models.CategoryModels;
 using BusinessLogic.Models.FilterModels;
+using BusinessLogic.Models.FilterValueModels;
 using BusinessLogic.Models.UserModels;
 using System;
 using System.Collections.Generic;
@@ -82,6 +83,9 @@ namespace BusinessLogic.Profiles
                 .ReverseMap();
 
             CreateMap<FilterValueCreationModel, FilterValue>()
+                .ReverseMap();
+
+            CreateMap<FilterValueEditModel, FilterValue>()
                 .ReverseMap();
 
             CreateMap<Image, ImageDto>()
