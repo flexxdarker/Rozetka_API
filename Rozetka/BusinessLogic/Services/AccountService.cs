@@ -394,7 +394,17 @@ namespace BusinessLogic.Services
             using HttpClient httpClient = new();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",loginDto.GoogleAccessToken);
             HttpResponseMessage response = await httpClient.GetAsync(_configuration["GoogleUserInfoUrl"]);
-            response.EnsureSuccessStatusCode();
+
+            try
+            {
+                response.EnsureSuccessStatusCode();
+
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine(ex.Message);
+            }
             string responseBody = await response.Content.ReadAsStringAsync();
             var userInfo = JsonConvert.DeserializeObject<GoogleUserInfo>(responseBody)!;
             User user = await userManager.FindByEmailAsync(userInfo.Email) ?? mapper.Map<User>(userInfo);
