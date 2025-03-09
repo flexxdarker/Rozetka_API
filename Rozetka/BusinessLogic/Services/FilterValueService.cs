@@ -49,7 +49,15 @@ namespace BusinessLogic.Services
             await filterValueRepo.DeleteAsync(id);
             await filterValueRepo.SaveAsync();
         }
-
+        public async Task DeleteByFilterId(int filterId)
+        {
+            var filterValues = mapper.Map<IEnumerable<FilterValueDto>>(await filterValueRepo.GetListBySpec(new FilterValueSpecs.GetByFilterId(filterId)));
+            foreach (var value in filterValues)
+            {
+                await filterValueRepo.DeleteAsync(value.Id);
+                await filterValueRepo.SaveAsync();
+            }
+        }
         public async Task<IEnumerable<FilterValueDto>> GetAllAsync()
         {
             return mapper.Map<IEnumerable<FilterValueDto>>(await filterValueRepo.GetListBySpec(new FilterValueSpecs.GetAll()));
