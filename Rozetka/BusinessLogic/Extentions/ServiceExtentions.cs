@@ -49,7 +49,7 @@ namespace BusinessLogic.Exstensions
         public static void AddValidationServices(this IServiceCollection services)
         { 
             services.AddScoped<IValidator<AdvertRatingCreateModel>, AdvertRatingCreateModelValidator>();
-            services.AddScoped<IValidator<AdvertCreateModel>, AdvertCreateModelValidator>();
+            services.AddScoped<IValidator<BaseAdvertModel>, AdvertBaseModelValidator>();
             services.AddScoped<IValidator<Advert>, AdvertValidator>();
             services.AddScoped<IValidator<CategoryCreateModel>, CategoryCreateModelValidator>();
             services.AddScoped<IValidator<FilterCreateModel>, FilterCreateModelValidator>();

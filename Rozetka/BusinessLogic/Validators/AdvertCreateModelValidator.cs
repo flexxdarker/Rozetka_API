@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic.Validators
 {
-    public class AdvertCreateModelValidator : AbstractValidator<AdvertCreateModel>
+    public class AdvertBaseModelValidator : AbstractValidator<BaseAdvertModel>
     {
-        public AdvertCreateModelValidator() 
+        public AdvertBaseModelValidator()
         {
             RuleFor(x => x.CategoryId)
                 .NotNull()
@@ -22,6 +22,12 @@ namespace BusinessLogic.Validators
             RuleFor(x => x.Description)
                 .MinimumLength(50).WithMessage(Errors.MinSymbolsCountError + " 50 symbols")
                 .MaximumLength(5000).WithMessage(Errors.MaxSymbolsCountError + "5000 symbols");
+
+            When(x => x is AdvertEditModel, () =>
+            {
+                RuleFor(x => ((AdvertEditModel)x!).Id)
+                    .GreaterThan(0).WithMessage(Errors.GreaterZeroError);
+            });
         }
     }
 }

@@ -28,7 +28,7 @@ namespace BusinessLogic.Services
         private readonly IRepository<Category> categorytRepo;
         private readonly IAdvertValueService advertValueService;
         private readonly IImageService imageService;
-        private readonly IValidator<AdvertCreateModel> advertCreateModelValidator;
+        private readonly IValidator<BaseAdvertModel> baseAdvertModelValidator;
         private readonly IValidator<Advert> advertValidator;
 
         public AdvertService(IMapper mapper, 
@@ -36,7 +36,7 @@ namespace BusinessLogic.Services
             IFilterService filterService,
             IAdvertValueService advertValueService, 
             IImageService imageService, 
-            IValidator<AdvertCreateModel> advertCreateModelValidator,
+            IValidator<BaseAdvertModel> baseAdvertModelValidator,
             IValidator<Advert> advertValidator,
             IRepository<Category> categorytRepo)
         {
@@ -45,7 +45,7 @@ namespace BusinessLogic.Services
             this.filterService = filterService;
             this.advertValueService = advertValueService;
             this.imageService = imageService;
-            this.advertCreateModelValidator = advertCreateModelValidator;
+            this.baseAdvertModelValidator = baseAdvertModelValidator;
             this.advertValidator = advertValidator;
             this.categorytRepo = categorytRepo;
         }
@@ -88,7 +88,7 @@ namespace BusinessLogic.Services
 
         public async Task<AdvertDto> CreateAsync(AdvertCreateModel advertCreationModel)
         {
-            advertCreateModelValidator.ValidateAndThrow(advertCreationModel);
+            baseAdvertModelValidator.ValidateAndThrow(advertCreationModel);
             var advert = mapper.Map<Advert>(advertCreationModel);
             if (!await categorytRepo.AnyAsync(x => x.Id == advertCreationModel.CategoryId))
             {
@@ -139,8 +139,12 @@ namespace BusinessLogic.Services
         }
         public async Task<AdvertDto> EditAsync(AdvertEditModel editModel)
         {
+            baseAdvertModelValidator.ValidateAndThrow(editModel);
+            if (!await advertRepo.AnyAsync(x => x.Id == editModel.Id))
+            {
+                throw new HttpException(Errors.InvalidAdvertId, HttpStatusCode.BadRequest);
+            }
             var advert = await advertRepo.GetItemBySpec(new AdvertSpecs.GetById(editModel.Id));
-
             mapper.Map(editModel, advert);
 
             advert.Price = ValidatePriceByCulture(editModel.Price, nameof(editModel.Price));
