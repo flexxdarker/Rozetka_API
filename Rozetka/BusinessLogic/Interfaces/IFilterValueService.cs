@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BusinessLogic.DTOs;
 using BusinessLogic.DTOs.Filter;
-using BusinessLogic.Models;
+using BusinessLogic.Models.FilterValueModels;
 
 namespace BusinessLogic.Interfaces
 {
