@@ -171,4 +171,16 @@
   <data name="InvalidFilterValueId" xml:space="preserve">
     <value>Filter Value Id is invalid</value>
   </data>
+  <data name="InvalidEmail" xml:space="preserve">
+    <value>{PropertyName} is invalid</value>
+  </data>
+  <data name="DateTooBig" xml:space="preserve">
+    <value>{PropertyName} must be greater than</value>
+  </data>
+  <data name="DateTooSmall" xml:space="preserve">
+    <value>{PropertyName} must be less than</value>
+  </data>
+  <data name="InvalidPhoneNumber" xml:space="preserve">
+    <value>{PropertyName} is in the invalid format (Example: +380XXXXXXXX)</value>
+  </data>
 </root>
