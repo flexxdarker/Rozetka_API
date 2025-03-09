@@ -169,6 +169,15 @@ namespace BusinessLogic {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {PropertyName} can`t be null.
+        /// </summary>
+        internal static string Null {
+            get {
+                return ResourceManager.GetString("Null", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Advert rating must be less or equal than 5.
         /// </summary>
         internal static string RatingLessThanOrEqualTo5 {

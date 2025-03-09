@@ -156,4 +156,7 @@
   <data name="MinSymbolsCountError" xml:space="preserve">
     <value>{PropertyName}length must be greater than</value>
   </data>
+  <data name="Null" xml:space="preserve">
+    <value>{PropertyName} can`t be null</value>
+  </data>
 </root>
