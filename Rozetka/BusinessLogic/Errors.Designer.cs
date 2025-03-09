@@ -133,6 +133,15 @@ namespace BusinessLogic {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Filter Value Id is invalid.
+        /// </summary>
+        internal static string InvalidFilterValueId {
+            get {
+                return ResourceManager.GetString("InvalidFilterValueId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {PropertyName} not recognized.
         /// </summary>
         internal static string InvalidPriceError {

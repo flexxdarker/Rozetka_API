@@ -53,7 +53,7 @@ namespace BusinessLogic.Exstensions
             services.AddScoped<IValidator<Advert>, AdvertValidator>();
             services.AddScoped<IValidator<BaseCategoryModel>, BaseCategoryModelValidator>();
             services.AddScoped<IValidator<BaseFilterModel>, BaseFilterModelValidator>();
-            services.AddScoped<IValidator<FilterValueCreationModel>, FilterValueCreationModelValidator>();
+            services.AddScoped<IValidator<BaseFilterValueModel>, BaseFilterValueModelValidator>();
             
         }
     }

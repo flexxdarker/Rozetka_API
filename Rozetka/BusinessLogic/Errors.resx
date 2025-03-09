@@ -168,4 +168,7 @@
   <data name="NotEmpty" xml:space="preserve">
     <value>{PropertyName} can`t be empty</value>
   </data>
+  <data name="InvalidFilterValueId" xml:space="preserve">
+    <value>Filter Value Id is invalid</value>
+  </data>
 </root>

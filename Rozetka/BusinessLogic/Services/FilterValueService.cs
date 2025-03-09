@@ -7,6 +7,7 @@ using BusinessLogic.Interfaces;
 using BusinessLogic.Models.FilterModels;
 using BusinessLogic.Models.FilterValueModels;
 using BusinessLogic.Specifications;
+using BusinessLogic.Validators;
 using DataAccess.Repositories;
 using FluentValidation;
 using System.Net;
@@ -18,22 +19,22 @@ namespace BusinessLogic.Services
         private readonly IMapper mapper;
         private readonly IRepository<FilterValue> filterValueRepo;
         private readonly IRepository<Filter> filterRepo;
-        private readonly IValidator<FilterValueCreationModel> filterValueCreateModelValidator;
+        private readonly IValidator<BaseFilterValueModel> baseFilterValueModelValidator;
 
         public FilterValueService(IMapper mapper,
         IRepository<FilterValue> filterValueRepo,
         IRepository<Filter> filterRepo,
-        IValidator<FilterValueCreationModel> filterValueCreateModelValidator)
+        IValidator<BaseFilterValueModel> baseFilterValueModelValidator)
         {
             this.mapper = mapper;
             this.filterValueRepo = filterValueRepo;
             this.filterRepo = filterRepo;
-            this.filterValueCreateModelValidator = filterValueCreateModelValidator;
+            this.baseFilterValueModelValidator = baseFilterValueModelValidator;
         }
 
         public async Task<FilterValueDto> CreateAsync(FilterValueCreationModel creationModel)
         {
-            filterValueCreateModelValidator.ValidateAndThrow(creationModel);
+            baseFilterValueModelValidator.ValidateAndThrow(creationModel);
             if(!await filterRepo.AnyAsync(x => x.Id == creationModel.FilterId))
             {
                 throw new HttpException(Errors.InvalidFilterId, HttpStatusCode.BadRequest);
@@ -61,6 +62,15 @@ namespace BusinessLogic.Services
 
         public async Task<FilterValueDto> EditAsync(FilterValueEditModel editModel)
         {
+            baseFilterValueModelValidator.ValidateAndThrow(editModel);
+            if (!await filterRepo.AnyAsync(x => x.Id == editModel.FilterId))
+            {
+                throw new HttpException(Errors.InvalidFilterId, HttpStatusCode.BadRequest);
+            }
+            if (!await filterValueRepo.AnyAsync(x => x.Id == editModel.Id))
+            {
+                throw new HttpException(Errors.InvalidFilterValueId, HttpStatusCode.BadRequest);
+            }
             var filterValue = await filterValueRepo.GetItemBySpec(new FilterValueSpecs.GetById(editModel.Id));
 
             mapper.Map(editModel, filterValue);
