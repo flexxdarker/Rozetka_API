@@ -1,10 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import Container from "@mui/material/Container";
-import ProductCardList from "./product/ProductCardList.tsx";
+// import ProductCardList from "./product/ProductCardList.tsx";
 import ImageSliderMainBaner from "./other/ImageSliderMainBaner.tsx";
 import ProductCardByCategory from "./product/ProductCardByCategory.tsx";
 import {IProductModel} from "../models/productsModel.ts";
 import {ProductServices} from "../services/productService.ts";
+import {ICategoryModel} from "../models/categoriesModel.ts";
+import {CategoriesServices} from "../services/categoriesService.ts";
 // import {Carousel} from "antd";
 //
 // const contentStyle: React.CSSProperties = {
@@ -31,16 +33,20 @@ const Home: React.FC = () => {
     ];
 
     const [products,setProducts] = useState<IProductModel[]>([]);
+    const [categories,setCategories] = useState<ICategoryModel[]>([]);
 
     const loadProducts = async () => {
         const res = await ProductServices.getAll();
-        console.log(res);
         setProducts(res.data);
     };
 
-
+    const loadCategories = async () => {
+        const res = await CategoriesServices.getAll();
+        setCategories(res.data);
+    };
 
     useEffect(() => {
+        loadCategories();
             loadProducts(); // Завантажуємо продукти, якщо пропси не передано
     }, []); // Додаємо залежність від пропсів
 
@@ -48,6 +54,18 @@ const Home: React.FC = () => {
     if (!products) {
         return <div>Loading...</div>; // Можна додати індикатор завантаження, поки продукти не завантажено
     }
+
+    // Групуємо продукти за categoryId
+    const groupedProducts = products.reduce((acc, product) => {
+        if (!acc[product.categoryId]) {
+            acc[product.categoryId] = [];
+        }
+        acc[product.categoryId].push(product);
+        return acc;
+    }, {} as Record<number, IProductModel[]>);
+
+    // Перетворюємо об'єкт на масив категорій
+    const result = Object.entries(groupedProducts);
 
 
     return (
@@ -73,11 +91,28 @@ const Home: React.FC = () => {
 
 
             </Container>
-            {/*<ImageSliderMainBaner images={images} delay={4000} />*/}
+            <ImageSliderMainBaner images={images} delay={4000} />
 
-            <ProductCardByCategory productsInit={products.slice(0,4)} title={"Start"}/>
+            {/*/ProductCardByCategory productsInit={products.slice(0,4)} title={"Start"}/>*/}
 
-            <ProductCardList productsProps={products}/>
+            {
+                // Перебираємо кожну категорію та її продукти
+                result.map(([categoryId, products],index) => {
+                    // Знаходимо відповідну категорію за categoryId
+                    const category = categories.find(c => c.id === parseInt(categoryId));
+
+                    if (category) {
+                        return (
+                    <ProductCardByCategory productsInit={products.slice(0, 4)} title={category.name} key={index}/>
+                        )} else {
+                        return (
+                        <ProductCardByCategory productsInit={products.slice(0, 4)} title={"Без категорії"} key={index}/>
+                        )
+                    }
+                })
+            }
+
+            {/*<ProductCardList productsProps={products}/>*/}
 
 
         </>

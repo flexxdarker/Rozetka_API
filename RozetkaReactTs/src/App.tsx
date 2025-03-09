@@ -7,6 +7,7 @@ import CategoryLayout from "./components/layout/categoryLayout/CategoryLayout.ts
 import ProductPage from "./components/product/ProductPage.tsx";
 import React from "react";
 import AccountLayout from "./components/layout/accountLayout/AccountLayout.tsx";
+//import CategoriesPage from "./components/category/CategoriesPage.tsx";
 // import ComparisonListPage from "./components/comparison/ComparisonListPage.tsx";
 // import ComparisonProductsPage from "./components/comparison/ComparisonProductsPage.tsx";
 // import FilterProductPage from "./components/filter/filterProductPage.tsx";
@@ -53,6 +54,7 @@ const WishList = lazy(() => import("./components/account/WishList.tsx"));
 const FilterProductPage = lazy(() => import("./components/filter/filterProductPage.tsx"));
 const ComparisonListPage = lazy(() => import("./components/comparison/ComparisonListPage.tsx"));
 const ComparisonProductsPage = lazy(() => import("./components/comparison/ComparisonProductsPage.tsx"));
+const CategoriesPage = lazy(() => import("./components/category/CategoriesPage.tsx"));
 
 export default function App() {
     return (
@@ -63,14 +65,14 @@ export default function App() {
                     <Route index element={<Home/>}/>
 
                     {/*Admin*/}
-                    <Route path="products" element={<ProductTable/>}/>
-                    <Route path="products/create" element={<ProductForm/>}/>
-                    <Route path="products/edit/:id" element={<ProductForm/>}/>
+                    <Route path="products-crud" element={<ProductTable/>}/>
+                    <Route path="products-crud/create" element={<ProductForm/>}/>
+                    <Route path="products-crud/edit/:id" element={<ProductForm/>}/>
                     {/*<Route path="product-page/:id" element={<ProductPage/>}/>*/}
 
-                    <Route path="categories" element={<CategoryTable/>}/>
-                    <Route path="categories/create" element={<CategoryForm/>}/>
-                    <Route path="categories/edit/:id" element={<CategoryForm/>}/>
+                    <Route path="categories-crud" element={<CategoryTable/>}/>
+                    <Route path="categories-crud/create" element={<CategoryForm/>}/>
+                    <Route path="categories-crud/edit/:id" element={<CategoryForm/>}/>
 
                     {/*Footer*/}
                     <Route path="about-us" element={<AboutUs/>}/>
@@ -85,6 +87,8 @@ export default function App() {
 
                     <Route path="order" element={<OrderPage/>}/>
                 </Route>
+
+                <Route path="categories" element={<CategoriesPage/>}/>
 
                 <Route path="product-page/:id" element={<ProductPage/>}/>
                 <Route path="product-filter" element={<FilterProductPage/>}/>

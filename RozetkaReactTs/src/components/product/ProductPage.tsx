@@ -40,7 +40,6 @@ const ProductPage: React.FC = () => {
     const loadProduct = async () => {
         if (params.id) {
             const res = await ProductServices.getById(params.id);
-            console.log(res);
             if (res.status === 200 && res.data != undefined) {
                 setProduct(res.data);
                 setIsWishList(WishListService.checkId(product!.id));
@@ -53,8 +52,6 @@ const ProductPage: React.FC = () => {
     const images: string[] = Array.isArray(product?.images)
         ? product.images.map(image => `${uploadings}` + "1200_" + image.name)
         : [];
-    console.log("image: ", images)
-
     useEffect(() => {
         loadProduct();
 
@@ -63,7 +60,6 @@ const ProductPage: React.FC = () => {
     useEffect(() => {
         if(product !== undefined) {
             setIsWishList(WishListService.checkId(product!.id));
-            console.log("setIsWishList: ", setIsWishList);
         }
     }, [product]);
 

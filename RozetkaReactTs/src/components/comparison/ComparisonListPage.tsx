@@ -9,6 +9,8 @@ import deleteBin from "../../assets/icons/deleteBin.svg";
 const ComparisonListPage: React.FC = () => {
 
     const [products, setProducts] = useState<IProductModel[]>([]);
+
+//@ts-ignore
     const [comparisonList, setComparisonList] = useState<number[]>(getComparisonListFromLocalStorage())
 
     const loadProducts = async () => {

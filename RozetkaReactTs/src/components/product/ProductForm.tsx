@@ -23,6 +23,7 @@ const ProductForm: React.FC = () => {
     const [product, setProduct] = useState<IProductModel | null>(null);
     const [filters, setFilters] = useState<IFilterModel[]>([]);
 
+    //@ts-ignore
     const [filterValue, setFilterValue] = useState<{ filterId: number, valueId: number }[]>([]);
 
     const [form] = Form.useForm();

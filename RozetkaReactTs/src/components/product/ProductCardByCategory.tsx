@@ -1,6 +1,7 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {IProductModel} from "../../models/productsModel.ts";
 import ProductCard from "./ProductCard.tsx";
+import arrowRight from "../../assets/icons/arrow-right.svg"
 
 interface ProductCardByCategoryProps {
     productsInit: IProductModel[];
@@ -10,12 +11,6 @@ interface ProductCardByCategoryProps {
 
 const ProductCardByCategory: React.FC<ProductCardByCategoryProps> = ({productsInit, title}) => {
 
-    const [products,setProducts] = useState<IProductModel[]>(productsInit);
-
-    // Перевіряємо, чи є продукти перед рендером
-    // if (!products) {
-    //     return <div>Loading...</div>; // Можна додати індикатор завантаження, поки продукти не завантажено
-    // }
 
     return (
         <>
@@ -38,7 +33,9 @@ const ProductCardByCategory: React.FC<ProductCardByCategoryProps> = ({productsIn
             </span>
                         </div>
                         <div
-                            className="w-[24px] h-[24px] shrink-0 bg-[url(https://static.codia.ai/image/2025-03-09/1f9c896d-2c44-4358-8345-1a8d44a4ea02.svg)] bg-cover bg-no-repeat overflow-hidden z-[5]"/>
+                            className="w-[24px] h-[24px] shrink-0 overflow-hidden z-[5]">
+                            <img src={arrowRight}/>
+                        </div>
                     </div>
                 </div>
                 <div className="flex gap-[4px] items-center self-stretch shrink-0 flex-nowrap">

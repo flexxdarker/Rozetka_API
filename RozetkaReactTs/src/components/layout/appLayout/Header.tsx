@@ -136,6 +136,7 @@ const Header = () => {
                                     </div>
                                 </div>
                             </Link>
+                            <Link to={"categories"}>
                             <button
                                 className="flex w-[232px] pt-[8px] pr-[20px] pb-[8px] pl-[20px] gap-[10px] items-center shrink-0 flex-nowrap bg-[#9cc319] rounded-[8px] border-none pointer">
             <span
@@ -147,6 +148,7 @@ const Header = () => {
                                     <img src={viewGrid}/>
                                 </div>
                             </button>
+                            </Link>
                         </div>
 
                         <div className="relative flex">
@@ -267,13 +269,13 @@ const Header = () => {
             <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}, backgroundColor: 'blue'}}>
 
 
-                <Link to="categories">
+                <Link to="categories-crud">
                     <Button sx={{my: 2, color: 'white', display: 'block'}}>
                         Categories
                     </Button>
                 </Link>
 
-                <Link to="products">
+                <Link to="products-crud">
                     <Button sx={{my: 2, color: 'white', display: 'block'}}>
                         Products
                     </Button>
