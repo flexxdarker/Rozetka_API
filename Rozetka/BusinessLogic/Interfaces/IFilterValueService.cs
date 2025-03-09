@@ -12,8 +12,9 @@ namespace BusinessLogic.Interfaces
     public  interface IFilterValueService
     {
         Task<IEnumerable<FilterValueDto>> GetAllAsync();
-        Task<FilterValueDto> CreateAsync(FilterValueCreationModel creationModel);
         Task<FilterValueDto> GetByIdAsync(int id);
+        Task<FilterValueDto> CreateAsync(FilterValueCreationModel creationModel);
+        Task<FilterValueDto> EditAsync(FilterValueEditModel editModel);
         Task DeleteAsync(int id);
         Task DeleteByFilterId(int filterId);
 

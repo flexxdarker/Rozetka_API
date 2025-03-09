@@ -58,6 +58,17 @@ namespace BusinessLogic.Services
                 await filterValueRepo.SaveAsync();
             }
         }
+
+        public async Task<FilterValueDto> EditAsync(FilterValueEditModel editModel)
+        {
+            var filterValue = await filterValueRepo.GetItemBySpec(new FilterValueSpecs.GetById(editModel.Id));
+
+            mapper.Map(editModel, filterValue);
+
+            await filterValueRepo.SaveAsync();
+            return mapper.Map<FilterValueDto>(filterValue);
+        }
+
         public async Task<IEnumerable<FilterValueDto>> GetAllAsync()
         {
             return mapper.Map<IEnumerable<FilterValueDto>>(await filterValueRepo.GetListBySpec(new FilterValueSpecs.GetAll()));

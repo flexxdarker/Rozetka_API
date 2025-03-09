@@ -7,10 +7,8 @@ using BusinessLogic.Entities;
 
 namespace BusinessLogic.Models.FilterValueModels
 {
-    public class FilterValueEditModel
+    public class FilterValueEditModel : BaseFilterValueModel
     {
         public int Id { get; set; }
-        public int FilterId { get; set; }
-        public string Value { get; set; } = string.Empty;
     }
 }

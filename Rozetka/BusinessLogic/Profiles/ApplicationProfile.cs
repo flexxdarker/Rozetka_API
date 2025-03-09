@@ -85,6 +85,9 @@ namespace BusinessLogic.Profiles
             CreateMap<FilterValueCreationModel, FilterValue>()
                 .ReverseMap();
 
+            CreateMap<FilterValueEditModel, FilterValue>()
+                .ReverseMap();
+
             CreateMap<Image, ImageDto>()
                 .ReverseMap();
 
