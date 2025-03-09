@@ -132,7 +132,7 @@ namespace Rozetka_Api.Controllers
 
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         [HttpGet("GetAllUsers")]
         public async Task<IActionResult> GetAllUsers()
         {
@@ -143,7 +143,7 @@ namespace Rozetka_Api.Controllers
             return Ok(result);
         }
 
-        ///[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         [HttpPost("BlockUser")]
         public async Task<IActionResult> BlockUser([FromBody] BlockUserDto model)
         {
@@ -161,7 +161,7 @@ namespace Rozetka_Api.Controllers
             return Ok(user);
         }
 
-        //[Authorize(Roles = Roles.ADMIN)]
+        [Authorize(Roles = "admin")]
         [HttpPost("UnBlockUser")]
         public async Task<IActionResult> UnBlockUser([FromBody] BlockUserDto model)
         {
