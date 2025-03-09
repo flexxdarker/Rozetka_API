@@ -83,13 +83,17 @@ namespace BusinessLogic.Services
                 if (priceParsed)
                     break;
             }
-            throw new HttpException(Errors.IdMustBePositive, HttpStatusCode.BadRequest);
+            throw new HttpException(Errors.InvalidPriceError, HttpStatusCode.BadRequest);
         }
 
         public async Task<AdvertDto> CreateAsync(AdvertCreateModel advertCreationModel)
         {
+            advertCreateModelValidator.ValidateAndThrow(advertCreationModel);
             var advert = mapper.Map<Advert>(advertCreationModel);
-
+            if (!await categorytRepo.AnyAsync(x => x.Id == advertCreationModel.CategoryId))
+            {
+                throw new HttpException(Errors.InvalidCategoryId, HttpStatusCode.BadRequest);
+            }
             advert.Price = ValidatePriceByCulture(advertCreationModel.Price);
             advert.Discount = ValidatePriceByCulture(advertCreationModel.Discount);
 

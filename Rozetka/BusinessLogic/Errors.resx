@@ -159,4 +159,7 @@
   <data name="Null" xml:space="preserve">
     <value>{PropertyName} can`t be null</value>
   </data>
+  <data name="InvalidFilterId" xml:space="preserve">
+    <value>Filter Id is invalid</value>
+  </data>
 </root>

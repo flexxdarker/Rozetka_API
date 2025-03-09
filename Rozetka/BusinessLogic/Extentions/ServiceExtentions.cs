@@ -10,6 +10,8 @@ using BusinessLogic.Models.AdvertModels;
 using BusinessLogic.Validators;
 using BusinessLogic.Entities;
 using BusinessLogic.Models.CategoryModels;
+using BusinessLogic.Models.FilterModels;
+using BusinessLogic.Models;
 
 namespace BusinessLogic.Exstensions
 {
@@ -45,6 +47,8 @@ namespace BusinessLogic.Exstensions
             services.AddScoped<IValidator<AdvertCreateModel>, AdvertCreateModelValidator>();
             services.AddScoped<IValidator<Advert>, AdvertValidator>();
             services.AddScoped<IValidator<CategoryCreateModel>, CategoryCreateModelValidator>();
+            services.AddScoped<IValidator<FilterCreateModel>, FilterCreateModelValidator>();
+            services.AddScoped<IValidator<FilterValueCreationModel>, FilterValueCreationModelValidator>();
             
         }
     }
