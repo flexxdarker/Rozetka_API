@@ -16,10 +16,6 @@ namespace BusinessLogic.Validators
             RuleFor(x => x.CategoryId)
                 .NotNull()
                 .GreaterThan(0).WithMessage(Errors.GreaterZeroError);
-            RuleFor(x => x.Price)
-                .NotEmpty().WithMessage(Errors.InvalidPriceError);
-            RuleFor(x => x.Discount)
-                .NotEmpty().WithMessage(Errors.InvalidPriceError);
             RuleFor(x => x.Title)
                 .MinimumLength(3).WithMessage(Errors.MinSymbolsCountError + " 3 symbols")
                 .MaximumLength(500).WithMessage(Errors.MaxSymbolsCountError + "500 symbols");

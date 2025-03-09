@@ -18,7 +18,7 @@ namespace BusinessLogic.Validators
             RuleFor(x => x.FilterId)
                 .GreaterThan(0).WithMessage(Errors.GreaterZeroError);
             RuleFor(x => x.Value)
-                .NotNull().WithMessage(Errors.Null)
+                .NotNull().WithMessage(Errors.NotNull)
                 .MaximumLength(30).WithMessage(Errors.MaxSymbolsCountError + " 30 symbols");
         }
     }

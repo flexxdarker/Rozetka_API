@@ -60,7 +60,7 @@ namespace BusinessLogic.Services
             return mapper.Map<AdvertPrintDto>(await advertRepo.GetItemBySpec(new  AdvertSpecs.GetById(id)));
         }
 
-        private decimal ValidatePriceByCulture(string price)
+        private decimal ValidatePriceByCulture(string price, string propertyName)
         {
             CultureInfo[] cultures = {
             new CultureInfo("uk-UA"),
@@ -68,7 +68,7 @@ namespace BusinessLogic.Services
             new CultureInfo("de-DE")
             };
 
-            decimal _price;
+            decimal _price = -1;
             bool priceParsed = false;
 
             foreach (var culture in cultures)
@@ -83,7 +83,7 @@ namespace BusinessLogic.Services
                 if (priceParsed)
                     break;
             }
-            throw new HttpException(Errors.InvalidPriceError, HttpStatusCode.BadRequest);
+            return _price;
         }
 
         public async Task<AdvertDto> CreateAsync(AdvertCreateModel advertCreationModel)
@@ -94,8 +94,9 @@ namespace BusinessLogic.Services
             {
                 throw new HttpException(Errors.InvalidCategoryId, HttpStatusCode.BadRequest);
             }
-            advert.Price = ValidatePriceByCulture(advertCreationModel.Price);
-            advert.Discount = ValidatePriceByCulture(advertCreationModel.Discount);
+            advert.Price = ValidatePriceByCulture(advertCreationModel.Price, nameof(advertCreationModel.Price));
+            advert.Discount = ValidatePriceByCulture(advertCreationModel.Discount, nameof(advertCreationModel.Discount));
+            advertValidator.ValidateAndThrow(advert);
 
             var savedImages = await imageService.SaveImagesAsync(advertCreationModel.ImageFiles);
 
@@ -142,8 +143,8 @@ namespace BusinessLogic.Services
 
             mapper.Map(editModel, advert);
 
-            advert.Price = ValidatePriceByCulture(editModel.Price);
-            advert.Discount = ValidatePriceByCulture(editModel.Discount);
+            advert.Price = ValidatePriceByCulture(editModel.Price, nameof(editModel.Price));
+            advert.Discount = ValidatePriceByCulture(editModel.Discount, nameof(editModel.Discount));
 
             if (editModel.ImageFiles != null)
             {

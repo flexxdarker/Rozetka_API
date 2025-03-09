@@ -178,11 +178,20 @@ namespace BusinessLogic {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {PropertyName} can`t be empty.
+        /// </summary>
+        internal static string NotEmpty {
+            get {
+                return ResourceManager.GetString("NotEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {PropertyName} can`t be null.
         /// </summary>
-        internal static string Null {
+        internal static string NotNull {
             get {
-                return ResourceManager.GetString("Null", resourceCulture);
+                return ResourceManager.GetString("NotNull", resourceCulture);
             }
         }
         
