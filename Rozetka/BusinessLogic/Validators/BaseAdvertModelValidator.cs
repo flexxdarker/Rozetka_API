@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic.Validators
 {
-    public class AdvertBaseModelValidator : AbstractValidator<BaseAdvertModel>
+    public class BaseAdvertModelValidator : AbstractValidator<BaseAdvertModel>
     {
-        public AdvertBaseModelValidator()
+        public BaseAdvertModelValidator()
         {
             RuleFor(x => x.CategoryId)
                 .NotNull()
