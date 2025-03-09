@@ -94,53 +94,8 @@ namespace Rozetka_Api.Helpers
 
             const string USERNAME = "admin@gmail.com";
             const string PASSWORD = "Admin1@";
-            //const string IMAGE = "1200_image.webp";
-                
+          
             var existingUser = await userManager.FindByEmailAsync(USERNAME);
-
-            //var image = await imageService.SaveImageAsync(IMAGE);
-            //if (existingUser == null)
-            //{
-            //    var user = new User
-            //    {
-            //        Name = "Семен",
-            //        SurName = "Малько",
-            //        Birthdate = DateTime.UtcNow,
-            //        PhoneNumber = "+380123456789",
-            //        UserName = USERNAME,
-            //        Email = USERNAME
-            //    };
-
-            //    //var avatar = new Avatar()
-            //    //{
-            //    //    Name = "",
-            //    //    User = user,
-            //    //    UserId = user.Id
-            //    //};
-            //    //await avatarRepo.InsertAsync(avatar);
-            //    //await avatarRepo.SaveAsync();
-            //    //user.Avatar = avatar;
-            //    var result = await userManager.CreateAsync(user, PASSWORD);
-            //    if (result.Succeeded)
-            //    {
-            //        // Тепер user.Id існує в базі, і можна додати Avatar
-            //        var avatar = new Avatar()
-            //        {
-            //            Name = "",
-            //            User = user, // Прив’язуємо User, щоб EF сам поставив UserId
-            //        };
-
-            //        await avatarRepo.InsertAsync(avatar);
-            //        await avatarRepo.SaveAsync();
-
-            //        // Присвоюємо користувачу створений аватар
-            //        user.Avatar = avatar;
-            //        await userManager.UpdateAsync(user);
-
-            //        await userManager.AddToRoleAsync(user, Roles.ADMIN);
-            //    }
-            //}
-
 
             if (existingUser == null)
             {

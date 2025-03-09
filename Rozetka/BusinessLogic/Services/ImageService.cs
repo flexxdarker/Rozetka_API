@@ -169,6 +169,13 @@ namespace BusinessLogic.Services
                 DeleteImageIfExists(image);
         }
 
+        public async Task<string> SaveImageFromUrlAsync(string url)
+        {
+            using var httpClient = new HttpClient();
+            var imageBytes = await httpClient.GetByteArrayAsync(url);
+            return await SaveImageAsync(imageBytes);
+        }
+
         private List<int> Sizes
         {
             get

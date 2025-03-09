@@ -17,9 +17,9 @@ namespace BusinessLogic.Interfaces
         //Task Logout(string refreshToken);
         //Task<UserTokens> RefreshTokens(UserTokens tokens);
         Task<LoginResponseDto> GoogleSignInAsync(GoogleLoginDto loginDto);
-        Task EditUserAsync(UserEditDto editUserDto);
+        Task EditUserAsync(UserEditDto editUserDto, string userId);
         Task<IdentityResult> ChangePasswordAsync(ChangePasswordDto model, string idUser);
-        Task<User> GetUser(string id);
+        Task<UserViewDto> GetUser(string id);
         Task<IdentityResult> BlockUser(string userId);
         Task<IdentityResult> UnblockUser(string userId);
         Task<List<UserViewDto>> GetAllUsers();
