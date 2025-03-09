@@ -1,149 +1,132 @@
 import React from 'react';
-import {LockOutlined, UserOutlined} from '@ant-design/icons';
-// import {Button, Checkbox, Form, Input, Flex, type FormProps} from 'antd';
-import {Button, Form, Input, Flex, type FormProps, message} from 'antd';
-import {Link, useNavigate} from "react-router-dom";
-import {ILoginModel} from "../../models/accountsModel.ts";
-import {AccountsService} from "../../services/accountsService.ts";
-import {TokenService} from "../../services/tokenService.ts";
-
-// type FieldTypeSignIn = {
-//     username?: string;
-//     password?: string;
-//     remember?: string;
-// };
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Form, Input, Flex, type FormProps, message } from 'antd';
+import { Link, useNavigate } from "react-router-dom";
+import { ILoginModel } from "../../models/accountsModel.ts";
+import { AccountsService } from "../../services/accountsService.ts";
+import { TokenService } from "../../services/tokenService.ts";
+import { useGoogleLogin } from '@react-oauth/google';
 
 const SignIn: React.FC = () => {
-
     const navigate = useNavigate();
+    const remember = React.useRef(false);
 
-        const onFinish: FormProps<ILoginModel>['onFinish'] = async (values) => {
-                console.log('Form values:', {...values}); // Обробка відправки форми з додатковими даними редактора
-             const res = await AccountsService.login(values);
+    // Функція для звичайного логіну
+    const onFinish: FormProps<ILoginModel>['onFinish'] = async (values) => {
+        console.log('Form values:', { ...values });
+        try {
+            const res = await AccountsService.login(values);
             TokenService.save(res.data);
-            if (res.status == 200) {
-                message.success("login success");
+
+            if (res.status === 200) {
+                message.success("Ви успішно увійшли в свій акаунт");
                 navigate("/");
             } else {
-                message.warning("Warning");
+                message.warning("Помилка авторизації");
             }
-        };
+        } catch (error: any) {
+            console.error("Помилка при авторизації:", error);
+            message.error("Помилка входу");
+        }
+    };
 
-        const onFinishFailed: FormProps<ILoginModel>['onFinishFailed'] = (errorInfo) => {
-            console.log('Failed:', errorInfo);
-        };
+    const onFinishFailed: FormProps<ILoginModel>['onFinishFailed'] = (errorInfo) => {
+        console.log('Failed:', errorInfo);
+    };
 
-        const GoogleSignIn = () => {
-            console.log('Google SignIn');
-        };
+    // Функція для авторизації через Google
+    const glLogin = useGoogleLogin({
+        onSuccess: async (tokenResponse) => {
+            console.log('Google Token Response:', tokenResponse);
 
+            try {
+                const result = await AccountsService.googleLogin({
+                    token: tokenResponse.access_token,
+                    remember: remember.current,
+                });
 
-        return (
-            <>
-                <div style={{
-                    minWidth: "300px",
-                    maxWidth: "fit-content",
-                    height: "fit-content",
-                    backgroundColor: "blue",
-                    alignItems: "center",
-                    margin: "auto",
-                    display: 'flex',
-                    flexDirection: 'column',
-                    position: "absolute",
-                    left: 0,
-                    right: 0,
-                    top: 0,
-                    bottom: 0
-                }}>
-                    <h1>SignIn page</h1>
-                    <Form
-                        name="login"
-                        initialValues={{remember: true}}
-                        style={{maxWidth: 360, margin: "20px", width: "300px"}}
-                        onFinish={onFinish}
-                        onFinishFailed={onFinishFailed}
-                    >
-                        <Form.Item
-                            name="email"
-                            rules={[{required: true, message: 'Please input your email!'}]}
-                        >
-                            <Input prefix={<UserOutlined/>} placeholder="Email"/>
-                        </Form.Item>
+                if (result.status === 200) {
+                    message.success("Ви успішно увійшли в свій акаунт");
+                    navigate("/");
+                } else {
+                    console.error('Помилка авторизації через Google:', result.data);
+                    if (result.status === 403) {
+                        message.error("Підтвердіть свій Email для завершення авторизації");
+                    } else {
+                        message.error(`Помилка авторизації: ${result.statusText}`);
+                    }
+                }
 
-                        <Form.Item
-                            name="password"
-                            rules={[{required: true, message: 'Please input your Password!'}]}
-                        >
-                            <Input prefix={<LockOutlined/>} type="password" placeholder="Password"/>
-                        </Form.Item>
+            } catch (error: any) {
+                console.error('Помилка авторизації через Google:', error);
+                message.error("Не вдалося авторизуватися через Google");
 
-                        <Form.Item>
-                            <Flex justify="space-between" align="center">
-                                {/*<Form.Item name="remember" valuePropName="checked" noStyle>*/}
-                                {/*    <Checkbox>Remember me</Checkbox>*/}
-                                {/*</Form.Item>*/}
-                                <a href="">Forgot password</a>
-                            </Flex>
-                        </Form.Item>
+                if (error.response && error.response.data) {
+                    console.error('Помилка від сервера:', error.response.data);
+                    message.error(`Помилка сервера: ${error.response.data.message}`);
+                }
+            }
+        }
+    });
 
+    return (
+        <div style={{
+            minWidth: "300px",
+            maxWidth: "fit-content",
+            height: "fit-content",
+            backgroundColor: "blue",
+            alignItems: "center",
+            margin: "auto",
+            display: 'flex',
+            flexDirection: 'column',
+            position: "absolute",
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0
+        }}>
+            <h1>SignIn page</h1>
+            <Form
+                name="login"
+                initialValues={{ remember: true }}
+                style={{ maxWidth: 360, margin: "20px", width: "300px" }}
+                onFinish={onFinish}
+                onFinishFailed={onFinishFailed}
+            >
+                <Form.Item
+                    name="email"
+                    rules={[{ required: true, message: 'Please input your email!' }]}
+                >
+                    <Input prefix={<UserOutlined />} placeholder="Email" />
+                </Form.Item>
 
-                        {/* const [description, setDescription] = useState<string>("");*/}
-                        {/* const editorRef = useRef<Editor | null>(null);*/}
+                <Form.Item
+                    name="password"
+                    rules={[{ required: true, message: 'Please input your Password!' }]}
+                >
+                    <Input prefix={<LockOutlined />} type="password" placeholder="Password" />
+                </Form.Item>
 
-                    {/*    const onFinish: FormProps<FieldTypeSignIn>['onFinish'] = (values) => {*/}
-                    {/*    // if (editorRef.current) {*/}
-                    {/*    const description = editorContent;*/}
-                    {/*    // const description = editorRef.current.getContent();*/}
-                    {/*    console.log('Form values:', {...values, description}); // Обробка відправки форми з додатковими даними редактора*/}
-                    {/*    // }*/}
-                    {/*};*/}
+                <Form.Item>
+                    <Flex justify="space-between" align="center">
+                        <a href="">Forgot password</a>
+                    </Flex>
+                </Form.Item>
 
-                        {/*// const handleEditorChange = (content, editor) => { setEditorContent(content); console.log('Content was updated:', content); };*/}
+                <Form.Item>
+                    <Button block type="primary" htmlType="submit">
+                        SignIn
+                    </Button>
+                    or
+                    <Link to="/signup">SignUp!</Link>
+                </Form.Item>
 
-                        {/*<Form.Item name="description">*/}
-                        {/*    <Editor*/}
-                        {/*        apiKey="l4ipj5d2e673xkfnuw4xjsxgaqqu4f45uf8qoh4az9o28mzr"*/}
-                        {/*        tinymceScriptSrc='/src/components/tinymce/js/tinymce/tinymce.min.js'*/}
-                        {/*        onInit={(_evt, editor) => editorRef.current = editor}*/}
-                        {/*        initialValue="<p>This is the initial content of the editor.</p>"*/}
-                        {/*        init={{*/}
-                        {/*            height: 500, //висота самого інтупа*/}
-                        {/*            language: "en", //мова панелі*/}
-                        {/*            menubar: true, //показувать меню*/}
-                        {/*            images_file_types: "jpg,jpeg", //формати файлі, які можна обирать - фото*/}
-                        {/*            plugins: [*/}
-                        {/*                'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',*/}
-                        {/*                'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',*/}
-                        {/*                'insertdatetime', 'media', 'table', 'preview', 'help', 'wordcount'*/}
-                        {/*            ],*/}
-                        {/*            toolbar: 'undo redo | blocks | ' +*/}
-                        {/*                'bold italic forecolor | alignleft aligncenter ' +*/}
-                        {/*                'alignright alignjustify | bullist numlist outdent indent | ' +*/}
-                        {/*                'removeformat | help',*/}
-                        {/*            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'*/}
-                        {/*        }}*/}
-                        {/*    />*/}
-                        {/*</Form.Item>*/}
-
-
-                        <Form.Item>
-                            <Button block type="primary" htmlType="submit">
-                                SignIn
-                            </Button>
-                            or
-                            {/*<a href="">Register now!</a>*/}
-                            <Link to="/signup">SignUp!</Link>
-                        </Form.Item>
-
-
-                        <Button block type="primary" htmlType="button" onClick={GoogleSignIn}>
-                            SignIn with Google
-                        </Button>
-                    </Form>
-                </div>
-            </>
-        );
-    }
-;
+                <Button block type="primary" onClick={() => glLogin()}>
+                    SignIn with Google
+                </Button>
+            </Form>
+        </div>
+    );
+};
 
 export default SignIn;
