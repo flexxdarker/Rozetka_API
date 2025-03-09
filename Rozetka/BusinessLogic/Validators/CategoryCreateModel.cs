@@ -20,7 +20,7 @@ namespace BusinessLogic.Validators
                 .NotNull()  
                 .GreaterThan(0).WithMessage(Errors.GreaterZeroError);
             RuleFor(x => x.Image)
-                .NotNull().WithMessage(Errors.Null);
+                .NotNull().WithMessage(Errors.NotNull);
         }
     }
 }
