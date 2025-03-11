@@ -2,8 +2,10 @@ import {
     ADD_TO_COMPARISON,
     REMOVE_FROM_COMPARISON,
     SET_COMPARISON_COUNT,
+    CLEAR_FROM_COMPARISON,
 } from "../actions/comparisonActions.ts";
-import { ComparisonActionTypes } from "../../types/types.ts"; // Імпортуємо типи
+import { ComparisonActionTypes } from "../../types/types.ts";
+import {ComparisonListService} from "../../services/comparisonService.ts"; // Імпортуємо типи
 
 // Типізація стану
 interface ComparisonState {
@@ -11,27 +13,10 @@ interface ComparisonState {
     comparisonCount: number;   // Кількість товарів у списку порівняння
 }
 
-// Функція для збереження даних у localStorage
-const saveToLocalStorage = (comparisonList: number[]): void => {
-    localStorage.setItem('comparisonList', JSON.stringify(comparisonList));
-}
-
-// Функція для отримання даних з localStorage///////////////////////////////////////////////////////////////////////
-export const getComparisonListFromLocalStorage = (): number[] => {
-    const storedComparisonList = localStorage.getItem('comparisonList');
-    return storedComparisonList ? JSON.parse(storedComparisonList) : [];
-}
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-export const isProductInComparison = (id: number): boolean => {
-    const comparisonList = getComparisonListFromLocalStorage(); // Отримуємо масив з localStorage
-    return comparisonList.includes(id); // Перевіряємо, чи містить масив це id
-}
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 // Початковий стан з типізацією
 const initialState: ComparisonState = {
-    comparisonList: getComparisonListFromLocalStorage(), // Завантажуємо список порівняння з localStorage
-    comparisonCount: getComparisonListFromLocalStorage().length, // Кількість товарів з localStorage
+    comparisonList: ComparisonListService.getAll(), // Завантажуємо список порівняння з localStorage
+    comparisonCount: ComparisonListService.count(), // Кількість товарів з localStorage
 };
 
 export const comparisonReducer = (state = initialState, action: ComparisonActionTypes): ComparisonState => {
@@ -48,7 +33,7 @@ export const comparisonReducer = (state = initialState, action: ComparisonAction
         case ADD_TO_COMPARISON:
             if (!state.comparisonList.includes(action.payload)) {
                 const updatedComparisonList = [...state.comparisonList, action.payload];
-                saveToLocalStorage(updatedComparisonList); // Зберігаємо новий список у localStorage
+                ComparisonListService.saveItems(updatedComparisonList); // Зберігаємо новий список у localStorage
                 return {
                     ...state,
                     comparisonList: updatedComparisonList,
@@ -58,11 +43,20 @@ export const comparisonReducer = (state = initialState, action: ComparisonAction
             return state;
         case REMOVE_FROM_COMPARISON:
 
-            saveToLocalStorage(updatedComparisonList); // Зберігаємо оновлений список у localStorage
+            ComparisonListService.saveItems(updatedComparisonList); // Зберігаємо оновлений список у localStorage
             return {
                 ...state,
                 comparisonList: updatedComparisonList,
                 comparisonCount: updatedComparisonList.length, // Оновлюємо кількість
+            };
+        case CLEAR_FROM_COMPARISON: // Обробка очищення списку
+
+            ComparisonListService.clearItems();
+
+            return {
+                ...state,
+                comparisonList: [],
+                comparisonCount: 0, // Скидаємо кількість на 0
             };
         default:
             return state;

@@ -13,7 +13,7 @@ import {useDispatch} from "react-redux";
 // import {useDispatch, useSelector} from "react-redux";
 import {incrementTotalPrice} from "../../store/actions/basketActions.ts";
 import {addToComparison, removeFromComparison} from "../../store/actions/comparisonActions.ts";
-import {isProductInComparison} from "../../store/reducers/comparisonReducer.ts";
+import {ComparisonListService} from "../../services/comparisonService.ts";
 //import {RootState} from "../../store";
 // import "../ProductCard/ProductCard.css"
 
@@ -30,7 +30,7 @@ const ProductCard: React.FC<ItemProps> = ({item}) => {
     const dispatch = useDispatch();
     const [isWishList, setIsWishList] = useState(WishListService.checkId(item.id));
     //const comparisonCount = useSelector((state: RootState) => state.comparison.comparisonCount);
-    const [isComparison, setIsComparison] = useState<boolean>(isProductInComparison(item.id));
+    const [isComparison, setIsComparison] = useState<boolean>(ComparisonListService.checkId(item.id));
 
     const WishListAdd = () => {
         WishListService.addId(item.id)
@@ -44,19 +44,19 @@ const ProductCard: React.FC<ItemProps> = ({item}) => {
 
     const ComparisonListAdd = () => {
         dispatch(addToComparison(item.id));
-        setIsComparison(isProductInComparison(item.id));
+        setIsComparison(ComparisonListService.checkId(item.id));
     };
 
     const ComparisonListRemove = () => {
         dispatch(removeFromComparison(item.id));
-        setIsComparison(isProductInComparison(item.id));
+        setIsComparison(ComparisonListService.checkId(item.id));
     };
 
 
 
     return (
         <div
-            className="main-container flex w-[286px] pt-[20px] pr-[20px] pb-[20px] pl-[20px] flex-col items-start flex-nowrap bg-[#fff] mx-auto my-0">
+            className="main-container flex min-w-[250px] w-[286px] pt-[20px] pr-[20px] pb-[20px] pl-[20px] flex-col items-start flex-nowrap bg-[#fff] mx-auto my-0">
             <div className="flex justify-between items-start self-stretch shrink-0 flex-nowrap">
                 <div className="flex w-[129px] flex-col gap-[16px] items-start shrink-0 flex-nowrap">
                     <div className="flex gap-[4px] items-center self-stretch shrink-0 flex-nowrap">

@@ -24,4 +24,11 @@ export interface SetComparisonListAction {
     payload: number[];
 }
 
-export type ComparisonActionTypes = AddToComparisonAction | RemoveFromComparisonAction | SetComparisonListAction;
+export interface ClearComparisonListAction {
+    type: 'CLEAR_FROM_COMPARISON';
+    payload: null;
+}
+
+
+
+export type ComparisonActionTypes = AddToComparisonAction | RemoveFromComparisonAction | SetComparisonListAction | ClearComparisonListAction;

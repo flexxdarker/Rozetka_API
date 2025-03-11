@@ -35,6 +35,7 @@ const ProductForm: React.FC = () => {
 
     const handleEditorChange = (content: string) => {
         setEditorContent(content);
+        form.setFieldsValue({ description: content });
     };
 
     const [previewOpen, setPreviewOpen] = useState<boolean>(false);
@@ -223,7 +224,9 @@ const ProductForm: React.FC = () => {
                 <FilterForm filters={filters} onChange={handleFilterChange}/>
                 {/*</Form.Item>*/}
 
-                <Form.Item wrapperCol={{span: 24}} name="description">
+                <Form.Item wrapperCol={{span: 24}} name="description"
+                           rules={[{required: true, message: 'Please input your description!'},
+                               {min: 50, message: 'description must be at least 50 characters long!'}]}>
                     <EditorTiny
                         //content={editMode && product !== null? product.description : ""}
                         initialValue={editMode && product !== null ? product.description : ""}

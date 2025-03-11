@@ -7,6 +7,8 @@ import {IProductModel} from "../models/productsModel.ts";
 import {ProductServices} from "../services/productService.ts";
 import {ICategoryModel} from "../models/categoriesModel.ts";
 import {CategoriesServices} from "../services/categoriesService.ts";
+import {Reviews} from "@mui/icons-material";
+import ProductsReviewed from "./product/productsReviewed.tsx";
 // import {Carousel} from "antd";
 //
 // const contentStyle: React.CSSProperties = {
@@ -112,6 +114,7 @@ const Home: React.FC = () => {
                 })
             }
 
+            <ProductsReviewed/>
             {/*<ProductCardList productsProps={products}/>*/}
 
 

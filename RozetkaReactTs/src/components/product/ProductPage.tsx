@@ -3,7 +3,7 @@ import {useParams} from "react-router-dom";
 import {IProductModel} from "../../models/productsModel.ts";
 import {ProductServices} from "../../services/productService.ts";
 import ImageSliderProductImages from "../other/ImageSliderProductImages.tsx";
-import {Rate} from "antd";
+import {Badge, Rate} from "antd";
 import formatPrice from "../../functions/formatPrice.ts";
 import balance from "../../assets/icons/balance.svg"
 import heart from "../../assets/icons/heart.svg"
@@ -13,6 +13,9 @@ import {useDispatch} from "react-redux";
 import {WishListService} from "../../services/wishListService.ts";
 import {BasketService} from "../../services/basketService.ts";
 import {incrementTotalPrice} from "../../store/actions/basketActions.ts";
+import {ReviewedListService} from "../../services/reviewedService.ts";
+import {addToComparison, removeFromComparison} from "../../store/actions/comparisonActions.ts";
+import {ComparisonListService} from "../../services/comparisonService.ts";
 
 const uploadings = import.meta.env.VITE_ROZETKA_UPLOADINGS;
 
@@ -23,7 +26,7 @@ const ProductPage: React.FC = () => {
     const params = useParams();
 
     const [product, setProduct] = useState<IProductModel | undefined>(); // Start with null or a loading state
-
+    const [isComparison, setIsComparison] = useState<boolean>(ComparisonListService.checkId(+params.id!));
     const dispatch = useDispatch();
     const [isWishList, setIsWishList] = useState<boolean>();
 
@@ -37,12 +40,25 @@ const ProductPage: React.FC = () => {
         setIsWishList(false); // Зміна стану відкриття/закриття
     };
 
+
+    const ComparisonListAdd = () => {
+        dispatch(addToComparison(product!.id));
+        setIsComparison(ComparisonListService.checkId(product!.id));
+    };
+
+    const ComparisonListRemove = () => {
+        dispatch(removeFromComparison(product!.id));
+        setIsComparison(ComparisonListService.checkId(product!.id));
+    };
+
+
     const loadProduct = async () => {
         if (params.id) {
             const res = await ProductServices.getById(params.id);
             if (res.status === 200 && res.data != undefined) {
                 setProduct(res.data);
-                setIsWishList(WishListService.checkId(product!.id));
+                setIsWishList(WishListService.checkId(res.data.id));
+                ReviewedListService.addId(Number(res.data.id));
             }
         }
     }
@@ -54,7 +70,6 @@ const ProductPage: React.FC = () => {
         : [];
     useEffect(() => {
         loadProduct();
-
     }, []);
 
     useEffect(() => {
@@ -260,7 +275,10 @@ const ProductPage: React.FC = () => {
                                                     </div>
                                                 </div>
                                             </button>
-                                            <button
+
+                                            { isComparison ? (
+                                                <Badge count={"✓"} size={"small"} color={"green"}>
+                                            <button type={"button"} onClick={ComparisonListRemove}
                                                 className="flex w-[40px] h-[40px] flex-col justify-center items-center shrink-0 flex-nowrap">
                                                 <div
                                                     className="flex h-[40px] pt-[4px] pr-[4px] pb-[4px] pl-[4px] flex-col justify-center items-center self-stretch shrink-0 flex-nowrap rounded-[4px] overflow-hidden">
@@ -270,6 +288,20 @@ const ProductPage: React.FC = () => {
                                                     </div>
                                                 </div>
                                             </button>
+                                                </Badge>
+                                                ) : (
+                                                <button type={"button"} onClick={ComparisonListAdd}
+                                                        className="flex w-[40px] h-[40px] flex-col justify-center items-center shrink-0 flex-nowrap">
+                                                    <div
+                                                        className="flex h-[40px] pt-[4px] pr-[4px] pb-[4px] pl-[4px] flex-col justify-center items-center self-stretch shrink-0 flex-nowrap rounded-[4px] overflow-hidden">
+                                                        <div
+                                                            className="w-[22.5px] h-[19.125px] shrink-0">
+                                                            <img src={balance}/>
+                                                        </div>
+                                                    </div>
+                                                </button>
+                                            )}
+
                                         </div>
                                     </div>
                                     <div
@@ -277,7 +309,7 @@ const ProductPage: React.FC = () => {
                                         <div
                                             className="flex justify-between items-start self-stretch shrink-0 flex-nowrap">
                                             <button type={"button"} onClick={() => {
-                                                if(!BasketService.checkId(product.id)) {
+                                                if (!BasketService.checkId(product.id)) {
                                                     BasketService.addId(product.id);
                                                     dispatch(incrementTotalPrice(Number(formatPrice(product.price - product.discount!))));
                                                 }}} className="flex w-[340px] h-[50px] pt-0 pr-[40px] pb-0 pl-[40px] justify-center items-center shrink-0 flex-nowrap bg-[#9cc319] rounded-[8px] border-none pointer">
