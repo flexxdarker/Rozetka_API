@@ -1,4 +1,5 @@
-﻿using BusinessLogic.DTOs.Order;
+﻿using BusinessLogic.DTOs.Basket;
+using BusinessLogic.DTOs.Order;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace BusinessLogic.DTOs.User
     public class GoogleLoginDto /*: GoogleUserInfo*/
     {
         public string GoogleAccessToken { get; set; } = string.Empty;
-        public List<int> Baskets { get; set; } = new List<int>();
-        public List<OrderItemDto>? OrderItems { get; set; }
+        public AddAdvertDto Baskets { get; set; } = new AddAdvertDto();
+        public List<OrderItemDto>? OrderItem { get; set; }
     }
 }

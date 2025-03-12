@@ -52,6 +52,7 @@ namespace Rozetka_Api.Controllers
             return Ok(orders);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost("ReciveOrderById/{id}")]
         public async Task<IActionResult> ReciveOrderById(int id)
         {
@@ -60,13 +61,14 @@ namespace Rozetka_Api.Controllers
             return Ok(order);
         }
 
-        [Authorize]
+        [Authorize(Roles = "admin")]
         [HttpGet("GetAllStatuses")]
         public async Task<IActionResult> GetAllStatuses()
         {
             return Ok(await _orderservice.GetAllStatus());
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPut("ChangeStatus")]
         public async Task<IActionResult> ChangeStatus(int orderId,int statusId)
         {

@@ -8,7 +8,7 @@ namespace BusinessLogic.DTOs.Basket
 {
     public class AddAdvertDto
     {
-        public List<int> AdvertsIds { get; set; }
-        public List<int> Amount {  get; set; }
+        public List<int>? AdvertsIds { get; set; }
+        public List<int>? Amount {  get; set; }
     }
 }

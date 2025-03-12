@@ -32,7 +32,7 @@ namespace Rozetka_Api.Controllers
             return Ok(await filterValueService.GetByIdAsync(id));
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = "admin")]
         [HttpDelete("delete/{id:int}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {

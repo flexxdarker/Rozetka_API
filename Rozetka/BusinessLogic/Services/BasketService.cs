@@ -23,24 +23,34 @@ namespace BusinessLogic.Services
         private readonly IRepository<OrderStatus> _status;
         private readonly IRepository<Order> _order;
         private readonly IRepository<OrderAdvert> _orderadvert;
+        private readonly IRepository<Image> _imageRepo;
 
-        public BasketService(IRepository<OrderStatus> status, IRepository<Basket> basket, IRepository<Advert> advert, IRepository<Order> order, IRepository<OrderAdvert> orderadvert)
+        public BasketService(IRepository<OrderStatus> status, IRepository<Basket> basket, IRepository<Advert> advert, IRepository<Order> order, IRepository<OrderAdvert> orderadvert, IRepository<Image> imageRepo)
         {
             _basket = basket;
             _advert = advert;
             _order = order;
             _status = status;
             _orderadvert = orderadvert;
+            _imageRepo = imageRepo;
         }
 
         public async Task pushBasketById(string userId, int advertId, int amount)//todo: add amount of product
         {
 
             var advert = await _advert.GetByIDAsync(advertId);
+            if (advert == null)
+            {
+                throw new Exception("Advert not found");
+            }
 
             var search = await _basket.GetAsync();
-
             var existingBasketItem = search.FirstOrDefault(b => b.AdvertId == advert.Id && b.UserId == userId);
+
+            var imagePath = await _imageRepo.AsQueryable()
+                .Where(x => x.AdvertId == advert.Id)
+                .Select(x => x.Name)
+                .FirstOrDefaultAsync() ?? "default-image.jpg"; // Додаємо дефолтне зображення
 
             if (existingBasketItem == null)
             {
@@ -51,11 +61,12 @@ namespace BusinessLogic.Services
                     UserId = userId,
                     DateAdded = DateTime.UtcNow,
                     Count = amount,
+                    ImagePath = imagePath
                 });
 
                 await _basket.SaveAsync();
             }
-            else if (existingBasketItem != null)
+            else
             {
                 var item = await _basket.GetItemBySpec(new BasketSpecs.GetById(existingBasketItem.Id));
                 item.Count += amount;
@@ -99,6 +110,13 @@ namespace BusinessLogic.Services
                 // Перевіряємо, чи вже є цей товар у кошику
                 int i = 0;
                 var existingItem = existingBasketItems.FirstOrDefault(b => b.AdvertId == advert.Id);
+
+                var imagePath = await _imageRepo.AsQueryable()
+                .Where(x => x.AdvertId == advert.Id)
+                .Select(x => x.Name)
+                .FirstOrDefaultAsync() ?? "default-image.jpg";
+
+
                 if (existingItem == null)
                 {
                     // Додаємо новий товар у кошик
@@ -107,7 +125,8 @@ namespace BusinessLogic.Services
                         AdvertId = advert.Id,
                         UserId = userId,
                         DateAdded = DateTime.UtcNow,
-                        Count = addAdvert.Amount[i]
+                        Count = addAdvert.Amount[i],
+                        ImagePath = imagePath
                     });
                 }
                 else if (existingItem != null)
@@ -167,7 +186,7 @@ namespace BusinessLogic.Services
             var newStatus = await _status.AsQueryable().Where(x => x.Id == 1).FirstOrDefaultAsync();
 
 
-            int amount = orderItems.Count;
+            decimal amount = orderItems.Select(x=>x.Price*x.Amount).Sum();
 
             var order = new Order
             {
@@ -209,7 +228,7 @@ namespace BusinessLogic.Services
         {
             var status = await _status.AsQueryable().Where(x => x.Id == 1).FirstOrDefaultAsync();
             
-            var amount = orderItems.Count;
+            var amount = orderItems.Select(x=>x.Price*x.Count).Sum();
 
             var order = new Order
             {
@@ -229,7 +248,7 @@ namespace BusinessLogic.Services
                 {
                     OrderId = order.Id,
                     AdvertId = advert.AdvertId,
-                    Count = advert.Amount,
+                    Count = advert.Count,
                     Price = advert.Price,
                 });
             }
@@ -270,6 +289,10 @@ namespace BusinessLogic.Services
             {
                 // Перевіряємо, чи вже є цей товар у кошику
                 var existingItem = existingBasketItems.FirstOrDefault(b => b.AdvertId == advert.Id);
+                var imagePath = await _imageRepo.AsQueryable()
+                .Where(x => x.AdvertId == advert.Id)
+                .Select(x => x.Name)
+                .FirstOrDefaultAsync() ?? "default-image.jpg";
 
                 if (existingItem == null)
                 {
@@ -279,7 +302,8 @@ namespace BusinessLogic.Services
                         AdvertId = advert.Id,
                         UserId = userId,
                         DateAdded = DateTime.UtcNow,
-                        Count = 1
+                        Count = 1,
+                        ImagePath = imagePath
                     });
                 }
                 else
@@ -295,59 +319,3 @@ namespace BusinessLogic.Services
 
     }
 }
-
-
-//if (addAdvert.AdvertsIds.Count != addAdvert.Amount.Count)
-//{
-//    throw new HttpException("Invalid Value", System.Net.HttpStatusCode.BadRequest);
-//}
-
-//// Отримуємо всі товари
-//var items = await _advert.GetAsync();
-//var adverts = items.ToArray();
-
-//// Отримуємо всі товари в кошику
-//var baskets = await _basket.GetAsync();
-
-//// Фільтруємо товари в кошику для конкретного користувача
-//var existingBasketItems = baskets.Where(x => x.UserId == userId).ToList();
-
-//// Список товарів для додавання у кошик
-//List<Advert> returnAdvert = new List<Advert>();
-
-//// Для кожного ID продукту перевіряємо його наявність
-//foreach (var advertId in addAdvert.AdvertsIds)
-//{
-//    var advert = adverts.FirstOrDefault(p => p.Id == advertId);
-//    if (advert != null)
-//    {
-//        returnAdvert.Add(advert);
-//    }
-//}
-
-//foreach (var advert in returnAdvert)
-//{
-//    // Перевіряємо, чи вже є цей товар у кошику
-//    int i = 0;
-//    var existingItem = existingBasketItems.FirstOrDefault(b => b.AdvertId == advert.Id);
-//    if (existingItem == null)
-//    {
-//        // Додаємо новий товар у кошик
-//        await _basket.InsertAsync(new Basket
-//        {
-//            AdvertId = advert.Id,
-//            UserId = userId,
-//            DateAdded = DateTime.UtcNow,
-//            Count = addAdvert.Amount[i]
-//        });
-//    }
-//    else if (existingItem != null)
-//    {
-//        var item = await _basket.GetItemBySpec(new BasketSpecs.GetById(existingItem.Id));
-//        item.Count += addAdvert.Amount[i];
-//        _basket.Update(item);
-//        await _basket.SaveAsync();
-//    }
-//}
-
-//await _basket.SaveAsync();

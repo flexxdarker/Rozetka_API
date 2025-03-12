@@ -320,7 +320,7 @@ namespace DataAccess.Migrations
                     UserId = table.Column<string>(type: "text", nullable: false),
                     OrderStatusId = table.Column<int>(type: "integer", nullable: false),
                     DateCrated = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Amount = table.Column<int>(type: "integer", nullable: false)
+                    Amount = table.Column<decimal>(type: "numeric", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -420,7 +420,8 @@ namespace DataAccess.Migrations
                     UserId = table.Column<string>(type: "text", nullable: true),
                     AdvertId = table.Column<int>(type: "integer", nullable: false),
                     Count = table.Column<int>(type: "integer", nullable: false),
-                    DateAdded = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    DateAdded = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ImagePath = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
