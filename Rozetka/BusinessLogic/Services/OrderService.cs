@@ -113,7 +113,8 @@ namespace BusinessLogic.Services
             var orders = _order.AsQueryable()
                                .Where(x => x.Id == id)
                                .Include(x => x.OrderAdverts)
-                               .ThenInclude(op => op.Advert) // Приєднуємо продукти до OrderProducts
+                               .ThenInclude(op => op.Advert)
+                               .ThenInclude(im=>im.Images)// Приєднуємо продукти до OrderProducts
                     .SelectMany(order => order.OrderAdverts.Select(op => new BasketViewItem
                     {
                         Id = op.Advert.Id,

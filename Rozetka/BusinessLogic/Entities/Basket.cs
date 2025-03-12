@@ -17,5 +17,6 @@ namespace BusinessLogic.Enities
         public Advert Advert { get; set; }
         public int Count { get; set; } = 1;
         public DateTime DateAdded { get; set; }
+        public string ImagePath { get; set; }
     }
 }

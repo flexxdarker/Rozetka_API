@@ -155,59 +155,140 @@ namespace BusinessLogic.Services
         public async Task<LoginResponseDto> Login(LoginModel model)
         {
 
-            //LoginResponseDto loginResponse = new LoginResponseDto();
             //var user = await userManager.FindByEmailAsync(model.Email);
 
-            //if (user == null || !await userManager.CheckPasswordAsync(user, model.Password))
-            //    throw new HttpException("Invalid user login or password.", HttpStatusCode.BadRequest);
+            //LoginResponseDto loginResultDto = new LoginResponseDto();
 
-            ////await signInManager.SignInAsync(user, true);
+            //if (user == null)
+            //{
+            //    loginResultDto.IsSuccess = false;
+            //    loginResultDto.Error = "Incorect data!";
+            //    return loginResultDto;
+            //}
+            //var isAuth = await userManager.CheckPasswordAsync(user, model.Password);
 
-            //// generate token
-            //loginResponse.AccessToken = jwtService.CreateToken(jwtService.GetClaims(user));
-            //loginResponse.RefreshToken = CreateRefreshToken(user.Id).Token;
+            //if (!isAuth)
+            //{
+            //    loginResultDto.IsSuccess = false;
+            //    loginResultDto.Error = "Incorect data!";
+            //    return loginResultDto;
+            //}
+
+            //if (user.LockoutEnabled == true)
+            //{
+            //    loginResultDto.IsSuccess = false;
+
+            //    string lockoutDate = user.LockoutEnd.HasValue
+            //        ? user.LockoutEnd.Value.ToString("MM/dd/yyyy")
+            //        : "невідомо";
+
+            //    loginResultDto.Error = $"Користувач {user.Name} {user.SurName} ЗАБЛОКОВАНИЙ до {lockoutDate}";
+            //    return loginResultDto;
+            //}
+
+            //var person = userRepo.AsQueryable()
+            //   .FirstOrDefault(x => x.Id == user.Id);
+
+            //var roles = await userManager.GetRolesAsync(user);
+
+            //var avatar = avatarRepository.AsQueryable().FirstOrDefault(x => x.UserId == user.Id).Name;
+
+            //var userTokenInfo = new UserTokenInfo
+            //{
+            //    Id = person.Id, 
+            //    Name = person.Name,
+            //    SurName = person.SurName,
+            //    Email = person.Email,
+            //    Birthday = person.Birthdate.ToString("dd-MM-yyyy"),
+            //    AvatarPath = avatar,
+            //    PhoneNumber = person.PhoneNumber,
+            //    Roles = roles.ToList(),
+            //};
+
+            //var token = await jwtService.CreateToken(userTokenInfo);
+
+            //loginResultDto.AccessToken = token;
+
+            //if (model.Baskets != null)
+            //{
+
+            //    // Перетворюємо кошик у масив
+            //    //var basketArray = model.Baskets.ToArray();
+
+            //    // Якщо користувач передав кошик із товарами
+            //    if (model.Baskets.AdvertsIds.Count > 0)
+            //    {
+            //        // Зберігаємо кошик користувача в базу даних
+
+            //        await  basketService.pushBasketArray(user.Id, );
+
+            //        // Отримуємо поточний кошик користувача з бази
+            //        var array = await basketRepo.GetAsync();
+
+            //        // Вибираємо товари тільки для цього користувача
+            //        List<Basket> arrayUser = array.Where(x => x.UserId == user.Id).ToList();
+
+            //        // Створюємо список ID продуктів із кошика
+            //        List<int> newListIdBasket = arrayUser.Select(item => item.AdvertId).ToList();
+
+            //        // Передаємо список ID продуктів у відповідь
+            //        loginResultDto.Baskets = newListIdBasket;
+            //    }
+            //    else
+            //    {
+            //        loginResultDto.Baskets = null; // Якщо кошик порожній
+            //    }
+            //}
+            //else
+            //{
+
+            //    // Отримуємо поточний кошик користувача з бази
+            //    var array = await basketRepo.GetAsync();
+
+            //    // Вибираємо товари тільки для цього користувача
+            //    List<Basket> arrayUser = array.Where(x => x.UserId == user.Id).ToList();
+
+            //    // Створюємо список ID продуктів із кошика
+            //    List<int> newListIdBasket = arrayUser.Select(item => item.AdvertId).ToList();
+
+            //    // Передаємо список ID продуктів у відповідь
+            //    loginResultDto.Baskets = newListIdBasket;
+            //}
+
+            //if (model.OrderItem != null)
+            //{
+            //    await basketService.PushOrderWhenLogin(user.Id, model.OrderItem);
+            //}
+            //loginResultDto.IsSuccess = true;
+
+            //return loginResultDto;
+
 
             var user = await userManager.FindByEmailAsync(model.Email);
+            var loginResultDto = new LoginResponseDto();
 
-            LoginResponseDto loginResultDto = new LoginResponseDto();
-
-            if (user == null)
+            if (user == null || !await userManager.CheckPasswordAsync(user, model.Password))
             {
                 loginResultDto.IsSuccess = false;
-                loginResultDto.Error = "Incorect data!";
-                return loginResultDto;
-            }
-            var isAuth = await userManager.CheckPasswordAsync(user, model.Password);
-
-            if (!isAuth)
-            {
-                loginResultDto.IsSuccess = false;
-                loginResultDto.Error = "Incorect data!";
+                loginResultDto.Error = "Incorrect data!";
                 return loginResultDto;
             }
 
-            if (user.LockoutEnabled == true)
+            if (user.LockoutEnabled)
             {
+                string lockoutDate = user.LockoutEnd?.ToString("MM/dd/yyyy") ?? "невідомо";
                 loginResultDto.IsSuccess = false;
-
-                string lockoutDate = user.LockoutEnd.HasValue
-                    ? user.LockoutEnd.Value.ToString("MM/dd/yyyy")
-                    : "невідомо";
-
                 loginResultDto.Error = $"Користувач {user.Name} {user.SurName} ЗАБЛОКОВАНИЙ до {lockoutDate}";
                 return loginResultDto;
             }
 
-            var person = userRepo.AsQueryable()
-               .FirstOrDefault(x => x.Id == user.Id);
-
+            var person = userRepo.AsQueryable().FirstOrDefault(x => x.Id == user.Id);
             var roles = await userManager.GetRolesAsync(user);
-
-            var avatar = avatarRepository.AsQueryable().FirstOrDefault(x => x.UserId == user.Id).Name;
+            var avatar = avatarRepository.AsQueryable().FirstOrDefault(x => x.UserId == user.Id)?.Name;
 
             var userTokenInfo = new UserTokenInfo
             {
-                Id = person.Id, 
+                Id = person.Id,
                 Name = person.Name,
                 SurName = person.SurName,
                 Email = person.Email,
@@ -217,61 +298,22 @@ namespace BusinessLogic.Services
                 Roles = roles.ToList(),
             };
 
-            var token = await jwtService.CreateToken(userTokenInfo);
+            loginResultDto.AccessToken = await jwtService.CreateToken(userTokenInfo);
 
-            loginResultDto.AccessToken = token;
-
-            if (model.Baskets == null)
+            if (model.Baskets != null && model.Baskets.AdvertsIds != null)
             {
-
-                // Перетворюємо кошик у масив
-                var basketArray = model.Baskets.ToArray();
-
-                // Якщо користувач передав кошик із товарами
-                if (basketArray.Length > 0)
-                {
-                    // Зберігаємо кошик користувача в базу даних
-                    await  basketService.pushBasketByIds(user.Id, basketArray);
-
-                    // Отримуємо поточний кошик користувача з бази
-                    var array = await basketRepo.GetAsync();
-
-                    // Вибираємо товари тільки для цього користувача
-                    List<Basket> arrayUser = array.Where(x => x.UserId == user.Id).ToList();
-
-                    // Створюємо список ID продуктів із кошика
-                    List<int> newListIdBasket = arrayUser.Select(item => item.AdvertId).ToList();
-
-                    // Передаємо список ID продуктів у відповідь
-                    loginResultDto.Baskets = newListIdBasket;
-                }
-                else
-                {
-                    loginResultDto.Baskets = null; // Якщо кошик порожній
-                }
+                await basketService.pushBasketArray(user.Id, model.Baskets);
             }
-            else
-            {
 
-                // Отримуємо поточний кошик користувача з бази
-                var array = await basketRepo.GetAsync();
-
-                // Вибираємо товари тільки для цього користувача
-                List<Basket> arrayUser = array.Where(x => x.UserId == user.Id).ToList();
-
-                // Створюємо список ID продуктів із кошика
-                List<int> newListIdBasket = arrayUser.Select(item => item.AdvertId).ToList();
-
-                // Передаємо список ID продуктів у відповідь
-                loginResultDto.Baskets = newListIdBasket;
-            }
+            var arrayUser = (await basketRepo.GetAsync()).Where(x => x.UserId == user.Id).ToList();
+            loginResultDto.Baskets = arrayUser.Select(item => item.AdvertId).ToList();
 
             if (model.OrderItem != null)
             {
                 await basketService.PushOrderWhenLogin(user.Id, model.OrderItem);
             }
-            loginResultDto.IsSuccess = true;
 
+            loginResultDto.IsSuccess = true;
             return loginResultDto;
         }   
 
@@ -343,58 +385,8 @@ namespace BusinessLogic.Services
             await refreshTokenR.SaveAsync();
         }
 
-        //private async Task<Google.Apis.Auth.GoogleJsonWebSignature.Payload> GetPayloadAsync(string credential)
-        //{
-        //    return await ValidateAsync(
-        //        credential,
-        //        new ValidationSettings
-        //        {
-        //            Audience = new List<string> {_configuration["Authentication:Google:ClientId"] }
-        //        }
-        //    );
-        //}
-
         public async Task<LoginResponseDto> GoogleSignInAsync(GoogleLoginDto loginDto)
         {
-            //Google.Apis.Auth.GoogleJsonWebSignature.Payload payload = await GetPayloadAsync(loginDto.Credential);
-            //LoginResponseDto loginResponse = new LoginResponseDto();
-
-            //var user = userRepo.AsQueryable().FirstOrDefault(x => x.Email == payload.Email);
-
-            //user ??= await CreateGoogleUserAsync(payload);
-
-            //if(user.LockoutEnabled == true)
-            //{
-            //    string lockoutDate = user.LockoutEnd.Value.ToString("MM/dd/yyyy");
-            //    loginResponse.Error = $"User {user.Name} {user.SurName} locked to {lockoutDate}";
-            //    loginResponse.AccessToken = "";
-            //    loginResponse.Baskets = null;
-            //    return loginResponse;
-            //}
-
-            //var roles = await userManager.GetRolesAsync(user);
-
-            //var avatar = avatarRepository.AsQueryable().FirstOrDefault(x => x.UserId == user.Id).Name;
-
-
-
-
-
-            // Створюємо DTO для токена
-            //var userTokenInfo = new UserTokenInfo
-            //{
-            //    Id = user.Id,
-            //    Name = user.Name,
-            //    SurName = user.SurName,
-            //    Email = user.Email,
-            //    Birthday = user.Birthdate.ToString("dd-MM-yyyy"),
-            //    AvatarPath = avatar,
-            //    PhoneNumber = user.PhoneNumber,
-            //    Roles = roles.ToList()
-            //};
-
-            //// Створюємо токен на основі DTO
-            //loginResponse.AccessToken = await jwtService.CreateToken(userTokenInfo);
 
             LoginResponseDto loginResponse = new LoginResponseDto();
 
@@ -431,56 +423,20 @@ namespace BusinessLogic.Services
                 Roles = roles.ToList()
             };
 
-            if (loginDto.Baskets.Count > 0)
+            if (loginDto.Baskets != null && loginDto.Baskets.AdvertsIds.Count > 0)
             {
-
-                // Перетворюємо кошик у масив
-                var basketArray = loginDto.Baskets.ToArray();
-
-                // Якщо користувач передав кошик із товарами
-                if (basketArray.Length > 0)
-                {
-                    // Зберігаємо кошик користувача в базу даних
-                    await basketService.pushBasketByIds(user.Id, basketArray);
-
-                    // Отримуємо поточний кошик користувача з бази
-                    var array = await basketRepo.GetAsync();
-
-                    // Вибираємо товари тільки для цього користувача
-                    List<Basket> arrayUser = array.Where(x => x.UserId == user.Id).ToList();
-
-                    // Створюємо список ID продуктів із кошика
-                    List<int> newListIdBasket = arrayUser.Select(item => item.AdvertId).ToList();
-
-                    // Передаємо список ID продуктів у відповідь
-                    loginResponse.Baskets = newListIdBasket;
-                }
-                else
-                {
-                    loginResponse.Baskets = null; // Якщо кошик порожній
-                }
-            }
-            else
-            {
-
-                // Отримуємо поточний кошик користувача з бази
-                var array = await basketRepo.GetAsync();
-
-                // Вибираємо товари тільки для цього користувача
-                List<Basket> arrayUser = array.Where(x => x.UserId == user.Id).ToList();
-
-                // Створюємо список ID продуктів із кошика
-                List<int> newListIdBasket = arrayUser.Select(item => item.AdvertId).ToList();
-
-                // Передаємо список ID продуктів у відповідь
-                loginResponse.Baskets = newListIdBasket;
+                await basketService.pushBasketArray(user.Id, loginDto.Baskets);
             }
 
-            if (loginDto.OrderItems.Count > 0)
-            {
+            var arrayUser = (await basketRepo.GetAsync()).Where(x => x.UserId == user.Id).ToList();
+            loginResponse.Baskets = arrayUser.Select(item => item.AdvertId).ToList();
 
-                await basketService.PushOrderWhenLogin(user.Id, loginDto.OrderItems);
+            if (loginDto.OrderItem != null)
+            {
+                await basketService.PushOrderWhenLogin(user.Id, loginDto.OrderItem);
             }
+
+            loginResponse.IsSuccess = true;
 
             return loginResponse;
 

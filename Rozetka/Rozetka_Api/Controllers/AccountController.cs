@@ -150,7 +150,7 @@ namespace Rozetka_Api.Controllers
             return Ok(await accountsService.BlockUser(model.UserId));
         }
 
-        [Authorize]
+        [Authorize(Roles = "admin")]
         [HttpGet("UserById")]
         public async Task<IActionResult> GetUser()
         {
