@@ -33,21 +33,21 @@ namespace Rozetka_Api.Controllers
             return Ok(await filterValueService.GetByIdAsync(id));
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = "admin")]
         [HttpPut("create")]
         public async Task<IActionResult> Create([FromForm] FilterValueCreationModel createModel)
         {
             return Ok(await filterValueService.CreateAsync(createModel));
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = "admin")]
         [HttpPost("edit")]
         public async Task<IActionResult> Edit([FromForm] FilterValueEditModel editModel)
         {
             return Ok(await filterValueService.EditAsync(editModel));
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = "admin")]
         [HttpDelete("delete/{id:int}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {

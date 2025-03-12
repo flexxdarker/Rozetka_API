@@ -17,7 +17,7 @@ namespace BusinessLogic.Validators
                 .NotEmpty().WithMessage(Errors.InvalidPriceError)
                 .GreaterThan(0).WithMessage(Errors.GreaterZeroError);
             RuleFor(x => x.Discount)
-                .NotEmpty().WithMessage(Errors.InvalidPriceError)
+                //.NotEmpty().WithMessage(Errors.InvalidPriceError)
                 .GreaterThanOrEqualTo(0).WithMessage(Errors.GreaterEqualZeroError)
                 .LessThanOrEqualTo(x => x.Price).WithMessage(Errors.DiscountGreaterOrEqualPrice);
         }
