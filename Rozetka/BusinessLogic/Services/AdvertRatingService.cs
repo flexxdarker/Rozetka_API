@@ -26,21 +26,28 @@ namespace BusinessLogic.Services
     {
         private readonly IMapper mapper;
         private readonly IRepository<AdvertRating> advertRatingRepo;
+        private readonly IRepository<Advert> advertRepo;
         private readonly IValidator<AdvertRatingCreateModel> advertRatingValidator;
         public AdvertRatingService(IMapper mapper, 
             IRepository<AdvertRating> advertRatingRepo,
-            IValidator<AdvertRatingCreateModel> advertRatingValidator)
+            IValidator<AdvertRatingCreateModel> advertRatingValidator,
+            IRepository<Advert> advertRepo)
         {
             this.mapper = mapper;
             this.advertRatingRepo = advertRatingRepo;
             this.advertRatingValidator = advertRatingValidator;
+            this.advertRepo = advertRepo;
         }
 
         public async Task<AdvertRatingDto> CreateAsync(AdvertRatingCreateModel advertRatingCreateModel, string currentUserId)
         {
+            advertRatingValidator.ValidateAndThrow(advertRatingCreateModel);
+            if (!await advertRepo.AnyAsync(x => x.Id == advertRatingCreateModel.AdvertId))
+            {
+                throw new HttpException(Errors.InvalidAdvertId, HttpStatusCode.BadRequest);
+            }
+
             var advertRating = mapper.Map<AdvertRating>(advertRatingCreateModel);
-            if(!(await advertRatingValidator.ValidateAsync(advertRatingCreateModel)).IsValid)
-                throw new HttpException(Errors.IdMustBePositive, HttpStatusCode.BadRequest);
 
             advertRating.UserId = currentUserId;
             await advertRatingRepo.InsertAsync(advertRating);

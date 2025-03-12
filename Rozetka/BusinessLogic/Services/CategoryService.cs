@@ -7,9 +7,12 @@ using BusinessLogic.Entities;
 using BusinessLogic.Exceptions;
 using BusinessLogic.Interfaces;
 using BusinessLogic.Models;
+using BusinessLogic.Models.AdvertModels;
 using BusinessLogic.Models.CategoryModels;
 using BusinessLogic.Specifications;
+using BusinessLogic.Validators;
 using DataAccess.Repositories;
+using FluentValidation;
 
 namespace BusinessLogic.Services
 {
@@ -20,17 +23,21 @@ namespace BusinessLogic.Services
         private readonly IFilterService filtersService;
         private readonly IImageService imageService;
         private readonly ICategoryFilterService categoryFiltersService;
+        private readonly IValidator<BaseCategoryModel> baseCategoryModelValidator;
+
         public CategoryService(IMapper mapper,
         IRepository<Category> categoriesRepo,
         IFilterService filtersService,
         ICategoryFilterService categoryFiltersService,
-        IImageService imageService)
+        IImageService imageService,
+        IValidator<BaseCategoryModel> baseCategoryModelValidator)
         {
             this.mapper = mapper;
             this.categoriesRepo = categoriesRepo;
             this.filtersService = filtersService;
             this.categoryFiltersService = categoryFiltersService;
             this.imageService = imageService;
+            this.baseCategoryModelValidator = baseCategoryModelValidator;
         }
 
         public async Task<IEnumerable<CategoryDto>> GetAllAsync()
@@ -75,13 +82,17 @@ namespace BusinessLogic.Services
 
         public async Task<CategoryDto> CreateAsync(CategoryCreateModel categoryCreateModel)
         {
+            baseCategoryModelValidator.ValidateAndThrow(categoryCreateModel);
             var category = mapper.Map<Category>(categoryCreateModel);
 
             if (categoryCreateModel.Image != null)
             {
                 category.Image = await imageService.SaveImageAsync(categoryCreateModel.Image);
             }
-
+            if (!await categoriesRepo.AnyAsync(x => x.Id == category.ParentCategoryId))
+            {
+                throw new HttpException(Errors.InvalidCategoryId, HttpStatusCode.BadRequest);
+            }
             if (category.ParentCategoryId == category.Id)
             {
                 throw new HttpException(Errors.CategoryCannotBeItsOwnParent, HttpStatusCode.BadRequest);
@@ -119,6 +130,8 @@ namespace BusinessLogic.Services
 
         public async Task<CategoryDto> EditAsync(CategoryEditModel editModel)
         {
+            baseCategoryModelValidator.ValidateAndThrow(editModel);
+
             var category = await categoriesRepo.GetItemBySpec(new CategorySpecs.GetById(editModel.Id));
 
             mapper.Map(editModel, category);

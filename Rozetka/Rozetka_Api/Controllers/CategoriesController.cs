@@ -23,7 +23,7 @@ namespace Rozetka_Api.Controllers
            this.categoriesService = categoriesService;
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = "admin")]
         [HttpGet("getall")]
         public async Task<IActionResult> GetAllCategories()
         {
