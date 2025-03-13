@@ -41,6 +41,7 @@ const ProductForm: React.FC = () => {
     const [previewOpen, setPreviewOpen] = useState<boolean>(false);
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
+    const [isImage, setIsImage] = useState(false);
 
     // const normFile = (e: any) => {
     //     if (Array.isArray(e)) {
@@ -127,6 +128,13 @@ const ProductForm: React.FC = () => {
         // Оновлюємо масив filterRows, який зберігає вибрані значення
     };
 
+    const uploadButton = (
+        <button style={{ border: 0, background: 'none' }} type="button">
+            <PlusOutlined />
+            <div style={{ marginTop: 8 }}>Upload</div>
+        </button>
+    );
+
 
     return (
         <>
@@ -189,6 +197,7 @@ const ProductForm: React.FC = () => {
                 <Form.Item name="imageFiles" label="Зображення" valuePropName="Image"
                            rules={[{required: true, message: "Please choose a photo for the product."}]}
                            getValueFromEvent={(e: UploadChangeParam) => {
+                               setIsImage(e.fileList.length > 0);
                                return e?.fileList.map(file => file.originFileObj);
                            }}>
 
@@ -203,10 +212,7 @@ const ProductForm: React.FC = () => {
                                 setPreviewTitle(file.name || file.url!.substring(file.url!.lastIndexOf('/') + 1));
                             }}>
 
-                        <div>
-                            <PlusOutlined/>
-                            <div style={{marginTop: 8}}>Upload</div>
-                        </div>
+                        {isImage  ? null : uploadButton}
                     </Upload>
                 </Form.Item>
 

@@ -28,9 +28,9 @@ const api = axios.create({
 
 export const CategoriesServices = {
     getAll: function() {
-        return api.get<ICategoryModel[]>("getcategories");
+        // return api.get<ICategoryModel[]>("getcategories");
 
-        //return api.get<ICategoryModel[]>("getall");
+        return api.get<ICategoryModel[]>("getall");
 
         // .then((res) => res.json())
         //   .then((data) => {

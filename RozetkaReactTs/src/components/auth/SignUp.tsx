@@ -1,32 +1,65 @@
-import React from 'react';
-import {Button, Form, Input, FormProps, DatePicker, message} from 'antd';
+import React, {useState} from 'react';
+import {
+    Button,
+    Form,
+    Input,
+    FormProps,
+    DatePicker,
+    message,
+    Upload,
+    UploadFile,
+} from 'antd';
 // import { Select, Button, Checkbox, Form, Input, FormProps } from 'antd';
-import {LockOutlined, UserOutlined, MailOutlined} from "@ant-design/icons";
+import {LockOutlined, UserOutlined, MailOutlined, PlusOutlined, PhoneOutlined} from "@ant-design/icons";
 import {Link, useNavigate} from "react-router-dom";
 import {IRegisterModel} from "../../models/accountsModel.ts";
 import {AccountsService} from "../../services/accountsService.ts";
 import utc from 'dayjs/plugin/utc';
 import dayjs from 'dayjs';
 import {TokenService} from "../../services/tokenService.ts";
+import {RcFile, UploadChangeParam} from "antd/es/upload";
 
 dayjs.extend(utc);
 
-
 // const { Option } = Select;
+//
+// const prefixSelector = (
+//     <Form.Item name="prefix" noStyle>
+//         <Select style={{ width: 70 }}>
+//             <Option value="86">+86</Option>
+//             <Option value="87">+87</Option>
+//         </Select>
+//     </Form.Item>
+// );
+
+
 
 const SignUp: React.FC = () => {
 
     const navigate = useNavigate();
+    const [isImage, setIsImage] = useState(false);
 
-    const onFinish: FormProps<IRegisterModel>['onFinish'] = async (values) => {
+    const onFinishFailed: FormProps<IRegisterModel>['onFinishFailed'] = (errorInfo) => {
+        console.log('Failed:', errorInfo);
+    };
+
+    const GoogleSignUp = () => {
+        console.log('Google SignUp');
+    };
+
+
+
+
+    const onFinish: FormProps<IRegisterModel>['onFinish'] = async (values: IRegisterModel) => {
         console.log('Form values:', {...values}); // Обробка відправки форми з додатковими даними редактора
+
 
         const selectedDate = values.birthdate;
         const utcDate = dayjs(selectedDate).utc().format()
 
 
         console.log(utcDate)
-        console.log('Form values:', {...values, birthdate: utcDate});
+        console.log('Form values:111', {...values, birthdate: utcDate});
 
         const res = await AccountsService.register({...values, birthdate: utcDate});
         TokenService.save(res.data);
@@ -38,13 +71,15 @@ const SignUp: React.FC = () => {
         }
     };
 
-    // const onFinishFailed: FormProps<FieldTypeSignUp>['onFinishFailed'] = (errorInfo) => {
-    //     console.log('Failed:', errorInfo);
-    // };
+    const uploadButton = (
+        <button style={{ border: 0, background: 'none' }} type="button">
+            <PlusOutlined />
+            <div style={{ marginTop: 8 }}>Upload</div>
+        </button>
+    );
 
-    const GoogleSignUp = () => {
-        console.log('Google SignUp');
-    };
+
+
 
 
     return (
@@ -70,7 +105,7 @@ const SignUp: React.FC = () => {
                     initialValues={{remember: true}}
                     style={{maxWidth: 360, margin: "20px", width: "300px"}}
                     onFinish={onFinish}
-                    // onFinishFailed={onFinishFailed}
+                    onFinishFailed={onFinishFailed}
                 >
                     <Form.Item
                         name="name"
@@ -101,6 +136,15 @@ const SignUp: React.FC = () => {
                     {/*>*/}
                     {/*    <Input addonBefore={prefixSelector} style={{ width: '100%' }} placeholder="Phone Number"/>*/}
                     {/*</Form.Item>*/}
+
+                    <Form.Item
+                        name="phoneNumber"
+                        rules={[{ required: true, message: 'Please input your phone number!' }
+                        ,{max: 13, message: "Некоректна довжина номеру"},
+                        ,{min: 13, message: "Некоректна довжина номеру"}]}
+                    >
+                        <Input prefix={<PhoneOutlined />} placeholder="Phone Number"/>
+                    </Form.Item>
 
                     <Form.Item
                         name="birthdate"
@@ -144,6 +188,29 @@ const SignUp: React.FC = () => {
                     {/*        <Checkbox>Remember me</Checkbox>*/}
                     {/*    </Form.Item>*/}
                     {/*</Form.Item>*/}
+
+                    <Form.Item
+                        name="avatar"
+                        rules={[{required: true, message: 'Please input your avatar!'}]}
+                        getValueFromEvent={(e: UploadChangeParam) => {
+                            setIsImage(e.fileList.length > 0);
+                            return e.fileList[0]?.originFileObj;
+                        }}
+                    >
+                        <Upload
+                            beforeUpload={() => false} // Забороняємо автоматичне завантаження
+                            accept="image/*"
+                            maxCount={1} // Лише один файл
+                            listType="picture-card"
+                            onPreview={(file: UploadFile) => {
+                                if (!file.url && !file.preview) {
+                                    file.preview = URL.createObjectURL(file.originFileObj as RcFile);
+                                }
+                            }}
+                        >
+                            {isImage  ? null : uploadButton}
+                        </Upload>
+                    </Form.Item>
 
                     <Form.Item>
                         <Button block type="primary" htmlType="submit">

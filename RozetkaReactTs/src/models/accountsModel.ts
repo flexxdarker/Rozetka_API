@@ -4,6 +4,8 @@ export interface IRegisterModel {
     name: string;
     surname: string;
     birthdate: string;
+    avatar: File;
+    phoneNumber: string
     // birthdate: dayjs.Dayjs;
 }
 
