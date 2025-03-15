@@ -1,6 +1,6 @@
 import {Route, Routes} from "react-router-dom";
 import {lazy, Suspense} from 'react';
-import { GoogleOAuthProvider } from '@react-oauth/google'; // Додаємо імпорт
+
 import AppLayout from "./components/layout/appLayout/AppLayout.tsx";
 import MainLoader from "./components/loaders/MainLoader.tsx";
 import MainLayout from "./components/layout/mainLayout/MainLayout.tsx";
@@ -30,11 +30,11 @@ const WishList = lazy(() => import("./components/account/WishList.tsx"));
 const FilterProductPage = lazy(() => import("./components/filter/filterProductPage.tsx"));
 
 
-const CLIENT_ID = '234334407358-8tdcpdrksc7d9o6mv3gkm7tcnpfdg4q4.apps.googleusercontent.com';
+
 
 export default function App() {
     return (
-        <GoogleOAuthProvider clientId={CLIENT_ID}>
+
             <Routes>
                 <Route path="/" element={<AppLayout/>}>
                     <Route path="" element={<MainLayout/>}>
@@ -74,6 +74,5 @@ export default function App() {
                 <Route path="signup" element={<Suspense fallback={<MainLoader/>}> <SignUp/> </Suspense>}/>
                 <Route path="*" element={<Suspense fallback={<MainLoader/>}> <NotFoundPage/> </Suspense>}/>
             </Routes>
-        </GoogleOAuthProvider>
     );
 }

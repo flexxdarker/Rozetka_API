@@ -1,6 +1,7 @@
 import { useGoogleLogin } from '@react-oauth/google';
 import { Button } from 'antd';
 import {LoginButtonProps} from "./types.ts";
+import React from 'react';
 
 const GoogleLoginButton: React.FC<LoginButtonProps> = ({ onLogin, title, icon }) => {
 

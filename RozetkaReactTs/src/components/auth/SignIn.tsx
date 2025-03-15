@@ -6,6 +6,10 @@ import { ILoginModel } from "../../models/accountsModel.ts";
 import { AccountsService } from "../../services/accountsService.ts";
 import { TokenService } from "../../services/tokenService.ts";
 import { useGoogleLogin } from '@react-oauth/google';
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import GoogleLoginButton from "./GoogleLoginButton.tsx"; // Додаємо імпорт
+
+import { GoogleOutlined } from '@ant-design/icons';
 
 const SignIn: React.FC = () => {
     const navigate = useNavigate();
@@ -35,41 +39,48 @@ const SignIn: React.FC = () => {
     };
 
     // Функція для авторизації через Google
-    const glLogin = useGoogleLogin({
-        onSuccess: async (tokenResponse) => {
-            console.log('Google Token Response:', tokenResponse);
+    // const glLogin = useGoogleLogin({
+    //     onSuccess: async (tokenResponse) => {
+    //         console.log('Google Token Response:', tokenResponse);
+    //
+    //         try {
+    //             const result = await AccountsService.googleLogin({
+    //                 token: tokenResponse.access_token,
+    //                 remember: remember.current,
+    //             });
+    //
+    //             if (result.status === 200) {
+    //                 message.success("Ви успішно увійшли в свій акаунт");
+    //                 navigate("/");
+    //             } else {
+    //                 console.error('Помилка авторизації через Google:', result.data);
+    //                 if (result.status === 403) {
+    //                     message.error("Підтвердіть свій Email для завершення авторизації");
+    //                 } else {
+    //                     message.error(`Помилка авторизації: ${result.statusText}`);
+    //                 }
+    //             }
+    //
+    //         } catch (error: any) {
+    //             console.error('Помилка авторизації через Google:', error);
+    //             message.error("Не вдалося авторизуватися через Google");
+    //
+    //             if (error.response && error.response.data) {
+    //                 console.error('Помилка від сервера:', error.response.data);
+    //                 message.error(`Помилка сервера: ${error.response.data.message}`);
+    //             }
+    //         }
+    //     }
+    // });
 
-            try {
-                const result = await AccountsService.googleLogin({
-                    token: tokenResponse.access_token,
-                    remember: remember.current,
-                });
 
-                if (result.status === 200) {
-                    message.success("Ви успішно увійшли в свій акаунт");
-                    navigate("/");
-                } else {
-                    console.error('Помилка авторизації через Google:', result.data);
-                    if (result.status === 403) {
-                        message.error("Підтвердіть свій Email для завершення авторизації");
-                    } else {
-                        message.error(`Помилка авторизації: ${result.statusText}`);
-                    }
-                }
+    const onLoginGoogleResult = (tokenGoogle:string) => {
+        console.log("google token", tokenGoogle);
+    }
 
-            } catch (error: any) {
-                console.error('Помилка авторизації через Google:', error);
-                message.error("Не вдалося авторизуватися через Google");
-
-                if (error.response && error.response.data) {
-                    console.error('Помилка від сервера:', error.response.data);
-                    message.error(`Помилка сервера: ${error.response.data.message}`);
-                }
-            }
-        }
-    });
-
+    const CLIENT_ID = '234334407358-8tdcpdrksc7d9o6mv3gkm7tcnpfdg4q4.apps.googleusercontent.com';
     return (
+        <GoogleOAuthProvider clientId={CLIENT_ID}>
         <div style={{
             minWidth: "300px",
             maxWidth: "fit-content",
@@ -121,11 +132,11 @@ const SignIn: React.FC = () => {
                     <Link to="/signup">SignUp!</Link>
                 </Form.Item>
 
-                <Button block type="primary" onClick={() => glLogin()}>
-                    SignIn with Google
-                </Button>
+                <GoogleLoginButton icon={<GoogleOutlined />} title='Увійти з Google' onLogin={onLoginGoogleResult} />
+
             </Form>
         </div>
+        </GoogleOAuthProvider>
     );
 };
 
