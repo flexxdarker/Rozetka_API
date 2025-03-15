@@ -149,12 +149,17 @@ namespace BusinessLogic.Services
                 .Select(x => new BasketViewItem
                 {
                     Id = x.AdvertId,
-                    Name = x.Advert.Title,
-                    Description = x.Advert.Description,
-                    Price = x.Advert.Price,
-                    Category = x.Advert.Category.Name,
-                    Amount = x.Count,
-                    ImagePaths = x.Advert.Images.Select(pi => pi.Name).ToList()
+                    Items = new List<BasketItemInformationDto> // Fixing the type conversion issue
+                    {
+                        new BasketItemInformationDto
+                        {
+                            Id = x.AdvertId,
+                            Name = x.Advert.Title,
+                            Price = x.Advert.Price,
+                            Quantity = x.Count,
+                            ImagePath = x.ImagePath
+                        }
+                    }
                 }).ToList();
 
             return basketItems;
@@ -185,8 +190,15 @@ namespace BusinessLogic.Services
 
             var newStatus = await _status.AsQueryable().Where(x => x.Id == 1).FirstOrDefaultAsync();
 
+            decimal amount = 0;
+            foreach (object item in orderItems)
+            {
+                var i = 0;
+                amount += orderItems[i].Items.Select(x => x.Price * x.Quantity).Sum();
+                i++;
+            }
 
-            decimal amount = orderItems.Select(x=>x.Price*x.Amount).Sum();
+            //decimal amount = orderItems.Items /*.Select(x=>x.Price*x.Amount).Sum();*/
 
             var order = new Order
             {
@@ -203,13 +215,15 @@ namespace BusinessLogic.Services
 
             foreach (var advert in orderItems)
             {
+                int i = 0;
                 listAdvert.Add(new OrderAdvert
                 {
                     OrderId = order.Id,
                     AdvertId = advert.Id,
-                    Count = advert.Amount,
-                    Price = advert.Price,
+                    Count = advert.Items[i].Quantity,
+                    Price = advert.Items[i].Price,
                 });
+                i++;
             }
 
             await _orderadvert.AddRangeAsync(listAdvert);

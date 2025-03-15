@@ -23,8 +23,8 @@ namespace Rozetka_Api.Controllers
             _orderservice = order;
         }
 
-        [Authorize]
-        [HttpPost("OrderInfo")]
+        [Authorize(Roles = "admin")]
+        [HttpGet("OrderInfo")]
         public async Task<IActionResult> GetAllOrders([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 2)
         {
             string userId = User.Claims.ToList()[0].Value.ToString();
@@ -35,7 +35,7 @@ namespace Rozetka_Api.Controllers
         }
 
         [Authorize]
-        [HttpPost("OrderById")]
+        [HttpGet("OrderById")]
         public async Task<IActionResult> OrderById([FromQuery] int id, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 4)
         {
             string userId = User.Claims.ToList()[0].Value.ToString();
@@ -44,7 +44,7 @@ namespace Rozetka_Api.Controllers
         }
 
         [Authorize]
-        [HttpPost("GetAllOrders")]
+        [HttpGet("GetAllOrders")]
         public async Task<IActionResult> GetAllOrders()
         {
             var orders = await _orderservice.GetAllOrders();
@@ -53,7 +53,7 @@ namespace Rozetka_Api.Controllers
         }
 
         [Authorize(Roles = "admin")]
-        [HttpPost("ReciveOrderById/{id}")]
+        [HttpGet("ReciveOrderById/{id}")]
         public async Task<IActionResult> ReciveOrderById(int id)
         {
             var order = await _orderservice.ResiveOrderById(id);
