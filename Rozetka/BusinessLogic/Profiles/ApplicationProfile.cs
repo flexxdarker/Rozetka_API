@@ -115,6 +115,14 @@ namespace BusinessLogic.Profiles
 
             CreateMap<User, LoginModel>().ReverseMap();
 
+            CreateMap<GoogleUserInfo, User>()
+                .ForMember(x => x.Name, opt => opt.MapFrom(x => x.Given_Name))
+                .ForMember(x => x.SurName, opt => opt.MapFrom(x => x.Family_Name))
+                .ForMember(x => x.UserName, opt => opt.MapFrom(x => x.Email))
+                .ForMember(x => x.Email, opt => opt.MapFrom(x => x.Email));
+                //.ForMember(x => x.EmailConfirmed, opt => opt.MapFrom(x => x.Email_Verified));
+
+
             CreateMap<RegisterModel, User>()
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
