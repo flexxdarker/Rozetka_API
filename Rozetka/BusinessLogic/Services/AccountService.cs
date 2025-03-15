@@ -145,12 +145,19 @@ namespace BusinessLogic.Services
             var user = await userManager.FindByEmailAsync(model.Email);
             var loginResultDto = new LoginResponseDto();
 
-            if (user == null || !await userManager.CheckPasswordAsync(user, model.Password))
+            if (user == null)
             {
                 loginResultDto.IsSuccess = false;
                 loginResultDto.Error = "Incorrect data!";
                 return loginResultDto;
             }
+            if(model.Password != null && !await userManager.CheckPasswordAsync(user, model.Password))
+            {
+                loginResultDto.IsSuccess = false;
+                loginResultDto.Error = "Incorrect data!";
+                return loginResultDto;
+            }
+            
 
             if (user.LockoutEnabled)
             {
@@ -280,6 +287,9 @@ namespace BusinessLogic.Services
 
                             loginResponse.AccessToken = await jwtService.CreateToken(userTokenInfo);
 
+                            await userManager.SetLockoutEnabledAsync(user, false);
+                            await userManager.SetLockoutEndDateAsync(user, DateTimeOffset.UtcNow - TimeSpan.FromMinutes(1));
+
                             if (loginDto.Baskets != null && loginDto.Baskets.AdvertsIds != null)
                             {
                                 await basketService.pushBasketArray(user.Id, loginDto.Baskets);
@@ -291,7 +301,6 @@ namespace BusinessLogic.Services
                             if (loginDto.OrderItem != null)
                             {
                                 await basketService.PushOrderWhenLogin(user.Id, loginDto.OrderItem);
-
                             }
                             loginResponse.IsSuccess = true;
                         }
@@ -303,7 +312,6 @@ namespace BusinessLogic.Services
                         LoginModel login = new LoginModel 
                         { 
                             Email = user.Email,
-                            Password = user.PasswordHash,
                             Baskets = loginDto.Baskets,
                             OrderItem = loginDto.OrderItem
                         };
