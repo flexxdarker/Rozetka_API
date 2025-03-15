@@ -11,7 +11,7 @@ const SignIn: React.FC = () => {
     const navigate = useNavigate();
     const remember = React.useRef(false);
 
-    // Функція для звичайного логіну
+
     const onFinish: FormProps<ILoginModel>['onFinish'] = async (values) => {
         console.log('Form values:', { ...values });
         try {
