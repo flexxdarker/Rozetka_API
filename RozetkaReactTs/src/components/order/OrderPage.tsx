@@ -13,6 +13,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../../store";
 import {calculateTotalPrice} from "../../store/actions/basketActions.ts";
 import {Link} from "react-router-dom";
+import {BasketServicesApi} from "../../services/basketServiceApi.ts";
 
 
 const OrderPage: React.FC = () => {
@@ -53,6 +54,10 @@ const OrderPage: React.FC = () => {
             dispatch(calculateTotalPrice(products, basket));
         }
     }, [products, basket, dispatch]);
+
+    const pushOrder = () =>{
+        BasketServicesApi.pushOrder();
+    }
 
 
     return (
@@ -180,7 +185,7 @@ const OrderPage: React.FC = () => {
               </span>
                                 </div>
                             </div>
-                            <button
+                            <button onClick={pushOrder}
                                 className={`${Object.keys(basket).length === 0 ? "pointer opacity-50 pointer-events-none" : ""} flex mt-[40px] h-[40px] flex-col gap-[20px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#9cc319] rounded-[8px] border-none pointer`}>
         <span
             className="h-[12px] shrink-0 font-['Inter'] text-[16px] font-medium leading-[12px] text-[#fff] text-left whitespace-nowrap">

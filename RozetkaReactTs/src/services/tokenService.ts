@@ -77,21 +77,21 @@ export const TokenService = {
                     payload[
                         "phoneNumber"
                         ] as string,
-                image:
+                avatar:
                     payload[
-                        "birthdate"
+                        "avatar"
                         ] as string,
                 birthdate:
                     payload[
                         "birthdate"
                         ] as string,
+                roles: payload[
+                    "role"
+                    ] as string,
                 exp:
                     payload[
                         "exp"
                         ] as number,
-                role: payload[
-                    "role"
-                    ] as string,
             };
         } catch (error) {
             console.error("Error decoding token", error);

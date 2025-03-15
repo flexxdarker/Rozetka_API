@@ -139,9 +139,9 @@ const SignUp: React.FC = () => {
 
                     <Form.Item
                         name="phoneNumber"
-                        rules={[{ required: true, message: 'Please input your phone number!' }
-                        ,{max: 13, message: "Некоректна довжина номеру"},
-                        ,{min: 13, message: "Некоректна довжина номеру"}]}
+                        rules={[{ required: true, message: 'Please input your phone number!' },
+                        {max: 13, message: "Некоректна довжина номеру"},
+                        {min: 13, message: "Некоректна довжина номеру"}]}
                     >
                         <Input prefix={<PhoneOutlined />} placeholder="Phone Number"/>
                     </Form.Item>

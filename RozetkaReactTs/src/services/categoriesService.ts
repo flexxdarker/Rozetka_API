@@ -1,35 +1,31 @@
 import axios from "axios";
 import {ICategoryModel, ICreateCategoryModel} from "../models/categoriesModel.ts";
+import {TokenService} from "./tokenService.ts";
 
-//import { tokensService } from "./tokensService";
 
+const apiToken = `${import.meta.env.VITE_ROZETKA_API}` + "Categories";
 
 const api = axios.create({
-    baseURL: `${import.meta.env.VITE_ROZETKA_API}` + "Categories",
+    baseURL: apiToken,
     //baseURL: "http://localhost:5119/api/Categories/",
 });
 
-// const api = axios.create({
-//     baseURL: `${process.env.REACT_APP_ROZETKA_API}Categories`
-// });
 
-// axios.interceptors.request.use(
-//     (config) => {
-//         const token = tokensService.getAccessToken();
-//         console.log(token);
-//         if (token) {
-//             config.headers.Authorization = `Bearer ${token}`;
-//         }
-//
-//         return config;
-//     },
-//     (error) => Promise.reject(error)
-// );
+
+axios.interceptors.request.use(
+    (config) => {
+        const token = TokenService.getAccessToken();
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => Promise.reject(error)
+);
 
 export const CategoriesServices = {
     getAll: function() {
         // return api.get<ICategoryModel[]>("getcategories");
-
         return api.get<ICategoryModel[]>("getall");
 
         // .then((res) => res.json())
@@ -53,12 +49,13 @@ export const CategoriesServices = {
         if (model.image) {
             data.append('imageFiles', model.image as File); // додаємо кожен файл
         }
-
-        return api.put("create", data);
+        return axios.put(apiToken + "/create",data);
+        //return api.put("create", data);
     },
 
     delete(id: number) {
-        return api.delete("delete/" + `${id}`);
+        return axios.delete(apiToken + "/delete" + `/${id}`);
+        //return api.delete("delete/" + `${id}`);
     },
 
     edit(model:ICreateCategoryModel) {
@@ -71,6 +68,7 @@ export const CategoriesServices = {
             data.append('imageFiles', model.image as File); // додаємо кожен файл
         }
 
-        return api.post("edit", data);
+        return axios.post(apiToken + "/edit", data);
+        //return api.post("edit", data);
     },
 };

@@ -14,17 +14,37 @@ export const AccountsService = {
 
 
     async register(model: IRegisterModel)  {
-        const res = await api.post("register", model, {
-                    headers: {
-                        "Content-Type": "application/json", // Вказуємо, що дані передаються у JSON
-                    },
-                });
-        if(res.status === 200){
-            const mode:ILoginModel = {email: model.email, password: model.password};
-            return AccountsService.login(mode);
+        console.log("model: ", model);
+        // const res = await api.post("register", model, {
+        //             headers: {
+        //                 "Content-Type": "application/json", // Вказуємо, що дані передаються у JSON
+        //             },
+        //         });
+
+        const data = new FormData();
+        for (const prop in model) {
+            data.append(prop, (model as any)[prop]);
         }
 
-        return res;
+        if (model.avatar) {
+                data.append('avatar', model.avatar); // додаємо кожен файл
+            };
+
+
+        try {
+            const res = await api.post("register", data);
+
+            if (res.status === 200) {
+                // On success, attempt to login with the provided credentials
+                const mode: ILoginModel = { email: model.email, password: model.password };
+                return await AccountsService.login(mode);
+            }
+
+            return res; // Return the response in case of failure
+        } catch (error) {
+            console.error("Registration failed:", error);
+            throw error; // Rethrow or handle the error as needed
+        }
     },
 
     login(model: ILoginModel) {

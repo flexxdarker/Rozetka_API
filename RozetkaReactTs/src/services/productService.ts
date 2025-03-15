@@ -1,21 +1,28 @@
 import axios from "axios";
 import {ICreateProductModel, IProductModel} from "../models/productsModel.ts";
+import {TokenService} from "./tokenService.ts";
 
+const apiToken = `${import.meta.env.VITE_ROZETKA_API}` + "Advert";
 
 const api = axios.create({
-    baseURL: `${import.meta.env.VITE_ROZETKA_API}` + "Advert",
+    baseURL: apiToken,
 });
+
+axios.interceptors.request.use(
+    (config) => {
+        const token = TokenService.getAccessToken();
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => Promise.reject(error)
+);
 
 
 export const ProductServices = {
     getAll: function() {
         return api.get<IProductModel[]>("getall");
-        // .then((res) => res.json())
-        //   .then((data) => {
-        //     console.log("start data");
-        //     console.log(data);
-        //
-        //   });
     },
 
     getById(id: string) {
@@ -35,8 +42,8 @@ export const ProductServices = {
             });
         }
 
-        //console.log("data: ",data);
-        return api.put("create", data);
+        return axios.put(apiToken + "/create",data);
+        //return api.put("create", data);
     },
 
     edit(model: ICreateProductModel) {
@@ -51,11 +58,12 @@ export const ProductServices = {
             });
         }
 
-        return api.post("edit", data);
+        return axios.post(apiToken + "/edit", data);
+        //return api.post("edit", data);
     },
 
     delete(id: number) {
-        return api.delete("delete/" + `${id}`);
+        return axios.delete(apiToken + "/delete" + `/${id}`);
+        //return api.delete("delete/" + `${id}`);
     },
-
 };

@@ -128,7 +128,7 @@ const Basket: React.FC<BasketProps> = ({onClose}) => {
                             Object.keys(basket).length === 0 ?
                                 <Link to="/" className="w-full flex h-[40px] bg-[white] rounded-[8px] items-center justify-center" onClick={onClose}>За покупками!</Link> :
                             // productsInBasket.map(product => (<BasketItem item={product}/>))
-                            products.map(product => basket[product.id] > 0 ? <BasketItem item={product}/> : null)
+                            products.map(product => basket[product.id] > 0 ? <BasketItem item={product} key={product.id}/> : null)
                         }
 
                     </div>

@@ -20,6 +20,7 @@ const CategoryForm: React.FC = () => {
     const [previewOpen, setPreviewOpen] = useState<boolean>(false);
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
+    const [isImage, setIsImage] = useState(false);
 
     const onFinish: FormProps['onFinish'] = async (values: ICreateCategoryModel) => {
         // Якщо parentCategoryId не вибраний, не додаємо його до values
@@ -76,6 +77,13 @@ const CategoryForm: React.FC = () => {
         setCategories(res.data);
     }
 
+    const uploadButton = (
+        <button style={{ border: 0, background: 'none' }} type="button">
+            <PlusOutlined />
+            <div style={{ marginTop: 8 }}>Upload</div>
+        </button>
+    );
+
 
     return (
         <>
@@ -124,6 +132,7 @@ const CategoryForm: React.FC = () => {
                 <Form.Item name="image" label="Зображення" valuePropName="Image"
                            rules={[{required: true, message: "Please choose a photo for the category."}]}
                            getValueFromEvent={(e: UploadChangeParam) => {
+                               setIsImage(e.fileList.length > 0);
                                return e.fileList[0]?.originFileObj;
                            }}>
 
@@ -141,10 +150,7 @@ const CategoryForm: React.FC = () => {
                             setPreviewTitle(file.name || file.url!.substring(file.url!.lastIndexOf('/') + 1));
                         }}
                     >
-                        <div>
-                            <PlusOutlined/>
-                            <div style={{marginTop: 8}}>Upload</div>
-                        </div>
+                        {isImage  ? null : uploadButton}
                     </Upload>
 
                 </Form.Item>
