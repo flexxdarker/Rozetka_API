@@ -205,7 +205,7 @@ namespace Rozetka_Api.Helpers
                         Console.ForegroundColor = ConsoleColor.White;
                         async Task<Category> CreateCategoryAsync(CategorySeedModel config, Category? parentCategory = null)
                         {
-                            var imageUrl = "https://ssl-product-images.www8-hp.com/digmedialib/prodimg/lowres/c08514660.png"; //faker.Image.LoremFlickrUrl(width: 640, height: 480);
+                            var imageUrl = "https://picsum.photos/800/600"; 
                             byte[] imageBytes = await httpClient.GetByteArrayAsync(imageUrl);
                             var image = await imageService.SaveImageAsync(imageBytes);
 
@@ -351,9 +351,7 @@ namespace Rozetka_Api.Helpers
                         Console.ForegroundColor = ConsoleColor.White;
                         async Task<Advert> CreateCategoryAsync(AdvertSeedModel config)
                         {
-                            var imageUrl = "https://ssl-product-images.www8-hp.com/digmedialib/prodimg/lowres/c08514660.png"; //faker.Image.LoremFlickrUrl(width: 640, height: 480);
-                            byte[] imageBytes = await httpClient.GetByteArrayAsync(imageUrl);
-                            var image = await imageService.SaveImageAsync(imageBytes);
+                           
 
                             var advert = new Advert
                             {
@@ -361,9 +359,22 @@ namespace Rozetka_Api.Helpers
                                 Description = config.Description,
                                 Price = config.Price,
                                 Discount = config.Discount,
-                                CategoryId = config.CategoryId,
+                                CategoryId = config.CategoryId
                             };
-
+                            Random rnd = new Random();
+                            int countImages = rnd.Next(1, 6);
+                            for (int i = 0; i < countImages; i++)
+                            {
+                                var imageUrl = "https://picsum.photos/800/600";
+                                byte[] imageBytes = await httpClient.GetByteArrayAsync(imageUrl);
+                                var image = await imageService.SaveImageAsync(imageBytes);
+                                advert.Images.Add(new Image
+                                {
+                                    Name = image,
+                                    AdvertId = advert.Id,
+                                    Priority = i
+                                });
+                            }
                             return advert;
                         }
 
