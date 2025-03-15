@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(RozetkaDbContext))]
-    [Migration("20250312180004_inti")]
+    [Migration("20250315164011_inti")]
     partial class inti
     {
         /// <inheritdoc />
@@ -448,7 +448,6 @@ namespace DataAccess.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("PhoneNumber")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("PhoneNumberConfirmed")

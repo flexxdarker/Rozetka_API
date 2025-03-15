@@ -226,126 +226,96 @@ namespace BusinessLogic.Services
 
             try
             {
-                //using HttpClient httpClient = new();
-                //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", loginDto.GoogleAccessToken);
-                //HttpResponseMessage response = await httpClient.GetAsync(_configuration["GoogleUserInfoUrl"]);
-                //response.EnsureSuccessStatusCode();
-
-                //string responseBody = await response.Content.ReadAsStringAsync();
-                //var userInfo = JsonConvert.DeserializeObject<GoogleUserInfo>(responseBody);
-
-                //if (userInfo == null)
-                //{
-                //    throw new Exception("Failed to fetch user info from Google.");
-                //}
-
-                //User user = await userManager.FindByEmailAsync(userInfo.Email) ?? mapper.Map<User>(userInfo);
-
-                //if (user == null)
-                //{
-                //    throw new Exception("User mapping failed.");
-                //}
-
-                //if (string.IsNullOrEmpty(user.Id))
-                //{
-                //    user.Avatar ??= new Avatar();
-
-                //    if (!string.IsNullOrEmpty(userInfo.Picture))
-                //    {
-                //        user.Avatar.Name = await imageService.SaveImageFromUrlAsync(userInfo.Picture);
-                //        user.Avatar.UserId = user.Id;
-                //    }
-
-                //    await CreateUserAsync(user);
-                //}
-
-                //var existingUser = await userManager.FindByEmailAsync(user.Email);
-
-                using HttpClient httpClient = new();
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", loginDto.GoogleAccessToken);
-                HttpResponseMessage response = await httpClient.GetAsync(_configuration["GoogleUserInfoUrl"]);
-                response.EnsureSuccessStatusCode();
-                string responseBody = await response.Content.ReadAsStringAsync();
-                var userInfo = JsonConvert.DeserializeObject<GoogleUserInfo>(responseBody)!;
-                User user = await userManager.FindByEmailAsync(userInfo.Email) ?? mapper.Map<User>(userInfo);
-                if (user.Id != null)
+                using (HttpClient httpClient = new HttpClient())
                 {
-                    if (!String.IsNullOrEmpty(userInfo.Picture))
-                    {
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", loginDto.GoogleAccessToken);
+                    HttpResponseMessage response = await httpClient.GetAsync(_configuration["GoogleUserInfoUrl"]);
+                    response.EnsureSuccessStatusCode();
+                    string responseBody = await response.Content.ReadAsStringAsync();
+                    var userInfo = JsonConvert.DeserializeObject<GoogleUserInfo>(responseBody);
 
-                        string avatar = await imageService.SaveImageFromUrlAsync(userInfo.Picture);
-                        Avatar avt = new Avatar()
+                    if (userInfo == null)
+                    {
+                        throw new Exception("Invalid Google token");
+                    }
+
+                    // Крок 2: Перевірити, чи існує користувач в базі даних
+                    var user = await userManager.FindByEmailAsync(userInfo.Email);
+
+                    if (user == null)
+                    {
+                        // Крок 3: Якщо користувач не знайдений, створити нового користувача
+                        user = mapper.Map<User>(userInfo);
+                        user.UserName = userInfo.Email;  // Встановити email як ім'я користувача
+
+                        if (!string.IsNullOrEmpty(userInfo.Picture))
+                        {
+                            // Крок 4: Зберегти аватар, якщо є
+                            string avatarPath = await imageService.SaveImageFromUrlAsync(userInfo.Picture);
+                            Avatar avatar = new Avatar { UserId = user.Id, Name = avatarPath };
+                            user.Avatar = avatar;
+                        }
+
+                        // Зберегти нового користувача
+                        var createResult = await userManager.CreateAsync(user);
+                        if (!createResult.Succeeded)
+                        {
+                            throw new Exception("Failed to create user");
+                        }
+                        else
+                        {
+                            var roles = await userManager.GetRolesAsync(user);
+                            var avatar = avatarRepository.AsQueryable().FirstOrDefault(x => x.UserId == user.Id)?.Name;
+                            var userTokenInfo = new UserTokenInfo
+                            {
+                                Id = user.Id,
+                                Name = user.Name,
+                                SurName = user.SurName,
+                                Email = user.Email,
+                                Birthday = user.Birthdate.ToString("dd-MM-yyyy"),
+                                AvatarPath = avatar,
+                                PhoneNumber = user.PhoneNumber,
+                                Roles = roles.ToList(),
+                            };
+
+                            loginResponse.AccessToken = await jwtService.CreateToken(userTokenInfo);
+
+                            if (loginDto.Baskets != null && loginDto.Baskets.AdvertsIds != null)
+                            {
+                                await basketService.pushBasketArray(user.Id, loginDto.Baskets);
+                            }
+
+                            var arrayUser = (await basketRepo.GetAsync()).Where(x => x.UserId == user.Id).ToList();
+                            loginResponse.Baskets = arrayUser.Select(item => item.AdvertId).ToList();
+
+                            if (loginDto.OrderItem != null)
+                            {
+                                await basketService.PushOrderWhenLogin(user.Id, loginDto.OrderItem);
+
+                            }
+                            loginResponse.IsSuccess = true;
+                        }
+                            
+
+                    }
+                    else
+                    {
+                        LoginModel login = new LoginModel 
                         { 
-                            UserId = user.Id,
-                            Name = avatar
+                            Email = user.Email,
+                            Password = user.PasswordHash,
+                            Baskets = loginDto.Baskets,
+                            OrderItem = loginDto.OrderItem
                         };
 
-                        user.Avatar = avt;
+                        var loginn = await Login(login);
+                        loginResponse.AccessToken = loginn.AccessToken;
+                        loginResponse.Baskets = loginn.Baskets;
+                        loginn.IsSuccess = loginResponse.IsSuccess;
+                        loginn.Error = loginResponse.Error;
                     }
-                    await CreateUserAsync(user, user.PasswordHash);
-                    loginResponse.IsSuccess = true;
                 }
             }
-
-            //if (existingUser == null)
-            //{
-            //    var avatar = await imageService.SaveImageAsync(userInfo.Picture);
-            //    user.Avatar.Name = avatar;
-            //    user.Avatar.UserId = user.Id;
-            //    user.Birthdate = DateTime.SpecifyKind(user.Birthdate, DateTimeKind.Utc);
-            //    //user.Birthdate = DateTime.UtcNow;
-            //    // Асинхронне створення нового користувача з паролем
-            //    var resultCreated = await userManager.CreateAsync(user, user);
-
-            //    // Перевірка результату створення користувача
-            //    if (!resultCreated.Succeeded)
-            //    {
-            //        registerResultDto.IsSuccess = false;
-            //        // Логування помилок створення користувача
-            //        registerResultDto.Error = string.Join($"Не вдалося створити користувача", ",", resultCreated.Errors.Select(e => e.Description));
-            //        return registerResultDto;
-            //    }
-
-            //    await userManager.SetLockoutEnabledAsync(user, false);
-            //    await userManager.SetLockoutEndDateAsync(user, DateTimeOffset.UtcNow - TimeSpan.FromMinutes(1));
-
-
-
-            //    //var avatarEntity = avatarRepository.AsQueryable().FirstOrDefault(x => x.UserId == user.Id);
-
-
-            //    var roles = await userManager.GetRolesAsync(user);
-
-            //    var userTokenInfo = new UserTokenInfo
-            //    {
-            //        Id = user.Id,
-            //        Name = user.Name,
-            //        SurName = user.SurName,
-            //        Email = user.Email,
-            //        Birthday = user.Birthdate.ToString("dd-MM-yyyy") ?? "N/A",
-            //        AvatarPath = avatar,
-            //        PhoneNumber = user.PhoneNumber,
-            //        Roles = roles.ToList()
-            //    };
-
-
-            //    loginResponse.AccessToken = await jwtService.CreateToken(userTokenInfo);
-
-            //    if (loginDto.Baskets?.AdvertsIds?.Count > 0)
-            //    {
-            //        await basketService.pushBasketArray(user.Id, loginDto.Baskets);
-            //    }
-
-            //    var userBaskets = (await basketRepo.GetAsync()).Where(x => x.UserId == user.Id).Select(item => item.AdvertId).ToList();
-            //    loginResponse.Baskets = userBaskets;
-
-            //    if (loginDto.OrderItem != null)
-            //    {
-            //        await basketService.PushOrderWhenLogin(user.Id, loginDto.OrderItem);
-            //    }
-
-            //    loginResponse.IsSuccess = true;
-            //}
             catch (Exception ex)
             {
                 loginResponse.IsSuccess = false;
