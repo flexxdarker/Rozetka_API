@@ -117,7 +117,7 @@ namespace BusinessLogic.Profiles
 
             CreateMap<GoogleUserInfo, User>()
                 .ForMember(x => x.Name, opt => opt.MapFrom(x => x.Given_Name))
-                .ForMember(x => x.SecurityStamp, opt => opt.MapFrom(x => x.Family_Name))
+                .ForMember(x => x.SurName, opt => opt.MapFrom(x => x.Family_Name))
                 .ForMember(x => x.UserName, opt => opt.MapFrom(x => x.Email))
                 .ForMember(x => x.Email, opt => opt.MapFrom(x => x.Email));
                 //.ForMember(x => x.EmailConfirmed, opt => opt.MapFrom(x => x.Email_Verified));

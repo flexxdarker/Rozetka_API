@@ -268,14 +268,21 @@ namespace BusinessLogic.Services
                 string responseBody = await response.Content.ReadAsStringAsync();
                 var userInfo = JsonConvert.DeserializeObject<GoogleUserInfo>(responseBody)!;
                 User user = await userManager.FindByEmailAsync(userInfo.Email) ?? mapper.Map<User>(userInfo);
-                if (user.Id == null)
+                if (user.Id != null)
                 {
                     if (!String.IsNullOrEmpty(userInfo.Picture))
                     {
 
-                        user.Avatar.Name = await imageService.SaveImageFromUrlAsync(userInfo.Picture);
+                        string avatar = await imageService.SaveImageFromUrlAsync(userInfo.Picture);
+                        Avatar avt = new Avatar()
+                        { 
+                            UserId = user.Id,
+                            Name = avatar
+                        };
+
+                        user.Avatar = avt;
                     }
-                    await CreateUserAsync(user);
+                    await CreateUserAsync(user, user.PasswordHash);
                     loginResponse.IsSuccess = true;
                 }
             }
