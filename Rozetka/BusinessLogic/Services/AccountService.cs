@@ -319,7 +319,7 @@ namespace BusinessLogic.Services
                         var loginn = await Login(login);
                         loginResponse.AccessToken = loginn.AccessToken;
                         loginResponse.Baskets = loginn.Baskets;
-                        loginn.IsSuccess = loginResponse.IsSuccess;
+                        loginn.IsSuccess = loginn.IsSuccess;
                         loginn.Error = loginResponse.Error;
                     }
                 }

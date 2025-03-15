@@ -59,24 +59,7 @@ namespace Rozetka_Api.Controllers
         {
 
             var result = await accountsService.GoogleSignInAsync(model);
-
-            if (result.IsSuccess)
-            {
-
-                if (result.Baskets != null)
-                {
-                    return Ok(new { token = result.AccessToken/*, refreshToken = result.RefreshToken */, baskets = result.Baskets });
-                }
-                else
-                {
-                    return Ok(new { token = result.AccessToken/*, refreshToken = result.RefreshToken */});
-                }
-
-            }
-            else
-            {
-                return BadRequest(result);
-            }
+            return Ok(result);
         }
 
         [Authorize]
