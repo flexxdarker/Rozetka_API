@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BusinessLogic.DTOs.Order;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,13 +10,14 @@ namespace BusinessLogic.DTOs.OrderStatus
     public class ChangeOrderStatus
     {
         public int Id { get; set; }
-        public List<string> Names { get; set; } = new List<string>();
-        public string UserName { get; set; }
+        public List<OrderItemInfo> Items { get; set; } = new List<OrderItemInfo>();
+        public string userName { get; set; }
+        public string Name { get; set; }
+        public string SurName { get; set; } 
         public string PhoneNumber { get; set; }
         public string Status { get; set; }
         public decimal TotalPrice { get; set; }
         public string DateCrated { get; set; }
-        public List<string> ImagePaths { get; set; }
         public string ImageUser { get; set; }
     }
 }
