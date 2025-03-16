@@ -29,7 +29,7 @@ const AccountMenu: React.FC = () => {
                         {/*text-[#9140d3]*/}
                         <span
                             className="h-[10px] self-stretch shrink-0 basis-auto font-['Inter'] text-[14px] font-normal leading-[10px] text-left whitespace-nowrap">
-          +380(97)055-55-55 {tokenPayload?.phoneNumber}
+          {tokenPayload?.phoneNumber || "no phone number"}
         </span>
                     </div>
                 </Link>

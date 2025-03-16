@@ -1,17 +1,26 @@
 import axios from "axios";
-import {ILoginModel, IRegisterModel} from "../models/accountsModel.ts";
+import {ILoginModel, IRegisterModel, IUserModel} from "../models/accountsModel.ts";
 import {IUserTokens} from "../models/tokenModel.ts";
 import {TokenService} from "./tokenService.ts";
 
+const apiToken = `${import.meta.env.VITE_ROZETKA_API}` + "Accounts";
+
 const api = axios.create({
-    baseURL: `${import.meta.env.VITE_ROZETKA_API}` + "Accounts",
+    baseURL: apiToken,
 });
 
-//const api = `${import.meta.env.VITE_ROZETKA_API}` + "Accounts/";
+axios.interceptors.request.use(
+    (config) => {
+        const token = TokenService.getAccessToken();
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => Promise.reject(error)
+);
 
 export const AccountsService = {
-
-
 
     async register(model: IRegisterModel)  {
         console.log("model: ", model);
@@ -58,5 +67,15 @@ export const AccountsService = {
     logout(refreshToken: string) {
         TokenService.clear();
         return api.post("logout", { refreshToken: refreshToken});
+    },
+
+
+
+    getAllUsers(){
+        return axios.get<IUserModel[]>(apiToken + "/GetAllUsers")
+    },
+
+    getUserById(){
+        return axios.get<IUserModel>(apiToken + "/UserById")
     },
 };

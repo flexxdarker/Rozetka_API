@@ -299,6 +299,17 @@ const Header = () => {
                     </Button>
                 </Link>
 
+                <Link to="orders-crud">
+                    <Button sx={{my: 2, color: 'white', display: 'block'}}>
+                        Orders
+                    </Button>
+                </Link>
+
+                <Link to="users-crud">
+                    <Button sx={{my: 2, color: 'white', display: 'block'}}>
+                        Users
+                    </Button>
+                </Link>
 
             </Box>
         </>

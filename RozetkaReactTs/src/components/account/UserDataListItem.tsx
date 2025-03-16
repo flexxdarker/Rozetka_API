@@ -31,7 +31,7 @@ const UserDataListItem: React.FC<UserDataListItemProps> = ({lable, data}) => {
                     className="flex w-[44px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] items-center shrink-0 flex-nowrap">
                     <img
                         src={arrowUp}
-                        className={`w-10 h-10 transition-transform duration-300 ${isRotated ? 'rotate-180' : ''}`}
+                        className={`w-10 h-10 transition-transform duration-300 ${isRotated ? 'rotate-0' : 'rotate-180'}`}
                         onClick={handleClick}
                     />
                 </button>

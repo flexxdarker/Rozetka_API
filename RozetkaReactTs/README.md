@@ -53,7 +53,7 @@ export default tseslint.config({
 })
 ```
 
-docker hib
+docker hub
 docker build -t borys1994/rozetka-client:latest .
 
 docker push borys1994/rozetka-client:latest

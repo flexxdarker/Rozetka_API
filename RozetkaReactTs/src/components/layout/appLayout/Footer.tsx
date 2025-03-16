@@ -1,14 +1,4 @@
 import React from 'react';
-// import { Layout as LayoutAntd } from 'antd';
-// const { Footer: FooterAntd } = LayoutAntd;
-import {Grid} from "@mui/joy";
-import Stack from '@mui/material/Stack';
-// import LinkMui from "@mui/material/Link";
-import { Link } from 'react-router-dom';
-
-
-
-
 
 const Footer: React.FC = () => {
 

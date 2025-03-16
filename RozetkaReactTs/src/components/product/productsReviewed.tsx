@@ -9,6 +9,7 @@ const ProductsReviewed: React.FC = () => {
 
     const [products,setProducts] = useState<IProductModel[]>([]);
 
+    //@ts-ignore
     const [reviewedProducts, setReviewedProducts] = useState<number[]>( ReviewedListService.getAll());
 
 

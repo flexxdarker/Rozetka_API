@@ -7,6 +7,8 @@ import CategoryLayout from "./components/layout/categoryLayout/CategoryLayout.ts
 import ProductPage from "./components/product/ProductPage.tsx";
 import React from "react";
 import AccountLayout from "./components/layout/accountLayout/AccountLayout.tsx";
+// import UsersTable from "./components/users/UsersTable.tsx";
+// import OrdersTable from "./components/orders/OrdersTable.tsx";
 //import CategoriesPage from "./components/category/CategoriesPage.tsx";
 // import ComparisonListPage from "./components/comparison/ComparisonListPage.tsx";
 // import ComparisonProductsPage from "./components/comparison/ComparisonProductsPage.tsx";
@@ -55,6 +57,8 @@ const FilterProductPage = lazy(() => import("./components/filter/filterProductPa
 const ComparisonListPage = lazy(() => import("./components/comparison/ComparisonListPage.tsx"));
 const ComparisonProductsPage = lazy(() => import("./components/comparison/ComparisonProductsPage.tsx"));
 const CategoriesPage = lazy(() => import("./components/category/CategoriesPage.tsx"));
+const OrdersTable = lazy(() => import("./components/orders/OrdersTable.tsx"));
+const UsersTable = lazy(() => import("./components/users/UsersTable.tsx"));
 
 export default function App() {
     return (
@@ -73,6 +77,10 @@ export default function App() {
                     <Route path="categories-crud" element={<CategoryTable/>}/>
                     <Route path="categories-crud/create" element={<CategoryForm/>}/>
                     <Route path="categories-crud/edit/:id" element={<CategoryForm/>}/>
+
+                    <Route path="orders-crud" element={<OrdersTable/>}/>
+
+                    <Route path="users-crud" element={<UsersTable/>}/>
 
                     {/*Footer*/}
                     <Route path="about-us" element={<AboutUs/>}/>
