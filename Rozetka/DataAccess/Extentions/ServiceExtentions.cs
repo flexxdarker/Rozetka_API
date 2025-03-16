@@ -1,10 +1,14 @@
 ﻿using BusinessLogic.Entities;
+using BusinessLogic.Interfaces;
 using DataAccess.Data;
+using DataAccess.Repositories;
 using DataAccess.Repostories;
+using Google;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using System;
 
 namespace DataAccess
@@ -19,11 +23,11 @@ namespace DataAccess
         public static void AddRepositories(this IServiceCollection services)
         {
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
         }
 
         public static void AddIdentity(this IServiceCollection services)
         {
-
             services.AddIdentity<User, IdentityRole>(options =>
             {
                 options.Stores.MaxLengthForKeys = 128;
@@ -59,6 +63,12 @@ namespace DataAccess
             {
                 Directory.CreateDirectory(imagesDirPath);
             }
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(imagesDirPath),
+                RequestPath = "/"+ app.Configuration["DirImages"]
+            });
         }
     }
 }

@@ -5,7 +5,7 @@ using BusinessLogic.Entities;
 using BusinessLogic.Interfaces;
 using BusinessLogic.Models;
 using BusinessLogic.Specifications;
-using DataAccess.Repostories;
+using DataAccess.Repositories;
 using System.Net;
 
 namespace BusinessLogic.Services
@@ -63,5 +63,14 @@ namespace BusinessLogic.Services
             return mapper.Map<IEnumerable<CategoryFilterDto>>(await categoryFiltersRepo.GetListBySpec(new CategoryFilterSpecs.GetByCategoryId(categoryId)));
         }
 
+        public async Task DeleteAsync(int categoryId)
+        {
+            var categoryFilters = mapper.Map<IEnumerable<CategoryFilterDto>>(await categoryFiltersRepo.GetListBySpec(new CategoryFilterSpecs.GetByCategoryId(categoryId)));
+            foreach (var value in categoryFilters)
+            {
+                await categoryFiltersRepo.DeleteAsync(value.Id);
+                await categoryFiltersRepo.SaveAsync();
+            }
+        }
     }
 }

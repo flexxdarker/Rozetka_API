@@ -5,7 +5,15 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq.Expressions;
 using System.Security.Claims;
-
+using DataAccess.Repositories;
+using BusinessLogic.Models.AdvertModels;
+using BusinessLogic.Validators;
+using BusinessLogic.Entities;
+using Google;
+using BusinessLogic.Models.CategoryModels;
+using BusinessLogic.Models.FilterModels;
+using BusinessLogic.Models.FilterValueModels;
+using BusinessLogic.Models.UserModels;
 
 namespace BusinessLogic.Exstensions
 {
@@ -19,8 +27,7 @@ namespace BusinessLogic.Exstensions
         {
            
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
-            //services.AddValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
+        
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<ICategoryService, CategoryService>();
@@ -30,8 +37,26 @@ namespace BusinessLogic.Exstensions
             services.AddScoped<IAdvertValueService, AdvertValueService>();
             services.AddScoped<IBasketService, BasketService>();
             services.AddScoped<IAccountsService, AccountsService>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IAccountsService, AccountsService>();
+            services.AddScoped<ISmtpService, SmtpService>();
+            services.AddScoped<IFilterValueService, FilterValueService>();
+            services.AddScoped<IAdvertRatingService, AdvertRatingService>();
+            //services.AddIdentity<User, Role>()
+            //        .AddEntityFrameworkStores<ApplicationDbContext>()
+            //        .AddDefaultTokenProviders();
 
         }
-
+        public static void AddValidationServices(this IServiceCollection services)
+        { 
+            services.AddScoped<IValidator<AdvertRatingCreateModel>, AdvertRatingCreateModelValidator>();
+            services.AddScoped<IValidator<BaseAdvertModel>, BaseAdvertModelValidator>();
+            services.AddScoped<IValidator<Advert>, AdvertValidator>();
+            services.AddScoped<IValidator<BaseCategoryModel>, BaseCategoryModelValidator>();
+            services.AddScoped<IValidator<BaseFilterModel>, BaseFilterModelValidator>();
+            services.AddScoped<IValidator<BaseFilterValueModel>, BaseFilterValueModelValidator>();
+            services.AddScoped<IValidator<RegisterModel>, RegisterModelValidator>();
+            
+        }
     }
 }

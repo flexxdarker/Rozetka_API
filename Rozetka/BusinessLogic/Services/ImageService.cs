@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
+using BusinessLogic.Exceptions;
 using BusinessLogic.Interfaces;
-using DataAccess.Repostories;
+using DataAccess.Repositories;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -166,6 +167,13 @@ namespace BusinessLogic.Services
         {
             foreach (var image in images)
                 DeleteImageIfExists(image);
+        }
+
+        public async Task<string> SaveImageFromUrlAsync(string url)
+        {
+            using var httpClient = new HttpClient();
+            var imageBytes = await httpClient.GetByteArrayAsync(url);
+            return await SaveImageAsync(imageBytes);
         }
 
         private List<int> Sizes

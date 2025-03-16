@@ -18,6 +18,6 @@ namespace BusinessLogic.Enities
         public DateTime DateCrated { get; set; }
         public ICollection<OrderAdvert> OrderAdverts { get; set; }
         //total summ
-        public int Amount { get; set; }
+        public decimal Amount { get; set; }
     }
 }

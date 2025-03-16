@@ -10,9 +10,8 @@ namespace BusinessLogic.DTOs.Order
     public class OrderInformationDto
     {
         public int Id { get; set; }
-        public List<string> Names { get; set; } = new List<string>();
+        public List<OrderItemInfo> OrderItems { get; set; }
         public string Status { get; set; }
         public decimal TotalPrice { get; set; }
-        public List<string> ImagePaths { get; set; }
     }
 }

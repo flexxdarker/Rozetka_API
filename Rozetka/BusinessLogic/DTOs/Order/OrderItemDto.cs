@@ -8,9 +8,9 @@ namespace BusinessLogic.DTOs.Order
 {
     public class OrderItemDto
     {
-        public int ProductId { get; set; }
+        public int AdvertId { get; set; }
         public int Count { get; set; }
         public decimal Price { get; set; }
-        public int Amount { get; set; }
+        //public int Amount { get; set; }
     }
 }

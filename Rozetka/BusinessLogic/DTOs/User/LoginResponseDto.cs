@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BusinessLogic.DTOs.Order;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,9 @@ namespace BusinessLogic.DTOs.User
 {
     public class LoginResponseDto
     {
+        public bool IsSuccess { get; set; }
         public string AccessToken { get; set; }
-        public string RefreshToken { get; set; }
+        public string Error { get; set; } = string.Empty;
+        public List<int> Baskets { get; set; }
     }
 }

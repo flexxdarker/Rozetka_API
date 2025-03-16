@@ -16,7 +16,6 @@ namespace BusinessLogic.Specifications
             public GetAll() => Query
                 .Include(c => c.Filters)
                 .ThenInclude(f => f.Filter)
-                //.Where(x => x.IsDeleted != false); 
                 .Where(x => true); 
         }
 
@@ -34,10 +33,6 @@ namespace BusinessLogic.Specifications
         {
             public GetById(int id) => Query.Where(x => x.Id == id).Include(x => x.SubCategories).Include(c => c.Filters)
                 .ThenInclude(f => f.Filter);
-        }
-        public class GetByName : Specification<Category>
-        {
-            public GetByName(string Name) => Query.Where(x => x.Name.ToLower() == Name);
         }
     }
 }

@@ -3,8 +3,9 @@ using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Rozetka_Api.Helpers;
-using Shop_Api_PV221;
+using Rozetka_Api;
 using System;
+using Microsoft.Extensions.FileProviders;
 
 namespace Rozetka_Api
 {
@@ -49,6 +50,7 @@ namespace Rozetka_Api
 
             builder.Services.AddDbContext(connStr); 
             builder.Services.AddCustomServices();
+            builder.Services.AddValidationServices();
             builder.Services.AddRepositories();
 
             var app = builder.Build();
@@ -77,8 +79,12 @@ namespace Rozetka_Api
                 scope.ServiceProvider.SeedAdmin().Wait();
             }
 
-            await app.SeedCategoriesAndFilters(builder.Configuration);
             await app.SeedStatuses(builder.Configuration);
+            await app.SeedFilters(builder.Configuration);
+            await app.SeedCategories(builder.Configuration);
+            await app.SeedCategoryFilters(builder.Configuration);
+            await app.SeedAdverts(builder.Configuration);
+            await app.SeedAdvertValues(builder.Configuration);
             await app.RunAsync();
         }
     }

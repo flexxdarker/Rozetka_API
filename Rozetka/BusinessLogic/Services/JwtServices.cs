@@ -7,57 +7,79 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using BusinessLogic.DTOs.User;
 using BusinessLogic.Entities;
+using BusinessLogic.Exceptions;
 using BusinessLogic.Helpers;
 using BusinessLogic.Interfaces;
+using DataAccess.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace BusinessLogic.Services
 {
     internal class JwtService : IJwtService
     {
+        private readonly IConfiguration _config;
         private readonly IConfiguration configuration;
         private readonly UserManager<User> userManager;
         private readonly JwtOptions jwtOptions;
+        private readonly IRepository<Avatar> avatarRepository;
 
-        public JwtService(IConfiguration configuration, UserManager<User> userManager)
+        public JwtService(IConfiguration configuration, UserManager<User> userManager, IConfiguration config, IRepository<Avatar> avatarRepository)
         {
             this.configuration = configuration;
             this.userManager = userManager;
             this.jwtOptions = configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>()!;
+            _config = config;
+            this.avatarRepository = avatarRepository;
         }
 
-        public string CreateToken(IEnumerable<Claim> claims)
+        public async Task<string> CreateToken(UserTokenInfo user)
         {
-            // TODO: make separate method
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("adlfjalUIYUuihafy34987432lNLJLhfasify93shfRQR##%^#&&^%@#$!sljdfl33"));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            if (user == null)
+                throw new ArgumentNullException(nameof(user), "User cannot be null");
 
-            var token = new JwtSecurityToken(
-                //issuer: jwtOptions.Issuer,
-                claims: claims,
-                expires: DateTime.UtcNow.AddDays(100),
-                signingCredentials: credentials);
+            var userDb = await userManager.FindByIdAsync(user.Id);
+            if (userDb == null)
+                throw new Exception($"User with ID {user.Id} not found");
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
+            var roles = await userManager.GetRolesAsync(userDb) ?? new List<string>();
 
-        public IEnumerable<Claim> GetClaims(User user)
-        {
-            var claims = new List<Claim>
+            // Формуємо список клеймів
+            List<Claim> claims = new()
+    {
+        new Claim("id", user.Id.ToString()),
+        new Claim("Name", user.Name ?? string.Empty),
+        new Claim("SurName", user.SurName ?? string.Empty),
+        new Claim("email", user.Email ?? string.Empty),
+        new Claim("phoneNumber", user.PhoneNumber ?? string.Empty),
+        new Claim("avatar", user.AvatarPath), // Перевірка на null
+        new Claim("birthdate", user.Birthday ?? string.Empty),  // Перевірка на null
+    };
+
+            foreach (var role in roles)
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.DateOfBirth, user.Birthdate.ToString()),
-            };
+                claims.Add(new Claim("roles", role));
+            }
 
-            var roles = userManager.GetRolesAsync(user).Result;
-            claims.AddRange(roles.Select(role => new Claim(ClaimsIdentity.DefaultRoleClaimType, role)));
+            var secretKey = _config.GetValue<string>("JwtSecretKey");
+            if (string.IsNullOrEmpty(secretKey))
+                throw new Exception("JWT Secret Key is missing in configuration");
 
-            return claims;
+            var signinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+            var signinCredentials = new SigningCredentials(signinKey, SecurityAlgorithms.HmacSha256);
+
+            var jwt = new JwtSecurityToken(
+                signingCredentials: signinCredentials,
+                expires: DateTime.Now.AddDays(10),
+                claims: claims
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(jwt);
         }
 
         public string CreateRefreshToken()
