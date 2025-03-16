@@ -6,6 +6,16 @@ import MainLayout from "./components/layout/mainLayout/MainLayout.tsx";
 import CategoryLayout from "./components/layout/categoryLayout/CategoryLayout.tsx";
 import ProductPage from "./components/product/ProductPage.tsx";
 import React from "react";
+import AccountLayout from "./components/layout/accountLayout/AccountLayout.tsx";
+// import UsersTable from "./components/users/UsersTable.tsx";
+// import OrdersTable from "./components/orders/OrdersTable.tsx";
+//import CategoriesPage from "./components/category/CategoriesPage.tsx";
+// import ComparisonListPage from "./components/comparison/ComparisonListPage.tsx";
+// import ComparisonProductsPage from "./components/comparison/ComparisonProductsPage.tsx";
+// import FilterProductPage from "./components/filter/filterProductPage.tsx";
+//import WishList from "./components/account/WishList.tsx";
+// import AccountOrders from "./components/account/AccountOrders.tsx";
+// import AccountData from "./components/account/AccountData.tsx";
 // import OrderPage from "./components/order/OrderPage.tsx";
 // import SubCategoryTable from "./components/subCategory/SubCategoryTable.tsx";
 // import SubCategoryForm from "./components/subCategory/SubCategoryForm.tsx";
@@ -39,9 +49,16 @@ const Franchising = lazy(() => import("./components/layout/footer/Franchising.ts
 const ReturnOfGoods = lazy(() => import("./components/layout/footer/ReturnOfGoods.tsx"));
 const CategoryTable = lazy(() => import("./components/category/CategoryTable"));
 const CategoryForm = lazy(() => import("./components/category/CategoryForm.tsx"));
-const SubCategoryTable = lazy(() => import("./components/subCategory/SubCategoryTable.tsx"));
-const SubCategoryForm = lazy(() => import("./components/subCategory/SubCategoryForm.tsx"));
 const OrderPage = lazy(() => import("./components/order/OrderPage.tsx"));
+const AccountData = lazy(() => import("./components/account/AccountData.tsx"));
+const AccountOrders = lazy(() => import("./components/account/AccountOrders.tsx"));
+const WishList = lazy(() => import("./components/account/WishList.tsx"));
+const FilterProductPage = lazy(() => import("./components/filter/filterProductPage.tsx"));
+const ComparisonListPage = lazy(() => import("./components/comparison/ComparisonListPage.tsx"));
+const ComparisonProductsPage = lazy(() => import("./components/comparison/ComparisonProductsPage.tsx"));
+const CategoriesPage = lazy(() => import("./components/category/CategoriesPage.tsx"));
+const OrdersTable = lazy(() => import("./components/orders/OrdersTable.tsx"));
+const UsersTable = lazy(() => import("./components/users/UsersTable.tsx"));
 
 export default function App() {
     return (
@@ -52,18 +69,18 @@ export default function App() {
                     <Route index element={<Home/>}/>
 
                     {/*Admin*/}
-                    <Route path="products" element={<ProductTable/>}/>
-                    <Route path="products/create" element={<ProductForm/>}/>
-                    <Route path="products/edit/:id" element={<ProductForm/>}/>
-                    <Route path="product-page/:id" element={<ProductPage/>}/>
+                    <Route path="products-crud" element={<ProductTable/>}/>
+                    <Route path="products-crud/create" element={<ProductForm/>}/>
+                    <Route path="products-crud/edit/:id" element={<ProductForm/>}/>
+                    {/*<Route path="product-page/:id" element={<ProductPage/>}/>*/}
 
-                    <Route path="categories" element={<CategoryTable/>}/>
-                    <Route path="categories/create" element={<CategoryForm/>}/>
-                    <Route path="categories/edit/:id" element={<CategoryForm/>}/>
+                    <Route path="categories-crud" element={<CategoryTable/>}/>
+                    <Route path="categories-crud/create" element={<CategoryForm/>}/>
+                    <Route path="categories-crud/edit/:id" element={<CategoryForm/>}/>
 
-                    <Route path="subcategories" element={<SubCategoryTable/>}/>
-                    <Route path="subcategories/create" element={<SubCategoryForm/>}/>
-                    <Route path="subcategories/edit/:id" element={<SubCategoryForm/>}/>
+                    <Route path="orders-crud" element={<OrdersTable/>}/>
+
+                    <Route path="users-crud" element={<UsersTable/>}/>
 
                     {/*Footer*/}
                     <Route path="about-us" element={<AboutUs/>}/>
@@ -77,6 +94,20 @@ export default function App() {
                     <Route path="franchising" element={<Franchising/>}/>
 
                     <Route path="order" element={<OrderPage/>}/>
+                </Route>
+
+                <Route path="categories" element={<CategoriesPage/>}/>
+
+                <Route path="product-page/:id" element={<ProductPage/>}/>
+                <Route path="product-filter" element={<FilterProductPage/>}/>
+
+                <Route path="comparison-list" element={<ComparisonListPage/>}/>
+                <Route path="comparison-products" element={<ComparisonProductsPage/>}/>
+
+                <Route path="account" element={<AccountLayout/>}>
+                    <Route path="data" element={<AccountData/>}/>
+                    <Route path="orders" element={<AccountOrders/>}/>
+                    <Route path="wish-list" element={<WishList/>}/>
                 </Route>
 
                 <Route path="" element={<CategoryLayout/>}>

@@ -19,12 +19,11 @@ const SignIn: React.FC = () => {
 
         const onFinish: FormProps<ILoginModel>['onFinish'] = async (values) => {
                 console.log('Form values:', {...values}); // Обробка відправки форми з додатковими даними редактора
-            const res = await AccountsService.login(values);
-            console.log(res);
+             const res = await AccountsService.login(values);
             TokenService.save(res.data);
             if (res.status == 200) {
                 message.success("login success");
-                navigate(-1);
+                navigate("/");
             } else {
                 message.warning("Warning");
             }

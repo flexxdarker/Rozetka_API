@@ -13,5 +13,12 @@ export default defineConfig({
       '@': '/src',
     },
   },
+  server: {
+    open: true,
+    port: 5173, // чи інший порт, який ви використовуєте
+  },
+  build: {
+    sourcemap: true, // важливо для дебагу
+  },
   // plugins: [ react(), svgr()]
 });

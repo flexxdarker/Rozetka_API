@@ -10,13 +10,14 @@ import Breadcrumbs from "../../other/Breadcrumbs.tsx";
 const MainLayout: React.FC = () => {
 
     const {
-        token: {colorBgContainer, borderRadiusLG},
+        token: {borderRadiusLG},
+        //token: {colorBgContainer, borderRadiusLG},
     } = theme.useToken();
 
 
     return (
         <>
-            <div style={{backgroundColor: 'red'}}>
+            <div style={{backgroundColor: 'red'}} >
                 <MainMenu/>
             </div>
             <Content className='Main'
@@ -27,7 +28,7 @@ const MainLayout: React.FC = () => {
                      }}>
                 <div
                     style={{
-                        background: colorBgContainer,
+                        // background: colorBgContainer,
                         minHeight: 800,
                         padding: 24,
                         borderRadius: borderRadiusLG,

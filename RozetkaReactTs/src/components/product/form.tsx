@@ -1,395 +1,379 @@
-// import React, {useEffect, useState} from 'react';
-// import {Button, Checkbox, Form, FormProps, Input, InputNumber, Select, SelectProps, Space, Upload, message} from 'antd';
-// import TextArea from 'antd/es/input/TextArea';
-// import {ArrowLeftOutlined, UploadOutlined} from '@ant-design/icons';
-// import {useNavigate, useParams} from "react-router-dom";
-// //import { EditProductModel, ProductModel } from '../models/products.model';
-// //import { productsService } from '../services/products.service';
-// // import {createGlobalStyle} from 'styled-components';
-// //
-// //
-// // const GlobalStyle = createGlobalStyle` body {
-// //     background-color: #f0f0f0;
-// //     font-family: Arial, sans-serif;
-// // }
-// //
-// // button {
-// //     background-color: #4CAF50; /* Зелений */
-// //     border: none;
-// //     color: white;
-// //     padding: 15px 32px;
-// //     text-align: center;
-// //     text-decoration: none;
-// //     display: inline-block;
-// //     font-size: 16px;
-// //     margin: 4px 2px;
-// //     cursor: pointer;
-// //     border-radius: 4px;
-// //
-// //     &:hover {
-// //         background-color: #45a049;
-// //     }
-// // } `;
-// // import {css} from 'styled-components';
-// //
-// // const buttonStyles = css` background-color: #4CAF50; /* Зелений */
-// //     border: none;
-// //     color: white;
-// //     padding: 15px 32px;
-// //     text-align: center;
-// //     text-decoration: none;
-// //     display: inline-block;
-// //     font-size: 16px;
-// //     margin: 4px 2px;
-// //     cursor: pointer;
-// //     border-radius: 4px;
-// //
-// //     &:hover {
-// //         background-color: #45a049;
-// //     } `;
+import React, { useState } from 'react';
+import { CloseOutlined } from '@ant-design/icons';
+import { Button, Form, Select, Space } from 'antd';
+import { IFilterModel } from "../../models/filterModel.ts";
+
+interface FilterFormProps {
+    filters: IFilterModel[]; // Array of filters passed as props
+    onChange: (updatedFilterRows: { filterId: number, valueId: number }[]) => void; // Callback function to update parent
+}
+
+const { Option } = Select;
+
+const FilterForm: React.FC<FilterFormProps> = ({ filters, onChange }) => {
+    const [filterRows, setFilterRows] = useState<{ filterId: number, valueId: number }[]>([]);
+    const [usedFilters, setUsedFilters] = useState<Set<number>>(new Set()); // Track used filters
+
+    const [form] = Form.useForm();
+
+    // Add a new row if the number of rows is less than filters array length
+    const addRow = () => {
+        const newRow = { filterId: 0, valueId: 0 };
+        const newFilterRows = [...filterRows, newRow];
+        setFilterRows(newFilterRows);
+        onChange(newFilterRows); // Оновлюємо дані в батьківському компоненті
+    };
+
+    const handleFilterChange = (value: number, index: number, type: 'filter' | 'value') => {
+        const newRows = [...filterRows];
+        if (type === 'filter') {
+            // When filter is changed, reset the value
+            newRows[index].filterId = value;
+            newRows[index].valueId = 0;
+        } else if (type === 'value') {
+            newRows[index].valueId = value;
+        }
+        setFilterRows(newRows);
+        onChange(newRows); // Update the parent component
+    };
+
+    // Remove a row and free the filter for re-selection
+    const removeRow = (index: number) => {
+        const newRows = filterRows.filter((_, i) => i !== index);
+        const removedFilter = filterRows[index].filterId;
+        setUsedFilters((prev) => {
+            const newUsedFilters = new Set(prev);
+            newUsedFilters.delete(removedFilter); // Remove the filter from used filters
+            return newUsedFilters;
+        });
+        setFilterRows(newRows);
+        onChange(newRows);
+    };
+
+    // Filter out already selected filters in the first Select
+    const getAvailableFilters = () => {
+        return filters.filter((filter) => !usedFilters.has(filter.id)); // Exclude already used filters
+    };
+
+    return (
+        <Form
+            labelCol={{ span: 6 }}
+            wrapperCol={{ span: 18 }}
+            form={form}
+            name="dynamic_form_complex"
+            autoComplete="off"
+            initialValues={{ items: [{}] }}
+        >
+            <Form.List name="items">
+                {(fields) => (
+                    <div style={{ display: 'flex', rowGap: 16, flexDirection: 'column' }}>
+                        {fields.map((field) => (
+                            <Form.Item label="List" key={field.key}>
+                                <Form.List name={[field.name, 'list']}>
+                                    {(subFields, subOpt) => (
+                                        <div style={{ display: 'flex', flexDirection: 'column', rowGap: 16 }}>
+                                            {subFields.map((subField, index) => (
+                                                <Space key={subField.key}>
+                                                    {/* Replace Input with Select */}
+                                                    <Form.Item noStyle name={[subField.name, 'first']}>
+                                                        <Select
+                                                            placeholder="Select Filter"
+                                                            style={{ width: "200px" }}
+                                                            value={filterRows[index]?.filterId || undefined}
+                                                            onChange={(value) => {
+                                                                handleFilterChange(value, index, 'filter');
+                                                                setUsedFilters((prev) => {
+                                                                    const newUsedFilters = new Set(prev);
+                                                                    newUsedFilters.add(value); // Add filter to used filters
+                                                                    return newUsedFilters;
+                                                                });
+                                                            }}
+                                                        >
+                                                            {getAvailableFilters().map((filter) => (
+                                                                <Option key={filter.id} value={filter.id}>
+                                                                    {filter.name}
+                                                                </Option>
+                                                            ))}
+                                                        </Select>
+                                                    </Form.Item>
+
+                                                    <Form.Item noStyle name={[subField.name, 'second']}>
+                                                        <Select
+                                                            placeholder="Select Value"
+                                                            style={{ width: "200px" }}
+                                                            value={filterRows[index]?.valueId || undefined}
+                                                            onChange={(value) => handleFilterChange(value, index, 'value')}
+                                                            disabled={filterRows[index]?.filterId === 0}
+                                                        >
+                                                            {/* Render values based on the selected filter */}
+                                                            {filters
+                                                                .filter((filter) => filter.id === filterRows[index]?.filterId)
+                                                                .flatMap((filter) =>
+                                                                    filter.values.map((value) => (
+                                                                        <Option key={value.id} value={value.id}>
+                                                                            {value.value}
+                                                                        </Option>
+                                                                    ))
+                                                                )}
+                                                        </Select>
+                                                    </Form.Item>
+
+                                                    <CloseOutlined onClick={() => {removeRow(index); subOpt.remove(index);}} />
+                                                </Space>
+                                            ))}
+                                            <Button type="dashed" onClick={() => {
+                                                subOpt.add();
+                                                addRow();}}
+                                                    block>
+                                                + Add Sub Item
+                                            </Button>
+                                        </div>
+                                    )}
+                                </Form.List>
+                            </Form.Item>
+                        ))}
+                    </div>
+                )}
+            </Form.List>
+
+        </Form>
+    );
+};
+
+export default FilterForm;
+
+
+
+
+
+
 //
-// import styled from 'styled-components';
-// const UL = styled.ul`
-//     list-style-type: none;
-//     margin: 0;
-//     padding: 0;
-//     overflow: hidden;
-//     background-color: #38444d;
-//
-//     li {
-//         float: left;
-//     }
-//
-//     li a, .dropbtn {
-//         display: inline-block;
-//         color: white;
-//         text-align: center;
-//         padding: 14px 16px;
-//         text-decoration: none;
-//     }
-//
-//     li a:hover, .dropdown:hover .dropbtn {
-//         background-color: red;
-//     }
-//
-//     li.dropdown {
-//         display: inline-block;
-//     }
-//
-//     .dropdown-content {
-//         display: none;
-//         position: absolute;
-//         background-color: #f9f9f9;
-//         min-width: 160px;
-//         box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-//         z-index: 1;
-//     }
-//
-//     .dropdown-content a {
-//         color: black;
-//         padding: 12px 16px;
-//         text-decoration: none;
-//         display: block;
-//         text-align: left;
-//     }
-//
-//     .dropdown-content a:hover {background-color: #f1f1f1;}
-//
-//     .dropdown:hover .dropdown-content {
-//         display: block;
-//     }`;
+// import React, {useState} from 'react';
+// import {Select, Button, Form} from 'antd';
+// import {IFilterModel} from "../../models/filterModel.ts";
 //
 //
-//
-// type FieldType = {
-//     name: string;
-//     price: number;
-//     discount: number;
-//     categoryId: number;
-//     description?: string;
-//     inStock: boolean;
-//     image: File;
-// };
-//
-// export interface ProductModel {
-//     id: number;
-//     name: string;
-//     categoryName: string;
-//     discount: number;
-//     price: number;
-//     imageUrl: string;
+// interface FilterFormProps {
+//     filters: IFilterModel[]; // Масив фільтрів передається як пропс
+//     onChange: (updatedFilterRows: { filterId: number, valueId: number }[]) => void; // Функція зворотного зв'язку
 // }
 //
-// export interface CreateProductModel {
-//     name: string;
-//     categoryId: number;
-//     discount: number;
-//     price: number;
-//     image: File;
-//     description?: string;
-//     inStock: boolean;
-// }
+// const {Option} = Select;
 //
-// export interface EditProductModel {
-//     id: number;
-//     name: string;
-//     categoryId: number;
-//     discount: number;
-//     price: number;
-//     imageUrl: string;
-//     newImage?: File;
-//     description?: string;
-//     inStock: boolean;
-// }
+// const FilterForm: React.FC<FilterFormProps> = ({filters, onChange}) => {
+//     const [filterRows, setFilterRows] = useState<{ filterId: number, valueId: number }[]>([]);
 //
+//     // Функція для додавання нового рядка
+//     const addRow = () => {
+//         const newRow = {filterId: 0, valueId: 0};
+//         const newFilterRows = [...filterRows, newRow];
+//         setFilterRows(newFilterRows);
+//         onChange(newFilterRows); // Оновлюємо дані в батьківському компоненті
+//     };
 //
-// const ProductForm: React.FC = () => {
+//     // Функція для видалення рядка
+//     const removeRow = (index: number) => {
+//         const newRows = filterRows.filter((_, i) => i !== index);
+//         setFilterRows(newRows);
+//         onChange(newRows); // Оновлюємо дані в батьківському компоненті
+//     };
 //
-//     const [categories, setCategories] = useState<SelectProps['options']>([]);
-//     const [editMode, setEditMode] = useState<boolean>(false);
-//     const [product, setProduct] = useState<ProductModel | null>(null);
-//
-//     const [form] = Form.useForm();
-//     const navigate = useNavigate();
-//     const params = useParams();
-//
-//     const loadCategories = async () => {
-//         // const res = await productsService.getCategories();
-//         // const options = res.data.map(i => { return { value: i.id, label: i.name } });
-//         //  setCategories(options);
-//     }
-//
-//     const loadProduct = async () => {
-//         // const id = Number(params.id);
-//         // const res = await productsService.get(id);
-//         // setProduct(res.data);
-//         // form.setFieldsValue(res.data);
-//     }
-//
-//     useEffect(() => {
-//         if (params.id) {
-//             setEditMode(true);
-//             loadProduct();
+//     // Функція для обробки зміни в селекторах
+//     const handleFilterChange = (value: number, index: number, type: 'filter' | 'value') => {
+//         const newRows = [...filterRows];
+//         if (type === 'filter') {
+//             newRows[index].filterId = value;
+//             newRows[index].valueId = 0; // Скидаємо значення value, коли змінюється filter
+//         } else if (type === 'value') {
+//             newRows[index].valueId = value;
 //         }
-//
-//         loadCategories();
-//         // eslint-disable-next-line
-//     }, []);
-//
-//     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
-//         console.log(values);
-//
-//         if (editMode) {
-//
-//             // use original values
-//             // TODO: use hidden inputs
-//             if (product === null) return;
-//
-//             const requestModel: EditProductModel = {
-//                 ...values,
-//                 id: product.id,
-//                 imageUrl: product.imageUrl,
-//                 newImage: values.image
-//             }
-//
-//             // const response = await productsService.edit(requestModel);
-//             //
-//             // if (response.status === 200) {
-//             //     message.success(`Product edited successfully!`);
-//             // }
-//         }
-//         // else {
-//         //     //const response = await productsService.create(values);
-//         //
-//         //     if (response.status === 200) {
-//         //         message.success(`Product created successfully!`);
-//         //     }
-//         // }
-//
-//         // go back
-//         navigate(-1);
-//     };
-//     const onReset = () => {
-//         form.resetFields();
+//         setFilterRows(newRows);
+//         onChange(newRows); // Оновлюємо дані в батьківському компоненті
 //     };
 //
-//     const normFile = (e: any) => {
-//         // if (Array.isArray(e)) {
-//         //     return e;
-//         // }
-//         return e?.file.originFileObj;
+//     // Створення списку доступних фільтрів без вже вибраних
+//     const getAvailableFilters = () => {
+//         return filters.filter(filter =>
+//             !filterRows.some(row => row.filterId === filter.id) // Фільтруємо вже вибрані
+//         );
 //     };
-//
-//     const normDescription = (e: any) => {
-//         return e.target.value === "" ? null : e.target.value;
-//     }
 //
 //     return (
-//         <>
-//             <Button type="text" onClick={() => navigate(-1)}>
-//                 <ArrowLeftOutlined/>
-//             </Button>
+//         <div>
+//             <Form layout="vertical">
+//                 {filterRows.map((row, index) => {
+//                     const selectedFilter = filters.find(filter => filter.id === row.filterId);
+//                     const availableValues = selectedFilter ? selectedFilter.values : [];
+//                     return (
+//                         <div key={index} style={{display: 'flex', marginBottom: 8}}>
+//                             <Form.Item name="filterid">
+//                                 <Select
+//                                     style={{width: '200px', marginRight: '8px'}}
+//                                     value={row.filterId || undefined}
+//                                     onChange={(value) => handleFilterChange(value, index, 'filter')}
+//                                     placeholder="Виберіть фільтр"
+//                                 >
+//                                     {getAvailableFilters().map((filter) => (
+//                                         <Option key={filter.id} value={filter.id} label={filter.name}>
+//                                             {filter.name}
+//                                         </Option>
+//                                     ))}
+//                                 </Select>
+//                             </Form.Item>
 //
-//
-//                 <UL>
-//                     <li><a href="#home">Home</a></li>
-//                     <li><a href="#news">News</a></li>
-//                     <li className="dropdown">
-//                         <a href="javascript:void(0)" className="dropbtn">Dropdown</a>
-//                         <div className="dropdown-content">
-//                             <a href="#">Link 1</a>
-//                             <a href="#">Link 2</a>
-//                             <a href="#">Link 3</a>
+//                             <Form.Item name="valueid">
+//                                 <Select
+//                                     style={{width: '200px'}}
+//                                     value={row.valueId || undefined}
+//                                     onChange={(value) => handleFilterChange(value, index, 'value')}
+//                                     placeholder="Виберіть значення"
+//                                     disabled={row.filterId === 0}
+//                                 >
+//                                     {availableValues.map((value) => (
+//                                         <Option key={value.id} value={value.id}>
+//                                             {value.value}
+//                                         </Option>
+//                                     ))}
+//                                 </Select>
+//                             </Form.Item>
+//                             <Button
+//                                 type="danger"
+//                                 onClick={() => removeRow(index)}
+//                                 style={{marginLeft: '8px'}}
+//                             >
+//                                 Видалити
+//                             </Button>
 //                         </div>
-//                     </li>
-//                 </UL>
-//
-//
-//             <h1 style={{textAlign: "center"}}>{editMode ? "Edit" : "Create"} Product</h1>
-//             <Form
-//                 form={form}
-//                 name="control-hooks"
-//                 onFinish={onFinish}
-//                 style={{
-//                     maxWidth: 600,
-//                     margin: "auto"
-//                 }}
-//                 layout="vertical"
-//             >
-//                 <Form.Item<FieldType>
-//                     name="name"
-//                     label="Name"
-//                     rules={[
-//                         {
-//                             required: true,
-//                         },
-//                     ]}
-//                     style={{
-//                         flexGrow: 1
-//                     }}
-//
-//                 >
-//                     <Input placeholder="Enter product name"/>
-//                 </Form.Item>
-//
-//                 <div style={col2}>
-//
-//                     <Form.Item<FieldType>
-//                         name="price"
-//                         label="Price"
-//                         rules={[
-//                             {
-//                                 required: true,
-//                             },
-//                         ]}
-//                         style={{
-//                             flexGrow: 1
-//                         }}
-//                     >
-//                         <InputNumber
-//                             style={{
-//                                 width: '100%',
-//                             }}
-//                             prefix="$"
-//                             placeholder="Enter product price"
-//                         />
-//                     </Form.Item>
-//
-//                     <Form.Item<FieldType>
-//                         name="discount"
-//                         label="Discount"
-//                         initialValue={0}
-//                         rules={[
-//                             {
-//                                 required: true,
-//                             },
-//                         ]}
-//                         style={{
-//                             flexGrow: 1
-//                         }}
-//                     >
-//                         <InputNumber
-//                             style={{
-//                                 width: '100%',
-//                             }}
-//                             prefix="%"
-//                             placeholder="Enter product discount"
-//                         />
-//                     </Form.Item>
-//                 </div>
-//
-//                 <Form.Item<FieldType>
-//                     name="categoryId"
-//                     label="Category"
-//                     rules={[
-//                         {
-//                             required: true,
-//                         },
-//                     ]}
-//                 >
-//                     <Select
-//                         placeholder="Select a product category"
-//                         allowClear
-//                         options={categories}>
-//                     </Select>
-//                 </Form.Item>
-//
-//                 <Form.Item<FieldType>
-//                     name="image"
-//                     label="Image"
-//                     valuePropName="file"
-//                     getValueFromEvent={normFile}
-//                     rules={[
-//                         {
-//                             required: editMode ? false : true,
-//                         },
-//                     ]}
-//                 >
-//                     <Upload maxCount={1}>
-//                         <Button icon={<UploadOutlined/>}>Click to Choose a File</Button>
-//                     </Upload>
-//                 </Form.Item>
-//
-//                 <Form.Item<FieldType>
-//                     name="description"
-//                     label="Description"
-//                     getValueFromEvent={normDescription}
-//                     initialValue={null}>
-//                     <TextArea rows={4}
-//                               placeholder="Enter product description"
-//                               minLength={10} maxLength={3000} showCount/>
-//                 </Form.Item>
-//
-//                 <Form.Item<FieldType>
-//                     name="inStock"
-//                     valuePropName="checked"
-//                     initialValue={false}
-//                     label="In Stock">
-//                     <Checkbox>
-//                         In Stock
-//                     </Checkbox>
-//                 </Form.Item>
-//                 <Form.Item style={{
-//                     textAlign: "center"
-//                 }}>
-//
-//                     <Space>
-//                         <Button type="primary" htmlType="submit">
-//                             {editMode ? "Edit" : "Create"}
-//                         </Button>
-//                         <Button htmlType="button" onClick={onReset}>
-//                             Reset
-//                         </Button>
-//                     </Space>
-//                 </Form.Item>
+//                     );
+//                 })}
+//                 <Button onClick={addRow} type="primary" style={{marginBottom: 16}}>
+//                     Додати фільтр
+//                 </Button>
 //             </Form>
-//         </>
+//         </div>
 //     );
-// }
+// };
 //
-// export default ProductForm;
-//
-// const col2: React.CSSProperties = {
-//     display: "flex",
-//     gap: 10
-// }
+// export default FilterForm;
+
+
+// // import React, {useEffect, useState} from 'react';
+// // import { Select, Button, Form, message } from 'antd';
+// // import {FilterServices} from "../../services/filterService.ts";
+// //
+// // interface IFilterModel {
+// //     id: number;
+// //     name: string;
+// //     values: IFilterValueModel[];
+// // }
+// //
+// // interface IFilterValueModel {
+// //     id: number;
+// //     value: string;
+// //     filterId: number;
+// //     filterName: string;
+// // }
+// //
+// // const { Option } = Select;
+// //
+// // const FilterForm: React.FC = () => {
+// //     // Ініціалізація масивів даних для фільтрів
+// //     const [filters, setFilters] = useState<IFilterModel[]>();
+// //
+// //
+// //     // Стан для збереження вибраних значень у формах
+// //     const [filterRows, setFilterRows] = useState<{ filterId: number, valueId: number }[]>([]);
+// //
+// //     // Функція для додавання нового рядка
+// //     const addRow = () => {
+// //         setFilterRows([...filterRows, { filterId: 0, valueId: 0 }]);
+// //     };
+// //
+// //     // Функція для видалення рядка
+// //     const removeRow = (index: number) => {
+// //         const newRows = filterRows.filter((_, i) => i !== index);
+// //         setFilterRows(newRows);
+// //     };
+// //
+// //     // Функція для обробки зміни в селекторах
+// //     const handleFilterChange = (value: number, index: number, type: 'filter' | 'value') => {
+// //         const newRows = [...filterRows];
+// //         if (type === 'filter') {
+// //             newRows[index].filterId = value;
+// //             newRows[index].valueId = 0; // Скидаємо значення value, коли змінюється filter
+// //         } else if (type === 'value') {
+// //             newRows[index].valueId = value;
+// //         }
+// //         setFilterRows(newRows);
+// //     };
+// //     const loadFilters = async () => {
+// //         const res = await FilterServices.getAll();
+// //         console.log(res);
+// //         setFilters(res.data);
+// //     };
+// //
+// //
+// //     useEffect(() => {
+// //         loadFilters();
+// //     }, []);
+// //
+// //     // Створення списку доступних фільтрів без вже вибраних
+// //     const getAvailableFilters = () => {
+// //         return filters?.filter(filter =>
+// //             !filterRows.some(row => row.filterId === filter.id) // Фільтруємо вже вибрані
+// //         );
+// //     };
+// //
+// //     return (
+// //         <div>
+// //
+// //             <Form layout="vertical">
+// //                 {filterRows.map((row, index) => {
+// //                     const selectedFilter = filters?.find(filter => filter.id === row.filterId);
+// //                     const availableValues = selectedFilter ? selectedFilter.values : [];
+// //                     return (
+// //                         <div key={index} style={{ display: 'flex', marginBottom: 8 }}>
+// //                             <Select
+// //                                 style={{ width: '200px', marginRight: '8px' }}
+// //                                 value={row.filterId || undefined}
+// //                                 onChange={(value) => handleFilterChange(value, index, 'filter')}
+// //                                 placeholder="Виберіть фільтр"
+// //                             >
+// //                                 {getAvailableFilters()?.map((filter) => (
+// //                                     <Option key={filter.id} value={filter.id}>
+// //                                         {filter.name}
+// //                                     </Option>
+// //                                 ))}
+// //                             </Select>
+// //                             <Select
+// //                                 style={{ width: '200px' }}
+// //                                 value={row.valueId || undefined}
+// //                                 onChange={(value) => handleFilterChange(value, index, 'value')}
+// //                                 placeholder="Виберіть значення"
+// //                                 disabled={row.filterId === 0}
+// //                             >
+// //                                 {availableValues.map((value) => (
+// //                                     <Option key={value.id} value={value.id}>
+// //                                         {value.value}
+// //                                     </Option>
+// //                                 ))}
+// //                             </Select>
+// //                             <Button
+// //                                 type="danger"
+// //                                 onClick={() => removeRow(index)}
+// //                                 style={{ marginLeft: '8px' }}
+// //                             >
+// //                                 Видалити
+// //                             </Button>
+// //                         </div>
+// //                     );
+// //                 })}
+// //             </Form>
+// //             <Button onClick={addRow} type="primary" style={{ marginBottom: 16 }}>
+// //                 Додати фільтр
+// //             </Button>
+// //         </div>
+// //     );
+// // };
+// //
+// // export default FilterForm;
