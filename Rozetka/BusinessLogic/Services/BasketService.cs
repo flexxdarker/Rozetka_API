@@ -190,17 +190,7 @@ namespace BusinessLogic.Services
 
             var newStatus = await _status.AsQueryable().Where(x => x.Id == 1).FirstOrDefaultAsync();
 
-            //decimal amount = 0;
-            //foreach (object item in orderItems)
-            //{
-            //    var i = 0;
-            //    amount += orderItems[i].Items.Select(x => x.Price * x.Quantity).Sum();
-            //    i++;
-            //}
-
             decimal amount = orderItems.Sum(item => item.Items.Sum(x => x.Price * x.Quantity));
-
-            //decimal amount = orderItems.Items /*.Select(x=>x.Price*x.Amount).Sum();*/
 
             var order = new Order
             {
