@@ -23,7 +23,6 @@ const ProductForm: React.FC = () => {
     const [product, setProduct] = useState<IProductModel | null>(null);
     const [filters, setFilters] = useState<IFilterModel[]>([]);
 
-    //@ts-ignore
     const [filterValue, setFilterValue] = useState<{ filterId: number, valueId: number }[]>([]);
 
     const [form] = Form.useForm();
@@ -52,6 +51,11 @@ const ProductForm: React.FC = () => {
 
     const onFinish: FormProps<ICreateProductModel>['onFinish'] = async (values) => {
         console.log('Form values:', {...values, description}); // Обробка відправки форм
+
+        if(filterValue.length > 0){
+            values.values = filterValue.map(item => item.valueId)
+        }
+
         //const imageFiles = values.imageFiles;
         if (editMode) {
             // if (!values.price) {
@@ -71,10 +75,7 @@ const ProductForm: React.FC = () => {
                 message.warning("Warning");
             }
         } else {
-            // console.log("Success create:", {...values, description,filterValue});
             console.log("Success create:", {...values, description});
-            //values.imageFiles = values.imageFiles.originFileObj;
-
             const res = await ProductServices.create({...values, description});
             console.log(res);
             if (res.status == 200) {
@@ -229,7 +230,10 @@ const ProductForm: React.FC = () => {
 
                 {/*<Form.Item>*/}
                 {/*<FilterForm filters={filters} onChange={handleFilterChange} />*/}
+                <Form.Item
+                    name="values">
                 <FilterForm filters={filters} onChange={handleFilterChange}/>
+            </Form.Item>
                 {/*</Form.Item>*/}
 
                 <Form.Item wrapperCol={{span: 24}} name="description"

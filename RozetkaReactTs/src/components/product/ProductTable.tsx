@@ -240,7 +240,6 @@ const ProductTable: React.FC = () => {
     return (
         <>
             <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-                <h1>Product table for admin</h1>
                 <Link to="create">
                     <ButtonMui variant="contained" style={{maxHeight: "25px"}}>Add</ButtonMui>
                 </Link>
