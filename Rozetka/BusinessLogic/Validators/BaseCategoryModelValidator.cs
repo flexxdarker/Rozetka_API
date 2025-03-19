@@ -17,9 +17,6 @@ namespace BusinessLogic.Validators
             RuleFor(x => x.Name)
                 .MinimumLength(3).WithMessage(Errors.MinSymbolsCountError + " 3 symbols")
                 .MaximumLength(20).WithMessage(Errors.MaxSymbolsCountError + "20 symbols");
-            RuleFor(x => x.ParentCategoryId)
-                .NotNull()  
-                .GreaterThan(0).WithMessage(Errors.GreaterZeroError);
             RuleFor(x => x.Image)
                 .NotNull().WithMessage(Errors.NotNull);
 
