@@ -1,8 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import {Link} from "react-router-dom";
-// import viewGrid from "./../../../assets/icons/view-grid.svg?react"
 import viewGrid from "./../../../assets/icons/view-grid.svg"
 import search from "./../../../assets/icons/search.svg"
 import heartWhite from "./../../../assets/icons/heart-white.svg"
@@ -12,6 +10,7 @@ import userWhite from "./../../../assets/icons/user-white.svg"
 import cartWhite from "./../../../assets/icons/cart-white.svg"
 import logoutWhite from "./../../../assets/icons/logoutWhite.svg"
 import settingWhite from "./../../../assets/icons/setting-white.svg"
+import admin from "./../../../assets/icons/admin.svg"
 import Basket from "../../basket/Basket.tsx";
 import Modal from "../../other/Modal.tsx";
 import {TokenService} from "../../../services/tokenService.ts";
@@ -92,9 +91,11 @@ const Header = () => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isLogin, setIsLogin] = useState(TokenService.isExists());
+    const [isAdmin, setIsAdmin] = useState<boolean>(TokenService.getAccessTokenPayload()?.roles === "admin");
 
     const logout = () => {
-        AccountsService.logout(TokenService.getRefreshToken() || "")
+        AccountsService.logout(TokenService.getAccessToken() || "");
+        setIsAdmin(false);
         setIsLogin(false);
     }
 
@@ -217,6 +218,17 @@ const Header = () => {
                                             <img src={settingWhite}/>
                                         </div>
                                     </Link>
+
+                                    {isAdmin &&(
+                                        <Link to="orders-crud"
+                                              className="flex w-[44px] pt-[8px] pr-[10px] pb-[8px] pl-[10px] gap-[10px] items-center shrink-0 flex-nowrap rounded-[8px]">
+                                            <div
+                                                className="w-[24px] h-[24px] shrink-0 overflow-hidden">
+                                                <img src={admin}/>
+                                            </div>
+                                        </Link>
+                                        )}
+
                                     <button onClick={logout}
                                             className="flex w-[44px] pt-[8px] pr-[10px] pb-[8px] pl-[10px] gap-[10px] items-center shrink-0 flex-nowrap rounded-[8px]">
                                         <div
@@ -266,52 +278,6 @@ const Header = () => {
                 </div>
             </Box>
 
-            <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}, backgroundColor: 'blue'}}>
-
-
-                <Link to="categories-crud">
-                    <Button sx={{my: 2, color: 'white', display: 'block'}}>
-                        Categories
-                    </Button>
-                </Link>
-
-                <Link to="products-crud">
-                    <Button sx={{my: 2, color: 'white', display: 'block'}}>
-                        Products
-                    </Button>
-                </Link>
-
-                <Link to="signin">
-                    <Button sx={{my: 2, color: 'white', display: 'block'}}>
-                        SignIn
-                    </Button>
-                </Link>
-
-                <Link to="signup">
-                    <Button sx={{my: 2, color: 'white', display: 'block'}}>
-                        SignUp
-                    </Button>
-                </Link>
-
-                <Link to="/product-filter">
-                    <Button sx={{my: 2, color: 'white', display: 'block'}}>
-                        filters
-                    </Button>
-                </Link>
-
-                <Link to="orders-crud">
-                    <Button sx={{my: 2, color: 'white', display: 'block'}}>
-                        Orders
-                    </Button>
-                </Link>
-
-                <Link to="users-crud">
-                    <Button sx={{my: 2, color: 'white', display: 'block'}}>
-                        Users
-                    </Button>
-                </Link>
-
-            </Box>
         </>
     );
 

@@ -47,7 +47,7 @@ export const CategoriesServices = {
         }
 
         if (model.image) {
-            data.append('imageFiles', model.image as File); // додаємо кожен файл
+            data.append('image', model.image as File); // додаємо кожен файл
         }
         return axios.put(apiToken + "/create",data);
         //return api.put("create", data);
@@ -65,7 +65,7 @@ export const CategoriesServices = {
         }
 
         if (model.image) {
-            data.append('imageFiles', model.image as File); // додаємо кожен файл
+            data.append('image', model.image as File); // додаємо кожен файл
         }
 
         return axios.post(apiToken + "/edit", data);

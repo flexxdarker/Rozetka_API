@@ -6,6 +6,7 @@ import {ICategoryModel, ICategoryName, ICreateCategoryModel} from "../../models/
 import {RcFile, UploadChangeParam} from "antd/es/upload";
 import {PlusOutlined} from "@ant-design/icons";
 
+const uploadings = import.meta.env.VITE_ROZETKA_UPLOADINGS;
 
 const CategoryForm: React.FC = () => {
 
@@ -22,11 +23,24 @@ const CategoryForm: React.FC = () => {
     const [previewTitle, setPreviewTitle] = useState('');
     const [isImage, setIsImage] = useState(false);
 
+    const [fileList, setFileList] = useState<UploadFile[]>([]);
+
     const onFinish: FormProps['onFinish'] = async (values: ICreateCategoryModel) => {
         // Якщо parentCategoryId не вибраний, не додаємо його до values
         if (!values.parentCategoryId) {
             delete values.parentCategoryId;
         }
+
+        // if (category?.image && !fileList[0]?.originFileObj) {
+        //     const file = await downloadFileAndSend(uploadings + `200_${category.image}`, category.image);
+        //
+        //     if (file) {
+        //     values.image = file;
+        //     }
+        // } else if (fileList.length > 0 && fileList[0].originFileObj) {
+        //     // Якщо файл був вибраний, додаємо його
+        //     values.image = fileList[0].originFileObj;
+        // }
 
         if (editMode) {
             console.log('Form values:', {...values}); // Обробка відправки форми з додатковими даними редактора
@@ -62,7 +76,9 @@ const CategoryForm: React.FC = () => {
             console.log(params.id);
             console.log(res.data);
             setCategory(res.data);
+            setFileList([{uid: String(res.data.id),name: res.data.image,status:"done",url:uploadings + `/200_${res.data.image}`}])
             form.setFieldsValue(res.data);
+
             //form.setFieldsValue({ name: "name", value: "name" });
         }
     };
@@ -83,6 +99,27 @@ const CategoryForm: React.FC = () => {
             <div style={{ marginTop: 8 }}>Upload</div>
         </button>
     );
+    const handleRemove = (file: UploadFile) => {
+        setFileList((prevList) => prevList.filter(item => item.uid !== file.uid));
+    };
+
+
+    // Обробник зміни файлів
+    const handleChange = (info: UploadChangeParam) => {
+        let newFileList = [...info.fileList];
+
+        // Оновлюємо статус кожного файлу (успішне завантаження або помилка)
+        newFileList = newFileList.map((file) => {
+            if (file.status === 'done') {
+                file.url = uploadings + '/200_' + file.name;
+            }
+            return file;
+        });
+
+        setFileList(newFileList);
+    };
+
+
 
 
     return (
@@ -129,18 +166,22 @@ const CategoryForm: React.FC = () => {
                         </Select>
                 </Form.Item>
 
-                <Form.Item name="image" label="Зображення" valuePropName="Image"
-                           rules={[{required: true, message: "Please choose a photo for the category."}]}
-                           getValueFromEvent={(e: UploadChangeParam) => {
-                               setIsImage(e.fileList.length > 0);
-                               return e.fileList[0]?.originFileObj;
-                           }}>
-
+                <Form.Item
+                    name="image"
+                    label="Зображення"
+                    valuePropName="Image"
+                    rules={editMode ? [] : [{ required: true, message: "Please choose a photo for the category." }]}
+                    getValueFromEvent={(e: UploadChangeParam) => {
+                        setIsImage(e.fileList.length > 0);
+                        return e.fileList[0]?.originFileObj;
+                    }}
+                >
                     <Upload
-                        beforeUpload={() => false} // Забороняємо автоматичне завантаження
+                        beforeUpload={() => true} // Забороняємо автоматичне завантаження
                         accept="image/*"
                         maxCount={1} // Лише один файл
                         listType="picture-card"
+                        fileList={fileList} // передаємо fileList, який містить вже завантажене зображення
                         onPreview={(file: UploadFile) => {
                             if (!file.url && !file.preview) {
                                 file.preview = URL.createObjectURL(file.originFileObj as RcFile);
@@ -149,11 +190,13 @@ const CategoryForm: React.FC = () => {
                             setPreviewOpen(true);
                             setPreviewTitle(file.name || file.url!.substring(file.url!.lastIndexOf('/') + 1));
                         }}
+                        onRemove={handleRemove} // Додаємо обробник для видалення файлів
+                        onChange={handleChange} // Обробка зміни файлів
                     >
-                        {isImage  ? null : uploadButton}
+                        {isImage || fileList.length > 0 ? null : uploadButton}
                     </Upload>
-
                 </Form.Item>
+
 
 
                 <Form.Item wrapperCol={{span: 24}}>

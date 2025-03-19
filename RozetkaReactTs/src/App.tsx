@@ -7,6 +7,7 @@ import CategoryLayout from "./components/layout/categoryLayout/CategoryLayout.ts
 import ProductPage from "./components/product/ProductPage.tsx";
 import React from "react";
 import AccountLayout from "./components/layout/accountLayout/AccountLayout.tsx";
+import AdminLayout from "./components/layout/adminLayout/AdminLayout.tsx";
 // import UsersTable from "./components/users/UsersTable.tsx";
 // import OrdersTable from "./components/orders/OrdersTable.tsx";
 //import CategoriesPage from "./components/category/CategoriesPage.tsx";
@@ -68,20 +69,6 @@ export default function App() {
                     {/*Header*/}
                     <Route index element={<Home/>}/>
 
-                    {/*Admin*/}
-                    <Route path="products-crud" element={<ProductTable/>}/>
-                    <Route path="products-crud/create" element={<ProductForm/>}/>
-                    <Route path="products-crud/edit/:id" element={<ProductForm/>}/>
-                    {/*<Route path="product-page/:id" element={<ProductPage/>}/>*/}
-
-                    <Route path="categories-crud" element={<CategoryTable/>}/>
-                    <Route path="categories-crud/create" element={<CategoryForm/>}/>
-                    <Route path="categories-crud/edit/:id" element={<CategoryForm/>}/>
-
-                    <Route path="orders-crud" element={<OrdersTable/>}/>
-
-                    <Route path="users-crud" element={<UsersTable/>}/>
-
                     {/*Footer*/}
                     <Route path="about-us" element={<AboutUs/>}/>
                     <Route path="contacts" element={<Contacts/>}/>
@@ -94,6 +81,21 @@ export default function App() {
                     <Route path="franchising" element={<Franchising/>}/>
 
                     <Route path="order" element={<OrderPage/>}/>
+                </Route>
+
+                <Route path="" element={<AdminLayout/>}>
+                    <Route path="products-crud" element={<ProductTable/>}/>
+                    <Route path="products-crud/create" element={<ProductForm/>}/>
+                    <Route path="products-crud/edit/:id" element={<ProductForm/>}/>
+                    {/*<Route path="product-page/:id" element={<ProductPage/>}/>*/}
+
+                    <Route path="categories-crud" element={<CategoryTable/>}/>
+                    <Route path="categories-crud/create" element={<CategoryForm/>}/>
+                    <Route path="categories-crud/edit/:id" element={<CategoryForm/>}/>
+
+                    <Route path="orders-crud" element={<OrdersTable/>}/>
+
+                    <Route path="users-crud" element={<UsersTable/>}/>
                 </Route>
 
                 <Route path="categories" element={<CategoriesPage/>}/>

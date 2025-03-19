@@ -16,18 +16,17 @@ interface ITokenPayload {
 
 
 const saveaccesstoken = import.meta.env.VITE_APP_SAVE_ACCOUNT_ACCESS;
-// const saveaccesstoken = process.env.REACT_APP_SAVE_ACCOUNT_ACCESS;
-const saverefreshtoken = import.meta.env.VITE_APP_SAVE_ACCOUNT_REFRESH;
+//const saverefreshtoken = import.meta.env.VITE_APP_SAVE_ACCOUNT_REFRESH;
 
 export const TokenService = {
     save(model: IUserTokens) {
         localStorage.setItem(saveaccesstoken, model.accessToken);
-        localStorage.setItem(saverefreshtoken, model.refreshToken);
+        //localStorage.setItem(saverefreshtoken, model.refreshToken);
     },
 
     clear() {
         localStorage.removeItem(saveaccesstoken);
-        localStorage.removeItem(saverefreshtoken);
+        //localStorage.removeItem(saverefreshtoken);
     },
 
     getAccessToken(): string | null {
@@ -35,10 +34,10 @@ export const TokenService = {
         return localStorage.getItem(saveaccesstoken);
     },
 
-    getRefreshToken() {
-        if (!saverefreshtoken) return null;
-        return localStorage.getItem(saverefreshtoken);
-    },
+    // getRefreshToken() {
+    //     if (!saverefreshtoken) return null;
+    //     return localStorage.getItem(saverefreshtoken);
+    // },
 
     isExists() {
         if(localStorage.getItem(saveaccesstoken)) {
@@ -86,7 +85,7 @@ export const TokenService = {
                         "birthdate"
                         ] as string,
                 roles: payload[
-                    "role"
+                    "roles"
                     ] as string,
                 exp:
                     payload[
