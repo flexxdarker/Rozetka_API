@@ -11,8 +11,12 @@ const adminMenu:{to:string,label:string}[] = [
         label: "Products",
     },
     {
-        to: "/product-filter",
-        label: "Filters",
+        to: "filter-crud",
+        label: "Filter",
+    },
+    {
+        to: "product-filter",
+        label: "Filter product",
     },
     {
         to: "orders-crud",
@@ -38,9 +42,9 @@ const AdminMenu: React.FC = () => {
     return (
         <div
             className="main-container flex w-[370px] flex-col gap-[4px] items-start flex-nowrap bg-[#fff] mx-auto rounded-[8px] overflow-visible">
-            {adminMenu.map((item,index) => {
-                    return (<>
-                            <div className=" relative inline-block text-left group" key={index}>
+            {adminMenu.map((item) => {
+                    return (
+                            <div className=" relative inline-block text-left group" key={item.to}>
                                 <Link to={item.to}
 
                                     className="flex w-[370px] h-[46px] pt-0 pr-0 pb-0 pl-[20px] items-center shrink-0 flex-nowrap bg-[#fff] hover:bg-gray-100 transition-all duration-200 hover:bg-gray-50 focus:outline-none
@@ -54,11 +58,12 @@ const AdminMenu: React.FC = () => {
                                     </div>
                                 </Link>
                             </div>
-                        </>
+
                     );
             })}
         </div>
     );
 };
+
 
 export default AdminMenu;

@@ -8,6 +8,7 @@ import ProductPage from "./components/product/ProductPage.tsx";
 import React from "react";
 import AccountLayout from "./components/layout/accountLayout/AccountLayout.tsx";
 import AdminLayout from "./components/layout/adminLayout/AdminLayout.tsx";
+// import FilterTable from "./components/filter/filterTable.tsx";
 // import UsersTable from "./components/users/UsersTable.tsx";
 // import OrdersTable from "./components/orders/OrdersTable.tsx";
 //import CategoriesPage from "./components/category/CategoriesPage.tsx";
@@ -60,6 +61,8 @@ const ComparisonProductsPage = lazy(() => import("./components/comparison/Compar
 const CategoriesPage = lazy(() => import("./components/category/CategoriesPage.tsx"));
 const OrdersTable = lazy(() => import("./components/orders/OrdersTable.tsx"));
 const UsersTable = lazy(() => import("./components/users/UsersTable.tsx"));
+const FilterTable = lazy(() => import("./components/filter/filterTable.tsx"));
+
 
 export default function App() {
     return (
@@ -96,6 +99,8 @@ export default function App() {
                     <Route path="orders-crud" element={<OrdersTable/>}/>
 
                     <Route path="users-crud" element={<UsersTable/>}/>
+
+                    <Route path="filter-crud" element={<FilterTable/>}/>
                 </Route>
 
                 <Route path="categories" element={<CategoriesPage/>}/>
