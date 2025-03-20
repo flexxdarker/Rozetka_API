@@ -14,6 +14,7 @@ import {useDispatch} from "react-redux";
 import {incrementTotalPrice} from "../../store/actions/basketActions.ts";
 import {addToComparison, removeFromComparison} from "../../store/actions/comparisonActions.ts";
 import {ComparisonListService} from "../../services/comparisonService.ts";
+import {toast, ToastContainer} from "react-toastify";
 //import {RootState} from "../../store";
 // import "../ProductCard/ProductCard.css"
 
@@ -25,6 +26,8 @@ interface ItemProps {
 const uploadings = import.meta.env.VITE_ROZETKA_UPLOADINGS;
 
 const ProductCard: React.FC<ItemProps> = ({item}) => {
+
+    //const notify = () => toast('Wow so easy !');
 
     //const {item, updateParentState} = props;
     const dispatch = useDispatch();
@@ -158,12 +161,12 @@ const ProductCard: React.FC<ItemProps> = ({item}) => {
                         <div
                             className="flex gap-[4px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff]">
                             <div className="flex gap-[4px] items-start shrink-0 flex-nowrap">
-                                <Rate disabled defaultValue={2}/>
+                                <Rate disabled defaultValue={item.averageRating}/>
                             </div>
                             <div className="flex w-[46px] gap-[4px] items-start shrink-0 flex-nowrap">
                 <span
                     className="h-[20px] shrink-0 basis-auto font-['Inter'] text-[10px] font-light leading-[20px] text-[#3b3b3b] text-left whitespace-nowrap">
-                  9 відгуків
+                  _ відгуків
                 </span>
                             </div>
                         </div>
@@ -190,12 +193,18 @@ const ProductCard: React.FC<ItemProps> = ({item}) => {
                 </span>
                                 </div>
                             }
+                            <div>
                             <button type={"button"} onClick={() => {
                                 if(!BasketService.checkId(item.id)) {
                                     BasketService.addId(item.id);
+                                    toast('Товар успішно добавлено в корзину!', {
+                                        position: 'bottom-right',
+                                    })
                                     dispatch(incrementTotalPrice(Number(formatPrice(item.price - item.discount!))));
                                 }
+
                             }}>
+
                                 <div
                                     className="flex w-[44px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] items-center shrink-0 flex-nowrap rounded-[8px] border-solid border-2 border-[#9cc319]">
                                     <div
@@ -204,6 +213,8 @@ const ProductCard: React.FC<ItemProps> = ({item}) => {
                                     </div>
                                 </div>
                             </button>
+                            <ToastContainer />
+                        </div>
                         </div>
                     </div>
                 </div>

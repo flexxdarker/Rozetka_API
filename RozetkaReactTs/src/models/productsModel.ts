@@ -13,6 +13,7 @@ export interface IProductModel {
     description: string;
     price: number;
     discount?: number;
+    averageRating: number;
     // firstImage: string;
     values?: values[];
     images?: IImageModel[];

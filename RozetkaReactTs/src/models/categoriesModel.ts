@@ -11,7 +11,7 @@ export interface ICreateCategoryModel {
     id?: number;
     name: string;
     parentCategoryId?: number;
-    image: string;
+    image: File;
 }
 
 export interface ICategoryName {

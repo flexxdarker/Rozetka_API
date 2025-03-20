@@ -34,6 +34,7 @@
     "react-resizable": "^3.0.5",
     "react-router-dom": "^7.0.1",
     "react-slider": "^2.0.6",
+    "react-toastify": "^11.0.5",
     "styled-components": "^6.1.14"
   },
   "devDependencies": {

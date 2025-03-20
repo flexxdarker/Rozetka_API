@@ -16,6 +16,7 @@ import {incrementTotalPrice} from "../../store/actions/basketActions.ts";
 import {ReviewedListService} from "../../services/reviewedService.ts";
 import {addToComparison, removeFromComparison} from "../../store/actions/comparisonActions.ts";
 import {ComparisonListService} from "../../services/comparisonService.ts";
+import {toast, ToastContainer} from "react-toastify";
 
 const uploadings = import.meta.env.VITE_ROZETKA_UPLOADINGS;
 
@@ -122,7 +123,7 @@ const ProductPage: React.FC = () => {
                                     className="min-h-[75px] justify-start items-center grow shrink-0 basis-0 font-['Inter'] text-[13px] font-normal leading-[22px] text-[#000] text-left">
                                     {
                                         product.values?.map((value, index) => (
-                                            <span key={index}>{value.filterName}/{value.valueName}</span>))
+                                            <span key={index}>{value.filterName}:{value.valueName} / </span>))
                                     }
                                 </span>
                             </div>
@@ -149,7 +150,7 @@ const ProductPage: React.FC = () => {
                                                 className="flex w-[265px] gap-[12px] items-center shrink-0 flex-nowrap">
                                                 <div
                                                     className="flex w-[176px] pt-[8px] pr-0 pb-[8px] pl-0 gap-[4px] items-start shrink-0 flex-nowrap">
-                                                    <Rate disabled defaultValue={2}/>
+                                                    <Rate disabled defaultValue={product.averageRating}/>
                                                 </div>
                                                 <div
                                                     className="flex w-[77px] gap-[4px] items-start shrink-0 flex-nowrap">
@@ -258,7 +259,7 @@ const ProductPage: React.FC = () => {
                                                     className="flex flex-col gap-[12px] self-stretch shrink-0 flex-nowrap">
                                                     <span
                                                         className="flex w-[166px] h-[23px] shrink-0 basis-auto font-['Inter'] text-[32px] font-medium leading-[20px] text-[#3b3b3b] text-center whitespace-nowrap">
-                {formatPrice(product.price)} грн грн
+                {formatPrice(product.price)} грн
               </span>
                                                 </div>
                                             }
@@ -308,9 +309,13 @@ const ProductPage: React.FC = () => {
                                         className="flex flex-col gap-[32px] items-start self-stretch shrink-0 flex-nowrap">
                                         <div
                                             className="flex justify-between items-start self-stretch shrink-0 flex-nowrap">
+                                            <div>
                                             <button type={"button"} onClick={() => {
                                                 if (!BasketService.checkId(product.id)) {
                                                     BasketService.addId(product.id);
+                                                    toast('Товар успішно добавлено в корзину!', {
+                                                        position: 'bottom-right',
+                                                    })
                                                     dispatch(incrementTotalPrice(Number(formatPrice(product.price - product.discount!))));
                                                 }}} className="flex w-[340px] h-[50px] pt-0 pr-[40px] pb-0 pl-[40px] justify-center items-center shrink-0 flex-nowrap bg-[#9cc319] rounded-[8px] border-none pointer">
                                                 <div
@@ -328,6 +333,8 @@ const ProductPage: React.FC = () => {
                                                 </span>
                                                 </div>
                                             </button>
+                                            <ToastContainer />
+                                        </div>
                                             <button
                                                 className="flex w-[340px] h-[50px] justify-center items-center shrink-0 flex-nowrap rounded-[8px] border-solid border-2 border-[#9cc319] pointer">
                                                 <div
