@@ -1,5 +1,9 @@
 # React + TypeScript + Vite
 
+docker build -t rozetka-client .
+
+docker run -d --restart=always --name rozetka_container -p 6543:80 rozetka-client
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:
@@ -48,3 +52,28 @@ export default tseslint.config({
   },
 })
 ```
+
+docker hub
+docker build -t borys1994/rozetka-client:latest .
+
+docker push borys1994/rozetka-client:latest
+
+login
+
+docker pull borys1994/rozetka-client
+docker run -d --restart=always --name rozetka_container -p 6543:80 borys1994/rozetka-client
+
+500  docker images
+501  docker ps -a
+502  docker stop 386
+503  docker ps -a
+504  docker rm 386
+505  docker ps -a
+506  docker images
+507  docker rmi 3d2
+508  docker images
+511  docker pull borys1994/rozetka-client
+512  docker images
+513  docker run -d --restart=always --name rozetka_container -p 6543:80 borys1994/rozetka-client
+514  docker ps -a
+515  history

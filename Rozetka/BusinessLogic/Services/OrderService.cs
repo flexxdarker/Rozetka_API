@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using BusinessLogic.DTOs.Basket;
 using BusinessLogic.DTOs.Cart;
 using BusinessLogic.DTOs.Order;
 using BusinessLogic.DTOs.OrderStatus;
@@ -57,16 +58,21 @@ namespace BusinessLogic.Services
         .Select(o => new ChangeOrderStatus
         {
             Id = o.Id,
-            Names = o.OrderAdverts.Select(oa => oa.Advert.Title).ToList(),
-            UserName = o.User.UserName,
+            Items = o.OrderAdverts.Select(oa => new OrderItemInfo
+            {
+                Id = oa.Advert.Id,
+                Name = oa.Advert.Title,
+                Price = oa.Price,
+                Quantity = oa.Count,
+                ImagePath = oa.Advert.Images.FirstOrDefault().Name
+            }).ToList(),
+            userName = o.User.UserName,
+            Name = o.User.Name,
+            SurName = o.User.SurName,
             PhoneNumber = o.User.PhoneNumber,
             Status = o.OrderStatus.Status, // назва статусу
             TotalPrice = o.Amount, // загальна сума
             DateCrated = o.DateCrated.ToString("yyyy-MM-dd HH:mm:ss"),
-            ImagePaths = o.OrderAdverts
-                .SelectMany(op => op.Advert.Images)
-                .Select(img => img.Name)
-                .ToList(),
             ImageUser = o.User.Avatar.Name
         }).ToListAsync();
 
@@ -87,11 +93,15 @@ namespace BusinessLogic.Services
                 {
                     Id = x.Id,
                     Status = x.OrderStatus.Status,
-                    Names = x.OrderAdverts.Select(x=>x.Advert.Title).ToList(),
+                    OrderItems = x.OrderAdverts.Select(y => new OrderItemInfo
+                    {
+                        Id = y.Advert.Id,
+                        Name = y.Advert.Title,
+                        Price = y.Price,
+                        Quantity = y.Count,
+                        ImagePath = y.Advert.Images.FirstOrDefault().Name
+                    }).ToList(),
                     TotalPrice = x.Amount,
-                    ImagePaths = x.OrderAdverts
-                    .SelectMany(x=>x.Advert.Images
-                    .Select(img=>img.Name)).ToList(),
                 });
             var totalOrders = orderItems.Count();
             
@@ -118,12 +128,18 @@ namespace BusinessLogic.Services
                     .SelectMany(order => order.OrderAdverts.Select(op => new BasketViewItem
                     {
                         Id = op.Advert.Id,
-                        Name = op.Advert.Title,
-                        Description = op.Advert.Description,
-                        Price = op.Price,
-                        Category = op.Advert.Category.Name,
-                        Amount = op.Count,
-                        ImagePaths = op.Advert.Images.Select(pi => pi.Name).ToList() // Припускаємо, що ProductImage має поле ImagePath
+                        Items = new List<BasketItemInformationDto>
+                        {
+                            new BasketItemInformationDto
+                            {
+                                Id = op.AdvertId,
+                                Name = op.Advert.Title,
+                                Price = op.Advert.Price,
+                                Quantity = op.Count,
+                                ImagePath = op.Advert.Images.FirstOrDefault().Name
+                            }
+                        },
+                        
                     }));
 
 
@@ -157,16 +173,21 @@ namespace BusinessLogic.Services
         .Select(o => new ChangeOrderStatus
         {
             Id = o.Id,
-            Names = o.OrderAdverts.Select(oa => oa.Advert.Title).ToList(),
-            UserName = o.User.UserName,
+            Items = o.OrderAdverts.Select(oa => new OrderItemInfo
+            {
+                Id = oa.Advert.Id,
+                Name = oa.Advert.Title,
+                Price = oa.Price,
+                Quantity = oa.Count,
+                ImagePath = oa.Advert.Images.FirstOrDefault().Name
+            }).ToList(),
+            userName = o.User.UserName,
+            Name = o.User.Name,
+            SurName = o.User.SurName,
             PhoneNumber = o.User.PhoneNumber,
             Status = o.OrderStatus.Status, // назва статусу
             TotalPrice = o.Amount, // загальна сума
             DateCrated = o.DateCrated.ToString("yyyy-MM-dd HH:mm:ss"),
-            ImagePaths = o.OrderAdverts
-                .SelectMany(op => op.Advert.Images)
-                .Select(img => img.Name)
-                .ToList(),
             ImageUser = o.User.Avatar.Name
         }).FirstOrDefaultAsync();
 

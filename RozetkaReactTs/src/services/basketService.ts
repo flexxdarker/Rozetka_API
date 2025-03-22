@@ -60,6 +60,17 @@ export const BasketService = {
         }
     },
 
+    checkId(id: number): boolean{
+        const itemString = localStorage.getItem(ProductBasket);
+        let items: IBasketModel = {};
+        if (itemString) {
+            items = JSON.parse(itemString); // Перетворюємо рядок назад в масив
+        }
+
+        // Якщо товар є в кошику, збільшуємо його кількість
+        return !!items[id];
+    },
+
     getCountById(id: number) {
         const itemString = localStorage.getItem(ProductBasket);
         if (itemString) {

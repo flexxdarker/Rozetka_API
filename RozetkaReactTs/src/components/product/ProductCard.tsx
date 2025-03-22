@@ -1,168 +1,205 @@
-// import Card from '@mui/material/Card';
-// import CardActions from '@mui/material/CardActions';
-// import CardContent from '@mui/material/CardContent';
-// import CardMedia from '@mui/material/CardMedia';
-// import Button from '@mui/material/Button';
-// import Typography from '@mui/material/Typography';
 import {IProductModel} from "../../models/productsModel.ts";
 import balance from "../../assets/icons/balance.svg"
 import cart from "../../assets/icons/cart.svg"
 import heart from "../../assets/icons/heart.svg"
+import heartRed from "../../assets/icons/heartFillRed.svg"
 import {Link} from "react-router-dom";
-import React from "react";
+import React, {useState} from "react";
 import {BasketService} from "../../services/basketService.ts";
+import {Badge, Rate} from "antd";
+import {WishListService} from "../../services/wishListService.ts";
+import formatPrice from "../../functions/formatPrice.ts";
+import {useDispatch} from "react-redux";
+// import {useDispatch, useSelector} from "react-redux";
+import {incrementTotalPrice} from "../../store/actions/basketActions.ts";
+import {addToComparison, removeFromComparison} from "../../store/actions/comparisonActions.ts";
+import {ComparisonListService} from "../../services/comparisonService.ts";
+//import {RootState} from "../../store";
 // import "../ProductCard/ProductCard.css"
 
 //import Typography from '../assets/contemplative-reptile.jpg';
+interface ItemProps {
+    item: IProductModel;
+}
+
+const uploadings = import.meta.env.VITE_ROZETKA_UPLOADINGS;
+
+const ProductCard: React.FC<ItemProps> = ({item}) => {
+
+    //const {item, updateParentState} = props;
+    const dispatch = useDispatch();
+    const [isWishList, setIsWishList] = useState(WishListService.checkId(item.id));
+    //const comparisonCount = useSelector((state: RootState) => state.comparison.comparisonCount);
+    const [isComparison, setIsComparison] = useState<boolean>(ComparisonListService.checkId(item.id));
+
+    const WishListAdd = () => {
+        WishListService.addId(item.id)
+        setIsWishList(true); // Зміна стану відкриття/закриття
+    };
+
+    const WishListRemove = () => {
+        WishListService.removeId(item.id)
+        setIsWishList(false); // Зміна стану відкриття/закриття
+    };
+
+    const ComparisonListAdd = () => {
+        dispatch(addToComparison(item.id));
+        setIsComparison(ComparisonListService.checkId(item.id));
+    };
+
+    const ComparisonListRemove = () => {
+        dispatch(removeFromComparison(item.id));
+        setIsComparison(ComparisonListService.checkId(item.id));
+    };
 
 
-const ProductCard = (props: { item: IProductModel }) => {
-
-    const {item} = props;
 
     return (
-
         <div
-            className="main-container flex w-[286px] pt-[20px] pr-[20px] pb-[20px] pl-[20px] flex-col items-start flex-nowrap bg-[#fff] relative mx-auto my-0">
-            <div className="flex justify-between items-start self-stretch shrink-0 flex-nowrap relative">
-                <div className="flex w-[129px] flex-col gap-[16px] items-start shrink-0 flex-nowrap relative">
-                    <div className="flex gap-[4px] items-center self-stretch shrink-0 flex-nowrap relative">
+            className="main-container flex min-w-[250px] w-[286px] pt-[20px] pr-[20px] pb-[20px] pl-[20px] flex-col items-start flex-nowrap bg-[#fff] mx-auto my-0">
+            <div className="flex justify-between items-start self-stretch shrink-0 flex-nowrap">
+                <div className="flex w-[129px] flex-col gap-[16px] items-start shrink-0 flex-nowrap">
+                    <div className="flex gap-[4px] items-center self-stretch shrink-0 flex-nowrap">
                         <button
-                            className="flex w-[93px] pt-[4px] pr-[4px] pb-[4px] pl-[4px] justify-center items-center shrink-0 flex-nowrap bg-[#9cc319] border-none relative pointer">
+                            className="flex w-[93px] pt-[4px] pr-[4px] pb-[4px] pl-[4px] justify-center items-center shrink-0 flex-nowrap bg-[#9cc319] border-none pointer">
                             <div
-                                className="w-[85px] shrink-0 font-['Inter'] text-[10px] font-normal leading-[10px] relative text-center whitespace-nowrap">
+                                className="w-[85px] shrink-0 font-['Inter'] text-[10px] font-normal leading-[10px] text-center whitespace-nowrap">
                 <span
-                    className="font-['Inter'] text-[10px] font-normal leading-[10px] text-[#fff] relative text-center uppercase">
+                    className="font-['Inter'] text-[10px] font-normal leading-[10px] text-[#fff] text-center uppercase">
                   Найкраща ціна
                 </span>
                             </div>
                         </button>
-                        {item.discount > 0 ?
-                        <button
-                            className="flex w-[32px] pt-[4px] pr-[4px] pb-[4px] pl-[4px] flex-col justify-center items-center shrink-0 flex-nowrap bg-[#e11515] border-none relative pointer">
+                        {item.discount! > 0 ?
+                            <button
+                                className="flex w-[32px] pt-[4px] pr-[4px] pb-[4px] pl-[4px] flex-col justify-center items-center shrink-0 flex-nowrap bg-[#e11515] border-none pointer">
               <span
-                  className="flex w-[24px] h-[7px] justify-center items-center shrink-0 font-['Inter'] text-[10px] font-normal leading-[10px] text-[#fff] relative text-center uppercase whitespace-nowrap">
-                -{Math.round(item.discount/(item.price/100))}%
+                  className="flex w-[24px] h-[7px] justify-center items-center shrink-0 font-['Inter'] text-[10px] font-normal leading-[10px] text-[#fff] text-center uppercase whitespace-nowrap">
+                -{Math.round(item.discount! / (item.price / 100))}%
               </span>
-                        </button>
+                            </button>
                             :
                             ""
                         }
                     </div>
                     <div
-                        className="flex w-[59px] h-[7px] gap-[10px] items-start shrink-0 flex-nowrap bg-[#fff] relative">
+                        className="flex w-[59px] h-[7px] gap-[10px] items-start shrink-0 flex-nowrap bg-[#fff]">
             <span
-                className="flex w-[59px] h-[7px] items-center shrink-0 font-['Inter'] text-[10px] font-normal leading-[7px] text-[#3b3b3b] relative text-right whitespace-nowrap">
+                className="flex w-[59px] h-[7px] items-center shrink-0 font-['Inter'] text-[10px] font-normal leading-[7px] text-[#3b3b3b] text-right whitespace-nowrap">
               Код: {item.id}
             </span>
                     </div>
                 </div>
-                <div className="flex w-[32px] flex-col gap-[4px] items-start shrink-0 flex-nowrap relative">
-                    <div className="flex w-[32px] items-start shrink-0 flex-nowrap relative">
+                <div className="flex w-[32px] flex-col gap-[4px] items-start shrink-0 flex-nowrap">
+
+                    { isComparison ? (
+                    <Badge count={"✓"} size={"small"} color={"green"}>
+                    <button type={"button"} className="flex w-[32px] items-start shrink-0 flex-nowrap" onClick={ComparisonListRemove}>
                         <div
-                            className="flex w-[32px] pt-[4px] pr-[4px] pb-[4px] pl-[4px] items-center shrink-0 flex-nowrap bg-[#fff] rounded-[4px] border-solid border-[0.5px] border-[#3b3b3b] relative">
+                            className="flex w-[32px] pt-[4px] pr-[4px] pb-[4px] pl-[4px] items-center shrink-0 flex-nowrap bg-[#fff] rounded-[4px] border-solid border-[0.5px] border-[#3b3b3b]">
                             <div
-                                className="w-[24px] h-[24px] shrink-0 relative overflow-hidden">
-                                 {/*className="w-[23px] h-[20px] bg-cover bg-no-repeat shrink-0 relative overflow-hidden z-[12]" style={{backgroundImage:`url(${balance})`}}>*/}
-                                {/*className="w-[24px] h-[24px] shrink-0 bg-[url(./assets/icons/balance.svg)] bg-cover bg-no-repeat relative overflow-hidden z-[12]">*/}
+                                className="w-[24px] h-[24px] shrink-0 overflow-hidden">
+                                {/*className="w-[23px] h-[20px] bg-cover bg-no-repeat shrink-0 overflow-hidden z-[12]" style={{backgroundImage:`url(${balance})`}}>*/}
+                                {/*className="w-[24px] h-[24px] shrink-0 bg-[url(./assets/icons/balance.svg)] bg-cover bg-no-repeat overflow-hidden z-[12]">*/}
                                 <img src={balance}/>
                             </div>
 
                         </div>
-                    </div>
-                    <div className="flex w-[32px] flex-col items-start shrink-0 flex-nowrap relative">
-                        <div
-                            className="flex h-[32px] pt-[4px] pr-[4px] pb-[4px] pl-[4px] flex-col justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[4px] border-solid border-[0.5px] border-[#3b3b3b] relative overflow-hidden">
+                    </button>
+                    </Badge>
+                        ) : (
+                        <button type={"button"} className="flex w-[32px] items-start shrink-0 flex-nowrap"
+                                onClick={ComparisonListAdd}>
                             <div
-                                // className="w-[24px] h-[24px] shrink-0 relative z-[15]">
-                                 className="w-[24px] h-[24px] bg-cover bg-no-repeat shrink-0 relative overflow-hidden" style={{backgroundImage:`url(${heart})`}}>
+                                className="flex w-[32px] pt-[4px] pr-[4px] pb-[4px] pl-[4px] items-center shrink-0 flex-nowrap bg-[#fff] rounded-[4px] border-solid border-[0.5px] border-[#3b3b3b]">
+                                <div
+                                    className="w-[24px] h-[24px] shrink-0 overflow-hidden">
+                                    <img src={balance}/>
+                                </div>
+
+                            </div>
+                        </button>
+                    )}
+
+
+                    <button type="button" className="flex w-[32px] flex-col items-start shrink-0 flex-nowrap"
+                            onClick={isWishList ? WishListRemove : WishListAdd}>
+                        <div
+                            className="flex h-[32px] pt-[4px] pr-[4px] pb-[4px] pl-[4px] flex-col justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[4px] border-solid border-[0.5px] border-[#3b3b3b] overflow-hidden">
+                            <div
+                                // className="w-[24px] h-[24px] shrink-0">
+                                className="w-[24px] h-[24px] bg-cover bg-no-repeat shrink-0 overflow-hidden">
+                                {isWishList ? <img src={heartRed}/> : <img src={heart}/>}
                                 {/*<img src={heart}/>*/}
                             </div>
                         </div>
-                    </div>
+                    </button>
+
                 </div>
             </div>
-            <div className="flex flex-col gap-[16px] items-center self-stretch shrink-0 flex-nowrap relative">
+            <div className="flex flex-col gap-[16px] items-center self-stretch shrink-0 flex-nowrap">
                 <Link to={`product-page/${item.id}`}>
-                <div
-                    className="w-[220px] h-[220px] shrink-0 relative bg-[url(./assets/69_4000.png)] bg-cover bg-no-repeat ">
-                    {/*<img src={cart}/>*/}
-                </div>
-                </Link>
-                <div className="flex flex-col gap-[8px] items-start self-stretch shrink-0 flex-nowrap relative">
                     <div
-                        className="flex gap-[10px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] relative">
+                        //className={`w-[220px] h-[220px] shrink-0 bg-[url(${uploadings + "400_" + item.images[0]?.name})] bg-cover bg-no-repeat `}>
+                        className={`w-[220px] h-[220px] shrink-0`}>
+                        <img src={`${uploadings + "400_" + item.images![0]?.name}`} alt="no image"/>
+                    </div>
+                </Link>
+                <div className="flex flex-col gap-[8px] items-start self-stretch shrink-0 flex-nowrap">
+                    <div
+                        className="flex gap-[10px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff]">
             <span
-                className="flex w-[203px] h-[26px] justify-start items-center shrink-0 font-['Inter'] text-[14px] font-normal leading-[26px] text-[#3b3b3b] relative text-left">
-              {/*Ноутбук DREAM MACHINES*/}
-                {/*<br/>*/}
-                {/*RG2050-15 (RG2050-15UA30)*/}
+                className="flex w-[203px] h-[26px] justify-start items-center shrink-0 font-['Inter'] text-[14px] font-normal leading-[26px] text-[#3b3b3b] text-left">
                 {item.title}
             </span>
                     </div>
                     <div
-                        className="flex flex-col gap-[4px] items-start self-stretch shrink-0 flex-nowrap relative">
+                        className="flex flex-col gap-[4px] items-start self-stretch shrink-0 flex-nowrap">
                         <div
-                            className="flex gap-[4px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff] relative">
-                            <div className="flex w-[96px] gap-[4px] items-start shrink-0 flex-nowrap relative">
-                                <div className="w-[16px] h-[16px] shrink-0 relative">
-                                    <div
-                                        className="w-full h-full bg-[url(../assets/images/e5ff0844-291d-4c1c-813c-bf3a1331d1fa.png)] bg-[length:100%_100%] bg-no-repeat absolute top-0 left-0"/>
-                                </div>
-                                <div className="w-[16px] h-[16px] shrink-0 relative">
-                                    <div
-                                        className="w-full h-full bg-[url(../assets/images/85051587-2fff-45f7-8b82-9c38bc07b82b.png)] bg-[length:100%_100%] bg-no-repeat absolute top-0 left-0"/>
-                                </div>
-                                <div className="w-[16px] h-[16px] shrink-0 relative">
-                                    <div
-                                        className="w-full h-full bg-[url(../assets/images/721e8328-4d88-4057-9408-b49018fbe8e4.png)] bg-[length:100%_100%] bg-no-repeat absolute top-0 left-0"/>
-                                </div>
-                                <div className="w-[16px] h-[16px] shrink-0 relative">
-                                    <div
-                                        className="w-full h-full bg-[url(../assets/images/4345f84a-48d2-4c08-9e47-470beb81e624.png)] bg-[length:100%_100%] bg-no-repeat absolute top-0 left-0"/>
-                                </div>
-                                <div className="w-[16px] h-[16px] shrink-0 relative">
-                                    <div
-                                        className="w-full h-full bg-[url(../assets/images/0edfdb70-89df-4dcd-9173-902df5e1d7fc.png)] bg-[length:100%_100%] bg-no-repeat absolute top-0 left-0"/>
-                                </div>
+                            className="flex gap-[4px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff]">
+                            <div className="flex gap-[4px] items-start shrink-0 flex-nowrap">
+                                <Rate disabled defaultValue={2}/>
                             </div>
-                            <div className="flex w-[46px] gap-[4px] items-start shrink-0 flex-nowrap relative">
+                            <div className="flex w-[46px] gap-[4px] items-start shrink-0 flex-nowrap">
                 <span
-                    className="h-[20px] shrink-0 basis-auto font-['Inter'] text-[10px] font-light leading-[20px] text-[#3b3b3b] relative text-left whitespace-nowrap">
+                    className="h-[20px] shrink-0 basis-auto font-['Inter'] text-[10px] font-light leading-[20px] text-[#3b3b3b] text-left whitespace-nowrap">
                   9 відгуків
                 </span>
                             </div>
                         </div>
 
                         <div
-                            className="flex justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff] relative">
-                            {item.discount > 0 ?
+                            className="flex justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff]">
+                            {item.discount! > 0 ?
                                 <div
-                                    className="flex w-[66px] flex-col gap-[9px] items-start shrink-0 flex-nowrap relative">
+                                    className="flex w-[66px] flex-col gap-[9px] items-start shrink-0 flex-nowrap">
                                 <span
-                                    className="h-[9px] shrink-0 font-['Inter'] text-[12px] font-medium leading-[9px] text-[#3b3b3b] relative text-left whitespace-nowrap line-through">
-                                {item.price}₴
+                                    className="h-[9px] shrink-0 font-['Inter'] text-[12px] font-medium leading-[9px] text-[#3b3b3b] text-left whitespace-nowrap line-through">
+                                {formatPrice(item.price)}₴
                                 </span>
                                     <span
-                                        className="flex w-[67px] h-[12px] items-center shrink-0 basis-auto font-['Inter'] text-[16px] font-semibold leading-[12px] text-[#e11515] relative text-center whitespace-nowrap">
-                                    {item.price - item.discount}₴
+                                        className="flex w-[67px] h-[12px] items-center shrink-0 basis-auto font-['Inter'] text-[16px] font-semibold leading-[12px] text-[#e11515] text-center whitespace-nowrap">
+                                    {formatPrice(item.price - item.discount!)}₴
                                 </span>
                                 </div>
                                 : <div
-                                    className="flex w-[66px] flex-col gap-[9px] items-start shrink-0 flex-nowrap relative">
+                                    className="flex w-[66px] flex-col gap-[9px] items-start shrink-0 flex-nowrap">
                 <span
-                    className="flex w-[68px] h-[12px] justify-center items-center shrink-0 basis-auto font-['Inter'] text-[16px] font-semibold leading-[12px] text-[#3b3b3b] relative text-center whitespace-nowrap">
-                  {item.price}₴
+                    className="flex w-[68px] h-[12px] justify-center items-center shrink-0 basis-auto font-['Inter'] text-[16px] font-semibold leading-[12px] text-[#3b3b3b] text-center whitespace-nowrap">
+                  {formatPrice(item.price)}₴
                 </span>
                                 </div>
                             }
                             <button type={"button"} onClick={() => {
-                                BasketService.addId(item.id)
+                                if(!BasketService.checkId(item.id)) {
+                                    BasketService.addId(item.id);
+                                    dispatch(incrementTotalPrice(Number(formatPrice(item.price - item.discount!))));
+                                }
                             }}>
                                 <div
-                                    className="flex w-[44px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] items-center shrink-0 flex-nowrap rounded-[8px] border-solid border-2 border-[#9cc319] relative">
+                                    className="flex w-[44px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] items-center shrink-0 flex-nowrap rounded-[8px] border-solid border-2 border-[#9cc319]">
                                     <div
-                                        className="w-[24px] h-[24px] shrink-0 relative overflow-hidden">
+                                        className="w-[24px] h-[24px] shrink-0 overflow-hidden">
                                         <img src={cart}/>
                                     </div>
                                 </div>
@@ -305,3 +342,40 @@ const ProductCard = (props: { item: IProductModel }) => {
 };
 
 export default ProductCard;
+
+//
+// import React, { useState } from 'react';
+// import { IProductModel } from '../../models/productsModel';
+//
+// interface ProductCardProps {
+//     item: IProductModel;
+//     updateParentState: (newValue: number) => void;
+// }
+//
+// const ProductCard: React.FC<ProductCardProps> = ({ item, updateParentState }) => {
+//     const [isWishList, setIsWishList] = useState<boolean>(false);
+//
+//     // Додаємо в список бажаних
+//     const WishListAdd = () => {
+//         setIsWishList(true);
+//         updateParentState(1); // Оновлюємо стан батьківського компонента
+//     };
+//
+//     // Видаляємо зі списку бажаних
+//     const WishListRemove = () => {
+//         setIsWishList(false);
+//         updateParentState(0); // Оновлюємо стан батьківського компонента
+//     };
+//
+//     return (
+//         <div>
+//             <h2>{item.title}</h2>
+//             {isWishList ? 'In Wishlist' : 'Not in Wishlist'}
+//             <button onClick={WishListAdd}>Add to Wishlist</button>
+//             <button onClick={WishListRemove}>Remove from Wishlist</button>
+//         </div>
+//     );
+// };
+//
+// export default ProductCard;
+

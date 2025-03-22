@@ -3,16 +3,19 @@ import {Link} from "react-router-dom";
 import ButtonMui from "@mui/material/Button";
 import {IProductModel} from "../../models/productsModel.ts";
 import {ProductServices} from "../../services/productService.ts";
-import {InputRef, TableColumnType, Input, Button, Space, Table, Popconfirm} from "antd";
+import {InputRef, TableColumnType, Input, Button, Space, Table, Popconfirm, message} from "antd";
 import Highlighter from 'react-highlight-words';
 //npm install @types/react-highlight-words --save-dev
-import { SearchOutlined } from '@ant-design/icons';
-import type { FilterDropdownProps } from 'antd/es/table/interface';
+import {SearchOutlined} from '@ant-design/icons';
+import type {FilterDropdownProps} from 'antd/es/table/interface';
+import dayjs from "dayjs";
+import {IImageModel} from "../../models/imageModel.ts";
 // import {Highlight} from "@mui/icons-material";
 
 
-
 type DataIndex = keyof IProductModel;
+
+const uploadings = import.meta.env.VITE_ROZETKA_UPLOADINGS;
 
 const ProductTable: React.FC = () => {
 
@@ -47,30 +50,30 @@ const ProductTable: React.FC = () => {
     };
 
     const getColumnSearchProps = (dataIndex: DataIndex): TableColumnType<IProductModel> => ({
-        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
-            <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+        filterDropdown: ({setSelectedKeys, selectedKeys, confirm, clearFilters, close}) => (
+            <div style={{padding: 8}} onKeyDown={(e) => e.stopPropagation()}>
                 <Input
                     ref={searchInput}
                     placeholder={`Search ${dataIndex}`}
                     value={selectedKeys[0]}
                     onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
                     onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
-                    style={{ marginBottom: 8, display: 'block' }}
+                    style={{marginBottom: 8, display: 'block'}}
                 />
                 <Space>
                     <Button
                         type="primary"
                         onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
-                        icon={<SearchOutlined />}
+                        icon={<SearchOutlined/>}
                         size="small"
-                        style={{ width: 90 }}
+                        style={{width: 90}}
                     >
                         Search
                     </Button>
                     <Button
                         onClick={() => clearFilters && handleReset(clearFilters)}
                         size="small"
-                        style={{ width: 90 }}
+                        style={{width: 90}}
                     >
                         Reset
                     </Button>
@@ -78,7 +81,7 @@ const ProductTable: React.FC = () => {
                         type="link"
                         size="small"
                         onClick={() => {
-                            confirm({ closeDropdown: false });
+                            confirm({closeDropdown: false});
                             setSearchText((selectedKeys as string[])[0]);
                             setSearchedColumn(dataIndex);
                         }}
@@ -98,10 +101,10 @@ const ProductTable: React.FC = () => {
             </div>
         ),
         filterIcon: (filtered: boolean) => (
-            <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />
+            <SearchOutlined style={{color: filtered ? '#1677ff' : undefined}}/>
         ),
         onFilter: (value, record) =>
-            record[dataIndex]
+            record[dataIndex]!
                 .toString()
                 .toLowerCase()
                 .includes((value as string).toLowerCase()),
@@ -115,7 +118,7 @@ const ProductTable: React.FC = () => {
         render: (text) =>
             searchedColumn === dataIndex ? (
                 <Highlighter
-                    highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+                    highlightStyle={{backgroundColor: '#ffc069', padding: 0}}
                     searchWords={[searchText]}
                     autoEscape
                     textToHighlight={text ? text.toString() : ''}
@@ -160,6 +163,13 @@ const ProductTable: React.FC = () => {
             dataIndex: "date",
             key: "date",
             ...getColumnSearchProps('date'),
+            render: (text: string) =>{
+                const formattedDate = dayjs(text).format('DD-MM-YYYY'); // Форматуємо дату до "рік-місяць-день"
+                return <p>{formattedDate}</p>;
+                // <div>{dayjs(text).format('YYYY-MM-DD')}</div>
+                }
+            ,
+
         },
         // {
         //     title: "Description",
@@ -180,8 +190,12 @@ const ProductTable: React.FC = () => {
         },
         {
             title: "FirstImage",
-            dataIndex: "firstImage",
-            key: "firstImage",
+            dataIndex: "images",
+            key: "images",
+            render: (record: IImageModel[]) => {
+                const imageUrl = `${uploadings + "200_" + record[0]?.name}`;
+                return <img src={imageUrl} alt="no image" />;
+            }
         },
         {
             title: "Action",
@@ -202,18 +216,26 @@ const ProductTable: React.FC = () => {
                     <Popconfirm
                         title="Delete the product"
                         description={`Are you sure to delete this ${record.name}?`}
-                        // onConfirm={() => deleteHandler(record.id)}
+                        onConfirm={() => deleteHandler(record.id)}
                         okText="Yes"
                         cancelText="No"
                     >
                         <Button>Delete</Button>
                     </Popconfirm>
-
-                    {/* <a>Delete</a> */}
                 </Space>
             )
         },
     ]);
+
+    const deleteHandler = async (id: number) => {
+        const res = await ProductServices.delete(id);
+        if (res.status === 200) {
+            message.success("Product deleted");
+            setProducts(prevProducts => prevProducts.filter(product => product.id !== id));
+        } else {
+            message.error("Something wrong");
+        }
+    };
 
     return (
         <>
@@ -230,8 +252,20 @@ const ProductTable: React.FC = () => {
                 columns={columns}
                 dataSource={products.map((product) => ({...product, key: product.id}))}
                 expandable={{
-                    expandedRowRender: (record) => <p style={{ margin: 0 }}>{record.description}</p>,
-                    rowExpandable: (record) => record.title !== 'Not Expandable',
+                    expandedRowRender: (record) => {
+                        // Якщо description існує, не є порожнім і не дорівнює "undefined", відобразимо його
+                        if (record.description && record.description.trim().length > 0 && record.description !== "undefined") {
+                            return <p style={{ margin: 0 }}>{record.description}</p>;
+                        }
+                        // Якщо description відсутній або порожній, нічого не передаватимемо
+                        else {
+                            return null;
+                        }
+                    },
+                    rowExpandable: (record: IProductModel) => {
+                        // Повертаємо лише булеве значення
+                        return !!(record.description && record.description !== "undefined" && record.description.trim().length > 0);
+                    },
                 }}
             />
         </>
