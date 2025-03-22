@@ -1,6 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import {IProductModel} from "../../models/productsModel.ts";
-import {ProductServices} from "../../services/productService.ts";
 import close from "../../assets/icons/close.svg"
 import BasketItem from "./BasketItem.tsx";
 import {IBasketModel} from "../../models/basketModel.ts";
@@ -13,6 +11,7 @@ import deleteBin from "../../assets/icons/deleteBin.svg"
 import {useDispatch, useSelector} from "react-redux";
 import {calculateTotalPrice} from "../../store/actions/basketActions.ts";
 import {AppDispatch, RootState} from "../../store";
+import useProducts from "../../hooks/useProducts.ts";
 
 interface BasketProps {
     onClose?: () => void;  // Приймаємо функцію закриття через пропс
@@ -24,15 +23,10 @@ const Basket: React.FC<BasketProps> = ({onClose}) => {
     const [toggleClear, setToggleClear] = useState<boolean>(false);
     const totalPrice = useSelector((state: RootState) => state.basket.totalPrice);
 
-    const [products, setProducts] = useState<IProductModel[]>([]);
+    const {products} = useProducts();
     const [basket, setBasket] = useState<IBasketModel>({});
     const itemWord = getWordForm(Object.keys(basket).length, ['товар', 'товари', 'товарів']);
 
-    const loadProducts = async () => {
-        const res = await ProductServices.getAll();
-        console.log(res);
-        setProducts(res.data);
-    };
 
     const handleBasketUpdate = () => {
         const savedBasket = BasketService.getItems();
@@ -42,7 +36,6 @@ const Basket: React.FC<BasketProps> = ({onClose}) => {
     };
 
     useEffect(() => {
-        loadProducts();
         handleBasketUpdate();
         // setBasket(BasketService.getItems());
         window.addEventListener('basket-updated', handleBasketUpdate);

@@ -1,25 +1,14 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {Table} from "antd";
 import {IOrderModel} from "../../models/orderModel.ts";
-import {OrderServices} from "../../services/orderServices.ts";
 import dayjs from "dayjs";
+import useOrders from "../../hooks/useOrders.ts";
 
 const uploadings = import.meta.env.VITE_ROZETKA_UPLOADINGS;
 
 const OrdersTable: React.FC = () => {
 
-    const [orders, setOrders] = useState<IOrderModel[]>([]);
-
-
-    const loadOrders = async () => {
-        const res = await OrderServices.getAll();
-        console.log(res);
-        setOrders(res.data);
-    };
-
-    useEffect(() => {
-        loadOrders();
-    }, []);
+    const {orders} = useOrders();
 
     const [columns] = useState([
         {

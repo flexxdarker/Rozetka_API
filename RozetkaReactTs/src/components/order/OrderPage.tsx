@@ -2,10 +2,8 @@ import React, {useEffect, useState} from 'react';
 import ContactDetailsOrder from "./СontactDetailsOrder.tsx";
 import DeliveryOrder from "./DeliveryOrder.tsx";
 import PaymentOrder from "./PaymentOrder.tsx";
-import {IProductModel} from "../../models/productsModel.ts";
 import {IBasketModel} from "../../models/basketModel.ts";
 import getWordForm from "../../functions/getWordForm.ts";
-import {ProductServices} from "../../services/productService.ts";
 import {BasketService} from "../../services/basketService.ts";
 import BasketItem from "../basket/BasketItem.tsx";
 import formatPrice from "../../functions/formatPrice.ts";
@@ -14,6 +12,7 @@ import {AppDispatch, RootState} from "../../store";
 import {calculateTotalPrice} from "../../store/actions/basketActions.ts";
 import {Link} from "react-router-dom";
 import {BasketServicesApi} from "../../services/basketServiceApi.ts";
+import useProducts from "../../hooks/useProducts.ts";
 
 
 const OrderPage: React.FC = () => {
@@ -21,15 +20,9 @@ const OrderPage: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
     const totalPrice = useSelector((state: RootState) => state.basket.totalPrice);
 
-    const [products, setProducts] = useState<IProductModel[]>([]);
+    const {products} = useProducts();
     const [basket, setBasket] = useState<IBasketModel>({});
     const itemWord = getWordForm(Object.keys(basket).length, ['товар', 'товари', 'товарів']);
-
-    const loadProducts = async () => {
-        const res = await ProductServices.getAll();
-        console.log(res);
-        setProducts(res.data);
-    };
 
     const handleBasketUpdate = () => {
         const savedBasket = BasketService.getItems();
@@ -39,7 +32,6 @@ const OrderPage: React.FC = () => {
     };
 
     useEffect(() => {
-        loadProducts();
         handleBasketUpdate();
         // setBasket(BasketService.getItems());
         window.addEventListener('basket-updated', handleBasketUpdate);

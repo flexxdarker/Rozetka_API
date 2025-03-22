@@ -1,20 +1,20 @@
 import React from 'react';
 import arrowRight from '../../../assets/icons/nav-arrow-right.svg';
 import {Link} from "react-router-dom";
-import useLoadCategories from "../../../hooks/useLoadCategories.ts";
+import useCategories from "../../../hooks/useCategories.ts";
 
 const uploadings = import.meta.env.VITE_ROZETKA_UPLOADINGS;
 
 const MenuByCategory: React.FC = () => {
 
-    const categories = useLoadCategories();
+    const {categories} = useCategories();
 
     return (
         <div
             className="main-container flex w-[370px] flex-col gap-[4px] items-start flex-nowrap bg-[#fff] mx-auto rounded-[8px] overflow-visible">
             {categories.map(category => {
                 if (category.parentCategoryId === null) {
-                    return (<Link to={`subcategories/${category.id}`} key={category.id}>
+                    return (<Link to={`subcategories/${category.id}`} key={category.id} state={category.name}>
                             <div className=" relative inline-block text-left group" >
                                 <button
 

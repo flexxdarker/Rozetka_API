@@ -14,11 +14,6 @@ export interface ICreateCategoryModel {
     image: File;
 }
 
-export interface ICategoryName {
-    id: number;
-    name: string;
-}
-
 export interface IUploadedFile {
     lastModified: number;
     lastModifiedDate: Date;

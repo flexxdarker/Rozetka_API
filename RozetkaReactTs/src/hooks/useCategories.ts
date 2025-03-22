@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import {CategoriesServices} from "../services/categoriesService.ts";
 import {ICategoryModel} from "../models/categoriesModel.ts";
 
-const useLoadCategories = () => {
+const useCategories = () => {
     const [categories, setCategories] = useState<ICategoryModel[]>([]);
 
     const loadCategories = async () => {
@@ -18,7 +18,7 @@ const useLoadCategories = () => {
         loadCategories();
     }, []);
 
-    return categories;
+    return {categories, setCategories};
 };
 
-export default useLoadCategories;
+export default useCategories;

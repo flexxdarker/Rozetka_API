@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import {ProductServices} from "../services/productService.ts";
 import {IProductModel} from "../models/productsModel.ts";
 
-const useLoadProducts = () => {
+const useProducts = () => {
     const [products, setProducts] = useState<IProductModel[]>([]);
 
     const loadProducts = async () => {
@@ -18,7 +18,7 @@ const useLoadProducts = () => {
         loadProducts();
     }, []);
 
-    return products;
+    return {products, setProducts};
 };
 
-export default useLoadProducts;
+export default useProducts;

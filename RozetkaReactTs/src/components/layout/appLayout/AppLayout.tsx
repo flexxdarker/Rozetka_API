@@ -12,15 +12,9 @@ const AppLayout: React.FC = () => {
 
 
     return (
-        <LayoutAntd className='Layout'>
+        <LayoutAntd className='Layout min-h-screen flex flex-col'>
             <Header/>
-            <div style={{
-                justifyContent: 'space-between',
-                display: "flex",
-                maxWidth: '1920px',
-                margin: '0 auto',
-                minWidth: '1080px'
-            }}>
+            <div className="flex-grow flex justify-between mx-auto px-4">
                 <Suspense fallback={<MainLoader/>}>
                     <Outlet/>
                 </Suspense>

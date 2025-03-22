@@ -1,26 +1,15 @@
-import React, {useEffect, useState} from 'react';
-import {IProductModel} from "../../models/productsModel.ts";
+import React, {useState} from 'react';
 import ProductCard from "./ProductCard.tsx";
-import {ProductServices} from "../../services/productService.ts";
 import {ReviewedListService} from "../../services/reviewedService.ts";
+import useProducts from "../../hooks/useProducts.ts";
 
 
 const ProductsReviewed: React.FC = () => {
 
-    const [products,setProducts] = useState<IProductModel[]>([]);
+    const {products} = useProducts();
 
     //@ts-ignore
     const [reviewedProducts, setReviewedProducts] = useState<number[]>( ReviewedListService.getAll());
-
-
-    const loadProducts = async () => {
-        const res = await ProductServices.getAll();
-        setProducts(res.data);
-    };
-
-    useEffect(() => {
-        loadProducts();
-    }, []);
 
     if(reviewedProducts.length<=0)
     {

@@ -6,19 +6,20 @@ import {useParams} from "react-router-dom";
 import {ProductServices} from "../../services/productService.ts";
 import {ICreateProductModel, IProductModel} from "../../models/productsModel.ts";
 import {useNavigate} from "react-router-dom";
-import {ICategoryName} from "../../models/categoriesModel.ts";
-import {CategoriesServices} from "../../services/categoriesService.ts";
 import {PlusOutlined} from '@ant-design/icons';
 import {RcFile, UploadChangeParam} from "antd/es/upload";
-import {IFilterModel} from "../../models/filterModel.ts";
-import {FilterServices} from "../../services/filterService.ts";
 import {IFilterValueProductForm} from "../../models/filterValueModel.ts";
 import FilterFormProductCreate from "./FilterFormProductCreate.tsx";
 import FilterFormProductEdit from "./FilterFormProductEdit.tsx";
+import useFilters from "../../hooks/useFilters.ts";
+import useCategories from "../../hooks/useCategories.ts";
 // import {CloseOutlined} from "@mui/icons-material";
 
 
 const ProductForm: React.FC = () => {
+
+    const {filters} = useFilters();
+    const {categories} = useCategories();
 
     //const initFV: IFilterValueProductForm[] = [{filterId: 2, valueId:11}, {filterId: 3, valueId:15}];
     const [initFV, setInitFV] = useState<IFilterValueProductForm[]>([]);
@@ -26,14 +27,11 @@ const ProductForm: React.FC = () => {
     const params = useParams();
     const [editMode, setEditeMode] = useState(false);
     const [product, setProduct] = useState<IProductModel | null>(null);
-    const [filters, setFilters] = useState<IFilterModel[]>([]);
 
     const [filterValue, setFilterValue] = useState<IFilterValueProductForm[]>([]);
 
     const [form] = Form.useForm();
     const navigate = useNavigate();
-
-    const [categories, setCategories] = useState<ICategoryName[]>([]);
 
     const [description, setEditorContent] = useState('');
 
@@ -88,22 +86,8 @@ const ProductForm: React.FC = () => {
 
 
     useEffect(() => {
-        loadFilters();
-
         loadProduct();
-
-        loadCategories();
     }, []);
-
-    const loadFilters = async () => {
-        const res = await FilterServices.getAll();
-        setFilters(res.data);
-    };
-
-    const loadCategories = async () => {
-        const res = await CategoriesServices.getAll();
-        setCategories(res.data);
-    }
 
     const loadProduct = async () => {
         if (params.id) {
@@ -126,7 +110,6 @@ const ProductForm: React.FC = () => {
     const handleFilterChange = (updatedFilterRows: IFilterValueProductForm[]) => {
         //console.log('Updated Filter Rows:', updatedFilterRows);
         setFilterValue(updatedFilterRows);
-        console.log("filtervalue", updatedFilterRows);
         // Оновлюємо масив filterRows, який зберігає вибрані значення
     };
 
@@ -174,8 +157,6 @@ const ProductForm: React.FC = () => {
             <div style={{ marginTop: 8 }}>Upload</div>
         </button>
     );
-
-
 
 
     return (

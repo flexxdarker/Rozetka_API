@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useState, useRef} from 'react';
 import {Link} from "react-router-dom";
 import ButtonMui from "@mui/material/Button";
 import {IProductModel} from "../../models/productsModel.ts";
@@ -10,6 +10,7 @@ import {SearchOutlined} from '@ant-design/icons';
 import type {FilterDropdownProps} from 'antd/es/table/interface';
 import dayjs from "dayjs";
 import {IImageModel} from "../../models/imageModel.ts";
+import useProducts from "../../hooks/useProducts.ts";
 // import {Highlight} from "@mui/icons-material";
 
 
@@ -19,20 +20,10 @@ const uploadings = import.meta.env.VITE_ROZETKA_UPLOADINGS;
 
 const ProductTable: React.FC = () => {
 
-    const [products, setProducts] = useState<IProductModel[]>([]);
+    const {products, setProducts} = useProducts();
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef<InputRef>(null);
-
-    const loadProducts = async () => {
-        const res = await ProductServices.getAll();
-        console.log(res);
-        setProducts(res.data);
-    };
-
-    useEffect(() => {
-        loadProducts();
-    }, []);
 
     const handleSearch = (
         selectedKeys: string[],

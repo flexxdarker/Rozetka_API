@@ -23,7 +23,7 @@ import {calculateTotalPrice} from "../../../store/actions/basketActions.ts";
 import {IBasketModel} from "../../../models/basketModel.ts";
 import {BasketService} from "../../../services/basketService.ts";
 import formatPrice from "../../../functions/formatPrice.ts";
-import useLoadProducts from "../../../hooks/useLoadProducts.ts";
+import useProducts from "../../../hooks/useProducts.ts";
 
 
 const Header = () => {
@@ -33,7 +33,7 @@ const Header = () => {
     const comparisonCount = useSelector((state: RootState) => state.comparison.comparisonCount);
     const [basket, setBasket] = useState<IBasketModel>({});
 
-    const products = useLoadProducts();
+    const {products} = useProducts();
 
     useEffect(() => {
         handleBasketUpdate();
@@ -113,7 +113,7 @@ const Header = () => {
 
     return (
         <>
-            <Box className="bg-gradient-to-b from-[#000] to-[#381753]"
+            <Box className="bg-gradient-to-b from-[#000] to-[#381753] sticky top-0 w-full z-50 max-h-[90px]"
                  sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
                 <div
                     className="main-container flex w-auto h-[90px] pt-0 pb-0 items-center flex-nowrap mx-auto my-0 justify-center">

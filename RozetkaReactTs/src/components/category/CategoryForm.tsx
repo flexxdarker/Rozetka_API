@@ -2,9 +2,10 @@ import React, {useEffect, useState} from 'react';
 import {Button, Form, type FormProps, Input, message, Modal, Select, Upload, UploadFile} from "antd";
 import {CategoriesServices} from "../../services/categoriesService.ts";
 import {useNavigate, useParams} from "react-router-dom";
-import {ICategoryModel, ICategoryName, ICreateCategoryModel} from "../../models/categoriesModel.ts";
+import {ICategoryModel, ICreateCategoryModel} from "../../models/categoriesModel.ts";
 import {RcFile, UploadChangeParam} from "antd/es/upload";
 import {PlusOutlined} from "@ant-design/icons";
+import useCategories from "../../hooks/useCategories.ts";
 
 const uploadings = import.meta.env.VITE_ROZETKA_UPLOADINGS;
 
@@ -16,7 +17,7 @@ const CategoryForm: React.FC = () => {
     const [form] = Form.useForm();
 
     const [category, setCategory] = useState<ICategoryModel | null>(null);
-    const [categories, setCategories] = useState<ICategoryName[]>([]);
+    const {categories} = useCategories();
 
     const [previewOpen, setPreviewOpen] = useState<boolean>(false);
     const [previewImage, setPreviewImage] = useState('');
@@ -73,8 +74,6 @@ const CategoryForm: React.FC = () => {
         if (params.id) {
             setEditMode(true);
             const res = await CategoriesServices.getById(params.id);
-            console.log(params.id);
-            console.log(res.data);
             setCategory(res.data);
             setFileList([{uid: String(res.data.id),name: res.data.image,status:"done",url:uploadings + `/200_${res.data.image}`}])
             form.setFieldsValue(res.data);
@@ -85,13 +84,8 @@ const CategoryForm: React.FC = () => {
 
     useEffect(() => {
         loadCategory();
-        loadCategories();
     }, []);
 
-    const loadCategories = async () => {
-        const res = await CategoriesServices.getAll();
-        setCategories(res.data);
-    }
 
     const uploadButton = (
         <button style={{ border: 0, background: 'none' }} type="button">

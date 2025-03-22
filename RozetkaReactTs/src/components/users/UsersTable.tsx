@@ -1,22 +1,13 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {Table} from "antd";
 import {IUserModel} from "../../models/accountsModel.ts";
-import {AccountsService} from "../../services/accountsService.ts";
+import useUsers from "../../hooks/useUsers.ts";
 
 const uploadings = import.meta.env.VITE_ROZETKA_UPLOADINGS;
 
 const UsersTable: React.FC = () => {
 
-    const [users,setUsers] = useState<IUserModel[]>([]);
-
-    const loadUsers = async () => {
-        const res = await AccountsService.getAllUsers();
-        setUsers(res.data);
-    };
-
-    useEffect(() => {
-        loadUsers();
-    }, []);
+    const {users} = useUsers();
 
 
     const [columns] = useState([
