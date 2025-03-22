@@ -263,6 +263,7 @@ namespace BusinessLogic.Services
                             user.Avatar = avatar;
                         }
 
+
                         // Зберегти нового користувача
                         var createResult = await userManager.CreateAsync(user);
                         if (!createResult.Succeeded)
@@ -271,6 +272,7 @@ namespace BusinessLogic.Services
                         }
                         else
                         {
+                            var resultRole = await userManager.AddToRoleAsync(user, Roles.User);
                             var roles = await userManager.GetRolesAsync(user);
                             var avatar = avatarRepository.AsQueryable().FirstOrDefault(x => x.UserId == user.Id)?.Name;
                             var userTokenInfo = new UserTokenInfo
