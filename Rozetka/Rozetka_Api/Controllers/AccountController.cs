@@ -150,5 +150,11 @@ namespace Rozetka_Api.Controllers
         {
             return Ok(await accountsService.UnblockUser(model.UserId));
         }
+
+        [HttpPut("ChangeRole")]
+        public async Task<IActionResult> ChangeRole([FromBody] string userId)
+        {
+            return Ok(await accountsService.ChangeRole(userId));
+        }
     }
 }

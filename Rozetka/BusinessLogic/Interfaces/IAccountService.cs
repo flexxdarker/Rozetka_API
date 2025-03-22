@@ -24,6 +24,7 @@ namespace BusinessLogic.Interfaces
         Task<IdentityResult> UnblockUser(string userId);
         Task<List<UserViewDto>> GetAllUsers();
         Task RemoveExpiredRefreshTokens();
+        Task<bool> ChangeRole(string userId);
 
         //Task<ResetToken> GenerageResetToken(string email);
         //Task ResetPassword(ResetPasswordModel model);

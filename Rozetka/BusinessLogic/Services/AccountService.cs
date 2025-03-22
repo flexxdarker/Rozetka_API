@@ -471,5 +471,41 @@ namespace BusinessLogic.Services
             }).ToListAsync();
             return users;
         }
+
+        public async Task<bool> ChangeRole(string userId)
+        {
+            var user = await userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                throw new ArgumentException("Користувача не знайдено");
+            }
+
+            // Отримуємо всі ролі користувача
+            var currentRoles = await userManager.GetRolesAsync(user);
+
+            // Перевіряємо, чи користувач має роль "admin" чи "user"
+            bool hasAdminRole = currentRoles.Contains("admin");
+            bool hasUserRole = currentRoles.Contains("user");
+
+            // Якщо користувач має роль "admin", знімаємо її та додаємо роль "user"
+            if (hasAdminRole)
+            {
+                await userManager.RemoveFromRoleAsync(user, Roles.Admin);
+                await userManager.AddToRoleAsync(user, Roles.User);
+            }
+            // Якщо користувач має роль "user", знімаємо її та додаємо роль "admin"
+            else if (hasUserRole)
+            {
+                await userManager.RemoveFromRoleAsync(user, Roles.User);
+                await userManager.AddToRoleAsync(user, Roles.Admin);
+            }
+            else
+            {
+                // Якщо користувач не має жодної з цих ролей, додаємо роль "user" за замовчуванням
+                await userManager.AddToRoleAsync(user, Roles.User);
+            }
+
+            return true;
+        }
     }
 }
