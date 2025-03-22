@@ -3,7 +3,7 @@ export interface ICategoryModel {
     name: string;
     image: string;
     parentCategoryId?: number;
-    parentCategoryName: string;
+    //parentCategoryName: string;
 }
 
 

@@ -10,20 +10,25 @@ import {ICategoryName} from "../../models/categoriesModel.ts";
 import {CategoriesServices} from "../../services/categoriesService.ts";
 import {PlusOutlined} from '@ant-design/icons';
 import {RcFile, UploadChangeParam} from "antd/es/upload";
-import FilterForm from "./form.tsx";
 import {IFilterModel} from "../../models/filterModel.ts";
 import {FilterServices} from "../../services/filterService.ts";
+import {IFilterValueProductForm} from "../../models/filterValueModel.ts";
+import FilterFormProductCreate from "./FilterFormProductCreate.tsx";
+import FilterFormProductEdit from "./FilterFormProductEdit.tsx";
 // import {CloseOutlined} from "@mui/icons-material";
 
 
 const ProductForm: React.FC = () => {
+
+    //const initFV: IFilterValueProductForm[] = [{filterId: 2, valueId:11}, {filterId: 3, valueId:15}];
+    const [initFV, setInitFV] = useState<IFilterValueProductForm[]>([]);
 
     const params = useParams();
     const [editMode, setEditeMode] = useState(false);
     const [product, setProduct] = useState<IProductModel | null>(null);
     const [filters, setFilters] = useState<IFilterModel[]>([]);
 
-    const [filterValue, setFilterValue] = useState<{ filterId: number, valueId: number }[]>([]);
+    const [filterValue, setFilterValue] = useState<IFilterValueProductForm[]>([]);
 
     const [form] = Form.useForm();
     const navigate = useNavigate();
@@ -41,16 +46,8 @@ const ProductForm: React.FC = () => {
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
 
-    // const normFile = (e: any) => {
-    //     if (Array.isArray(e)) {
-    //         return e.map(file => file.originFileObj);  // Extract originFileObj from each file
-    //     }
-    //     return e?.fileList.map((file: any) => file.originFileObj);  // Extract originFileObj from the fileList
-    // };
-
-
     const onFinish: FormProps<ICreateProductModel>['onFinish'] = async (values) => {
-        console.log('Form values:', {...values, description}); // Обробка відправки форм
+        //console.log('Form values:', {...values, description}); // Обробка відправки форм
 
         if(filterValue.length > 0){
             values.values = filterValue.map(item => item.valueId)
@@ -67,7 +64,6 @@ const ProductForm: React.FC = () => {
             // }
             //values.imageFiles = values.imageFiles.originFileObj;//???????
             const res = await ProductServices.edit({...values, description});
-            console.log(res);
             if (res.status == 200) {
                 message.success("Update");
                 navigate(-1);
@@ -75,9 +71,8 @@ const ProductForm: React.FC = () => {
                 message.warning("Warning");
             }
         } else {
-            console.log("Success create:", {...values, description});
+            //console.log("Success create:", {...values, description});
             const res = await ProductServices.create({...values, description});
-            console.log(res);
             if (res.status == 200) {
                 message.success("Created");
                 navigate(-1);
@@ -93,14 +88,15 @@ const ProductForm: React.FC = () => {
 
 
     useEffect(() => {
-        loadProduct();
         loadFilters();
+
+        loadProduct();
+
         loadCategories();
     }, []);
 
     const loadFilters = async () => {
         const res = await FilterServices.getAll();
-        console.log(res);
         setFilters(res.data);
     };
 
@@ -113,20 +109,64 @@ const ProductForm: React.FC = () => {
         if (params.id) {
             setEditeMode(true);
             const res = await ProductServices.getById(params.id);
-            console.log(params.id);
-            console.log(res.data);
-            setProduct(res.data);
-            setEditorContent(res.data.description);
-            form.setFieldsValue(res.data);
-            //form.setFieldsValue({ name: "name", value: "name" });
+            if (res.status === 200) {
+                setProduct(res.data);
+                setEditorContent(res.data.description);
+                form.setFieldsValue(res.data);
+            } else {
+                message.warning("Warning");
+            }
         }
+        const filterValueProductForms: IFilterValueProductForm[] = [];
+        setInitFV(filterValueProductForms);
+        handleFilterChange(filterValueProductForms);
     }
 
-    const handleFilterChange = (updatedFilterRows: { filterId: number, valueId: number }[]) => {
-        console.log('Updated Filter Rows:', updatedFilterRows);
+
+    const handleFilterChange = (updatedFilterRows: IFilterValueProductForm[]) => {
+        //console.log('Updated Filter Rows:', updatedFilterRows);
         setFilterValue(updatedFilterRows);
+        console.log("filtervalue", updatedFilterRows);
         // Оновлюємо масив filterRows, який зберігає вибрані значення
     };
+
+
+    useEffect(() => {
+        const filterValueProductForms: IFilterValueProductForm[] = [];
+        console.log(product?.values);
+        if (product?.values) {
+            product?.values.forEach(value => {
+                // Знайдемо фільтр за його name
+                const filter = filters.find(f => f.name === value.filterName);
+
+                // Якщо фільтр знайдено
+                if (filter) {
+                    // Знайдемо відповідне значення для цього фільтра
+                    const filterValue = filter.values.find(fv => fv.value === value.valueName);
+
+                    // Якщо значення фільтра знайдено
+                    if (filterValue) {
+                        filterValueProductForms.push({
+                            filterId: filter.id,
+                            valueId: filterValue.id
+                        });
+                    }
+                }
+
+            });
+        }
+        console.log("filterValueProductForms",filterValueProductForms);
+        // Оновлюємо стейт filterValue
+        setInitFV(filterValueProductForms);
+        handleFilterChange(filterValueProductForms);
+    }, [product]);
+
+    // useEffect(() => {
+    //     if(initFV.length > 0){
+    //         handleFilterChange(initFV);
+    //     }
+    // }, [initFV]);
+
 
     const uploadButton = (
         <button style={{ border: 0, background: 'none' }} type="button">
@@ -134,6 +174,8 @@ const ProductForm: React.FC = () => {
             <div style={{ marginTop: 8 }}>Upload</div>
         </button>
     );
+
+
 
 
     return (
@@ -232,7 +274,12 @@ const ProductForm: React.FC = () => {
                 {/*<FilterForm filters={filters} onChange={handleFilterChange} />*/}
                 <Form.Item
                     name="values">
-                <FilterForm filters={filters} onChange={handleFilterChange}/>
+                    {editMode ? (
+                            <FilterFormProductEdit filters={filters} onChange={handleFilterChange} initValue={initFV} />
+                    ) : (
+                        <FilterFormProductCreate filters={filters} onChange={handleFilterChange} />
+                    )}
+
             </Form.Item>
                 {/*</Form.Item>*/}
 

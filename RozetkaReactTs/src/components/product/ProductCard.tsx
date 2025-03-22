@@ -141,7 +141,7 @@ const ProductCard: React.FC<ItemProps> = ({item}) => {
                 </div>
             </div>
             <div className="flex flex-col gap-[16px] items-center self-stretch shrink-0 flex-nowrap">
-                <Link to={`product-page/${item.id}`}>
+                <Link to={`/product-page/${item.id}`}>
                     <div
                         //className={`w-[220px] h-[220px] shrink-0 bg-[url(${uploadings + "400_" + item.images[0]?.name})] bg-cover bg-no-repeat `}>
                         className={`w-[220px] h-[220px] shrink-0`}>

@@ -17,14 +17,13 @@ import {TokenService} from "../../../services/tokenService.ts";
 import {AccountsService} from "../../../services/accountsService.ts";
 import {AutoComplete, Badge,} from 'antd';
 import type {AutoCompleteProps} from 'antd';
-import {IProductModel} from "../../../models/productsModel.ts";
-import {ProductServices} from "../../../services/productService.ts";
 import {useDispatch, useSelector} from 'react-redux';
 import {AppDispatch, RootState} from "../../../store";
 import {calculateTotalPrice} from "../../../store/actions/basketActions.ts";
 import {IBasketModel} from "../../../models/basketModel.ts";
 import {BasketService} from "../../../services/basketService.ts";
 import formatPrice from "../../../functions/formatPrice.ts";
+import useLoadProducts from "../../../hooks/useLoadProducts.ts";
 
 
 const Header = () => {
@@ -33,17 +32,10 @@ const Header = () => {
     const totalPrice = useSelector((state: RootState) => state.basket.totalPrice);
     const comparisonCount = useSelector((state: RootState) => state.comparison.comparisonCount);
     const [basket, setBasket] = useState<IBasketModel>({});
-    const [products, setProducts] = useState<IProductModel[]>([]);
 
-    const loadProducts = async () => {
-        const res = await ProductServices.getAll();
-        console.log(res);
-        setProducts(res.data);
-    };
-
+    const products = useLoadProducts();
 
     useEffect(() => {
-        loadProducts();
         handleBasketUpdate();
     }, []);
 

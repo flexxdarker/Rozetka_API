@@ -47,7 +47,6 @@ const FiltersProducts:React.FC<IFilterHotelsSectionProps> = (props) => {
 
     const loadFilters = async () => {
         const res = await FilterServices.getAll();
-        console.log(res);
         setFilters(res.data);
     };
 

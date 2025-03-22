@@ -3,3 +3,9 @@ export interface IFilterValueCreateModel {
     filterId: number;
     value: string;
 }
+
+////////////////
+export interface IFilterValueProductForm {
+    filterId: number;
+    valueId: number;
+}

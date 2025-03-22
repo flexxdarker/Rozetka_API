@@ -1,12 +1,19 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import ProductCardList from "../product/ProductCardList.tsx";
 import FiltersProducts from "./filtersProducts.tsx";
 import SortProducts from "./sortProducts.tsx";
 import {IProductModel} from "../../models/productsModel.ts";
 import {ProductServices} from "../../services/productService.ts";
+import {useLocation} from "react-router-dom";
 
 
 const FilterProductPage: React.FC = () => {
+
+    const location = useLocation();
+    const id: number = useMemo(() => {
+        return location.state ? (location.state as number) : 5;
+    }, [location.state]);
+
 
     const [products,setProducts] = useState<IProductModel[]>([]);
     const [productsFilterList,setProductsFilterList] = useState<IProductModel[]>([]);
@@ -18,7 +25,6 @@ const FilterProductPage: React.FC = () => {
 
     const loadProducts = async () => {
         const res = await ProductServices.getAll();
-        console.log(res);
         setProducts(res.data);
         setProductsFilterList(res.data)
 
@@ -36,6 +42,7 @@ const FilterProductPage: React.FC = () => {
         loadProducts();
     }, []);
 
+
     const productsSortHandl = (products: IProductModel[]) => {
         // setProducts(products);
         setProductsFilterList(products);
@@ -49,6 +56,15 @@ const FilterProductPage: React.FC = () => {
         setProductsFilterList(products.filter(x=> x.price >= minPrice && x.price <= maxPrice));
     }
 
+    // useEffect(() => {
+    //     setProductsFilterList(products.filter(x=> x.categoryId === id));
+    // }, [id]);
+
+    useEffect(() => {
+        setProductsFilterList(products.filter(x=> x.categoryId === id));
+    }, [products]);
+
+
     return (
         <>
             <div className="flex felx-col">
@@ -56,6 +72,7 @@ const FilterProductPage: React.FC = () => {
                     {/*<FiltersProducts />*/}
                     <FiltersProducts minPriceInit={minPriceInit} maxPriceInit={maxPriceInit} onChange={priceValue}/>
                 </div>
+
                 <div className="flex flex-col">
                     <SortProducts productsInit={productsFilterList} onChange={productsSortHandl}/>
                     {productsFilterList.length <= 0 ? (

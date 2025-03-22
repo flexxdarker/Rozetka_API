@@ -8,6 +8,7 @@ import ProductPage from "./components/product/ProductPage.tsx";
 import React from "react";
 import AccountLayout from "./components/layout/accountLayout/AccountLayout.tsx";
 import AdminLayout from "./components/layout/adminLayout/AdminLayout.tsx";
+import SubCategoriesPage from "./components/subCategory/subCategoriesPage.tsx";
 // import FilterTable from "./components/filter/filterTable.tsx";
 // import UsersTable from "./components/users/UsersTable.tsx";
 // import OrdersTable from "./components/orders/OrdersTable.tsx";
@@ -103,12 +104,17 @@ export default function App() {
                     <Route path="filter-crud" element={<FilterTable/>}/>
                 </Route>
 
+
+                <Route path="subcategories/:id" element={<SubCategoriesPage/>}/>
+
                 <Route path="categories" element={<CategoriesPage/>}/>
 
                 <Route path="product-page/:id" element={<ProductPage/>}/>
+
                 <Route path="product-filter" element={<FilterProductPage/>}/>
 
                 <Route path="comparison-list" element={<ComparisonListPage/>}/>
+
                 <Route path="comparison-products" element={<ComparisonProductsPage/>}/>
 
                 <Route path="account" element={<AccountLayout/>}>

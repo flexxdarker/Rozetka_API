@@ -1,30 +1,21 @@
-import React, {useEffect, useState} from 'react';
-import {ICategoryModel} from "../../../models/categoriesModel.ts";
-import {CategoriesServices} from "../../../services/categoriesService.ts";
+import React from 'react';
 import arrowRight from '../../../assets/icons/nav-arrow-right.svg';
+import {Link} from "react-router-dom";
+import useLoadCategories from "../../../hooks/useLoadCategories.ts";
 
 const uploadings = import.meta.env.VITE_ROZETKA_UPLOADINGS;
 
 const MenuByCategory: React.FC = () => {
-    const [categories, setCategories] = useState<ICategoryModel[]>([]);
 
-    const loadCategories = async () => {
-        const res = await CategoriesServices.getAll();
-        console.log(res);
-        setCategories(res.data);
-    };
-
-    useEffect(() => {
-        loadCategories();
-    }, []);
+    const categories = useLoadCategories();
 
     return (
         <div
             className="main-container flex w-[370px] flex-col gap-[4px] items-start flex-nowrap bg-[#fff] mx-auto rounded-[8px] overflow-visible">
             {categories.map(category => {
-                if (category.parentCategoryId !== null) {
-                    return (<>
-                            <div className=" relative inline-block text-left group" key={category.id}>
+                if (category.parentCategoryId === null) {
+                    return (<Link to={`subcategories/${category.id}`} key={category.id}>
+                            <div className=" relative inline-block text-left group" >
                                 <button
 
                                     className="flex w-[370px] h-[46px] pt-0 pr-0 pb-0 pl-[20px] items-center shrink-0 flex-nowrap bg-[#fff] hover:bg-gray-100 transition-all duration-200 hover:bg-gray-50 focus:outline-none
@@ -47,24 +38,26 @@ const MenuByCategory: React.FC = () => {
                                     </div>
 
                                 </button>
-                                    <div
-                                        className="absolute -right-48 top-0 mt-2 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 opacity-0
-                                        group-hover:opacity-100 group-hover:pointer-events-auto pointer-events-none transition-opacity duration-200 ease-out z-[2]">
-                                        <div >
-                                            <a href="#"
-                                               className="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100">
-                                                Пункт 1
-                                            </a>
-                                            <a href="#"
-                                               className="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100">
-                                                Пункт 2
-                                            </a>
-                                            <a href="#"
-                                               className="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100">
-                                                Пункт 3
-                                            </a>
-                                        </div>
-                                    </div>
+
+                                {/*це мало бути випадаюче меню*/}
+                                    {/*<div*/}
+                                    {/*    className="absolute -right-48 top-0 mt-2 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 opacity-0*/}
+                                    {/*    group-hover:opacity-100 group-hover:pointer-events-auto pointer-events-none transition-opacity duration-200 ease-out z-[2]">*/}
+                                    {/*    <div >*/}
+                                    {/*        <a href="#"*/}
+                                    {/*           className="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100">*/}
+                                    {/*            Пункт 1*/}
+                                    {/*        </a>*/}
+                                    {/*        <a href="#"*/}
+                                    {/*           className="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100">*/}
+                                    {/*            Пункт 2*/}
+                                    {/*        </a>*/}
+                                    {/*        <a href="#"*/}
+                                    {/*           className="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100">*/}
+                                    {/*            Пункт 3*/}
+                                    {/*        </a>*/}
+                                    {/*    </div>*/}
+                                    {/*</div>*/}
 
 
                                 {/* Випадаюче меню */}
@@ -72,7 +65,7 @@ const MenuByCategory: React.FC = () => {
                             </div>
 
 
-                        </>
+                        </Link>
                     )
                         ;
                 } else {
