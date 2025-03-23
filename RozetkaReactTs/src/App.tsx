@@ -9,6 +9,8 @@ import React from "react";
 import AccountLayout from "./components/layout/accountLayout/AccountLayout.tsx";
 import AdminLayout from "./components/layout/adminLayout/AdminLayout.tsx";
 import SubCategoriesPage from "./components/subCategory/subCategoriesPage.tsx";
+import OrderResultLayout from "./components/layout/orderResultLayout/OrderResultLayout.tsx";
+// import OrderResultPage from "./components/order/OrderResultPage.tsx";
 // import FilterTable from "./components/filter/filterTable.tsx";
 // import UsersTable from "./components/users/UsersTable.tsx";
 // import OrdersTable from "./components/orders/OrdersTable.tsx";
@@ -63,6 +65,7 @@ const CategoriesPage = lazy(() => import("./components/category/CategoriesPage.t
 const OrdersTable = lazy(() => import("./components/orders/OrdersTable.tsx"));
 const UsersTable = lazy(() => import("./components/users/UsersTable.tsx"));
 const FilterTable = lazy(() => import("./components/filter/filterTable.tsx"));
+const OrderResultPage = lazy(() => import("./components/order/OrderResultPage.tsx"));
 
 
 export default function App() {
@@ -128,6 +131,17 @@ export default function App() {
                 </Route>
 
             </Route>
+
+            <Route path="" element={<OrderResultLayout/>}>
+
+                    <Route path="order-result" element={<OrderResultPage/>}/>
+
+            </Route>
+
+
+
+
+
             <Route path="signin" element={<Suspense fallback={<MainLoader/>}> <SignIn/> </Suspense>}/>
             <Route path="signup" element={<Suspense fallback={<MainLoader/>}> <SignUp/> </Suspense>}/>
             <Route path="*" element={<Suspense fallback={<MainLoader/>}> <NotFoundPage/> </Suspense>}/>

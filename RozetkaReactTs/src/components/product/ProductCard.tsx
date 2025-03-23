@@ -5,20 +5,14 @@ import heart from "../../assets/icons/heart.svg"
 import heartRed from "../../assets/icons/heartFillRed.svg"
 import {Link} from "react-router-dom";
 import React, {useState} from "react";
-import {BasketService} from "../../services/basketService.ts";
 import {Badge, Rate} from "antd";
 import {WishListService} from "../../services/wishListService.ts";
 import formatPrice from "../../functions/formatPrice.ts";
 import {useDispatch} from "react-redux";
-// import {useDispatch, useSelector} from "react-redux";
-import {incrementTotalPrice} from "../../store/actions/basketActions.ts";
 import {addToComparison, removeFromComparison} from "../../store/actions/comparisonActions.ts";
 import {ComparisonListService} from "../../services/comparisonService.ts";
-import {toast, ToastContainer} from "react-toastify";
-//import {RootState} from "../../store";
-// import "../ProductCard/ProductCard.css"
+import useBasket from "../../hooks/useBasket.ts";
 
-//import Typography from '../assets/contemplative-reptile.jpg';
 interface ItemProps {
     item: IProductModel;
 }
@@ -29,11 +23,11 @@ const ProductCard: React.FC<ItemProps> = ({item}) => {
 
     //const notify = () => toast('Wow so easy !');
 
-    //const {item, updateParentState} = props;
     const dispatch = useDispatch();
     const [isWishList, setIsWishList] = useState(WishListService.checkId(item.id));
-    //const comparisonCount = useSelector((state: RootState) => state.comparison.comparisonCount);
     const [isComparison, setIsComparison] = useState<boolean>(ComparisonListService.checkId(item.id));
+
+    const { BasketFirstAdd } = useBasket();
 
     const WishListAdd = () => {
         WishListService.addId(item.id)
@@ -54,8 +48,6 @@ const ProductCard: React.FC<ItemProps> = ({item}) => {
         dispatch(removeFromComparison(item.id));
         setIsComparison(ComparisonListService.checkId(item.id));
     };
-
-
 
     return (
         <div
@@ -194,16 +186,7 @@ const ProductCard: React.FC<ItemProps> = ({item}) => {
                                 </div>
                             }
                             <div>
-                            <button type={"button"} onClick={() => {
-                                if(!BasketService.checkId(item.id)) {
-                                    BasketService.addId(item.id);
-                                    toast('Товар успішно добавлено в корзину!', {
-                                        position: 'bottom-right',
-                                    })
-                                    dispatch(incrementTotalPrice(Number(formatPrice(item.price - item.discount!))));
-                                }
-
-                            }}>
+                            <button type={"button"} onClick={()=>BasketFirstAdd(item)}>
 
                                 <div
                                     className="flex w-[44px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] items-center shrink-0 flex-nowrap rounded-[8px] border-solid border-2 border-[#9cc319]">
@@ -213,180 +196,13 @@ const ProductCard: React.FC<ItemProps> = ({item}) => {
                                     </div>
                                 </div>
                             </button>
-                            <ToastContainer />
                         </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        // <div className="cardBox">
-        //     <div className="card-head">
-        //         <div className="card-title">
-        //             <div className="card-special-offer">
-        //                 <div className="title-special-offer">
-        //                     <div className="typography">
-        //                         <span>Акція</span>
-        //                     </div>
-        //                 </div>
-        //
-        //                 <div className="value-special-offer">
-        //                     <div className="typography">
-        //                         10%
-        //                     </div>
-        //                 </div>
-        //             </div>
-        //
-        //             <div className="card-id">
-        //                 <div className="typography">Код: {item.id}</div>
-        //             </div>
-        //         </div>
-        //
-        //         <div className="icon-box">
-        //             <img src={heart} alt="heart"/>
-        //             <img src={balance} alt="balance"/>
-        //         </div>
-        //     </div>
-        // </div>
-
-        // <div className="main-container">
-        //     <div className="frame">
-        //         <div className="frame-1">
-        //             <div className="frame-2">
-        //                 <button className="button-frame">
-        //                     <div className="best-price">
-        //                         <span className="best-price-3">Н</span>
-        //                         <span className="best-price-4">айкраща ціна</span>
-        //                     </div>
-        //                 </button>
-        //                 <button className="red-rectangle">
-        //                     <span className="minus-twelve-percent">-12%</span>
-        //                 </button>
-        //             </div>
-        //             <div className="frame-5">
-        //                 <span className="code-597169">Код: 597169</span>
-        //             </div>
-        //         </div>
-        //         <div className="frame-6">
-        //             <div className="ic-like">
-        //                 <div className="frame-7">
-        //                     <div className="heart"/>
-        //                 </div>
-        //             </div>
-        //             <div className="ic-balance">
-        //                 <div className="cil-balance-scale">
-        //                     <div className="group"/>
-        //                 </div>
-        //             </div>
-        //         </div>
-        //     </div>
-        //     <div className="frame-8">
-        //         <div className="default"/>
-        //         <div className="frame-9">
-        //             <div className="frame-a">
-        //     <span className="notebook-dream-machines">
-        //       Ноутбук DREAM MACHINES
-        //       <br/>
-        //       RG2050-15 (RG2050-15UA30)
-        //     </span>
-        //             </div>
-        //             <div className="frame-b">
-        //                 <div className="rating-read-only">
-        //                     <div className="rating-interactive">
-        //                         <div className="rating-star">
-        //                             <div className="full"/>
-        //                         </div>
-        //                         <div className="rating-star-c">
-        //                             <div className="full-d"/>
-        //                         </div>
-        //                         <div className="rating-star-e">
-        //                             <div className="full-f"/>
-        //                         </div>
-        //                         <div className="rating-star-10">
-        //                             <div className="full-11"/>
-        //                         </div>
-        //                         <div className="rating-star-12">
-        //                             <div className="full-13"/>
-        //                         </div>
-        //                     </div>
-        //                     <div className="note">
-        //                         <span className="reviews">9 відгуків</span>
-        //                     </div>
-        //                 </div>
-        //                 <div className="frame-14">
-        //                     <div className="frame-15">
-        //                         <span className="price-1">32 999₴</span>
-        //                         <span className="price-2">28 999₴</span>
-        //                     </div>
-        //                     <div className="btn-basket-small">
-        //                         <div className="cart"/>
-        //                     </div>
-        //                 </div>
-        //             </div>
-        //         </div>
-        //     </div>
-        // </div>
-
-        // <Card sx={{ maxWidth: 345 }} style={{ margin: '20px' }}>
-        //     <CardMedia
-        //         component="img"
-        //         alt="green iguana"
-        //         height="140"
-        //         image="../static/images/cards/contemplative-reptile.jpg"
-        //     />
-        //     <CardContent>
-        //         <Typography gutterBottom variant="h5" component="div">
-        //             Lizard
-        //         </Typography>
-        //         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-        //             Lizards are a widespread group of squamate reptiles, with over 6,000
-        //             species, ranging across all continents except Antarctica
-        //         </Typography>
-        //     </CardContent>
-        //     <CardActions>
-        //         <Button size="small">Share</Button>
-        //         <Button size="small">Learn More</Button>
-        //     </CardActions>
-        // </Card>
     );
 };
 
 export default ProductCard;
-
-//
-// import React, { useState } from 'react';
-// import { IProductModel } from '../../models/productsModel';
-//
-// interface ProductCardProps {
-//     item: IProductModel;
-//     updateParentState: (newValue: number) => void;
-// }
-//
-// const ProductCard: React.FC<ProductCardProps> = ({ item, updateParentState }) => {
-//     const [isWishList, setIsWishList] = useState<boolean>(false);
-//
-//     // Додаємо в список бажаних
-//     const WishListAdd = () => {
-//         setIsWishList(true);
-//         updateParentState(1); // Оновлюємо стан батьківського компонента
-//     };
-//
-//     // Видаляємо зі списку бажаних
-//     const WishListRemove = () => {
-//         setIsWishList(false);
-//         updateParentState(0); // Оновлюємо стан батьківського компонента
-//     };
-//
-//     return (
-//         <div>
-//             <h2>{item.title}</h2>
-//             {isWishList ? 'In Wishlist' : 'Not in Wishlist'}
-//             <button onClick={WishListAdd}>Add to Wishlist</button>
-//             <button onClick={WishListRemove}>Remove from Wishlist</button>
-//         </div>
-//     );
-// };
-//
-// export default ProductCard;
-

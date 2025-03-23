@@ -8,8 +8,8 @@ import formatPrice from "../../functions/formatPrice.ts";
 import clsx from 'clsx';
 import {BasketServicesApi} from "../../services/basketServiceApi.ts";
 import {IBasketApi} from "../../models/basketModel.ts";
+import {toast} from "react-toastify";
 
-//import Typography from '../assets/contemplative-reptile.jpg';
 
 const uploadings = import.meta.env.VITE_ROZETKA_UPLOADINGS;
 
@@ -46,10 +46,20 @@ const BasketItem = (props: { item: IProductModel, className?: string }) => {
         console.log("res2 basket ", res2);
     }
 
-    const removeAll = () => {
+    const removeAll = async () => {
         BasketService.removeAllItems(item.id);
         window.dispatchEvent(new Event('basket-updated'));
         setCount(BasketService.getCountById(item.id));
+
+        const res = await BasketServicesApi.deleteBasket(item.id);
+        if(res.status === 200){
+            // console.log('Товар успішно видалено з корзини!');
+            toast('Товар успішно видалено з корзини!', {
+                position: 'bottom-right',
+                autoClose: 4000, // Auto close after 3 seconds
+                closeButton: true,  // Add close button to the toast
+            });
+        }
     }
 
 

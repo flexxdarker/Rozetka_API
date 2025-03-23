@@ -10,7 +10,7 @@ import formatPrice from "../../functions/formatPrice.ts";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../../store";
 import {calculateTotalPrice} from "../../store/actions/basketActions.ts";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {BasketServicesApi} from "../../services/basketServiceApi.ts";
 import useProducts from "../../hooks/useProducts.ts";
 
@@ -19,6 +19,7 @@ const OrderPage: React.FC = () => {
 
     const dispatch = useDispatch<AppDispatch>();
     const totalPrice = useSelector((state: RootState) => state.basket.totalPrice);
+    const navigate = useNavigate();
 
     const {products} = useProducts();
     const [basket, setBasket] = useState<IBasketModel>({});
@@ -47,8 +48,15 @@ const OrderPage: React.FC = () => {
         }
     }, [products, basket, dispatch]);
 
-    const pushOrder = () =>{
-        BasketServicesApi.pushOrder();
+    const pushOrder = async () =>{
+        const res = await BasketServicesApi.pushOrder();
+            if(res.status === 200)
+            {
+                BasketService.clearItems();
+                setBasket({});
+                navigate("/order-result");
+            }
+
     }
 
 
@@ -90,7 +98,7 @@ const OrderPage: React.FC = () => {
                         {
                             Object.keys(basket).length === 0 ?
                                 <Link to="/" className="w-full flex h-[40px] bg-[white] items-center justify-center">За покупками!</Link> :
-                            products.map(product => basket[product.id] > 0 ? <BasketItem item={product} className="rounded-none"/> : null)
+                            products.map(product => basket[product.id] > 0 ? <BasketItem item={product} key={product.id} className="rounded-none"/> : null)
                         }
 
                     </div>
@@ -106,7 +114,7 @@ const OrderPage: React.FC = () => {
                             </div>
                             <div>
                                 <button
-                                    className="flex w-[121px] h-[40px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] justify-center items-center shrink-0 flex-nowrap bg-[#b5b5b5] rounded-[8px] border-none relative pointer">
+                                    className="flex w-[121px] h-[40px] p-[10px] gap-[10px] justify-center items-center shrink-0 flex-nowrap bg-[#b5b5b5] rounded-[8px] border-none relative pointer">
             <span
                 className="flex w-[101px] h-[12px] justify-center items-start shrink-0 basis-auto font-['Inter'] text-[16px] font-medium leading-[12px] text-[#fff] relative text-center whitespace-nowrap">
               Застосувати

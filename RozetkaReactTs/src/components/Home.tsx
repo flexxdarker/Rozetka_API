@@ -1,6 +1,5 @@
 import React from 'react';
 import Container from "@mui/material/Container";
-// import ProductCardList from "./product/ProductCardList.tsx";
 import ImageSliderMainBaner from "./other/ImageSliderMainBaner.tsx";
 import ProductCardByCategory from "./product/ProductCardByCategory.tsx";
 import {IProductModel} from "../models/productsModel.ts";
@@ -100,8 +99,6 @@ const Home: React.FC = () => {
 
             <ProductsReviewed/>
             {/*<ProductCardList productsProps={products}/>*/}
-
-
         </>
     );
 };

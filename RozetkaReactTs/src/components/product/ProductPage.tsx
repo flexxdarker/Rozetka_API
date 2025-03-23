@@ -11,12 +11,10 @@ import heartRed from "../../assets/icons/heartFillRed.svg"
 import cartWhite from "../../assets/icons/cart-white.svg"
 import {useDispatch} from "react-redux";
 import {WishListService} from "../../services/wishListService.ts";
-import {BasketService} from "../../services/basketService.ts";
-import {incrementTotalPrice} from "../../store/actions/basketActions.ts";
 import {ReviewedListService} from "../../services/reviewedService.ts";
 import {addToComparison, removeFromComparison} from "../../store/actions/comparisonActions.ts";
 import {ComparisonListService} from "../../services/comparisonService.ts";
-import {toast, ToastContainer} from "react-toastify";
+import useBasket from "../../hooks/useBasket.ts";
 
 const uploadings = import.meta.env.VITE_ROZETKA_UPLOADINGS;
 
@@ -30,6 +28,8 @@ const ProductPage: React.FC = () => {
     const [isComparison, setIsComparison] = useState<boolean>(ComparisonListService.checkId(+params.id!));
     const dispatch = useDispatch();
     const [isWishList, setIsWishList] = useState<boolean>();
+
+    const { BasketFirstAdd } = useBasket();
 
     const WishListAdd = () => {
             WishListService.addId(product!.id)
@@ -310,14 +310,7 @@ const ProductPage: React.FC = () => {
                                         <div
                                             className="flex justify-between items-start self-stretch shrink-0 flex-nowrap">
                                             <div>
-                                            <button type={"button"} onClick={() => {
-                                                if (!BasketService.checkId(product.id)) {
-                                                    BasketService.addId(product.id);
-                                                    toast('Товар успішно добавлено в корзину!', {
-                                                        position: 'bottom-right',
-                                                    })
-                                                    dispatch(incrementTotalPrice(Number(formatPrice(product.price - product.discount!))));
-                                                }}} className="flex w-[340px] h-[50px] pt-0 pr-[40px] pb-0 pl-[40px] justify-center items-center shrink-0 flex-nowrap bg-[#9cc319] rounded-[8px] border-none pointer">
+                                            <button type={"button"} onClick={()=>BasketFirstAdd(product)} className="flex w-[340px] h-[50px] pt-0 pr-[40px] pb-0 pl-[40px] justify-center items-center shrink-0 flex-nowrap bg-[#9cc319] rounded-[8px] border-none pointer">
                                                 <div
                                                     className="flex w-[44px] h-[44px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] justify-center items-center shrink-0 flex-nowrap">
                                                     <div
@@ -333,7 +326,6 @@ const ProductPage: React.FC = () => {
                                                 </span>
                                                 </div>
                                             </button>
-                                            <ToastContainer />
                                         </div>
                                             <button
                                                 className="flex w-[340px] h-[50px] justify-center items-center shrink-0 flex-nowrap rounded-[8px] border-solid border-2 border-[#9cc319] pointer">

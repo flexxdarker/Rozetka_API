@@ -12,6 +12,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {calculateTotalPrice} from "../../store/actions/basketActions.ts";
 import {AppDispatch, RootState} from "../../store";
 import useProducts from "../../hooks/useProducts.ts";
+import useBasket from "../../hooks/useBasket.ts";
 
 interface BasketProps {
     onClose?: () => void;  // Приймаємо функцію закриття через пропс
@@ -22,6 +23,8 @@ const Basket: React.FC<BasketProps> = ({onClose}) => {
     const dispatch = useDispatch<AppDispatch>();
     const [toggleClear, setToggleClear] = useState<boolean>(false);
     const totalPrice = useSelector((state: RootState) => state.basket.totalPrice);
+
+    const {BasketClear} = useBasket();
 
     const {products} = useProducts();
     const [basket, setBasket] = useState<IBasketModel>({});
@@ -45,21 +48,8 @@ const Basket: React.FC<BasketProps> = ({onClose}) => {
         };
     }, []);
 
-    // Розрахунок загальної вартості замовлення та збереження її в Redux
-    // const calculateTotalPrice = () => {
-    //     const total = products.reduce((total, product) => {
-    //         const quantity = basket[product.id.toString()] || 0;
-    //         return total + (product.price - product.discount) * quantity;
-    //     }, 0);
-    //
-    //     // Оновлюємо загальну ціну в Redux
-    //     dispatch(setTotalPrice(total));
-    //
-    //     return total;
-    // };
-
     const clearBasket = () => {
-        BasketService.clearItems();
+        BasketClear();
         setBasket({}); // Очищаємо стан кошика вручну
         setToggleClear(!toggleClear); // Тригеримо оновлення через toggle
     }
@@ -115,7 +105,7 @@ const Basket: React.FC<BasketProps> = ({onClose}) => {
                             </div>
                         </div>
                     </div>
-                    <div className="flex w-[760px] flex-col gap-[20px] items-start shrink-0 flex-nowrap relative">
+                    <div className="flex w-[760px] max-h-[500px] flex-col gap-[20px] items-start shrink-0 flex-nowrap relative overflow-x-scroll">
 
                         {
                             Object.keys(basket).length === 0 ?
@@ -123,7 +113,6 @@ const Basket: React.FC<BasketProps> = ({onClose}) => {
                             // productsInBasket.map(product => (<BasketItem item={product}/>))
                             products.map(product => basket[product.id] > 0 ? <BasketItem item={product} key={product.id}/> : null)
                         }
-
                     </div>
 
                 </div>
