@@ -21,6 +21,16 @@ namespace BusinessLogic.Specifications
                 .Include(c => c.Images)
                 .Where(x => true);
         }
+        public class GetAllByCategoryId : Specification<Advert>
+        {
+            public GetAllByCategoryId(int categoryId) => Query
+                .Include(c => c.Values)
+                .ThenInclude(f => f.Value)
+                .ThenInclude(fv => fv.Filter)
+                .Include(a => a.AdvertRatings)
+                .Include(c => c.Images)
+                .Where(x => x.CategoryId == categoryId);
+        }
         public class GetById : Specification<Advert>
         {
             public GetById(int id) => Query

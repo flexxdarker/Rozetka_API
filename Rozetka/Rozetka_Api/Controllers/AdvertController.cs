@@ -31,6 +31,14 @@ namespace Rozetka_Api.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet("getall/{catgoryId:int}")]
+        public async Task<IActionResult> GetAllByCategiryId([FromRoute] int catgoryId)
+        {
+            return Ok(await advertService.GetAllAsync(catgoryId));
+        }
+
+
+        [AllowAnonymous]
         [HttpGet("getbyid/{id:int}")]
         public async Task<IActionResult> GetById([FromRoute]int id)
         {
