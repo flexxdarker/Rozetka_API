@@ -184,7 +184,7 @@ namespace BusinessLogic.Services
             }
         }
 
-        public async Task PushOrder(string userId/*, List<OrderItemDto> orderItems*/)
+        public async Task<OrderInformationDto> PushOrder(string userId/*, List<OrderItemDto> orderItems*/)
         {   
             var orderItems = await GetBasketItems(userId);
 
@@ -228,6 +228,23 @@ namespace BusinessLogic.Services
             }
 
              await _basket.SaveAsync();
+
+
+            return new OrderInformationDto
+            {
+                Id = order.Id,
+                Status = order.OrderStatus.Status,
+                OrderItems = order.OrderAdverts.Select(y => new OrderItemInfo
+                {
+                    Id = y.Advert.Id,
+                    Name = y.Advert.Title,
+                    Price = y.Price,
+                    Quantity = y.Count,
+                    ImagePath = y.Advert.Images.FirstOrDefault().Name
+                }).ToList(),
+                CreateTime = order.DateCrated,
+                TotalPrice = order.Amount,
+            };
         }
 
         public async Task PushOrderWhenLogin(string userId, List<OrderItemDto> orderItems)

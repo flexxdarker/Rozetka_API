@@ -12,6 +12,7 @@ namespace BusinessLogic.DTOs.Order
         public int Id { get; set; }
         public List<OrderItemInfo> OrderItems { get; set; }
         public string Status { get; set; }
+        public DateTime CreateTime { get; set; }
         public decimal TotalPrice { get; set; }
     }
 }
