@@ -44,7 +44,6 @@ const SignIn: React.FC = () => {
                     minWidth: "300px",
                     maxWidth: "fit-content",
                     height: "fit-content",
-                    backgroundColor: "blue",
                     alignItems: "center",
                     margin: "auto",
                     display: 'flex',
@@ -54,7 +53,8 @@ const SignIn: React.FC = () => {
                     right: 0,
                     top: 0,
                     bottom: 0
-                }}>
+                }}
+                     className={"rounded-[8px] bg-[#fff] border-solid border border-[#9cc319]"}>
                     <h1>SignIn page</h1>
                     <Form
                         name="login"

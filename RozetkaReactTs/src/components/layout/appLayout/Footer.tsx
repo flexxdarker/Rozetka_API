@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 const Footer: React.FC = () => {
 
     return (
-        <Box className={"sticky w-full bg-gradient-to-b from-[#000] to-[#381753]"}>
+        <Box className={"sticky w-full bg-gradient-to-b from-[#000] to-[#381753] mt-[4px]"}>
                      <div
                 className=" main-container flex h-[300px] gap-[50px] items-center flex-nowrap mx-auto my-0  justify-center">
                 <div

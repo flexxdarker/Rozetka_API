@@ -71,9 +71,10 @@ export const AccountsService = {
         return api.post<IUserTokens>("login", data);
     },
 
-    logout(refreshToken: string) {
+    logout() {
+    // logout(refreshToken: string) {
         TokenService.clear();
-        return api.post("logout", { refreshToken: refreshToken});
+        //return api.post("logout", { refreshToken: refreshToken});
     },
 
     getAllUsers(){

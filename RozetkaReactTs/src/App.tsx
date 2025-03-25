@@ -9,7 +9,7 @@ import React from "react";
 import AccountLayout from "./components/layout/accountLayout/AccountLayout.tsx";
 import AdminLayout from "./components/layout/adminLayout/AdminLayout.tsx";
 import SubCategoriesPage from "./components/subCategory/subCategoriesPage.tsx";
-import OrderResultLayout from "./components/layout/orderResultLayout/OrderResultLayout.tsx";
+import EasyLayout from "./components/layout/orderResultLayout/EasyLayout.tsx";
 // import OrderResultPage from "./components/order/OrderResultPage.tsx";
 // import FilterTable from "./components/filter/filterTable.tsx";
 // import UsersTable from "./components/users/UsersTable.tsx";
@@ -136,20 +136,14 @@ export default function App() {
 
             </Route>
 
-            <Route path="" element={<OrderResultLayout/>}>
-
-                    <Route path="order-result" element={<OrderResultPage/>}/>
-
+            <Route path="" element={<EasyLayout/>}>
+                <Route path="order-result" element={<OrderResultPage/>}/>
+                <Route path="signin" element={<Suspense fallback={<MainLoader/>}> <SignIn/> </Suspense>}/>
+                <Route path="signup" element={<Suspense fallback={<MainLoader/>}> <SignUp/> </Suspense>}/>
+                <Route path="*" element={<Suspense fallback={<MainLoader/>}> <NotFoundPage/> </Suspense>}/>
             </Route>
 
 
-
-
-
-            <Route path="signin" element={<Suspense fallback={<MainLoader/>}> <SignIn/> </Suspense>}/>
-            <Route path="signup" element={<Suspense fallback={<MainLoader/>}> <SignUp/> </Suspense>}/>
-            <Route path="*" element={<Suspense fallback={<MainLoader/>}> <NotFoundPage/> </Suspense>}/>
         </Routes>
     );
 }
-

@@ -21,16 +21,17 @@ const saveaccesstoken = import.meta.env.VITE_APP_SAVE_ACCOUNT_ACCESS;
 export const TokenService = {
     save(model: IUserTokens) {
         localStorage.setItem(saveaccesstoken, model.accessToken);
-        //localStorage.setItem(saverefreshtoken, model.refreshToken);
+        window.dispatchEvent(new Event('storageChangeToken'));
     },
 
     saveTokenString(token: string) {
         localStorage.setItem(saveaccesstoken, token);
-        window.dispatchEvent(new Event('storageSaveToken'));
+        window.dispatchEvent(new Event('storageChangeToken'));
     },
 
     clear() {
         localStorage.removeItem(saveaccesstoken);
+        window.dispatchEvent(new Event('storageChangeToken'));
         //localStorage.removeItem(saverefreshtoken);
     },
 

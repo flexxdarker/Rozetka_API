@@ -2,14 +2,14 @@ import React, {Suspense} from 'react';
 import {Layout as LayoutAntd} from 'antd';
 import {Outlet} from "react-router-dom";
 import MainLoader from "../../loaders/MainLoader.tsx";
-import OrderResultHeader from "./OrderResultHeader.tsx";
+import EasyHeader from "./EasyHeader.tsx";
 
-const OrderResultLayout: React.FC = () => {
+const EasyLayout: React.FC = () => {
 
     return (
         <LayoutAntd className='Layout min-h-screen flex flex-col'>
-            <OrderResultHeader/>
-            <div className="flex-grow flex justify-between mx-auto px-4">
+            <EasyHeader/>
+            <div className="flex justify-between m-auto px-4 align-center items-center">
                 <Suspense fallback={<MainLoader/>}>
                     <Outlet/>
                 </Suspense>
@@ -18,5 +18,5 @@ const OrderResultLayout: React.FC = () => {
     );
 };
 
-export default OrderResultLayout;
+export default EasyLayout;
 

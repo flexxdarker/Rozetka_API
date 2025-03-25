@@ -64,6 +64,9 @@ const ProductPage: React.FC = () => {
         }
     }
 
+    const removeHTMLTags = (text: string) => {
+        return text.replace(/<[^>]+>/g, "");
+    };
 
 
     const images: string[] = Array.isArray(product?.images)
@@ -84,8 +87,8 @@ const ProductPage: React.FC = () => {
             {product == undefined ?
                 <h1>Product Page {params.id}</h1>
                 :
-                <div className="flex flex-col">
-                    <div className="flex w-[1552px] bg-[#fff] rounded-[8px] p-[50px] pt-[20px] pb-[20px] mb-[4px]">
+                <div className="flex flex-col gap-[4px]">
+                    <div className="flex w-[1552px] bg-[#fff] rounded-[8px] p-[50px] pt-[20px] pb-[20px]">
                         <div className="flex gap-[50px]">
                             <div className="p-[10px]">
                                 <span
@@ -464,8 +467,9 @@ const ProductPage: React.FC = () => {
                     </div>
 
 
-                    <h1>Product Page {params.id}</h1>
-                    <h1>Product Page {product.id}</h1>
+                    <div className={"flex bg-[#fff] p-[10px]"}>
+                        {removeHTMLTags(product.description)}
+                    </div>
                 </div>
             }
         </>

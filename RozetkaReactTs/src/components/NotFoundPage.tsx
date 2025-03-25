@@ -9,17 +9,30 @@ const NotFoundPage: React.FC = () => {
 
     return (
         <>
-        <h1>Not found page</h1>
 
-        <Button variant="contained" size="large" onClick={() => {navigate(-1)}} style={{background: 'grey'}}>
-            Back
-        </Button>
+            <div className={"flex flex-col gap-[40px] h-[auto] p-[20px] rounded-[8px] bg-[#fff] border-solid border border-[#9cc319]"}>
+                <div className={"flex items-center justify-center"}>
+                    <span>Сторінку не знайдено!</span>
+                </div>
 
-            <Link to={"/"}>
-            <Button variant="contained" size="large" color="success">
-                Main
-            </Button>
-            </Link>
+                <div className={"flex  gap-[40px]  "}>
+                    <div className={"flex"}>
+                        <Button variant="contained"  className={"h-[30px]"} onClick={() => {
+                            navigate(-1)
+                        }}>
+                            Back
+                        </Button>
+                    </div>
+
+                    <div className={"flex"}>
+                        <Link to={"/"}>
+                            <Button variant="contained"  color="success" className={"h-[30px]"}>
+                                Main
+                            </Button>
+                        </Link>
+                    </div>
+                </div>
+            </div>
         </>
     );
 };
