@@ -363,6 +363,7 @@ namespace BusinessLogic.Services
             user.Name = editUserDto.FirstName;
             user.SurName = editUserDto.LastName;
             user.Email = editUserDto.Email;
+            user.PhoneNumber = editUserDto.PhoneNumber;
 
             // Handle Avatar update
             if (editUserDto.Avatar != null)
