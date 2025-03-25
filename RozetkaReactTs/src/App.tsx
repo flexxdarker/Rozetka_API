@@ -120,10 +120,14 @@ export default function App() {
 
                 <Route path="comparison-products" element={<ComparisonProductsPage/>}/>
 
+                <Route path="wish-list" element={<WishList/>}/>
+
                 <Route path="account" element={<AccountLayout/>}>
                     <Route path="data" element={<AccountData/>}/>
                     <Route path="orders" element={<AccountOrders/>}/>
                     <Route path="wish-list" element={<WishList/>}/>
+                    <Route path="comparison-list" element={<ComparisonListPage/>}/>
+                    <Route path="comparison-products" element={<ComparisonProductsPage/>}/>
                 </Route>
 
                 <Route path="" element={<CategoryLayout/>}>

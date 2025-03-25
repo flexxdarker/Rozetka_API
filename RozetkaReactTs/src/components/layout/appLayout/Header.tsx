@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import Box from '@mui/material/Box';
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import viewGrid from "./../../../assets/icons/view-grid.svg"
 import search from "./../../../assets/icons/search.svg"
 import heartWhite from "./../../../assets/icons/heart-white.svg"
@@ -32,6 +32,8 @@ const Header = () => {
     const totalPrice = useSelector((state: RootState) => state.basket.totalPrice);
     const comparisonCount = useSelector((state: RootState) => state.comparison.comparisonCount);
     const [basket, setBasket] = useState<IBasketModel>({});
+
+    const navigate = useNavigate();
 
     const {products} = useProducts();
 
@@ -89,6 +91,8 @@ const Header = () => {
         AccountsService.logout(TokenService.getAccessToken() || "");
         setIsAdmin(false);
         setIsLogin(false);
+
+        navigate("/");
     }
 
     const openModal = () => {
@@ -180,16 +184,30 @@ const Header = () => {
                         {/*</div>*/}
 
                         <div className="flex gap-[24px] items-center shrink-0 flex-nowrap">
-                            <button
-                                className="flex w-[40px] h-[40px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] justify-center items-center shrink-0 flex-nowrap rounded-[8px]">
-                                <div className="flex w-[24px] gap-[10px] items-center shrink-0 flex-nowrap">
-                                    <div
-                                        className="h-[24px] grow shrink-0 basis-0 overflow-hidden text-blue-500">
-                                        <img src={heartWhite}/>
-                                    </div>
-                                </div>
-                            </button>
+
+                            {isLogin ? (
+                                    <Link to={"/account/wish-list"}
+                                          className="flex w-[40px] h-[40px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] justify-center items-center shrink-0 flex-nowrap rounded-[8px]">
+                                        <div className="flex w-[24px] gap-[10px] items-center shrink-0 flex-nowrap">
+                                            <div
+                                                className="h-[24px] grow shrink-0 basis-0 overflow-hidden text-blue-500">
+                                                <img src={heartWhite}/>
+                                            </div>
+                                        </div>
+                                    </Link>
+                            ) : (
+                                    <Link to={"wish-list"}
+                                          className="flex w-[40px] h-[40px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] justify-center items-center shrink-0 flex-nowrap rounded-[8px]">
+                                        <div className="flex w-[24px] gap-[10px] items-center shrink-0 flex-nowrap">
+                                            <div
+                                                className="h-[24px] grow shrink-0 basis-0 overflow-hidden text-blue-500">
+                                                <img src={heartWhite}/>
+                                            </div>
+                                        </div>
+                                    </Link>
+                                )}
                             <Badge count={comparisonCount} size={"small"}>  {/*✓*/}
+
                             <Link to={"/comparison-list"}
                                 className="flex w-[40px] h-[40px] flex-col justify-center items-center shrink-0 flex-nowrap">
                                 <div

@@ -46,7 +46,6 @@ const CategoryForm: React.FC = () => {
         if (editMode) {
             console.log('Form values:', {...values}); // Обробка відправки форми з додатковими даними редактора
             const res = await CategoriesServices.edit(values);
-            console.log(res);
             if (res.status == 200) {
                 message.success("Edited");
                 navigate(-1);
@@ -56,7 +55,6 @@ const CategoryForm: React.FC = () => {
         } else {
             console.log('Form values:', {...values}); // Обробка відправки форми з додатковими даними редактора
             const res = await CategoriesServices.create(values);
-            console.log(res);
             if (res.status == 200) {
                 message.success("Create");
                 navigate(-1);
@@ -77,7 +75,6 @@ const CategoryForm: React.FC = () => {
             setCategory(res.data);
             setFileList([{uid: String(res.data.id),name: res.data.image,status:"done",url:uploadings + `/200_${res.data.image}`}])
             form.setFieldsValue(res.data);
-
             //form.setFieldsValue({ name: "name", value: "name" });
         }
     };
@@ -117,8 +114,6 @@ const CategoryForm: React.FC = () => {
 
     return (
         <>
-
-            <h1>Category form</h1>
             <Form
                 form={form}
                 labelCol={{span: 6}}

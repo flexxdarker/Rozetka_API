@@ -38,9 +38,6 @@ export interface IOrderInfoOrderItemsModel {
 
 
 
-
-
-
 export interface IOrderByIdModel {
     items: IOrderByIdItemsModel[];
     totalCount: number;
@@ -67,5 +64,5 @@ export interface IOrderByIdItemsItemsModel {
 export interface IOrderStatus {
     id: number;
     status: string;
-    orders: string;
+    orders?: string;
 }

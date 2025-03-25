@@ -192,7 +192,7 @@ const ProductTable: React.FC = () => {
             title: "Action",
             key: "action",
             // render: () => <a>Delete</a>
-            render: (record: any) => (
+            render: (record: IProductModel) => (
                 <Space size="middle">
                     {/* <Button>Show</Button> */}
 
@@ -206,7 +206,7 @@ const ProductTable: React.FC = () => {
 
                     <Popconfirm
                         title="Delete the product"
-                        description={`Are you sure to delete this ${record.name}?`}
+                        description={`Are you sure to delete this ${record.title}?`}
                         onConfirm={() => deleteHandler(record.id)}
                         okText="Yes"
                         cancelText="No"

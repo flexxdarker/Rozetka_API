@@ -13,6 +13,8 @@ import {calculateTotalPrice} from "../../store/actions/basketActions.ts";
 import {Link, useNavigate} from "react-router-dom";
 import {BasketServicesApi} from "../../services/basketServiceApi.ts";
 import useProducts from "../../hooks/useProducts.ts";
+import {AccountsService} from "../../services/accountsService.ts";
+import {IUserModel} from "../../models/accountsModel.ts";
 
 
 const OrderPage: React.FC = () => {
@@ -24,6 +26,42 @@ const OrderPage: React.FC = () => {
     const {products} = useProducts();
     const [basket, setBasket] = useState<IBasketModel>({});
     const itemWord = getWordForm(Object.keys(basket).length, ['товар', 'товари', 'товарів']);
+
+
+
+    const [userName, setUserName] = useState<string | null>(null);
+    const [userSurName, setUserSurName] = useState<string | null>(null);
+    const [userPhoneNumber, setUserPhoneNumber] = useState<string | null>(null);
+
+
+    const [userInfo,setUserInfo] = useState<IUserModel | undefined>(undefined);
+    const loadUser = async () => {
+        const res = await AccountsService.getUserById();
+        if(res.status === 200)
+        {
+            setUserInfo(res.data);
+        }
+    }
+
+    useEffect(() => {
+        // const payload = TokenService.getAccessTokenPayload();
+        // if (payload) {
+        //     setUserName(payload.name);
+        //     setUserSurName(payload.surName);
+        //     setUserPhoneNumber(payload.phoneNumber);
+        // }
+        loadUser();
+    }, []);
+
+
+    useEffect(() => {
+        if(userInfo) {
+            console.log("user", userInfo)
+            setUserName(userInfo!.firstName);
+            setUserSurName(userInfo!.lastName);
+            setUserPhoneNumber(userInfo!.phoneNumber);
+        }
+    }, [userInfo]);
 
     const handleBasketUpdate = () => {
         const savedBasket = BasketService.getItems();
@@ -60,11 +98,14 @@ const OrderPage: React.FC = () => {
     }
 
 
+
+
     return (
         <>
             <div className="flex gap-[4px]">
                 <div className="flex-col w-[900px]">
-                    <ContactDetailsOrder/>
+                    <ContactDetailsOrder firstName={userName} surName={userSurName}
+                                         phoneNumber={userPhoneNumber} setPhoneNumber={setUserPhoneNumber}/>
                     <DeliveryOrder/>
                     <PaymentOrder/>
                 </div>

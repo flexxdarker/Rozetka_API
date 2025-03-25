@@ -1,5 +1,12 @@
 import axios from "axios";
-import {ILoginModel, IRegisterModel, IUserModel} from "../models/accountsModel.ts";
+import {
+    IEditUserModel,
+    ILoginModel,
+    IRegisterModel,
+    IUserChangePassword,
+    IUserModel,
+    IUserNewToken
+} from "../models/accountsModel.ts";
 import {IUserTokens} from "../models/tokenModel.ts";
 import {TokenService} from "./tokenService.ts";
 
@@ -69,13 +76,34 @@ export const AccountsService = {
         return api.post("logout", { refreshToken: refreshToken});
     },
 
-
-
     getAllUsers(){
         return axios.get<IUserModel[]>(apiToken + "/GetAllUsers")
     },
 
     getUserById(){
         return axios.get<IUserModel>(apiToken + "/UserById")
+    },
+
+    editUser(model: IEditUserModel){
+        const data = new FormData();
+        for (const prop in model) {
+            data.append(prop, (model as any)[prop]);
+        }
+
+        if (model.avatar) {
+            data.append('avatar', model.avatar as File); // додаємо кожен файл
+        }
+
+        return axios.put<IUserNewToken>(apiToken + "/edit-user", data);
+    },
+
+    changePassword(model: IUserChangePassword){
+
+        const data = new FormData();
+        for (const prop in model) {
+            data.append(prop, (model as any)[prop]);
+        }
+
+        return axios.post<{ message: string }>(apiToken + "/change-password",data)
     },
 };

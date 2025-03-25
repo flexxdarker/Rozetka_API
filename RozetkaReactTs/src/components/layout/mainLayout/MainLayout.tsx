@@ -17,7 +17,7 @@ const MainLayout: React.FC = () => {
 
     return (
         <>
-            <div style={{backgroundColor: 'red'}} >
+            <div >
                 <MainMenu/>
             </div>
             <Content className='Main'

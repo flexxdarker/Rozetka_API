@@ -1,7 +1,7 @@
 import {IUserTokens} from "../models/tokenModel.ts";
 import { jwtDecode } from "jwt-decode";
 
-interface ITokenPayload {
+export interface ITokenPayload {
     [key: string]: string | number | undefined;
     id: string;
     name:string;
@@ -22,6 +22,11 @@ export const TokenService = {
     save(model: IUserTokens) {
         localStorage.setItem(saveaccesstoken, model.accessToken);
         //localStorage.setItem(saverefreshtoken, model.refreshToken);
+    },
+
+    saveTokenString(token: string) {
+        localStorage.setItem(saveaccesstoken, token);
+        window.dispatchEvent(new Event('storageSaveToken'));
     },
 
     clear() {

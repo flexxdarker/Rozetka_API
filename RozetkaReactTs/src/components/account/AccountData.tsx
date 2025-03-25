@@ -1,12 +1,12 @@
 import React from 'react';
-import UserDataListItem from "./UserDataListItem.tsx";
+import AccountDataUserInfo from "./AccountDataUserInfo.tsx";
+import AccountChangePassword from "./AccoutChangePassword.tsx";
 
 
 const AccountData: React.FC = () => {
 
-
         return (
-            <>
+            <div className={"flex flex-col gap-[4px]"}>
                 <div
                     className="main-container flex w-[1160px] h-[82px] pt-0 pr-[20px] pb-0 pl-[20px] gap-[40px] items-center flex-nowrap bg-[#fff] rounded-[8px] mx-auto my-0">
                     <div
@@ -17,12 +17,9 @@ const AccountData: React.FC = () => {
         </span>
                     </div>
                 </div>
-
-                <UserDataListItem lable="Налаштування" data={{
-                    "Логін (телефон)": "+380(97)055-55-55",
-                    "Прізвище": "Українка"
-                }} />
-            </>
+                <AccountDataUserInfo/>
+                <AccountChangePassword/>
+            </div>
         );
     }
 ;

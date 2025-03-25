@@ -11,7 +11,7 @@ export interface ICreateCategoryModel {
     id?: number;
     name: string;
     parentCategoryId?: number;
-    image: File;
+    image?: File;
 }
 
 export interface IUploadedFile {
