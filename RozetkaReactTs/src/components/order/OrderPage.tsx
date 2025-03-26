@@ -56,7 +56,7 @@ const OrderPage: React.FC = () => {
 
     useEffect(() => {
         if(userInfo) {
-            console.log("user", userInfo)
+            //console.log("user", userInfo)
             setUserName(userInfo!.firstName);
             setUserSurName(userInfo!.lastName);
             setUserPhoneNumber(userInfo!.phoneNumber);
@@ -94,9 +94,7 @@ const OrderPage: React.FC = () => {
                 setBasket({});
                 navigate("/order-result");
             }
-
     }
-
 
 
 
@@ -131,7 +129,6 @@ const OrderPage: React.FC = () => {
                                 </div>
                             </div>
                         </div>
-
                     </div>
                     {/*items*/}
                     <div className="flex w-[100%] flex-col gap-[4px] items-start shrink-0 flex-nowrap relative">
@@ -141,9 +138,7 @@ const OrderPage: React.FC = () => {
                                 <Link to="/" className="w-full flex h-[40px] bg-[white] items-center justify-center">За покупками!</Link> :
                             products.map(product => basket[product.id] > 0 ? <BasketItem item={product} key={product.id} className="rounded-none"/> : null)
                         }
-
                     </div>
-
                     {/*start ending*/}
                     <div
                         className="mt-[4px] flex-col p-[40px] justify-between items-end self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-tl-none rounded-tr-none rounded-br-[8px] rounded-bl-[8px] relative">
@@ -163,8 +158,6 @@ const OrderPage: React.FC = () => {
                                 </button>
                             </div>
                         </div>
-
-
                         <div
                             className="flex flex-col gap-[10px] items-start self-stretch shrink-0 flex-nowrap">
                             <div
@@ -234,17 +227,11 @@ const OrderPage: React.FC = () => {
         </span>
                             </button>
                         </div>
-
-
                     </div>
-
                 </div>
-
             </div>
-
         </>
-    )
-        ;
+    );
 };
 
 export default OrderPage;

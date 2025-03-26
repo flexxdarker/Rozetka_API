@@ -87,7 +87,7 @@ const Home: React.FC = () => {
 
                     if (category) {
                         return (
-                    <ProductCardByCategory productsInit={products.slice(0, 4)} title={category.name}
+                    <ProductCardByCategory productsInit={products.reverse().slice(0, 4)} title={category.name}
                                            categoryId={Number(categoryId)} key={index}/>
                         )} else {
                         return (

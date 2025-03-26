@@ -50,6 +50,7 @@ const Basket: React.FC<BasketProps> = ({onClose}) => {
 
     const clearBasket = () => {
         BasketClear();
+        window.dispatchEvent(new Event('basket-updated'));
         setBasket({}); // Очищаємо стан кошика вручну
         setToggleClear(!toggleClear); // Тригеримо оновлення через toggle
     }

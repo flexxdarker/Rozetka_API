@@ -15,10 +15,6 @@ const adminMenu: { to: string, label: string }[] = [
         label: "Filter",
     },
     {
-        to: "product-filter",
-        label: "Filter product",
-    },
-    {
         to: "orders-crud",
         label: "Orders",
     },

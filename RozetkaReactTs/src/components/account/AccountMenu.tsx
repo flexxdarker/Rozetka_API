@@ -46,13 +46,13 @@ const AccountMenu: React.FC = () => {
           Список порівнянь
         </span>
                     </Link>
-                    <div
+                    <Link to={"/order"}
                         className="flex pt-[10px] pr-[50px] pb-[10px] pl-[50px] gap-[10px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff]">
         <span
             className="h-[19px] shrink-0 basis-auto font-['Inter'] text-[16px] font-normal leading-[19px] text-[#3b3b3b] text-left whitespace-nowrap">
           Кошик
         </span>
-                    </div>
+                    </Link>
                     <div
                         className="flex pt-[10px] pr-[50px] pb-[10px] pl-[50px] gap-[10px] items-center self-stretch shrink-0 flex-nowrap bg-[#fff]">
         <span

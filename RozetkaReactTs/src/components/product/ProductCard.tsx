@@ -15,11 +15,12 @@ import useBasket from "../../hooks/useBasket.ts";
 
 interface ItemProps {
     item: IProductModel;
+    forComparison?: boolean;
 }
 
 const uploadings = import.meta.env.VITE_ROZETKA_UPLOADINGS;
 
-const ProductCard: React.FC<ItemProps> = ({item}) => {
+const ProductCard: React.FC<ItemProps> = ({item, forComparison}) => {
 
     //const notify = () => toast('Wow so easy !');
 
@@ -27,7 +28,7 @@ const ProductCard: React.FC<ItemProps> = ({item}) => {
     const [isWishList, setIsWishList] = useState(WishListService.checkId(item.id));
     const [isComparison, setIsComparison] = useState<boolean>(ComparisonListService.checkId(item.id));
 
-    const { BasketFirstAdd } = useBasket();
+    const {BasketFirstAdd} = useBasket();
 
     const WishListAdd = () => {
         WishListService.addId(item.id)
@@ -51,7 +52,7 @@ const ProductCard: React.FC<ItemProps> = ({item}) => {
 
     return (
         <div
-            className="main-container flex min-w-[250px] w-[286px] pt-[20px] pr-[20px] pb-[20px] pl-[20px] flex-col items-start flex-nowrap bg-[#fff] mx-auto my-0">
+            className={`main-container flex ${forComparison ? ("w-full") : ("min-w-[250px] w-[286px]")}  p-[20px] flex-col items-start flex-nowrap bg-[#fff] mx-auto my-0`}>
             <div className="flex justify-between items-start self-stretch shrink-0 flex-nowrap">
                 <div className="flex w-[129px] flex-col gap-[16px] items-start shrink-0 flex-nowrap">
                     <div className="flex gap-[4px] items-center self-stretch shrink-0 flex-nowrap">
@@ -87,22 +88,23 @@ const ProductCard: React.FC<ItemProps> = ({item}) => {
                 </div>
                 <div className="flex w-[32px] flex-col gap-[4px] items-start shrink-0 flex-nowrap">
 
-                    { isComparison ? (
-                    <Badge count={"✓"} size={"small"} color={"green"}>
-                    <button type={"button"} className="flex w-[32px] items-start shrink-0 flex-nowrap" onClick={ComparisonListRemove}>
-                        <div
-                            className="flex w-[32px] pt-[4px] pr-[4px] pb-[4px] pl-[4px] items-center shrink-0 flex-nowrap bg-[#fff] rounded-[4px] border-solid border-[0.5px] border-[#3b3b3b]">
-                            <div
-                                className="w-[24px] h-[24px] shrink-0 overflow-hidden">
-                                {/*className="w-[23px] h-[20px] bg-cover bg-no-repeat shrink-0 overflow-hidden z-[12]" style={{backgroundImage:`url(${balance})`}}>*/}
-                                {/*className="w-[24px] h-[24px] shrink-0 bg-[url(./assets/icons/balance.svg)] bg-cover bg-no-repeat overflow-hidden z-[12]">*/}
-                                <img src={balance}/>
-                            </div>
+                    {isComparison ? (
+                        <Badge count={"✓"} size={"small"} color={"green"}>
+                            <button type={"button"} className="flex w-[32px] items-start shrink-0 flex-nowrap"
+                                    onClick={ComparisonListRemove}>
+                                <div
+                                    className="flex w-[32px] pt-[4px] pr-[4px] pb-[4px] pl-[4px] items-center shrink-0 flex-nowrap bg-[#fff] rounded-[4px] border-solid border-[0.5px] border-[#3b3b3b]">
+                                    <div
+                                        className="w-[24px] h-[24px] shrink-0 overflow-hidden">
+                                        {/*className="w-[23px] h-[20px] bg-cover bg-no-repeat shrink-0 overflow-hidden z-[12]" style={{backgroundImage:`url(${balance})`}}>*/}
+                                        {/*className="w-[24px] h-[24px] shrink-0 bg-[url(./assets/icons/balance.svg)] bg-cover bg-no-repeat overflow-hidden z-[12]">*/}
+                                        <img src={balance}/>
+                                    </div>
 
-                        </div>
-                    </button>
-                    </Badge>
-                        ) : (
+                                </div>
+                            </button>
+                        </Badge>
+                    ) : (
                         <button type={"button"} className="flex w-[32px] items-start shrink-0 flex-nowrap"
                                 onClick={ComparisonListAdd}>
                             <div
@@ -186,17 +188,17 @@ const ProductCard: React.FC<ItemProps> = ({item}) => {
                                 </div>
                             }
                             <div>
-                            <button type={"button"} onClick={()=>BasketFirstAdd(item)}>
+                                <button type={"button"} onClick={() => BasketFirstAdd(item)}>
 
-                                <div
-                                    className="flex w-[44px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] items-center shrink-0 flex-nowrap rounded-[8px] border-solid border-2 border-[#9cc319]">
                                     <div
-                                        className="w-[24px] h-[24px] shrink-0 overflow-hidden">
-                                        <img src={cart}/>
+                                        className="flex w-[44px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] items-center shrink-0 flex-nowrap rounded-[8px] border-solid border-2 border-[#9cc319]">
+                                        <div
+                                            className="w-[24px] h-[24px] shrink-0 overflow-hidden">
+                                            <img src={cart}/>
+                                        </div>
                                     </div>
-                                </div>
-                            </button>
-                        </div>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

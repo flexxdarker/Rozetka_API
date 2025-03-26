@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {Link} from "react-router-dom";
 import ButtonMui from "@mui/material/Button";
 import {IProductModel} from "../../models/productsModel.ts";
@@ -11,6 +11,7 @@ import type {FilterDropdownProps} from 'antd/es/table/interface';
 import dayjs from "dayjs";
 import {IImageModel} from "../../models/imageModel.ts";
 import useProducts from "../../hooks/useProducts.ts";
+import useCategories from "../../hooks/useCategories.ts";
 // import {Highlight} from "@mui/icons-material";
 
 
@@ -21,6 +22,7 @@ const uploadings = import.meta.env.VITE_ROZETKA_UPLOADINGS;
 const ProductTable: React.FC = () => {
 
     const {products, setProducts} = useProducts();
+    const {categories} = useCategories();
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef<InputRef>(null);
@@ -119,104 +121,116 @@ const ProductTable: React.FC = () => {
             ),
     });
 
-    const [columns] = useState([
-        {
-            title: "Id",
-            dataIndex: "id",
-            key: "id",
-            sorter: (a: { id: number; }, b: { id: number; }) => a.id - b.id
-        },
-        {
-            title: "Title",
-            dataIndex: "title",
-            key: "title",
-            ...getColumnSearchProps('title'),
-            render: (text: string) => <div
-                style={{
-                    minWidth: 100,
-                    maxWidth: '30ch',
-                    overflow: 'hidden',
-                    display: '-webkit-box',
-                    WebkitBoxOrient: 'vertical',
-                    WebkitLineClamp: 2,
-                    whiteSpace: 'normal',
-                    textOverflow: 'ellipsis'
-                }}>{
-                text}</div>
-        },
-        {
-            title: "CategoryId",
-            dataIndex: "categoryId",
-            key: "categoryId",
-        },
-        {
-            title: "date",
-            dataIndex: "date",
-            key: "date",
-            ...getColumnSearchProps('date'),
-            render: (text: string) =>{
-                const formattedDate = dayjs(text).format('DD-MM-YYYY'); // Форматуємо дату до "рік-місяць-день"
-                return <p>{formattedDate}</p>;
-                // <div>{dayjs(text).format('YYYY-MM-DD')}</div>
+    const [columns,setColumns] = useState([{}]);
+
+    useEffect(() => {
+
+        setColumns([
+            {
+                title: "Id",
+                dataIndex: "id",
+                key: "id",
+                sorter: (a: { id: number; }, b: { id: number; }) => a.id - b.id
+            },
+            {
+                title: "Title",
+                dataIndex: "title",
+                key: "title",
+                ...getColumnSearchProps('title'),
+                render: (text: string) => <div
+                    style={{
+                        minWidth: 100,
+                        maxWidth: '30ch',
+                        overflow: 'hidden',
+                        display: '-webkit-box',
+                        WebkitBoxOrient: 'vertical',
+                        WebkitLineClamp: 2,
+                        whiteSpace: 'normal',
+                        textOverflow: 'ellipsis'
+                    }}>{
+                    text}</div>
+            },
+            {
+                title: "CategoryId",
+                dataIndex: "categoryId",
+                key: "categoryId",
+                render: (text: string) => {
+                    const filteredCategory = categories.filter(c => c.id == +text);
+
+                    // Якщо є категорії, повертаємо їх назву, якщо ні — порожній рядок
+                    return filteredCategory.length > 0 ? filteredCategory[0].name : "Не знайдено";
                 }
-            ,
+            },
+            {
+                title: "date",
+                dataIndex: "date",
+                key: "date",
+                ...getColumnSearchProps('date'),
+                render: (text: string) =>{
+                    const formattedDate = dayjs(text).format('DD-MM-YYYY'); // Форматуємо дату до "рік-місяць-день"
+                    return <p>{formattedDate}</p>;
+                    // <div>{dayjs(text).format('YYYY-MM-DD')}</div>
+                }
+                ,
 
-        },
-        // {
-        //     title: "Description",
-        //     dataIndex: "description",
-        //     key: "description",
-        //     // maxWidth: 20,
-        //     // ellipsis:true,
-        // },
-        {
-            title: "Price",
-            dataIndex: "price",
-            key: "price",
-        },
-        {
-            title: "Discount",
-            dataIndex: "discount",
-            key: "discount",
-        },
-        {
-            title: "FirstImage",
-            dataIndex: "images",
-            key: "images",
-            render: (record: IImageModel[]) => {
-                const imageUrl = `${uploadings + "200_" + record[0]?.name}`;
-                return <img src={imageUrl} alt="no image" />;
-            }
-        },
-        {
-            title: "Action",
-            key: "action",
-            // render: () => <a>Delete</a>
-            render: (record: IProductModel) => (
-                <Space size="middle">
-                    {/* <Button>Show</Button> */}
+            },
+            // {
+            //     title: "Description",
+            //     dataIndex: "description",
+            //     key: "description",
+            //     // maxWidth: 20,
+            //     // ellipsis:true,
+            // },
+            {
+                title: "Price",
+                dataIndex: "price",
+                key: "price",
+            },
+            {
+                title: "Discount",
+                dataIndex: "discount",
+                key: "discount",
+            },
+            {
+                title: "FirstImage",
+                dataIndex: "images",
+                key: "images",
+                render: (record: IImageModel[]) => {
+                    const imageUrl = `${uploadings + "200_" + record[0]?.name}`;
+                    return <img src={imageUrl} alt="no image" />;
+                }
+            },
+            {
+                title: "Action",
+                key: "action",
+                // render: () => <a>Delete</a>
+                render: (record: IProductModel) => (
+                    <Space size="middle">
+                        {/* <Button>Show</Button> */}
 
-                    <Link to={`/product-page/${record.id}`}>
-                        <Button>Show</Button>
-                    </Link>
+                        <Link to={`/product-page/${record.id}`}>
+                            <Button>Show</Button>
+                        </Link>
 
-                    <Link to={`edit/${record.id}`}>
-                        <Button>Edit</Button>
-                    </Link>
+                        <Link to={`edit/${record.id}`}>
+                            <Button>Edit</Button>
+                        </Link>
 
-                    <Popconfirm
-                        title="Delete the product"
-                        description={`Are you sure to delete this ${record.title}?`}
-                        onConfirm={() => deleteHandler(record.id)}
-                        okText="Yes"
-                        cancelText="No"
-                    >
-                        <Button>Delete</Button>
-                    </Popconfirm>
-                </Space>
-            )
-        },
-    ]);
+                        <Popconfirm
+                            title="Delete the product"
+                            description={`Are you sure to delete this ${record.title}?`}
+                            onConfirm={() => deleteHandler(record.id)}
+                            okText="Yes"
+                            cancelText="No"
+                        >
+                            <Button>Delete</Button>
+                        </Popconfirm>
+                    </Space>
+                )
+            },
+        ])
+    }, [categories]);
+
 
     const deleteHandler = async (id: number) => {
         const res = await ProductServices.delete(id);

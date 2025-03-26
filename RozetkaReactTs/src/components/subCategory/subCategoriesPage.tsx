@@ -30,7 +30,7 @@ const SubCategoriesPage: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        setSortProducts(products.filter(x => x.categoryId === +params.id!).slice(0, 4));
+        setSortProducts(products.filter(x => x.categoryId === +params.id!).reverse().slice(0, 4));
     }, [products, categoryName]);
 
     return (
