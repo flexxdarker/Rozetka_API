@@ -16,22 +16,23 @@ export interface ITokenPayload {
 
 
 const saveaccesstoken = import.meta.env.VITE_APP_SAVE_ACCOUNT_ACCESS;
+const storageChangeToken = import.meta.env.VITE_APP_CHANGE_TOKEN_EVENT;
 //const saverefreshtoken = import.meta.env.VITE_APP_SAVE_ACCOUNT_REFRESH;
 
 export const TokenService = {
     save(model: IUserTokens) {
         localStorage.setItem(saveaccesstoken, model.accessToken);
-        window.dispatchEvent(new Event('storageChangeToken'));
+        window.dispatchEvent(new Event(storageChangeToken));
     },
 
     saveTokenString(token: string) {
         localStorage.setItem(saveaccesstoken, token);
-        window.dispatchEvent(new Event('storageChangeToken'));
+        window.dispatchEvent(new Event(storageChangeToken));
     },
 
     clear() {
         localStorage.removeItem(saveaccesstoken);
-        window.dispatchEvent(new Event('storageChangeToken'));
+        window.dispatchEvent(new Event(storageChangeToken));
         //localStorage.removeItem(saverefreshtoken);
     },
 
@@ -90,7 +91,8 @@ export const TokenService = {
                     payload[
                         "birthdate"
                         ] as string,
-                roles: payload[
+                roles:
+                    payload[
                     "roles"
                     ] as string,
                 exp:

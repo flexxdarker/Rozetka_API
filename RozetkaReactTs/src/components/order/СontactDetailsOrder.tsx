@@ -5,11 +5,20 @@ interface DetailsProps {
     firstName?: string | null;
     surName?: string | null;
     phoneNumber?: string | null;
-    setPhoneNumber: React.Dispatch<React.SetStateAction<string | null>>;
+    setFirstName?: React.Dispatch<React.SetStateAction<string | null>>;
+    setSurName?: React.Dispatch<React.SetStateAction<string | null>>;
+    setPhoneNumber?: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 
-const ContactDetailsOrder: React.FC<DetailsProps> = ({firstName, surName, phoneNumber, setPhoneNumber}) => {
+const ContactDetailsOrder: React.FC<DetailsProps> = ({
+                                                         firstName,
+                                                         surName,
+                                                         phoneNumber,
+                                                         setPhoneNumber,
+                                                         setFirstName,
+                                                         setSurName
+                                                     }) => {
 
     const [isOpen, setIsOpen] = useState(false); // Стан для відкриття/закриття списку
 
@@ -17,8 +26,28 @@ const ContactDetailsOrder: React.FC<DetailsProps> = ({firstName, surName, phoneN
         setIsOpen(!isOpen); // Зміна стану відкриття/закриття
     };
 
+    const [isValidNumber, setIsValidNumber] = useState<boolean>(false);
+
+
     const handlePhoneNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setPhoneNumber(event.target.value);  // Оновлюємо стан в батьківському компоненті
+        const phonePattern = /^\+380\d{9}$/;
+
+        if (phonePattern.test(event.target.value)) {
+             // Оновлюємо стан в батьківському компоненті
+            setIsValidNumber(true);
+        } else {
+            setIsValidNumber(false);
+        }
+
+        setPhoneNumber!(event.target.value);
+    };
+
+    const handleFirstNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setFirstName!(event.target.value);  // Оновлюємо стан в батьківському компоненті
+    };
+
+    const handleSurNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSurName!(event.target.value);  // Оновлюємо стан в батьківському компоненті
     };
 
     return (
@@ -44,10 +73,12 @@ const ContactDetailsOrder: React.FC<DetailsProps> = ({firstName, surName, phoneN
                             <div
                                 className="flex flex-col gap-[20px] items-start self-stretch shrink-0 flex-nowrap relative z-[4]">
                                 <input placeholder="Прізвище" value={surName!}
+                                       onChange={handleSurNameChange}
                                        className="flex w-[380px] h-[40px] pt-[20px] pr-[10px] pb-[20px] pl-[10px] gap-[10px] items-center shrink-0 flex-nowrap rounded-[8px] border-solid border border-[#b5b5b5] overflow-hidden">
 
                                 </input>
                                 <input placeholder="Ім'я" value={firstName!}
+                                       onChange={handleFirstNameChange}
                                        className="flex w-[380px] h-[40px] pt-[20px] pr-[10px] pb-[20px] pl-[10px] gap-[10px] items-center shrink-0 flex-nowrap rounded-[8px] border-solid border border-[#b5b5b5] overflow-hidden">
 
                                 </input>
@@ -55,6 +86,7 @@ const ContactDetailsOrder: React.FC<DetailsProps> = ({firstName, surName, phoneN
                                        onChange={handlePhoneNumberChange}
                                        className="flex w-[380px] h-[40px] pt-[20px] pr-[10px] pb-[20px] pl-[10px] gap-[10px] items-center shrink-0 flex-nowrap rounded-[8px] border-solid border border-[#b5b5b5] overflow-hidden">
                                 </input>
+                                {!isValidNumber && (<span className={"text-red-500"}>Не корректний номер "+380ХХХХХХХХХ" </span>)}
                             </div>
 
                             <div className="flex w-[380px] gap-[4px] items-start shrink-0 flex-nowrap">

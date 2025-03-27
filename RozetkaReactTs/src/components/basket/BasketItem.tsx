@@ -20,30 +20,37 @@ const BasketItem = (props: { item: IProductModel, className?: string }) => {
 
     const [count,setCount] = useState(BasketService.getCountById(item.id));
 
-    const addItem = () => {
+    const addItem = async () => {
         BasketService.addId(item.id);
         window.dispatchEvent(new Event('basket-updated'));
         setCount(BasketService.getCountById(item.id));
 
-        const res = BasketServicesApi.deleteBasket(item.id);
-        console.log("res delete basket ", res);
-
+        const res = await BasketServicesApi.deleteBasket(item.id);
+        if(res.status === 200){
+            console.log(200)
+        }
         const data: IBasketApi = {productId: item.id, amount: BasketService.getCountById(item.id)}
-        const res2 = BasketServicesApi.createBasketId(data);
-        console.log("res2 basket ", res2);
+        const res2 = await BasketServicesApi.createBasketId(data);
+        if(res2.status === 200){
+            console.log(200)
+        }
     }
 
-    const removeItem = () => {
+    const removeItem = async () => {
         BasketService.removeId(item.id);
         window.dispatchEvent(new Event('basket-updated'));
         setCount(BasketService.getCountById(item.id));
 
-        const res = BasketServicesApi.deleteBasket(item.id);
-        console.log("res delete basket ", res);
+        const res = await BasketServicesApi.deleteBasket(item.id);
+        if(res.status === 200){
+            console.log(200)
+        }
 
         const data: IBasketApi = {productId: item.id, amount: BasketService.getCountById(item.id)}
-        const res2 = BasketServicesApi.createBasketId(data);
-        console.log("res2 basket ", res2);
+        const res2 = await BasketServicesApi.createBasketId(data);
+        if(res2.status === 200){
+            console.log(200)
+        }
     }
 
     const removeAll = async () => {

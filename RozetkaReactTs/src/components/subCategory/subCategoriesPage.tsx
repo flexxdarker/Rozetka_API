@@ -6,6 +6,7 @@ import {ISubCategoryTreeModel} from "../../models/subCategoriesModel.ts";
 import useProducts from "../../hooks/useProducts.ts";
 import ProductCardByCategory from "../product/ProductCardByCategory.tsx";
 import {IProductModel} from "../../models/productsModel.ts";
+import ProductsReviewed from "../product/productsReviewed.tsx";
 
 const SubCategoriesPage: React.FC = () => {
 
@@ -43,6 +44,8 @@ const SubCategoriesPage: React.FC = () => {
                     }
                 </div>
                 <ProductCardByCategory productsInit={sortProducts} title={categoryName} categoryId={Number(params.id)}/>
+
+                <ProductsReviewed/>
             </div>
         </>
     )

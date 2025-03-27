@@ -62,12 +62,16 @@ const ProductCardByCategory: React.FC<ProductCardByCategoryProps> = ({productsIn
                 </div>
                 <div className="flex gap-[4px] items-center self-stretch shrink-0 flex-nowrap">
                     {
-                        productsInit.map((product) => <ProductCard item={product} key={product.id}/>
+                        productsInit.length>0 ? (
+                        productsInit.map((product) => <ProductCard item={product} key={product.id}/>)
+                        ) : (
+                            <div>
+                                Вибачте поки товарів в цій категорії недобавлено:(
+                            </div>
                         )
                     }
                 </div>
             </div>
-
         </>
     );
 };

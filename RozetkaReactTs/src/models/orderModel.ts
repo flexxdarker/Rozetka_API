@@ -24,6 +24,7 @@ export interface IOrderInfoModel {
 export interface IOrderInfoItemsModel {
     id: number;
     orderItems: IOrderInfoOrderItemsModel[];
+    createTime: string,
     status: string;
     totalPrice: number;
 }

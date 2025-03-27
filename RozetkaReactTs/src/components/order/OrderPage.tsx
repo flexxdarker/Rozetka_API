@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import ContactDetailsOrder from "./СontactDetailsOrder.tsx";
 import DeliveryOrder from "./DeliveryOrder.tsx";
 import PaymentOrder from "./PaymentOrder.tsx";
-import {IBasketModel} from "../../models/basketModel.ts";
+import {IBasketItemsModel, IBasketModel} from "../../models/basketModel.ts";
 import getWordForm from "../../functions/getWordForm.ts";
 import {BasketService} from "../../services/basketService.ts";
 import BasketItem from "../basket/BasketItem.tsx";
@@ -15,6 +15,19 @@ import {BasketServicesApi} from "../../services/basketServiceApi.ts";
 import useProducts from "../../hooks/useProducts.ts";
 import {AccountsService} from "../../services/accountsService.ts";
 import {IUserModel} from "../../models/accountsModel.ts";
+import useIsLogin from "../../hooks/useIsLogin.ts";
+
+
+export interface Recipient {
+    recipientName: string | null;
+    recipientSurName: string | null;
+    recipientCity: string | null;
+    recipientStreet: string | null;
+    recipientHouse: string | null;
+    recipientFlat: string | null;
+    recipientDeliveryType: string | null;
+    recipientPayType: string | null;
+}
 
 
 const OrderPage: React.FC = () => {
@@ -23,15 +36,36 @@ const OrderPage: React.FC = () => {
     const totalPrice = useSelector((state: RootState) => state.basket.totalPrice);
     const navigate = useNavigate();
 
+    const {isLogin} = useIsLogin();
+
     const {products} = useProducts();
     const [basket, setBasket] = useState<IBasketModel>({});
     const itemWord = getWordForm(Object.keys(basket).length, ['товар', 'товари', 'товарів']);
 
+    const [itemsFromBasketApi, setItemsFromBasketApi] = useState<IBasketItemsModel[]>([]);
 
+    const loadBasketItems = async () => {
+        const res = await BasketServicesApi.getBasketItems()
+        if(res.status === 200)
+        {
+            setItemsFromBasketApi(res.data)
+        }
+    }
 
     const [userName, setUserName] = useState<string | null>(null);
     const [userSurName, setUserSurName] = useState<string | null>(null);
     const [userPhoneNumber, setUserPhoneNumber] = useState<string | null>(null);
+
+    const [recipient, setRecipient] = useState<Recipient>({
+        recipientName: null,
+        recipientSurName: null,
+        recipientCity: null,
+        recipientStreet: null,
+        recipientHouse: null,
+        recipientFlat: null,
+        recipientDeliveryType: null,
+        recipientPayType: null,
+    });
 
 
     const [userInfo,setUserInfo] = useState<IUserModel | undefined>(undefined);
@@ -44,6 +78,25 @@ const OrderPage: React.FC = () => {
     }
 
     useEffect(() => {
+        BasketService.clearItems();
+
+        console.log("items", itemsFromBasketApi);
+
+        itemsFromBasketApi.forEach(item => {
+            item.items.forEach(item => {
+                if (item.id && item.quantity) {
+                    BasketService.addId(item.id, item.quantity);
+                }
+            });
+        });
+
+        const savedBasket = BasketService.getItems();
+        if (savedBasket) {
+            setBasket(savedBasket);
+        }
+    }, [itemsFromBasketApi]);
+
+    useEffect(() => {
         // const payload = TokenService.getAccessTokenPayload();
         // if (payload) {
         //     setUserName(payload.name);
@@ -51,7 +104,12 @@ const OrderPage: React.FC = () => {
         //     setUserPhoneNumber(payload.phoneNumber);
         // }
         loadUser();
+        loadBasketItems();
     }, []);
+
+    useEffect(() => {
+        console.log("items" , itemsFromBasketApi);
+    }, [itemsFromBasketApi]);
 
 
     useEffect(() => {
@@ -60,6 +118,12 @@ const OrderPage: React.FC = () => {
             setUserName(userInfo!.firstName);
             setUserSurName(userInfo!.lastName);
             setUserPhoneNumber(userInfo!.phoneNumber);
+
+            setRecipient(prevState => ({
+                ...prevState,
+                recipientName: userInfo!.firstName,
+                recipientSurName: userInfo!.lastName,
+            }));
         }
     }, [userInfo]);
 
@@ -92,7 +156,7 @@ const OrderPage: React.FC = () => {
             {
                 BasketService.clearItems();
                 setBasket({});
-                navigate("/order-result");
+                navigate("/order-result", {state: {order:res.data, recipient: recipient}});
             }
     }
 
@@ -101,12 +165,17 @@ const OrderPage: React.FC = () => {
     return (
         <>
             <div className="flex gap-[4px]">
+                {isLogin &&(
                 <div className="flex-col w-[900px]">
-                    <ContactDetailsOrder firstName={userName} surName={userSurName}
+                    <ContactDetailsOrder firstName={userName} setFirstName={setUserName}
+                                         surName={userSurName} setSurName={setUserSurName}
                                          phoneNumber={userPhoneNumber} setPhoneNumber={setUserPhoneNumber}/>
-                    <DeliveryOrder/>
-                    <PaymentOrder/>
+
+                    <DeliveryOrder recipient={recipient} setRecipient={setRecipient}/>
+
+                    <PaymentOrder setRecipient={setRecipient}/>
                 </div>
+                )}
                 <div className="w-[648px]">
                     <div className="flex w-[100%] flex-col gap-[4px] items-start shrink-0 flex-nowrap relative">
                         <div

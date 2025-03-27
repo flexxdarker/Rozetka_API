@@ -10,6 +10,8 @@ import AccountLayout from "./components/layout/accountLayout/AccountLayout.tsx";
 import AdminLayout from "./components/layout/adminLayout/AdminLayout.tsx";
 import SubCategoriesPage from "./components/subCategory/subCategoriesPage.tsx";
 import EasyLayout from "./components/layout/orderResultLayout/EasyLayout.tsx";
+import ProtectedRoute from "./components/guards/ProtectedRoute.tsx";
+
 // import OrderResultPage from "./components/order/OrderResultPage.tsx";
 // import FilterTable from "./components/filter/filterTable.tsx";
 // import UsersTable from "./components/users/UsersTable.tsx";
@@ -66,6 +68,8 @@ const OrdersTable = lazy(() => import("./components/orders/OrdersTable.tsx"));
 const UsersTable = lazy(() => import("./components/users/UsersTable.tsx"));
 const FilterTable = lazy(() => import("./components/filter/filterTable.tsx"));
 const OrderResultPage = lazy(() => import("./components/order/OrderResultPage.tsx"));
+const TermsUseSite = lazy(() => import("./components/layout/footer/TermsUseSite.tsx"));
+const Guarantee = lazy(() => import("./components/layout/footer/Guarantee.tsx"));
 
 
 export default function App() {
@@ -79,8 +83,10 @@ export default function App() {
                     {/*Footer*/}
                     <Route path="about-us" element={<AboutUs/>}/>
                     <Route path="contacts" element={<Contacts/>}/>
+                    <Route path="terms-use-site" element={<TermsUseSite/>}/>
 
                     <Route path="delivery-and-payment" element={<DeliveryAndPayment/>}/>
+                    <Route path="guarantee" element={<Guarantee/>}/>
                     <Route path="return-of-goods" element={<ReturnOfGoods/>}/>
 
                     <Route path="for-corporate-client" element={<ForCorporateClient/>}/>
@@ -91,20 +97,22 @@ export default function App() {
                 </Route>
 
                 <Route path="" element={<AdminLayout/>}>
-                    <Route path="products-crud" element={<ProductTable/>}/>
-                    <Route path="products-crud/create" element={<ProductForm/>}/>
-                    <Route path="products-crud/edit/:id" element={<ProductForm/>}/>
-                    {/*<Route path="product-page/:id" element={<ProductPage/>}/>*/}
+                    <Route element={<ProtectedRoute/>}>
+                        <Route path="products-crud" element={<ProductTable/>}/>
+                        <Route path="products-crud/create" element={<ProductForm/>}/>
+                        <Route path="products-crud/edit/:id" element={<ProductForm/>}/>
+                        {/*<Route path="product-page/:id" element={<ProductPage/>}/>*/}
 
-                    <Route path="categories-crud" element={<CategoryTable/>}/>
-                    <Route path="categories-crud/create" element={<CategoryForm/>}/>
-                    <Route path="categories-crud/edit/:id" element={<CategoryForm/>}/>
+                        <Route path="categories-crud" element={<CategoryTable/>}/>
+                        <Route path="categories-crud/create" element={<CategoryForm/>}/>
+                        <Route path="categories-crud/edit/:id" element={<CategoryForm/>}/>
 
-                    <Route path="orders-crud" element={<OrdersTable/>}/>
+                        <Route path="orders-crud" element={<OrdersTable/>}/>
 
-                    <Route path="users-crud" element={<UsersTable/>}/>
+                        <Route path="users-crud" element={<UsersTable/>}/>
 
-                    <Route path="filter-crud" element={<FilterTable/>}/>
+                        <Route path="filter-crud" element={<FilterTable/>}/>
+                    </Route>
                 </Route>
 
 

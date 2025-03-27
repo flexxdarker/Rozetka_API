@@ -1,16 +1,21 @@
-import React, {useState} from "react";
-import {Table} from "antd";
+import React, {useEffect, useState} from "react";
+import {Button, message, Popconfirm, Space, Table} from "antd";
 import {IUserModel} from "../../models/accountsModel.ts";
 import useUsers from "../../hooks/useUsers.ts";
+import {AccountsService} from "../../services/accountsService.ts";
 
 const uploadings = import.meta.env.VITE_ROZETKA_UPLOADINGS;
 
 const UsersTable: React.FC = () => {
 
-    const {users} = useUsers();
+    const {users, setUsers} = useUsers();
 
 
-    const [columns] = useState([
+    const [columns,setColumns] = useState([{}]);
+
+    useEffect(() => {
+
+        setColumns([
         {
             title: "Id",
             dataIndex: "id",
@@ -64,6 +69,26 @@ const UsersTable: React.FC = () => {
             key: "roles",
         },
         {
+            title: "Change role",
+            key: "changeRoles",
+            render: (record: IUserModel) => (
+                <Space size="middle">
+
+
+
+                    <Popconfirm
+                        title="Delete the product"
+                        description={`Are you sure to change role?`}
+                        onConfirm={() => changeRoleHandler(record.id)}
+                        okText="Yes"
+                        cancelText="No"
+                    >
+                        <Button>Змінити роль</Button>
+                    </Popconfirm>
+                </Space>
+            )
+        },
+        {
             title: "Avatar",
             dataIndex: "avatar",
             key: "avatar",
@@ -72,7 +97,31 @@ const UsersTable: React.FC = () => {
                 return <img src={imageUrl} alt="no image" className={"w-[100px] h-[100px]"}/>;
             }
         },
-    ]);
+    ])
+    }, [users]);
+
+
+
+    const changeRoleHandler = async (id: string) => {
+        const res = await AccountsService.changeRole(id);
+        if (res.status === 200) {
+            message.success("Role changed successfully");
+            setUsers(
+                users.map(user => {
+                    if (user.id === id) {
+                        return {
+                            ...user,
+                            roles: user.roles === "user" ? "admin" : "user",
+                        };
+                    }
+                    return user;
+                })
+            );
+        } else {
+            message.error("Something went wrong");
+        }
+
+    };
 
     return (
         <>

@@ -1,40 +1,24 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import SocialNetworks from "./SocialNetworks.tsx";
 import MenuByCategory from "./MenuByCategory.tsx";
-import {TokenService} from "../../../services/tokenService.ts";
 import AccountMenu from "../../account/AccountMenu.tsx";
-
+import useIsLogin from "../../../hooks/useIsLogin.ts";
 
 const MainMenu: React.FC = () => {
 
-    const [isLoggin, setIsLoggin] = useState<boolean>();
-
-    const isExistToken = () =>{
-        setIsLoggin(TokenService.isExists());
-    }
-
-    useEffect(() => {
-        isExistToken();
-        window.addEventListener('storageChangeToken', isExistToken);
-        // Очищаємо слухача при демонтажі компонента
-
-        return () => {
-            window.removeEventListener('storageChangeToken', isExistToken);
-        };
-    }, []);
+    const {isLogin} = useIsLogin();
 
     return (
         <>
                 <div className={"flex flex-col gap-[4px] overflow-visible"}>
                     <MenuByCategory/>
 
-                    {isLoggin && (
+                    {isLogin && (
                         <AccountMenu/>
                     )}
 
                     <SocialNetworks/>
                 </div>
-
         </>
     );
 };

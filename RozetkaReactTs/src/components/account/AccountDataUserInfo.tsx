@@ -227,7 +227,11 @@ const AccountDataUserInfo: React.FC = () => {
                                             className="flex p-[10px] gap-[10px] items-center self-stretch shrink-0 flex-nowrap">
                                             <Form.Item
                                                 name="phoneNumber"
-                                                rules={[{required: true, message: 'Please input phone number'}]}
+                                                rules={[{required: true, message: 'Please input phone number'},
+                                                {
+                                                    pattern: /^\+380\d{9}$/,  // Перевірка на формат: +380 + 9 цифр
+                                                    message: 'Номер телефону повинен починатися з +380 і містити 13 цифр.',
+                                                },]}
                                             >
                                                 <Input placeholder="Phone number" disabled={isDisable}/>
                                             </Form.Item>

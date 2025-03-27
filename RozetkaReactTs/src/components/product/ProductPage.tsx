@@ -29,11 +29,11 @@ const ProductPage: React.FC = () => {
     const dispatch = useDispatch();
     const [isWishList, setIsWishList] = useState<boolean>();
 
-    const { BasketFirstAdd } = useBasket();
+    const {BasketFirstAdd} = useBasket();
 
     const WishListAdd = () => {
-            WishListService.addId(product!.id)
-            setIsWishList(true); // Зміна стану відкриття/закриття
+        WishListService.addId(product!.id)
+        setIsWishList(true); // Зміна стану відкриття/закриття
     };
 
     const WishListRemove = () => {
@@ -77,7 +77,7 @@ const ProductPage: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        if(product !== undefined) {
+        if (product !== undefined) {
             setIsWishList(WishListService.checkId(product!.id));
         }
     }, [product]);
@@ -87,7 +87,7 @@ const ProductPage: React.FC = () => {
             {product == undefined ?
                 <h1>Product Page {params.id}</h1>
                 :
-                <div className="flex flex-col gap-[4px]">
+                <div className="flex flex-col gap-[4px] max-w-[1552px]">
                     <div className="flex w-[1552px] bg-[#fff] rounded-[8px] p-[50px] pt-[20px] pb-[20px]">
                         <div className="flex gap-[50px]">
                             <div className="p-[10px]">
@@ -134,8 +134,9 @@ const ProductPage: React.FC = () => {
 
                         {/*second col*/}
                         <div className="flex flex-col ml-[4px]">
+
                             <div
-                                className="main-container flex w-[808px] p-[40px] flex-col gap-[48px] items-start flex-nowrap bg-[#fff] mx-auto my-0">
+                                className="main-container flex w-[808px] h-full p-[40px] flex-col gap-[48px] items-start flex-nowrap bg-[#fff] mx-auto my-0 justify-around">
                                 <div
                                     className="flex flex-col gap-[48px] items-start self-stretch shrink-0 flex-nowrap">
                                     <div
@@ -172,65 +173,67 @@ const ProductPage: React.FC = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <div
-                                        className="flex w-[262px] flex-col gap-[32px] items-start shrink-0 flex-nowrap">
-                                        <div
-                                            className="flex w-[197px] flex-col gap-[20px] items-start shrink-0 flex-nowrap">
-                                            <div
-                                                className="w-[197px] self-stretch shrink-0 font-['Inter'] text-[16px] font-normal leading-[12px] relative text-left whitespace-nowrap">
-              <span className="font-['Inter'] text-[16px] font-light leading-[20px] text-[#3b3b3b] text-left">
-                Колір:
-              </span>
-                                                <span
-                                                    className="font-['Inter'] text-[16px] font-normal leading-[20px] text-[#3b3b3b] text-left">
-                {" "}
-                                                    Lemon Green{" "}
-              </span>
-                                            </div>
-                                            <div
-                                                className="flex w-[143px] gap-[9px] items-center shrink-0 flex-nowrap">
-                                                <div
-                                                    className="w-[28px] h-[28px] shrink-0 bg-[url(../assets/images/5d66012f-f1d8-449f-9855-21f917005116.png)] bg-cover bg-no-repeat rounded-[50%] relative z-[25]"/>
-                                                <div
-                                                    className="w-[28px] h-[28px] shrink-0 bg-[url(../assets/images/2d743017-db00-45d2-908c-16099c147af4.png)] bg-cover bg-no-repeat rounded-[50%] relative z-[26]"/>
-                                                <div
-                                                    className="w-[28px] h-[28px] shrink-0 bg-[url(../assets/images/66070069-2877-4657-97a1-811095a9045a.png)] bg-cover bg-no-repeat rounded-[50%] relative z-[27]"/>
-                                                <div
-                                                    className="w-[32px] h-[32px] shrink-0 bg-[url(../assets/images/f8ea9142-3db0-4c7c-81f3-ff8db99f4aae.png)] bg-cover bg-no-repeat relative z-[28]"/>
-                                            </div>
-                                        </div>
-                                        <div
-                                            className="flex flex-col gap-[20px] justify-center items-start self-stretch shrink-0 flex-nowrap">
-                                            <div
-                                                className="w-[262px] self-stretch shrink-0 font-['Inter'] text-[16px] font-normal leading-[12px] text-left whitespace-nowrap">
-              <span className="font-['Inter'] text-[16px] font-light leading-[20px] text-[#3b3b3b] text-left">
-                Вбудована пам’ять:
-              </span>
-                                                <span
-                                                    className="font-['Inter'] text-[16px] font-normal leading-[20px] text-[#3b3b3b] text-left">
-                {" "}
-                                                    256 ГБ{" "}
-              </span>
-                                            </div>
-                                            <div
-                                                className="flex w-[196px] gap-[24px] items-center shrink-0 flex-nowrap">
-                                                <button
-                                                    className="flex w-[84px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] justify-center items-center shrink-0 flex-nowrap rounded-[8px] border-solid border border-[#b5b5b5] pointer">
-                <span
-                    className="h-[15px] shrink-0 basis-auto font-['Inter'] text-[20px] font-light leading-[15px] text-[#b5b5b5] text-left whitespace-nowrap">
-                  512 ГБ
-                </span>
-                                                </button>
-                                                <button
-                                                    className="flex w-[88px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] justify-center items-center shrink-0 flex-nowrap rounded-[8px] border-solid border border-[#3b3b3b] pointer">
-                <span
-                    className="h-[15px] shrink-0 basis-auto font-['Inter'] text-[20px] font-normal leading-[15px] text-[#3b3b3b] text-left whitespace-nowrap">
-                  256 ГБ
-                </span>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
+
+                                    {/*                      */}
+                                    {/*                      <div*/}
+                                    {/*                          className="flex w-[262px] flex-col gap-[32px] items-start shrink-0 flex-nowrap">*/}
+                                    {/*                          <div*/}
+                                    {/*                              className="flex w-[197px] flex-col gap-[20px] items-start shrink-0 flex-nowrap">*/}
+                                    {/*                              <div*/}
+                                    {/*                                  className="w-[197px] self-stretch shrink-0 font-['Inter'] text-[16px] font-normal leading-[12px] relative text-left whitespace-nowrap">*/}
+                                    {/*<span className="font-['Inter'] text-[16px] font-light leading-[20px] text-[#3b3b3b] text-left">*/}
+                                    {/*  Колір:*/}
+                                    {/*</span>*/}
+                                    {/*                                  <span*/}
+                                    {/*                                      className="font-['Inter'] text-[16px] font-normal leading-[20px] text-[#3b3b3b] text-left">*/}
+                                    {/*  {" "}*/}
+                                    {/*                                      Lemon Green{" "}*/}
+                                    {/*</span>*/}
+                                    {/*                              </div>*/}
+                                    {/*                              <div*/}
+                                    {/*                                  className="flex w-[143px] gap-[9px] items-center shrink-0 flex-nowrap">*/}
+                                    {/*                                  <div*/}
+                                    {/*                                      className="w-[28px] h-[28px] shrink-0 bg-[url(../assets/images/5d66012f-f1d8-449f-9855-21f917005116.png)] bg-cover bg-no-repeat rounded-[50%] relative z-[25]"/>*/}
+                                    {/*                                  <div*/}
+                                    {/*                                      className="w-[28px] h-[28px] shrink-0 bg-[url(../assets/images/2d743017-db00-45d2-908c-16099c147af4.png)] bg-cover bg-no-repeat rounded-[50%] relative z-[26]"/>*/}
+                                    {/*                                  <div*/}
+                                    {/*                                      className="w-[28px] h-[28px] shrink-0 bg-[url(../assets/images/66070069-2877-4657-97a1-811095a9045a.png)] bg-cover bg-no-repeat rounded-[50%] relative z-[27]"/>*/}
+                                    {/*                                  <div*/}
+                                    {/*                                      className="w-[32px] h-[32px] shrink-0 bg-[url(../assets/images/f8ea9142-3db0-4c7c-81f3-ff8db99f4aae.png)] bg-cover bg-no-repeat relative z-[28]"/>*/}
+                                    {/*                              </div>*/}
+                                    {/*                          </div>*/}
+                                    {/*                          <div*/}
+                                    {/*                              className="flex flex-col gap-[20px] justify-center items-start self-stretch shrink-0 flex-nowrap">*/}
+                                    {/*                              <div*/}
+                                    {/*                                  className="w-[262px] self-stretch shrink-0 font-['Inter'] text-[16px] font-normal leading-[12px] text-left whitespace-nowrap">*/}
+                                    {/*<span className="font-['Inter'] text-[16px] font-light leading-[20px] text-[#3b3b3b] text-left">*/}
+                                    {/*  Вбудована пам’ять:*/}
+                                    {/*</span>*/}
+                                    {/*                                  <span*/}
+                                    {/*                                      className="font-['Inter'] text-[16px] font-normal leading-[20px] text-[#3b3b3b] text-left">*/}
+                                    {/*  {" "}*/}
+                                    {/*                                      256 ГБ{" "}*/}
+                                    {/*</span>*/}
+                                    {/*                              </div>*/}
+                                    {/*                              <div*/}
+                                    {/*                                  className="flex w-[196px] gap-[24px] items-center shrink-0 flex-nowrap">*/}
+                                    {/*                                  <button*/}
+                                    {/*                                      className="flex w-[84px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] justify-center items-center shrink-0 flex-nowrap rounded-[8px] border-solid border border-[#b5b5b5] pointer">*/}
+                                    {/*  <span*/}
+                                    {/*      className="h-[15px] shrink-0 basis-auto font-['Inter'] text-[20px] font-light leading-[15px] text-[#b5b5b5] text-left whitespace-nowrap">*/}
+                                    {/*    512 ГБ*/}
+                                    {/*  </span>*/}
+                                    {/*                                  </button>*/}
+                                    {/*                                  <button*/}
+                                    {/*                                      className="flex w-[88px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] justify-center items-center shrink-0 flex-nowrap rounded-[8px] border-solid border border-[#3b3b3b] pointer">*/}
+                                    {/*  <span*/}
+                                    {/*      className="h-[15px] shrink-0 basis-auto font-['Inter'] text-[20px] font-normal leading-[15px] text-[#3b3b3b] text-left whitespace-nowrap">*/}
+                                    {/*    256 ГБ*/}
+                                    {/*  </span>*/}
+                                    {/*                                  </button>*/}
+                                    {/*                              </div>*/}
+                                    {/*                          </div>*/}
+                                    {/*                      </div>*/}
                                 </div>
                                 <div
                                     className="flex flex-col gap-[28px] items-start self-stretch shrink-0 flex-nowrap">
@@ -270,7 +273,7 @@ const ProductPage: React.FC = () => {
                                         <div
                                             className="flex w-[120px] gap-[28px] items-end shrink-0 flex-nowrap">
                                             <button type="button" onClick={isWishList ? WishListRemove : WishListAdd}
-                                                className="flex w-[40px] h-[40px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] justify-center items-center shrink-0 flex-nowrap rounded-[8px]">
+                                                    className="flex w-[40px] h-[40px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] justify-center items-center shrink-0 flex-nowrap rounded-[8px]">
                                                 <div
                                                     className="flex w-[24px] gap-[10px] items-center shrink-0 flex-nowrap">
                                                     <div
@@ -280,20 +283,20 @@ const ProductPage: React.FC = () => {
                                                 </div>
                                             </button>
 
-                                            { isComparison ? (
+                                            {isComparison ? (
                                                 <Badge count={"✓"} size={"small"} color={"green"}>
-                                            <button type={"button"} onClick={ComparisonListRemove}
-                                                className="flex w-[40px] h-[40px] flex-col justify-center items-center shrink-0 flex-nowrap">
-                                                <div
-                                                    className="flex h-[40px] pt-[4px] pr-[4px] pb-[4px] pl-[4px] flex-col justify-center items-center self-stretch shrink-0 flex-nowrap rounded-[4px] overflow-hidden">
-                                                    <div
-                                                        className="w-[22.5px] h-[19.125px] shrink-0">
-                                                        <img src={balance}/>
-                                                    </div>
-                                                </div>
-                                            </button>
+                                                    <button type={"button"} onClick={ComparisonListRemove}
+                                                            className="flex w-[40px] h-[40px] flex-col justify-center items-center shrink-0 flex-nowrap">
+                                                        <div
+                                                            className="flex h-[40px] pt-[4px] pr-[4px] pb-[4px] pl-[4px] flex-col justify-center items-center self-stretch shrink-0 flex-nowrap rounded-[4px] overflow-hidden">
+                                                            <div
+                                                                className="w-[22.5px] h-[19.125px] shrink-0">
+                                                                <img src={balance}/>
+                                                            </div>
+                                                        </div>
+                                                    </button>
                                                 </Badge>
-                                                ) : (
+                                            ) : (
                                                 <button type={"button"} onClick={ComparisonListAdd}
                                                         className="flex w-[40px] h-[40px] flex-col justify-center items-center shrink-0 flex-nowrap">
                                                     <div
@@ -313,23 +316,24 @@ const ProductPage: React.FC = () => {
                                         <div
                                             className="flex justify-between items-start self-stretch shrink-0 flex-nowrap">
                                             <div>
-                                            <button type={"button"} onClick={()=>BasketFirstAdd(product)} className="flex w-[340px] h-[50px] pt-0 pr-[40px] pb-0 pl-[40px] justify-center items-center shrink-0 flex-nowrap bg-[#9cc319] rounded-[8px] border-none pointer">
-                                                <div
-                                                    className="flex w-[44px] h-[44px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] justify-center items-center shrink-0 flex-nowrap">
+                                                <button type={"button"} onClick={() => BasketFirstAdd(product)}
+                                                        className="flex w-[340px] h-[50px] pt-0 pr-[40px] pb-0 pl-[40px] justify-center items-center shrink-0 flex-nowrap bg-[#9cc319] rounded-[8px] border-none pointer">
                                                     <div
-                                                        className="w-[24px] h-[24px] shrink-0 overflow-hidden">
-                                                        <img src={cartWhite}/>
+                                                        className="flex w-[44px] h-[44px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] justify-center items-center shrink-0 flex-nowrap">
+                                                        <div
+                                                            className="w-[24px] h-[24px] shrink-0 overflow-hidden">
+                                                            <img src={cartWhite}/>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div
-                                                    className="flex w-[90px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] justify-center items-center shrink-0 flex-nowrap">
+                                                    <div
+                                                        className="flex w-[90px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] justify-center items-center shrink-0 flex-nowrap">
                                                 <span
                                                     className="h-[15px] shrink-0 basis-auto font-['Inter'] text-[20px] font-medium leading-[15px] text-[#fff] text-left whitespace-nowrap">
                                                 Купити
                                                 </span>
-                                                </div>
-                                            </button>
-                                        </div>
+                                                    </div>
+                                                </button>
+                                            </div>
                                             <button
                                                 className="flex w-[340px] h-[50px] justify-center items-center shrink-0 flex-nowrap rounded-[8px] border-solid border-2 border-[#9cc319] pointer">
                                                 <div
@@ -374,100 +378,103 @@ const ProductPage: React.FC = () => {
                             </div>
 
                             {/*delivery info*/}
+
                             <div
-                                className="main-container flex w-[808px] pt-[40px] pr-[28px] pb-[40px] pl-[28px] flex-col gap-[8px] items-start flex-nowrap bg-[#fff] mx-auto my-0 mt-[4px]">
-                                <div
-                                    className="flex justify-between items-center self-stretch shrink-0 flex-nowrap">
+                                className="grow main-container h-fit flex w-[808px] pt-[40px] pr-[28px] pb-[40px] pl-[28px] flex-col gap-[8px] items-start flex-nowrap bg-[#fff] mx-auto my-0 mt-[4px]">
+                                <div className={"flex flex-col"}>
                                     <div
-                                        className="flex w-[264px] gap-[8px] justify-center items-center shrink-0 flex-nowrap">
+                                        className="flex justify-between items-center self-stretch shrink-0 flex-nowrap">
                                         <div
-                                            className="flex w-[40px] h-[40px] gap-[10px] justify-center items-center shrink-0 flex-nowrap">
+                                            className="flex w-[264px] gap-[8px] justify-center items-center shrink-0 flex-nowrap">
                                             <div
-                                                className="w-[17.415px] h-[20px] shrink-0 bg-[url(../assets/images/3537509e-992f-4492-bbf0-fb108af2b044.png)] bg-[length:100%_100%] bg-no-repeat"/>
-                                        </div>
-                                        <span
-                                            className="h-[10px] shrink-0 basis-auto font-['Inter'] text-[14px] font-normal leading-[10px] text-[#3b3b3b] text-left whitespace-nowrap">
+                                                className="flex w-[40px] h-[40px] gap-[10px] justify-center items-center shrink-0 flex-nowrap">
+                                                <div
+                                                    className="w-[17.415px] h-[20px] shrink-0 bg-[url(../assets/images/3537509e-992f-4492-bbf0-fb108af2b044.png)] bg-[length:100%_100%] bg-no-repeat"/>
+                                            </div>
+                                            <span
+                                                className="h-[10px] shrink-0 basis-auto font-['Inter'] text-[14px] font-normal leading-[10px] text-[#3b3b3b] text-left whitespace-nowrap">
             Самовивіз з магазинів BuyZone
           </span>
-                                    </div>
-                                    <div
-                                        className="flex w-[111px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] justify-center items-center shrink-0 flex-nowrap">
+                                        </div>
+                                        <div
+                                            className="flex w-[111px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] justify-center items-center shrink-0 flex-nowrap">
           <span
               className="h-[10px] shrink-0 basis-auto font-['Inter'] text-[14px] font-normal leading-[10px] text-[#3b3b3b] text-left whitespace-nowrap">
             Безкоштовно
           </span>
-                                    </div>
-                                </div>
-                                <div
-                                    className="flex justify-between items-center self-stretch shrink-0 flex-nowrap">
-                                    <div
-                                        className="flex w-[362px] gap-[8px] items-center shrink-0 flex-nowrap">
-                                        <div
-                                            className="flex w-[40px] h-[40px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] items-center shrink-0 flex-nowrap">
-                                            <div
-                                                className="w-[24px] h-[24px] shrink-0 bg-[url(../assets/images/8b975302-2f0c-4ce7-89b3-0f654a820a37.png)] bg-cover bg-no-repeat overflow-hidden"/>
                                         </div>
-                                        <span
-                                            className="h-[10px] shrink-0 basis-auto font-['Inter'] text-[14px] font-normal leading-[10px] text-[#3b3b3b] text-left whitespace-nowrap">
+                                    </div>
+                                    <div
+                                        className="flex justify-between items-center self-stretch shrink-0 flex-nowrap">
+                                        <div
+                                            className="flex w-[362px] gap-[8px] items-center shrink-0 flex-nowrap">
+                                            <div
+                                                className="flex w-[40px] h-[40px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] items-center shrink-0 flex-nowrap">
+                                                <div
+                                                    className="w-[24px] h-[24px] shrink-0 bg-[url(../assets/images/8b975302-2f0c-4ce7-89b3-0f654a820a37.png)] bg-cover bg-no-repeat overflow-hidden"/>
+                                            </div>
+                                            <span
+                                                className="h-[10px] shrink-0 basis-auto font-['Inter'] text-[14px] font-normal leading-[10px] text-[#3b3b3b] text-left whitespace-nowrap">
             Доставка кур’єром Нова Пошта, Meest Пошта
           </span>
-                                    </div>
-                                    <div
-                                        className="flex w-[106px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] justify-center items-center shrink-0 flex-nowrap">
+                                        </div>
+                                        <div
+                                            className="flex w-[106px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] justify-center items-center shrink-0 flex-nowrap">
           <span
               className="h-[12px] shrink-0 basis-auto font-['Inter'] text-[16px] font-normal leading-[12px] text-[#3b3b3b] text-left whitespace-nowrap">
             99₴ - 259₴
           </span>
-                                    </div>
-                                </div>
-                                <div
-                                    className="flex justify-between items-center self-stretch shrink-0 flex-nowrap">
-                                    <div
-                                        className="flex w-[349px] gap-[8px] items-center shrink-0 flex-nowrap">
-                                        <div
-                                            className="flex w-[40px] h-[40px] pt-0 pr-[10px] pb-0 pl-[10px] gap-[10px] items-center shrink-0 flex-nowrap">
-                                            <div
-                                                className="w-[24px] h-[24px] shrink-0 bg-[url(../assets/images/6c310935-7402-4bab-b95b-7fea23c559a1.png)] bg-cover bg-no-repeat overflow-hidden"/>
                                         </div>
-                                        <span
-                                            className="h-[10px] shrink-0 basis-auto font-['Inter'] text-[14px] font-normal leading-[10px] text-[#3b3b3b] text-left whitespace-nowrap">
+                                    </div>
+                                    <div
+                                        className="flex justify-between items-center self-stretch shrink-0 flex-nowrap">
+                                        <div
+                                            className="flex w-[349px] gap-[8px] items-center shrink-0 flex-nowrap">
+                                            <div
+                                                className="flex w-[40px] h-[40px] pt-0 pr-[10px] pb-0 pl-[10px] gap-[10px] items-center shrink-0 flex-nowrap">
+                                                <div
+                                                    className="w-[24px] h-[24px] shrink-0 bg-[url(../assets/images/6c310935-7402-4bab-b95b-7fea23c559a1.png)] bg-cover bg-no-repeat overflow-hidden"/>
+                                            </div>
+                                            <span
+                                                className="h-[10px] shrink-0 basis-auto font-['Inter'] text-[14px] font-normal leading-[10px] text-[#3b3b3b] text-left whitespace-nowrap">
             Самовивіз з відділень поштових операторів
           </span>
-                                    </div>
-                                    <div
-                                        className="flex w-[104px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] justify-center items-center shrink-0 flex-nowrap">
+                                        </div>
+                                        <div
+                                            className="flex w-[104px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] justify-center items-center shrink-0 flex-nowrap">
           <span
               className="h-[12px] shrink-0 basis-auto font-['Inter'] text-[16px] font-normal leading-[12px] text-[#3b3b3b] text-left whitespace-nowrap">
             55₴ - 139₴
           </span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div
-                                    className="flex pt-[20px] pr-0 pb-[14px] pl-0 gap-[8px] items-center self-stretch shrink-0 flex-nowrap">
-                                    <div
-                                        className="flex w-[40px] h-[40px] pt-0 pr-[10px] pb-0 pl-[10px] gap-[10px] items-start shrink-0 flex-nowrap">
-                                        <div
-                                            className="w-[24px] h-[24px] shrink-0 bg-[url(../assets/images/bbd3ded2-1630-406c-8ba4-cda9a0ed002c.png)] bg-cover bg-no-repeat overflow-hidden"/>
-                                    </div>
-                                    <div
-                                        className="flex w-[656px] gap-[10px] justify-center items-end shrink-0 flex-nowrap">
-          <span
-              className="flex w-[656px] h-[30px] justify-start items-center grow shrink-0 basis-0 font-['Inter'] text-[14px] font-normal leading-[30px] text-[#3b3b3b] text-left whitespace-nowrap">
-            Оплата під час отримання товару. Оплата карткою у відділенні, Apple
-            Pay, карткою онлайн, <br/>
-            Google Pay. Безготівкова для юридичних осіб, Безготівкова для
-            фізичних осіб, Mastercard, Visa.
-          </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
+                                    <div className="flex justify-between items-center self-stretch">
+                                        <div className="flex w-fit gap-[8px] items-center shrink-0">
+                                            <div
+                                                className="flex w-[40px] h-[40px] pt-0 pr-[10px] pb-0 pl-[10px] gap-[10px] items-center shrink-0 flex-nowrap">
+                                                <div
+                                                    className="w-[24px] h-[24px] shrink-0 bg-[url(../assets/images/6c310935-7402-4bab-b95b-7fea23c559a1.png)] bg-cover bg-no-repeat overflow-hidden"/>
+                                            </div>
+                                            <div className={"flex h-auto"}>
+                                        <span
+                                            className="flex w-[656px] h-[180px] justify-start grow shrink-0 basis-0 font-['Inter'] text-[14px] font-normal leading-[30px] text-[#3b3b3b] text-left">
+      Оплата під час отримання товару. Оплата карткою у відділенні, Apple Pay, карткою онлайн, Google Pay. Безготівкова для юридичних осіб, Безготівкова для фізичних осіб, Mastercard, Visa.
+    </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                        </div>
 
                     </div>
 
 
-                    <div className={"flex bg-[#fff] p-[10px]"}>
+                    <div className={"flex bg-[#fff] p-[40px] w-auto"}>
                         {removeHTMLTags(product.description)}
                     </div>
                 </div>

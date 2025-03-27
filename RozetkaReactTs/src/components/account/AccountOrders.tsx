@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {IOrderInfoModel} from "../../models/orderModel.ts";
 import {OrderServices} from "../../services/orderServices.ts";
 import OrderCard from "./OrderCard.tsx";
+import {Link} from "react-router-dom";
 
 
 const AccountOrders: React.FC = () => {
@@ -34,7 +35,11 @@ const AccountOrders: React.FC = () => {
             </div>
 
                 {ordersUser?.items && ordersUser.items.length > 0 ?
-                    (ordersUser.items.map(item=>  <OrderCard item={item} key={item.id}/>)) : ""}
+                    (ordersUser.items.map(item=>  <OrderCard item={item} key={item.id}/>)) : (
+                        <Link to={"/"} className={"flex bg-[#fff] w-full p-[20px] rounded-[4px] items-center justify-center"}>
+                            Зробіть ваше перше замовлення!!!
+                        </Link>
+                    )}
 
             </div>
         </>

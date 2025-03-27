@@ -19,7 +19,7 @@ export const BasketService = {
         return {};
     },
 
-    addId(id: number) {
+    addId(id: number , quantity:number = 0) {
         const itemString = localStorage.getItem(ProductBasket);
         let items: IBasketModel = {};
         if (itemString) {
@@ -27,13 +27,16 @@ export const BasketService = {
         }
 
         // Якщо товар є в кошику, збільшуємо його кількість
-        if (items[id]) {
-            items[id] += 1;
+        if(quantity > 0){
+            items[id] = quantity;
         } else {
-            // Якщо товару немає в кошику, додаємо його з кількістю 1
-            items[id] = 1;
+            if (items[id]) {
+                items[id] += 1;
+            } else {
+                // Якщо товару немає в кошику, додаємо його з кількістю 1
+                items[id] = 1;
+            }
         }
-
         //const updatedIds = [...ids, id];
         BasketService.saveItems(items); // Зберігаємо оновлений масив в localStorage
     },

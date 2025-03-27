@@ -1,7 +1,28 @@
-import React from 'react';
-import {Link} from "react-router-dom";
+import React, {useEffect} from 'react';
+import {Link, useLocation} from "react-router-dom";
+import {IOrderInfoItemsModel} from "../../models/orderModel.ts";
+import formatPrice from "../../functions/formatPrice.ts";
+import {Recipient} from "./OrderPage.tsx";
+
+interface LocationState {
+    order: IOrderInfoItemsModel,
+    recipient: Recipient,
+}
 
 const OrderResultPage: React.FC = () => {
+
+    const location = useLocation();
+
+    const { order, recipient } = location.state as LocationState;
+
+    // const order: IOrderInfoItemsModel = useMemo(() => {
+    //     // Якщо location.state містить масив продуктів, повертаємо його, інакше порожній масив
+    //     return location.state as IOrderInfoItemsModel;
+    // }, [location.state]);
+
+    useEffect(() => {
+        console.log("state", location.state);
+    }, [location.state]);
 
     return (
         <div className={"flex flex-col justify-center items-center flex-nowrap gap-[4px]"}>
@@ -32,7 +53,7 @@ const OrderResultPage: React.FC = () => {
                         className="flex pt-[20px] pr-[40px] pb-[20px] pl-[40px] gap-[10px] items-center self-stretch shrink-0 flex-nowrap border-solid border-t border-t-[#b5b5b5]">
             <span
                 className="flex w-[127px] h-[12px] justify-center items-center shrink-0 basis-auto font-['Inter'] text-[16px] font-medium leading-[12px] text-[#3b3b3b] text-center whitespace-nowrap">
-                Замовлення №1
+                Замовлення №{order.id}
             </span>
                     </div>
                     <div
@@ -49,7 +70,7 @@ const OrderResultPage: React.FC = () => {
                                 className="flex p-[10px] gap-[10px] justify-center items-center shrink-0 flex-nowrap">
                     <span
                         className="flex w-full h-[10px] justify-center items-center shrink-0 font-['Inter'] text-[14px] font-medium leading-[10px] text-[#3b3b3b] text-center whitespace-nowrap">
-                        314567910
+                        {order.id}
                     </span>
                             </div>
                         </div>
@@ -81,10 +102,28 @@ const OrderResultPage: React.FC = () => {
                                 className="flex p-[10px] gap-[10px] justify-center items-center shrink-0 flex-nowrap">
                     <span
                         className="flex w-full h-[10px] justify-center items-center shrink-0 font-['Inter'] text-[14px] font-medium leading-[10px] text-[#3b3b3b] text-center whitespace-nowrap">
-                        23 798 грн
+                        {formatPrice(order.totalPrice)} грн
                     </span>
                             </div>
                         </div>
+
+                        <div className="flex gap-[60px] items-center self-stretch shrink-0 flex-nowrap">
+                            <div
+                                className="flex w-[180px] pt-[10px] pr-0 pb-[10px] pl-0 gap-[10px] items-center shrink-0 flex-nowrap">
+                    <span
+                        className="flex w-full h-[10px] shrink-0 font-['Inter'] text-[14px] font-light leading-[10px] text-[#3b3b3b] text-center whitespace-nowrap">
+                        Спосіб оплати
+                    </span>
+                            </div>
+                            <div
+                                className="flex p-[10px] gap-[10px] justify-center items-center shrink-0 flex-nowrap">
+                    <span
+                        className="flex w-full h-[10px] justify-center items-center shrink-0 font-['Inter'] text-[14px] font-medium leading-[10px] text-[#3b3b3b] text-center whitespace-nowrap">
+                        {recipient.recipientPayType}
+                    </span>
+                            </div>
+                        </div>
+
                         <div className="flex gap-[60px] items-center self-stretch shrink-0 flex-nowrap">
                             <div
                                 className="flex w-[180px] pt-[10px] pr-0 pb-[10px] pl-0 gap-[10px] items-center shrink-0 flex-nowrap">
@@ -97,7 +136,7 @@ const OrderResultPage: React.FC = () => {
                                 className="flex p-[10px] gap-[10px] justify-center items-center shrink-0 flex-nowrap">
                     <span
                         className="flex w-full h-[10px] justify-center items-center shrink-0 font-['Inter'] text-[14px] font-medium leading-[10px] text-[#3b3b3b] text-center whitespace-nowrap">
-                        Самовивіз з Нової Пошти
+                        {recipient.recipientDeliveryType}
                     </span>
                             </div>
                         </div>
@@ -113,7 +152,8 @@ const OrderResultPage: React.FC = () => {
                                 className="flex p-[10px] gap-[10px] items-center grow shrink-0 basis-0 flex-nowrap">
                     <span
                         className="h-[10px] w-full grow shrink-0 basis-0 font-['Inter'] text-[14px] font-medium leading-[10px] text-[#3b3b3b] text-left whitespace-nowrap">
-                        м.Рівне, 6 Київська, 44 (біля кафе Мономах)
+                        {recipient.recipientCity}, {recipient.recipientStreet}, буд. {recipient.recipientHouse}, кв. {recipient.recipientFlat}
+                        {/*м.Рівне, 6 Київська, 44 (біля кафе Мономах)*/}
                     </span>
                             </div>
                         </div>

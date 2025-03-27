@@ -13,6 +13,7 @@ import {calculateTotalPrice} from "../../store/actions/basketActions.ts";
 import {AppDispatch, RootState} from "../../store";
 import useProducts from "../../hooks/useProducts.ts";
 import useBasket from "../../hooks/useBasket.ts";
+import useIsLogin from "../../hooks/useIsLogin.ts";
 
 interface BasketProps {
     onClose?: () => void;  // Приймаємо функцію закриття через пропс
@@ -23,6 +24,8 @@ const Basket: React.FC<BasketProps> = ({onClose}) => {
     const dispatch = useDispatch<AppDispatch>();
     const [toggleClear, setToggleClear] = useState<boolean>(false);
     const totalPrice = useSelector((state: RootState) => state.basket.totalPrice);
+
+    const {isLogin} = useIsLogin();
 
     const {BasketClear} = useBasket();
 
@@ -172,6 +175,8 @@ const Basket: React.FC<BasketProps> = ({onClose}) => {
                     </div>
                     <div
                         className="flex w-[250px] flex-col gap-[20px] items-start self-stretch shrink-0 flex-nowrap relative">
+
+                        {isLogin ? (
                         <Link to={"order"}
                               className={`flex h-[50px] flex-col gap-[20px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#9cc319] rounded-[8px] border-none relative ${Object.keys(basket).length === 0 ? "pointer opacity-50 pointer-events-none" : ""}`}
                               onClick={onClose}>
@@ -180,6 +185,16 @@ const Basket: React.FC<BasketProps> = ({onClose}) => {
               Купити зараз
             </span>
                         </Link>
+                            ) :(
+                            <Link to={"/signin"}
+                                  className={`flex h-[50px] flex-col gap-[20px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#9cc319] rounded-[8px] border-none relative ${Object.keys(basket).length === 0 ? "pointer opacity-50 pointer-events-none" : ""}`}
+                                  onClick={onClose}>
+            <span
+                className="h-[15px] shrink-0 basis-auto font-['Inter'] text-[20px] font-medium leading-[15px] text-[#fff] relative text-left whitespace-nowrap">
+              Купити зараз
+            </span>
+                            </Link>
+                        )}
                         <button
                             className="flex h-[50px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[8px] border-solid border border-[#9cc319] relative pointer">
                             <div

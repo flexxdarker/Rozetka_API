@@ -4,7 +4,7 @@ const AboutUs: React.FC = () => {
 
 
     return (
-        <h1>AboutUs</h1>
+        <div className={"flex bg-[#fff] w-[1000px] p-[50px] justify-center"}>AboutUs</div>
     );
 };
 

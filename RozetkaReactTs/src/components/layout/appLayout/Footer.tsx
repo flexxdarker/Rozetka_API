@@ -1,5 +1,6 @@
 import React from 'react';
 import Box from "@mui/material/Box";
+import {Link} from "react-router-dom";
 
 const Footer: React.FC = () => {
 
@@ -43,27 +44,31 @@ const Footer: React.FC = () => {
                     </span>
                             </div>
                         </div>
-                        <div
+
+                        <Link to={"/about-us"}
                             className="flex pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] items-center self-stretch shrink-0 flex-nowrap">
                 <span
                     className="h-[24px] shrink-0 basis-auto font-['Inter'] text-[20px] font-normal leading-[24px] text-[#fff] text-left whitespace-nowrap">
                     Про нас
                 </span>
-                        </div>
-                        <div
+                        </Link>
+
+                        <Link to={"/terms-use-site"}
                             className="flex pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] items-center self-stretch shrink-0 flex-nowrap">
                 <span
                     className="h-[24px] shrink-0 basis-auto font-['Inter'] text-[20px] font-normal leading-[24px] text-[#fff] text-left whitespace-nowrap">
                     Умови використання сайту
                 </span>
-                        </div>
-                        <div
+                        </Link>
+
+
+                        <Link to={"/contacts"}
                             className="flex pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] items-center self-stretch shrink-0 flex-nowrap">
                 <span
                     className="h-[24px] shrink-0 basis-auto font-['Inter'] text-[20px] font-normal leading-[24px] text-[#fff] text-left whitespace-nowrap">
                     Контакти
                 </span>
-                        </div>
+                        </Link>
                     </div>
                     <div className="flex w-[320px] flex-col items-start shrink-0 flex-nowrap">
                         <div
@@ -73,7 +78,8 @@ const Footer: React.FC = () => {
                     Допомога
                 </span>
                         </div>
-                        <div className="flex w-[320px] items-start shrink-0 flex-nowrap">
+
+                        <Link to={"/delivery-and-payment"} className="flex w-[320px] items-start shrink-0 flex-nowrap">
                             <div
                                 className="flex w-[320px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] items-center self-stretch shrink-0 flex-nowrap">
                     <span
@@ -81,8 +87,9 @@ const Footer: React.FC = () => {
                         Доставка та оплата
                     </span>
                             </div>
-                        </div>
-                        <div className="flex w-[320px] items-start shrink-0 flex-nowrap">
+                        </Link>
+
+                        <Link to={"/guarantee"} className="flex w-[320px] items-start shrink-0 flex-nowrap">
                             <div
                                 className="flex w-[320px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] items-center self-stretch shrink-0 flex-nowrap">
                     <span
@@ -90,8 +97,9 @@ const Footer: React.FC = () => {
                         Гарантія
                     </span>
                             </div>
-                        </div>
-                        <div className="flex w-[320px] items-start shrink-0 flex-nowrap">
+                        </Link>
+
+                        <Link to={"/return-of-goods"} className="flex w-[320px] items-start shrink-0 flex-nowrap">
                             <div
                                 className="flex w-[320px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] items-center self-stretch shrink-0 flex-nowrap">
                     <span
@@ -99,7 +107,7 @@ const Footer: React.FC = () => {
                         Повернення товару
                     </span>
                             </div>
-                        </div>
+                        </Link>
                     </div>
                     <div className="flex w-[320px] flex-col items-start shrink-0 flex-nowrap">
                         <div

@@ -1,6 +1,7 @@
 import axios from "axios";
 import {TokenService} from "./tokenService.ts";
-import {IBasketApi} from "../models/basketModel.ts";
+import {IBasketApi, IBasketItemsModel} from "../models/basketModel.ts";
+import {IOrderInfoItemsModel} from "../models/orderModel.ts";
 
 const apiToken = `${import.meta.env.VITE_ROZETKA_API}` + "Basket";
 
@@ -40,6 +41,10 @@ export const BasketServicesApi = {
     },
 
     pushOrder(){
-        return axios.post(apiToken + "/PushOrder");
+        return axios.post<IOrderInfoItemsModel>(apiToken + "/PushOrder");
     },
+
+    getBasketItems(){
+        return axios.post<IBasketItemsModel[]>(apiToken + "/GetBasketItems");
+    }
 };

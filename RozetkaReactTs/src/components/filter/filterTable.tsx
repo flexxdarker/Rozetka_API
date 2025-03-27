@@ -10,7 +10,6 @@ const FilterTable: React.FC = () => {
     const [filters, setFilters] = useState<IFilterModel[]>([]);
     const loadFilters = async () => {
         const res = await FilterServices.getAll();
-        console.log(res);
         setFilters(res.data);
     };
 
