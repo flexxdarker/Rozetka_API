@@ -39,7 +39,7 @@ namespace Rozetka_Api.Controllers
             return Ok(await filterService.CreateAsync(filterCreateModel));
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = "admin")]
         [HttpPost("edit")]
         public async Task<IActionResult> Edit([FromForm] FilterEditModel filterEditModel)
         {

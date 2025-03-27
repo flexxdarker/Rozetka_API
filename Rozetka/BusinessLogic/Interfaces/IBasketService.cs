@@ -18,5 +18,6 @@ namespace BusinessLogic.Interfaces
         Task DeleteProductFromBasket(string userId, int productId);
         Task<OrderInformationDto> PushOrder(string userId/*, List<OrderItemDto> orderItems*/);
         Task PushOrderWhenLogin(string userId, List<OrderItemDto> orderItems);
+        Task ClearBasket(string userId);
     }
 }

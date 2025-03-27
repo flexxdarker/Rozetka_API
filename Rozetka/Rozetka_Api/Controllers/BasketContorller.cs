@@ -69,6 +69,15 @@ namespace Rozetka_Api.Controllers
         }
 
         [Authorize]
+        [HttpDelete("ClearBasket")]
+        public async Task<IActionResult> ClearBasket()
+        {
+            string userId = User.Claims.ToList()[0].Value.ToString();
+            await _basket.ClearBasket(userId);
+            return Ok();
+        }
+
+        [Authorize]
         [HttpPost("PushOrder")]
         public async Task<IActionResult> PushOrder(/*[FromBody] List<OrderItemDto> orderItems*/)
         {
