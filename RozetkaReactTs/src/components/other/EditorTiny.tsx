@@ -9,7 +9,7 @@ interface MyEditorProps extends IAllProps {
     onEditorChange: (content: string) => void;
 }
 
-const KEY : string | undefined = import.meta.env.VITE_APP_TINYMCE_KEY;
+//const KEY : string | undefined = import.meta.env.VITE_APP_TINYMCE_KEY;
 
 const EditorTiny: FC<MyEditorProps> = ({initialValue,onEditorChange}) => {
 
@@ -61,7 +61,7 @@ const EditorTiny: FC<MyEditorProps> = ({initialValue,onEditorChange}) => {
                     initialValue={initialValue}
                     //value={content}
                     init={{
-                        licenseKey: KEY ?? '',
+                        // licenseKey: KEY ?? '',
                         placeholder: "Enter your text here...",
                         height: 500, //висота самого інтупа
                         language: "en", //мова панелі

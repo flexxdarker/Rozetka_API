@@ -1,6 +1,7 @@
 import axios from "axios";
 import {ICategoryModel, ICreateCategoryModel} from "../models/categoriesModel.ts";
 import {TokenService} from "./tokenService.ts";
+import {ISubCategoryTreeModel} from "../models/subCategoriesModel.ts";
 
 
 const apiToken = `${import.meta.env.VITE_ROZETKA_API}` + "Categories";
@@ -70,5 +71,9 @@ export const CategoriesServices = {
 
         return axios.post(apiToken + "/edit", data);
         //return api.post("edit", data);
+    },
+
+    getTree() {
+        return api.get<ISubCategoryTreeModel[]>("gettree");
     },
 };
