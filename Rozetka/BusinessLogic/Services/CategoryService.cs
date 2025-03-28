@@ -89,13 +89,12 @@ namespace BusinessLogic.Services
             {
                 category.Image = await imageService.SaveImageAsync(categoryCreateModel.Image);
             }
-            if (!await categoriesRepo.AnyAsync(x => x.Id == category.ParentCategoryId))
+            if(category.ParentCategoryId != null)
             {
-                throw new HttpException(Errors.InvalidCategoryId, HttpStatusCode.BadRequest);
-            }
-            if (category.ParentCategoryId == category.Id)
-            {
-                throw new HttpException(Errors.CategoryCannotBeItsOwnParent, HttpStatusCode.BadRequest);
+                if (!await categoriesRepo.AnyAsync(x => x.Id == category.ParentCategoryId))
+                {
+                    throw new HttpException(Errors.InvalidCategoryId, HttpStatusCode.BadRequest);
+                }
             }
 
             await categoriesRepo.InsertAsync(category);
