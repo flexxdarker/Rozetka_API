@@ -46,5 +46,9 @@ export const BasketServicesApi = {
 
     getBasketItems(){
         return axios.post<IBasketItemsModel[]>(apiToken + "/GetBasketItems");
-    }
+    },
+
+    clearBasket(){
+        return axios.delete(apiToken + "/ClearBasket");
+    },
 };

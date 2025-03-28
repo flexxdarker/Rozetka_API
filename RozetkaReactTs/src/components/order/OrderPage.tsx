@@ -16,6 +16,8 @@ import useProducts from "../../hooks/useProducts.ts";
 import {AccountsService} from "../../services/accountsService.ts";
 import {IUserModel} from "../../models/accountsModel.ts";
 import useIsLogin from "../../hooks/useIsLogin.ts";
+import deleteBin from "../../assets/icons/deleteBin.svg";
+import useBasket from "../../hooks/useBasket.ts";
 
 
 export interface Recipient {
@@ -43,6 +45,7 @@ const OrderPage: React.FC = () => {
     const itemWord = getWordForm(Object.keys(basket).length, ['товар', 'товари', 'товарів']);
 
     const [itemsFromBasketApi, setItemsFromBasketApi] = useState<IBasketItemsModel[]>([]);
+    const {BasketClear} = useBasket();
 
     const loadBasketItems = async () => {
         const res = await BasketServicesApi.getBasketItems()
@@ -159,6 +162,12 @@ const OrderPage: React.FC = () => {
             }
     }
 
+    const clearBasket = () => {
+        BasketClear();
+        window.dispatchEvent(new Event('basket-updated'));
+        setBasket({}); // Очищаємо стан кошика вручну
+        //setToggleClear(!toggleClear); // Тригеримо оновлення через toggle
+    }
 
 
     return (
@@ -196,15 +205,27 @@ const OrderPage: React.FC = () => {
               </span>
                                 </div>
                             </div>
+                            <div>
+                                <button type={"button"} onClick={clearBasket}
+                                        className="flex w-[40px] items-center shrink-0 flex-nowrap relative justify-center">
+                                    <div
+                                        className="flex w-[40px] h-[40px] shrink-0 rounded-[8px] relative items-center justify-center">
+                                        <img src={deleteBin}/>
+                                    </div>
+                                </button>
+                            </div>
                         </div>
+
                     </div>
                     {/*items*/}
                     <div className="flex w-[100%] flex-col gap-[4px] items-start shrink-0 flex-nowrap relative">
 
                         {
                             Object.keys(basket).length === 0 ?
-                                <Link to="/" className="w-full flex h-[40px] bg-[white] items-center justify-center">За покупками!</Link> :
-                            products.map(product => basket[product.id] > 0 ? <BasketItem item={product} key={product.id} className="rounded-none"/> : null)
+                                <Link to="/" className="w-full flex h-[40px] p-[40px] bg-[white] items-center justify-center">За
+                                    покупками!</Link> :
+                                products.map(product => basket[product.id] > 0 ?
+                                    <BasketItem item={product} key={product.id} className="rounded-none"/> : null)
                         }
                     </div>
                     {/*start ending*/}

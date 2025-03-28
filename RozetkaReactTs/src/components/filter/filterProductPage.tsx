@@ -112,7 +112,7 @@ const [isReset, setIsReset] = useState<boolean>(false);
 
 return (
     <>
-        <button type={"button"} onClick={reset}>reset</button>
+
 
         <div className="flex felx-col gap-[4px]">
             <div className="flex">
@@ -121,10 +121,14 @@ return (
             </div>
 
             <div className="flex flex-col gap-[4px]">
-                <SortProducts productsInit={productsFilterList}
-                              categoryIdInit={categoryId}
-                              onChangeCategoryId={handleChangeCategoryId}
-                              onChangeProducts={productsSortHandl}/>
+                <div className={"flex"}>
+                    <SortProducts productsInit={productsFilterList}
+                                  categoryIdInit={categoryId}
+                                  onChangeCategoryId={handleChangeCategoryId}
+                                  onChangeProducts={productsSortHandl}/>
+
+                    <button type={"button"} className={"font-['Inter'] text-[20px] font-medium leading-[15px] text-[#fff] p-[25px] w-[300px] bg-[#9cc319] rounded-[8px] ml-[4px]"} onClick={reset}>Reset all filters</button>
+                </div>
                 {productsFilterList.length === 0 ? (
                     <>
                         <ProductCardList productsProps={products} message={"Товарів не знайдено!!!"}/>

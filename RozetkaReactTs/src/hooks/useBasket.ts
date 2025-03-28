@@ -33,16 +33,18 @@ const useBasket = () => {
     };
 
     const BasketClear = () =>{
-        if(BasketService.isExists()) {
-            const items = BasketService.getItems();
-            const ids = Object.keys(items).map(Number);
-            console.log("ids", ids);
-
-            if(isLogin) {
-                ids.forEach(id => BasketServicesApi.deleteBasket(id));
-            }
-            BasketService.clearItems();
-        }
+        BasketServicesApi.clearBasket();
+        BasketService.clearItems();
+        // if(BasketService.isExists()) {
+        //     const items = BasketService.getItems();
+        //     const ids = Object.keys(items).map(Number);
+        //     console.log("ids", ids);
+        //
+        //     if(isLogin) {
+        //         ids.forEach(id => BasketServicesApi.deleteBasket(id));
+        //     }
+        //     BasketService.clearItems();
+        //}
     }
 
     return { BasketFirstAdd , BasketClear };
