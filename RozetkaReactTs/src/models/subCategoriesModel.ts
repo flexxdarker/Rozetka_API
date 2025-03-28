@@ -4,6 +4,7 @@ export interface ISubCategoryModel {
     image: string;
     parentCategoryId?: number;
     filters?: number[];
+    subCategories?: ISubCategoryTreeModel[];
 }
 
 
