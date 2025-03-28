@@ -4,7 +4,7 @@ const ReturnOfGoods: React.FC = () => {
 
 
     return (
-        <h1>Return of goods</h1>
+        <div className={"flex bg-[#fff] w-[1000px] p-[50px] justify-center"}>Return of goods</div>
     );
 };
 

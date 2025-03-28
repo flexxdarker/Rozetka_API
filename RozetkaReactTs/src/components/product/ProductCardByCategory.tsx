@@ -2,14 +2,16 @@ import React from 'react';
 import {IProductModel} from "../../models/productsModel.ts";
 import ProductCard from "./ProductCard.tsx";
 import arrowRight from "../../assets/icons/arrow-right.svg"
+import {Link} from "react-router-dom";
 
 interface ProductCardByCategoryProps {
     productsInit: IProductModel[];
     title: string;
+    categoryId?: number;
 }
 
 
-const ProductCardByCategory: React.FC<ProductCardByCategoryProps> = ({productsInit, title}) => {
+const ProductCardByCategory: React.FC<ProductCardByCategoryProps> = ({productsInit, title, categoryId}) => {
 
 
     return (
@@ -24,27 +26,52 @@ const ProductCardByCategory: React.FC<ProductCardByCategoryProps> = ({productsIn
             {title}
           </span>
                     </div>
-                    <div className="flex w-[183px] gap-[10px] items-center shrink-0 flex-nowrap">
-                        <div
-                            className="w-[149px] shrink-0 font-['Inter'] text-[14px] font-normal leading-[10px] text-left whitespace-nowrap">
+                    {categoryId ? (
+                        <Link state={categoryId} to={"/product-filter"}
+                              className="flex w-[183px] gap-[10px] items-center shrink-0 flex-nowrap">
+                            <div
+                                className="w-[149px] shrink-0 font-['Inter'] text-[14px] font-normal leading-[10px] text-left whitespace-nowrap">
             <span
                 className="font-['Inter'] text-[14px] font-normal leading-[20px] text-[#000]">
               Більше рекомендацій
             </span>
-                        </div>
-                        <div
-                            className="w-[24px] h-[24px] shrink-0 overflow-hidden z-[5]">
-                            <img src={arrowRight}/>
-                        </div>
-                    </div>
+                            </div>
+                            <div
+                                className="w-[24px] h-[24px] shrink-0 overflow-hidden">
+                                <img src={arrowRight}/>
+                            </div>
+                        </Link>
+                    ) : (
+                        <Link state={categoryId} to={"/product-filter"}
+                              className="flex w-[183px] gap-[10px] items-center shrink-0 flex-nowrap">
+                            <div
+                                className="w-[149px] shrink-0 font-['Inter'] text-[14px] font-normal leading-[10px] text-left whitespace-nowrap">
+            <span
+                className="font-['Inter'] text-[14px] font-normal leading-[20px] text-[#000]">
+              Більше рекомендацій
+            </span>
+                            </div>
+                            <div
+                                className="w-[24px] h-[24px] shrink-0 overflow-hidden">
+                                <img src={arrowRight}/>
+                            </div>
+                        </Link>
+                    )
+                    }
+
                 </div>
                 <div className="flex gap-[4px] items-center self-stretch shrink-0 flex-nowrap">
                     {
+                        productsInit.length>0 ? (
                         productsInit.map((product) => <ProductCard item={product} key={product.id}/>)
+                        ) : (
+                            <div>
+                                Вибачте поки товарів в цій категорії недобавлено:(
+                            </div>
+                        )
                     }
                 </div>
             </div>
-
         </>
     );
 };

@@ -17,7 +17,7 @@ namespace BusinessLogic.Validators
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage(Errors.NotEmpty)
                 .MinimumLength(3).WithMessage(Errors.MinSymbolsCountError + " 3 symbols")
-                .MaximumLength(30).WithMessage(Errors.MaxSymbolsCountError + "30 symbols");
+                .MaximumLength(50).WithMessage(Errors.MaxSymbolsCountError + " 50 symbols");
 
             When(x => x is FilterEditModel, () =>
             {

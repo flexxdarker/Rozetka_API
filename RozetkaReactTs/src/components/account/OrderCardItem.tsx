@@ -18,7 +18,7 @@ const OrderCardItem: React.FC<OrderCardItemProps> = ({item}) => {
                     className="flex w-[120px] h-[120px] flex-col gap-[16px] justify-center items-center shrink-0 flex-nowrap bg-[#fff]">
                     <img  src={`${uploadings + "200_" + item.imagePath}`}
                           alt={item.name}
-                        className="w-[120px] h-[120px] shrink-0"/>
+                        className="w-[120px] h-[120px] shrink-0 object-contain"/>
                 </div>
                 <div
                     className="flex justify-between items-center grow shrink-0 basis-0 flex-nowrap">

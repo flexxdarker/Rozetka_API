@@ -5,32 +5,30 @@ import heart from "../../assets/icons/heart.svg"
 import heartRed from "../../assets/icons/heartFillRed.svg"
 import {Link} from "react-router-dom";
 import React, {useState} from "react";
-import {BasketService} from "../../services/basketService.ts";
 import {Badge, Rate} from "antd";
 import {WishListService} from "../../services/wishListService.ts";
 import formatPrice from "../../functions/formatPrice.ts";
 import {useDispatch} from "react-redux";
-// import {useDispatch, useSelector} from "react-redux";
-import {incrementTotalPrice} from "../../store/actions/basketActions.ts";
 import {addToComparison, removeFromComparison} from "../../store/actions/comparisonActions.ts";
 import {ComparisonListService} from "../../services/comparisonService.ts";
-//import {RootState} from "../../store";
-// import "../ProductCard/ProductCard.css"
+import useBasket from "../../hooks/useBasket.ts";
 
-//import Typography from '../assets/contemplative-reptile.jpg';
 interface ItemProps {
     item: IProductModel;
+    forComparison?: boolean;
 }
 
 const uploadings = import.meta.env.VITE_ROZETKA_UPLOADINGS;
 
-const ProductCard: React.FC<ItemProps> = ({item}) => {
+const ProductCard: React.FC<ItemProps> = ({item, forComparison}) => {
 
-    //const {item, updateParentState} = props;
+    //const notify = () => toast('Wow so easy !');
+
     const dispatch = useDispatch();
     const [isWishList, setIsWishList] = useState(WishListService.checkId(item.id));
-    //const comparisonCount = useSelector((state: RootState) => state.comparison.comparisonCount);
     const [isComparison, setIsComparison] = useState<boolean>(ComparisonListService.checkId(item.id));
+
+    const {BasketFirstAdd} = useBasket();
 
     const WishListAdd = () => {
         WishListService.addId(item.id)
@@ -52,11 +50,9 @@ const ProductCard: React.FC<ItemProps> = ({item}) => {
         setIsComparison(ComparisonListService.checkId(item.id));
     };
 
-
-
     return (
         <div
-            className="main-container flex min-w-[250px] w-[286px] pt-[20px] pr-[20px] pb-[20px] pl-[20px] flex-col items-start flex-nowrap bg-[#fff] mx-auto my-0">
+            className={`main-container flex ${forComparison ? ("w-full") : ("min-w-[250px] w-[286px]")}  p-[20px] flex-col items-start flex-nowrap bg-[#fff] mx-auto my-0`}>
             <div className="flex justify-between items-start self-stretch shrink-0 flex-nowrap">
                 <div className="flex w-[129px] flex-col gap-[16px] items-start shrink-0 flex-nowrap">
                     <div className="flex gap-[4px] items-center self-stretch shrink-0 flex-nowrap">
@@ -92,22 +88,23 @@ const ProductCard: React.FC<ItemProps> = ({item}) => {
                 </div>
                 <div className="flex w-[32px] flex-col gap-[4px] items-start shrink-0 flex-nowrap">
 
-                    { isComparison ? (
-                    <Badge count={"✓"} size={"small"} color={"green"}>
-                    <button type={"button"} className="flex w-[32px] items-start shrink-0 flex-nowrap" onClick={ComparisonListRemove}>
-                        <div
-                            className="flex w-[32px] pt-[4px] pr-[4px] pb-[4px] pl-[4px] items-center shrink-0 flex-nowrap bg-[#fff] rounded-[4px] border-solid border-[0.5px] border-[#3b3b3b]">
-                            <div
-                                className="w-[24px] h-[24px] shrink-0 overflow-hidden">
-                                {/*className="w-[23px] h-[20px] bg-cover bg-no-repeat shrink-0 overflow-hidden z-[12]" style={{backgroundImage:`url(${balance})`}}>*/}
-                                {/*className="w-[24px] h-[24px] shrink-0 bg-[url(./assets/icons/balance.svg)] bg-cover bg-no-repeat overflow-hidden z-[12]">*/}
-                                <img src={balance}/>
-                            </div>
+                    {isComparison ? (
+                        <Badge count={"✓"} size={"small"} color={"green"}>
+                            <button type={"button"} className="flex w-[32px] items-start shrink-0 flex-nowrap"
+                                    onClick={ComparisonListRemove}>
+                                <div
+                                    className="flex w-[32px] pt-[4px] pr-[4px] pb-[4px] pl-[4px] items-center shrink-0 flex-nowrap bg-[#fff] rounded-[4px] border-solid border-[0.5px] border-[#3b3b3b]">
+                                    <div
+                                        className="w-[24px] h-[24px] shrink-0 overflow-hidden">
+                                        {/*className="w-[23px] h-[20px] bg-cover bg-no-repeat shrink-0 overflow-hidden z-[12]" style={{backgroundImage:`url(${balance})`}}>*/}
+                                        {/*className="w-[24px] h-[24px] shrink-0 bg-[url(./assets/icons/balance.svg)] bg-cover bg-no-repeat overflow-hidden z-[12]">*/}
+                                        <img src={balance}/>
+                                    </div>
 
-                        </div>
-                    </button>
-                    </Badge>
-                        ) : (
+                                </div>
+                            </button>
+                        </Badge>
+                    ) : (
                         <button type={"button"} className="flex w-[32px] items-start shrink-0 flex-nowrap"
                                 onClick={ComparisonListAdd}>
                             <div
@@ -138,11 +135,11 @@ const ProductCard: React.FC<ItemProps> = ({item}) => {
                 </div>
             </div>
             <div className="flex flex-col gap-[16px] items-center self-stretch shrink-0 flex-nowrap">
-                <Link to={`product-page/${item.id}`}>
+                <Link to={`/product-page/${item.id}`}>
                     <div
                         //className={`w-[220px] h-[220px] shrink-0 bg-[url(${uploadings + "400_" + item.images[0]?.name})] bg-cover bg-no-repeat `}>
-                        className={`w-[220px] h-[220px] shrink-0`}>
-                        <img src={`${uploadings + "400_" + item.images![0]?.name}`} alt="no image"/>
+                        className={`w-[220px] h-[220px] shrink-0 w-fit h-fit`}>
+                        <img src={`${uploadings + "400_" + item.images![0]?.name}`} alt="no image" className={"object-contain w-[220px] h-[220px]"}/>
                     </div>
                 </Link>
                 <div className="flex flex-col gap-[8px] items-start self-stretch shrink-0 flex-nowrap">
@@ -158,12 +155,12 @@ const ProductCard: React.FC<ItemProps> = ({item}) => {
                         <div
                             className="flex gap-[4px] justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff]">
                             <div className="flex gap-[4px] items-start shrink-0 flex-nowrap">
-                                <Rate disabled defaultValue={2}/>
+                                <Rate disabled defaultValue={item.averageRating}/>
                             </div>
                             <div className="flex w-[46px] gap-[4px] items-start shrink-0 flex-nowrap">
                 <span
                     className="h-[20px] shrink-0 basis-auto font-['Inter'] text-[10px] font-light leading-[20px] text-[#3b3b3b] text-left whitespace-nowrap">
-                  9 відгуків
+                  _ відгуків
                 </span>
                             </div>
                         </div>
@@ -190,192 +187,24 @@ const ProductCard: React.FC<ItemProps> = ({item}) => {
                 </span>
                                 </div>
                             }
-                            <button type={"button"} onClick={() => {
-                                if(!BasketService.checkId(item.id)) {
-                                    BasketService.addId(item.id);
-                                    dispatch(incrementTotalPrice(Number(formatPrice(item.price - item.discount!))));
-                                }
-                            }}>
-                                <div
-                                    className="flex w-[44px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] items-center shrink-0 flex-nowrap rounded-[8px] border-solid border-2 border-[#9cc319]">
+                            <div>
+                                <button type={"button"} onClick={() => BasketFirstAdd(item)}>
+
                                     <div
-                                        className="w-[24px] h-[24px] shrink-0 overflow-hidden">
-                                        <img src={cart}/>
+                                        className="flex w-[44px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] items-center shrink-0 flex-nowrap rounded-[8px] border-solid border-2 border-[#9cc319]">
+                                        <div
+                                            className="w-[24px] h-[24px] shrink-0 overflow-hidden">
+                                            <img src={cart}/>
+                                        </div>
                                     </div>
-                                </div>
-                            </button>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        // <div className="cardBox">
-        //     <div className="card-head">
-        //         <div className="card-title">
-        //             <div className="card-special-offer">
-        //                 <div className="title-special-offer">
-        //                     <div className="typography">
-        //                         <span>Акція</span>
-        //                     </div>
-        //                 </div>
-        //
-        //                 <div className="value-special-offer">
-        //                     <div className="typography">
-        //                         10%
-        //                     </div>
-        //                 </div>
-        //             </div>
-        //
-        //             <div className="card-id">
-        //                 <div className="typography">Код: {item.id}</div>
-        //             </div>
-        //         </div>
-        //
-        //         <div className="icon-box">
-        //             <img src={heart} alt="heart"/>
-        //             <img src={balance} alt="balance"/>
-        //         </div>
-        //     </div>
-        // </div>
-
-        // <div className="main-container">
-        //     <div className="frame">
-        //         <div className="frame-1">
-        //             <div className="frame-2">
-        //                 <button className="button-frame">
-        //                     <div className="best-price">
-        //                         <span className="best-price-3">Н</span>
-        //                         <span className="best-price-4">айкраща ціна</span>
-        //                     </div>
-        //                 </button>
-        //                 <button className="red-rectangle">
-        //                     <span className="minus-twelve-percent">-12%</span>
-        //                 </button>
-        //             </div>
-        //             <div className="frame-5">
-        //                 <span className="code-597169">Код: 597169</span>
-        //             </div>
-        //         </div>
-        //         <div className="frame-6">
-        //             <div className="ic-like">
-        //                 <div className="frame-7">
-        //                     <div className="heart"/>
-        //                 </div>
-        //             </div>
-        //             <div className="ic-balance">
-        //                 <div className="cil-balance-scale">
-        //                     <div className="group"/>
-        //                 </div>
-        //             </div>
-        //         </div>
-        //     </div>
-        //     <div className="frame-8">
-        //         <div className="default"/>
-        //         <div className="frame-9">
-        //             <div className="frame-a">
-        //     <span className="notebook-dream-machines">
-        //       Ноутбук DREAM MACHINES
-        //       <br/>
-        //       RG2050-15 (RG2050-15UA30)
-        //     </span>
-        //             </div>
-        //             <div className="frame-b">
-        //                 <div className="rating-read-only">
-        //                     <div className="rating-interactive">
-        //                         <div className="rating-star">
-        //                             <div className="full"/>
-        //                         </div>
-        //                         <div className="rating-star-c">
-        //                             <div className="full-d"/>
-        //                         </div>
-        //                         <div className="rating-star-e">
-        //                             <div className="full-f"/>
-        //                         </div>
-        //                         <div className="rating-star-10">
-        //                             <div className="full-11"/>
-        //                         </div>
-        //                         <div className="rating-star-12">
-        //                             <div className="full-13"/>
-        //                         </div>
-        //                     </div>
-        //                     <div className="note">
-        //                         <span className="reviews">9 відгуків</span>
-        //                     </div>
-        //                 </div>
-        //                 <div className="frame-14">
-        //                     <div className="frame-15">
-        //                         <span className="price-1">32 999₴</span>
-        //                         <span className="price-2">28 999₴</span>
-        //                     </div>
-        //                     <div className="btn-basket-small">
-        //                         <div className="cart"/>
-        //                     </div>
-        //                 </div>
-        //             </div>
-        //         </div>
-        //     </div>
-        // </div>
-
-        // <Card sx={{ maxWidth: 345 }} style={{ margin: '20px' }}>
-        //     <CardMedia
-        //         component="img"
-        //         alt="green iguana"
-        //         height="140"
-        //         image="../static/images/cards/contemplative-reptile.jpg"
-        //     />
-        //     <CardContent>
-        //         <Typography gutterBottom variant="h5" component="div">
-        //             Lizard
-        //         </Typography>
-        //         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-        //             Lizards are a widespread group of squamate reptiles, with over 6,000
-        //             species, ranging across all continents except Antarctica
-        //         </Typography>
-        //     </CardContent>
-        //     <CardActions>
-        //         <Button size="small">Share</Button>
-        //         <Button size="small">Learn More</Button>
-        //     </CardActions>
-        // </Card>
     );
 };
 
 export default ProductCard;
-
-//
-// import React, { useState } from 'react';
-// import { IProductModel } from '../../models/productsModel';
-//
-// interface ProductCardProps {
-//     item: IProductModel;
-//     updateParentState: (newValue: number) => void;
-// }
-//
-// const ProductCard: React.FC<ProductCardProps> = ({ item, updateParentState }) => {
-//     const [isWishList, setIsWishList] = useState<boolean>(false);
-//
-//     // Додаємо в список бажаних
-//     const WishListAdd = () => {
-//         setIsWishList(true);
-//         updateParentState(1); // Оновлюємо стан батьківського компонента
-//     };
-//
-//     // Видаляємо зі списку бажаних
-//     const WishListRemove = () => {
-//         setIsWishList(false);
-//         updateParentState(0); // Оновлюємо стан батьківського компонента
-//     };
-//
-//     return (
-//         <div>
-//             <h2>{item.title}</h2>
-//             {isWishList ? 'In Wishlist' : 'Not in Wishlist'}
-//             <button onClick={WishListAdd}>Add to Wishlist</button>
-//             <button onClick={WishListRemove}>Remove from Wishlist</button>
-//         </div>
-//     );
-// };
-//
-// export default ProductCard;
-

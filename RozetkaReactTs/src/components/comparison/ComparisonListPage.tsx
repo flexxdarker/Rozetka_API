@@ -1,37 +1,25 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import ComparisonListItem from "./ComparisonListItem.tsx";
 import {IProductModel} from "../../models/productsModel.ts";
-import {ProductServices} from "../../services/productService.ts";
 import deleteBin from "../../assets/icons/deleteBin.svg";
 import {ComparisonListService} from "../../services/comparisonService.ts";
 import {useDispatch} from "react-redux";
 import {AppDispatch} from "../../store";
 import {clearFromComparison} from "../../store/actions/comparisonActions.ts";
+import useProducts from "../../hooks/useProducts.ts";
 
 
 const ComparisonListPage: React.FC = () => {
 
-    const [products, setProducts] = useState<IProductModel[]>([]);
+    const {products} = useProducts();
     const dispatch = useDispatch<AppDispatch>();
 
-//@ts-ignore
     const [comparisonList, setComparisonList] = useState<number[]>(ComparisonListService.getAll())
-
-    const loadProducts = async () => {
-        const res = await ProductServices.getAll();
-        //console.log(res);
-        setProducts(res.data);
-    };
 
     const clearComparisonList = ()=>{
         setComparisonList([]);
         dispatch(clearFromComparison());
     }
-
-
-    useEffect(() => {
-        loadProducts();
-    }, []);
 
 
     // Фільтрація продуктів, щоб лишити ті, які є у comparisonList

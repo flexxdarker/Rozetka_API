@@ -23,7 +23,7 @@ const Breadcrumbs : React.FC = () => {
         })
 
     return (
-        <div className="breadcrumbs">{crumbs}</div>
+        <div className="breadcrumbs bg-[#fff] flex w-full p-[20px] rounded-[8px] mt-[4px]">{crumbs}</div>
     );
 };
 

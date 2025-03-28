@@ -1,8 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import {Link} from "react-router-dom";
-// import viewGrid from "./../../../assets/icons/view-grid.svg?react"
+import {Link, useNavigate} from "react-router-dom";
 import viewGrid from "./../../../assets/icons/view-grid.svg"
 import search from "./../../../assets/icons/search.svg"
 import heartWhite from "./../../../assets/icons/heart-white.svg"
@@ -12,20 +10,20 @@ import userWhite from "./../../../assets/icons/user-white.svg"
 import cartWhite from "./../../../assets/icons/cart-white.svg"
 import logoutWhite from "./../../../assets/icons/logoutWhite.svg"
 import settingWhite from "./../../../assets/icons/setting-white.svg"
+import admin from "./../../../assets/icons/admin.svg"
 import Basket from "../../basket/Basket.tsx";
 import Modal from "../../other/Modal.tsx";
 import {TokenService} from "../../../services/tokenService.ts";
 import {AccountsService} from "../../../services/accountsService.ts";
 import {AutoComplete, Badge,} from 'antd';
 import type {AutoCompleteProps} from 'antd';
-import {IProductModel} from "../../../models/productsModel.ts";
-import {ProductServices} from "../../../services/productService.ts";
 import {useDispatch, useSelector} from 'react-redux';
 import {AppDispatch, RootState} from "../../../store";
 import {calculateTotalPrice} from "../../../store/actions/basketActions.ts";
 import {IBasketModel} from "../../../models/basketModel.ts";
 import {BasketService} from "../../../services/basketService.ts";
 import formatPrice from "../../../functions/formatPrice.ts";
+import useProducts from "../../../hooks/useProducts.ts";
 
 
 const Header = () => {
@@ -34,17 +32,12 @@ const Header = () => {
     const totalPrice = useSelector((state: RootState) => state.basket.totalPrice);
     const comparisonCount = useSelector((state: RootState) => state.comparison.comparisonCount);
     const [basket, setBasket] = useState<IBasketModel>({});
-    const [products, setProducts] = useState<IProductModel[]>([]);
 
-    const loadProducts = async () => {
-        const res = await ProductServices.getAll();
-        console.log(res);
-        setProducts(res.data);
-    };
+    const navigate = useNavigate();
 
+    const {products} = useProducts();
 
     useEffect(() => {
-        loadProducts();
         handleBasketUpdate();
     }, []);
 
@@ -92,10 +85,15 @@ const Header = () => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isLogin, setIsLogin] = useState(TokenService.isExists());
+    const [isAdmin, setIsAdmin] = useState<boolean>(TokenService.getAccessTokenPayload()?.roles === "admin");
 
     const logout = () => {
-        AccountsService.logout(TokenService.getRefreshToken() || "")
+        //AccountsService.logout(TokenService.getAccessToken() || "");
+        AccountsService.logout();
+        setIsAdmin(false);
         setIsLogin(false);
+
+        navigate("/");
     }
 
     const openModal = () => {
@@ -120,11 +118,11 @@ const Header = () => {
 
     return (
         <>
-            <Box className="bg-gradient-to-b from-[#000] to-[#381753]"
+            <Box className="bg-gradient-to-b from-[#000] to-[#381753] sticky top-0 w-full z-50 max-h-[90px] mb-[4px]"
                  sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
                 <div
                     className="main-container flex w-auto h-[90px] pt-0 pb-0 items-center flex-nowrap mx-auto my-0 justify-center">
-                    <div className="flex gap-[102px] items-center shrink-0 flex-nowrap">
+                    <div className="flex gap-[50px] items-center shrink-0 flex-nowrap">
 
                         <div className="flex w-[378px] gap-[46px] items-center shrink-0 flex-nowrap">
                             <Link to="/">
@@ -137,23 +135,23 @@ const Header = () => {
                                 </div>
                             </Link>
                             <Link to={"categories"}>
-                            <button
-                                className="flex w-[232px] pt-[8px] pr-[20px] pb-[8px] pl-[20px] gap-[10px] items-center shrink-0 flex-nowrap bg-[#9cc319] rounded-[8px] border-none pointer">
+                                <button
+                                    className="flex w-[232px] pt-[8px] pr-[20px] pb-[8px] pl-[20px] gap-[10px] items-center shrink-0 flex-nowrap bg-[#9cc319] rounded-[8px] border-none pointer">
             <span
                 className="flex w-[158px] h-[20px] justify-center items-center shrink-0 basis-auto font-['Inter'] text-[20px] font-medium leading-[20px] text-[#fff] text-center whitespace-nowrap">
               Каталог товарів
             </span>
-                                <div
-                                    className="w-[24px] h-[24px] shrink-0 overflow-hidden">
-                                    <img src={viewGrid}/>
-                                </div>
-                            </button>
+                                    <div
+                                        className="w-[24px] h-[24px] shrink-0 overflow-hidden">
+                                        <img src={viewGrid}/>
+                                    </div>
+                                </button>
                             </Link>
                         </div>
 
                         <div className="relative flex">
                             <AutoComplete
-                                className="h-[40px] flex w-[600px] pt-0 pr-0 pb-0 pl-[10px] items-center shrink-0 flex-nowrap bg-[#fff] rounded-[8px] border-solid border border-[#000] overflow-hidden z-[1]"
+                                className="h-[40px] flex max-w-[600px] min-w-[550px] pt-0 pr-0 pb-0 pl-[10px] items-center shrink-0 flex-nowrap bg-[#fff] rounded-[8px] border-solid border border-[#000] overflow-hidden z-[1]"
                                 options={options}
                                 onSelect={onSelect}
                                 onSearch={handleSearch}
@@ -161,7 +159,6 @@ const Header = () => {
                                 notFoundContent={"Товар не знайдено"}
                                 size="large"
                             >
-                                {/*<Input.Search size="large" placeholder="input here" enterButton/>*/}
                                 <input placeholder="Я шукаю...(наприклад, смартфон)" className="grow"/>
                             </AutoComplete>
                             <img src={search}
@@ -187,26 +184,40 @@ const Header = () => {
                         {/*</div>*/}
 
                         <div className="flex gap-[24px] items-center shrink-0 flex-nowrap">
-                            <button
-                                className="flex w-[40px] h-[40px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] justify-center items-center shrink-0 flex-nowrap rounded-[8px]">
-                                <div className="flex w-[24px] gap-[10px] items-center shrink-0 flex-nowrap">
-                                    <div
-                                        className="h-[24px] grow shrink-0 basis-0 overflow-hidden text-blue-500">
-                                        <img src={heartWhite}/>
+
+                            {isLogin ? (
+                                <Link to={"/account/wish-list"}
+                                      className="flex w-[40px] h-[40px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] justify-center items-center shrink-0 flex-nowrap rounded-[8px]">
+                                    <div className="flex w-[24px] gap-[10px] items-center shrink-0 flex-nowrap">
+                                        <div
+                                            className="h-[24px] grow shrink-0 basis-0 overflow-hidden text-blue-500">
+                                            <img src={heartWhite}/>
+                                        </div>
                                     </div>
-                                </div>
-                            </button>
+                                </Link>
+                            ) : (
+                                <Link to={"wish-list"}
+                                      className="flex w-[40px] h-[40px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] justify-center items-center shrink-0 flex-nowrap rounded-[8px]">
+                                    <div className="flex w-[24px] gap-[10px] items-center shrink-0 flex-nowrap">
+                                        <div
+                                            className="h-[24px] grow shrink-0 basis-0 overflow-hidden text-blue-500">
+                                            <img src={heartWhite}/>
+                                        </div>
+                                    </div>
+                                </Link>
+                            )}
                             <Badge count={comparisonCount} size={"small"}>  {/*✓*/}
-                            <Link to={"/comparison-list"}
-                                className="flex w-[40px] h-[40px] flex-col justify-center items-center shrink-0 flex-nowrap">
-                                <div
-                                    className="flex h-[40px] pt-[4px] pr-[4px] pb-[4px] pl-[4px] flex-col justify-center items-center self-stretch shrink-0 flex-nowrap rounded-[4px] overflow-hidden">
+
+                                <Link to={"/comparison-list"}
+                                      className="flex w-[40px] h-[40px] flex-col justify-center items-center shrink-0 flex-nowrap">
                                     <div
-                                        className="w-[22.5px] h-[19.125px] shrink-0">
-                                        <img src={balanceWhite}/>
+                                        className="flex h-[40px] pt-[4px] pr-[4px] pb-[4px] pl-[4px] flex-col justify-center items-center self-stretch shrink-0 flex-nowrap rounded-[4px] overflow-hidden">
+                                        <div
+                                            className="w-[22.5px] h-[19.125px] shrink-0">
+                                            <img src={balanceWhite}/>
+                                        </div>
                                     </div>
-                                </div>
-                            </Link>
+                                </Link>
                             </Badge>
                             {isLogin ?
                                 <>
@@ -217,6 +228,17 @@ const Header = () => {
                                             <img src={settingWhite}/>
                                         </div>
                                     </Link>
+
+                                    {isAdmin && (
+                                        <Link to="orders-crud"
+                                              className="flex w-[44px] pt-[8px] pr-[10px] pb-[8px] pl-[10px] gap-[10px] items-center shrink-0 flex-nowrap rounded-[8px]">
+                                            <div
+                                                className="w-[24px] h-[24px] shrink-0 overflow-hidden">
+                                                <img src={admin}/>
+                                            </div>
+                                        </Link>
+                                    )}
+
                                     <button onClick={logout}
                                             className="flex w-[44px] pt-[8px] pr-[10px] pb-[8px] pl-[10px] gap-[10px] items-center shrink-0 flex-nowrap rounded-[8px]">
                                         <div
@@ -266,52 +288,6 @@ const Header = () => {
                 </div>
             </Box>
 
-            <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}, backgroundColor: 'blue'}}>
-
-
-                <Link to="categories-crud">
-                    <Button sx={{my: 2, color: 'white', display: 'block'}}>
-                        Categories
-                    </Button>
-                </Link>
-
-                <Link to="products-crud">
-                    <Button sx={{my: 2, color: 'white', display: 'block'}}>
-                        Products
-                    </Button>
-                </Link>
-
-                <Link to="signin">
-                    <Button sx={{my: 2, color: 'white', display: 'block'}}>
-                        SignIn
-                    </Button>
-                </Link>
-
-                <Link to="signup">
-                    <Button sx={{my: 2, color: 'white', display: 'block'}}>
-                        SignUp
-                    </Button>
-                </Link>
-
-                <Link to="/product-filter">
-                    <Button sx={{my: 2, color: 'white', display: 'block'}}>
-                        filters
-                    </Button>
-                </Link>
-
-                <Link to="orders-crud">
-                    <Button sx={{my: 2, color: 'white', display: 'block'}}>
-                        Orders
-                    </Button>
-                </Link>
-
-                <Link to="users-crud">
-                    <Button sx={{my: 2, color: 'white', display: 'block'}}>
-                        Users
-                    </Button>
-                </Link>
-
-            </Box>
         </>
     );
 

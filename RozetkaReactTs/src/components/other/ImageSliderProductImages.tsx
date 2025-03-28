@@ -47,9 +47,12 @@ const ImageSliderProductImages: React.FC<ImageSliderProductImagesProps> = ({imag
 
                 {/* Main Image */}
                 <div
-                    className="h-[640px] grow bg-cover bg-no-repeat"
+                    className="h-[640px] grow bg-no-repeat bg-center object-contain"
                     style={{
                         backgroundImage: `url(${images[currentImageIndex]})`,
+                        backgroundSize: 'contain', // щоб зображення було повністю видно, зберігаючи пропорції
+                        backgroundPosition: 'center', // розміщує зображення по центру контейнера
+                        backgroundRepeat: 'no-repeat', // вимикає повторення зображення
                     }}
                 ></div>
 
@@ -76,7 +79,8 @@ const ImageSliderProductImages: React.FC<ImageSliderProductImagesProps> = ({imag
                         style={{
                             backgroundImage: `url(${image})`,
                             backgroundSize: 'contain',
-                            backgroundRepeat: 'no-repeat'
+                            backgroundRepeat: 'no-repeat',
+                            backgroundPosition: 'center',
                         }}
                     ></div>
                 ))}

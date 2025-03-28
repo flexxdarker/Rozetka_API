@@ -76,7 +76,7 @@ const PriceFilter: React.FC<IPriceFilterProps> = ({ minPriceValueInit, maxPriceV
     return (
         <div className="main-container h-[fit-content] flex w-[376px] pt-[10px] pr-0 pb-[10px] pl-0 flex-col gap-[10px] items-start flex-nowrap bg-[#fff] rounded-[8px] mx-auto my-0">
             <div className="flex justify-between items-center self-stretch shrink-0 flex-nowrap bg-[#fff] relative">
-                <div className="flex w-[76px] pt-[10px] pr-[20px] pb-[10px] pl-[20px] gap-[10px] justify-center items-center shrink-0 flex-nowrap">
+                <div className="flex pt-[10px] pr-[20px] pb-[10px] pl-[20px] gap-[10px] justify-center items-center shrink-0 flex-nowrap">
                     <span className="h-[12px] shrink-0 basis-auto font-['Inter'] text-[16px] font-bold leading-[12px] text-[#3b3b3b] text-left whitespace-nowrap">
                         Ціна
                     </span>

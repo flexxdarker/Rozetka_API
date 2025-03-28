@@ -2,8 +2,8 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useLocation } from "react-router-dom";
 import { IProductModel } from "../../models/productsModel.ts";
 import deleteBin from "../../assets/icons/deleteBin.svg";
-import ComparisonCard from "./ComparisonCard.tsx";
 import ComparisonProductValue from "./ComparisonProductValue.tsx";
+import ProductCard from "../product/ProductCard.tsx";
 
 interface GroupedValues {
     filterName: string;
@@ -102,7 +102,7 @@ const ComparisonProductsPage: React.FC = () => {
 
                 <div className={"flex gap-[4px]"}>
                     {
-                        products.map(product => <ComparisonCard product={product} key={product.id} />)
+                        products.map(product => <ProductCard item={product} key={product.id} forComparison={true}/>)
                     }
                 </div>
 
