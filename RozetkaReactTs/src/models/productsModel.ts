@@ -13,7 +13,7 @@ export interface IProductModel {
     description: string;
     price: number;
     discount?: number;
-    // firstImage: string;
+    averageRating: number;
     values?: values[];
     images?: IImageModel[];
 }
@@ -26,7 +26,6 @@ export interface ICreateProductModel {
     description: string;
     price: number;
     discount: number;
-    // firstImage: string;
     values: number[];
     imageFiles?: File[];
 }

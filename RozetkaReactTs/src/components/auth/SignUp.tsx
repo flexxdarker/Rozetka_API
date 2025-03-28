@@ -18,6 +18,7 @@ import utc from 'dayjs/plugin/utc';
 import dayjs from 'dayjs';
 import {TokenService} from "../../services/tokenService.ts";
 import {RcFile, UploadChangeParam} from "antd/es/upload";
+import {toast} from "react-toastify";
 
 dayjs.extend(utc);
 
@@ -51,23 +52,25 @@ const SignUp: React.FC = () => {
 
 
     const onFinish: FormProps<IRegisterModel>['onFinish'] = async (values: IRegisterModel) => {
-        console.log('Form values:', {...values}); // Обробка відправки форми з додатковими даними редактора
-
-
         const selectedDate = values.birthdate;
         const utcDate = dayjs(selectedDate).utc().format()
-
-
-        console.log(utcDate)
         console.log('Form values:111', {...values, birthdate: utcDate});
 
         const res = await AccountsService.register({...values, birthdate: utcDate});
-        TokenService.save(res.data);
-        if (res.status == 200) {
-            message.success("register success");
-            navigate('/');
-        } else {
-            message.warning("Warning");
+        if(res.status === 200 && res.data.accessToken != null) {
+            TokenService.save(res.data);
+            if (res.status == 200) {
+                message.success("register success");
+                navigate('/');
+            } else {
+                message.warning("Warning");
+            }
+        } else{
+            toast('Помилка користувача', {
+                position: 'bottom-right',
+                autoClose: 4000, // Auto close after 3 seconds
+                closeButton: true,  // Add close button to the toast
+            });
         }
     };
 
@@ -88,7 +91,6 @@ const SignUp: React.FC = () => {
                 minWidth: "300px",
                 maxWidth: "fit-content",
                 height: "fit-content",
-                backgroundColor: "red",
                 alignItems: "center",
                 margin: "auto",
                 display: 'flex',
@@ -98,7 +100,9 @@ const SignUp: React.FC = () => {
                 right: 0,
                 top: 0,
                 bottom: 0
-            }}>
+            }}
+
+            className={"rounded-[8px] bg-[#fff] border-solid border border-[#9cc319]"}>
                 <h1>SignUp page</h1>
                 <Form
                     name="login"
@@ -140,8 +144,12 @@ const SignUp: React.FC = () => {
                     <Form.Item
                         name="phoneNumber"
                         rules={[{ required: true, message: 'Please input your phone number!' },
-                        {max: 13, message: "Некоректна довжина номеру"},
-                        {min: 13, message: "Некоректна довжина номеру"}]}
+                        // {max: 13, message: "Некоректна довжина номеру"},
+                        // {min: 13, message: "Некоректна довжина номеру"},
+                            {
+                                pattern: /^\+380\d{9}$/,  // Перевірка на формат: +380 + 9 цифр
+                                message: 'Номер телефону повинен починатися з +380 і містити 13 цифр.',
+                            },]}
                     >
                         <Input prefix={<PhoneOutlined />} placeholder="Phone Number"/>
                     </Form.Item>

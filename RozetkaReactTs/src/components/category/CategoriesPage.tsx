@@ -7,7 +7,6 @@ const CategoriesPage: React.FC = () => {
     return (
         <>
             <div className={"flex"}>
-                <h1>categories</h1>
 
                 <CategoryCardList/>
 

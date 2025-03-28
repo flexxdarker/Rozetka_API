@@ -4,7 +4,7 @@ import {Content} from "antd/es/layout/layout";
 import {Outlet} from "react-router-dom";
 import MainMenu from "./MainMenu.tsx";
 import MainLoader from "../../loaders/MainLoader.tsx";
-import Breadcrumbs from "../../other/Breadcrumbs.tsx";
+//import Breadcrumbs from "../../other/Breadcrumbs.tsx";
 
 
 const MainLayout: React.FC = () => {
@@ -17,7 +17,7 @@ const MainLayout: React.FC = () => {
 
     return (
         <>
-            <div style={{backgroundColor: 'red'}} >
+            <div >
                 <MainMenu/>
             </div>
             <Content className='Main'
@@ -30,11 +30,11 @@ const MainLayout: React.FC = () => {
                     style={{
                         // background: colorBgContainer,
                         minHeight: 800,
-                        padding: 24,
+                        padding: 4,
                         borderRadius: borderRadiusLG,
                     }}
                 >
-                    <Breadcrumbs/>
+                    {/*<Breadcrumbs/>*/}
                     <Suspense fallback={<MainLoader/>}>
                         <Outlet/>
                     </Suspense>

@@ -1,30 +1,28 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import CategoryCard from "./CategoryCard.tsx";
 import {ICategoryModel} from "../../models/categoriesModel.ts";
-import {CategoriesServices} from "../../services/categoriesService.ts";
+import useCategories from "../../hooks/useCategories.ts";
 
+interface CategoryCardListProps{
+    categoriesInit?: ICategoryModel[];
+}
 
-const CategoryCardList: React.FC = () => {
-    const [categories,setCategories] = useState<ICategoryModel[]>([]);
-
-    const loadCategories = async () => {
-        const res = await CategoriesServices.getAll();
-        setCategories(res.data);
-    };
+const CategoryCardList: React.FC<CategoryCardListProps> = ({categoriesInit}) => {
+    const {categories, setCategories} = useCategories();
 
     useEffect(() => {
-        loadCategories();
+        if(categoriesInit) {
+            setCategories(categoriesInit);
+        }
     }, []);
 
     return (
         <>
-            <h1>CategoryCardList</h1>
             <div className={"flex gap-[4px] max-w-[1300px] h-full flex-wrap"}>
                 {
-                    categories.map((category,index) => <CategoryCard key={index} category={category} />)
+                    categories.map((category, index) => <CategoryCard key={index} category={category}/>)
                 }
             </div>
-
         </>
     )
         ;

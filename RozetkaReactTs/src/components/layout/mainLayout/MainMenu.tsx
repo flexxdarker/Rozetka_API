@@ -1,23 +1,24 @@
 import React from 'react';
-import Paper from '@mui/material/Paper';
-import {Link} from "react-router-dom";
 import SocialNetworks from "./SocialNetworks.tsx";
 import MenuByCategory from "./MenuByCategory.tsx";
-
+import AccountMenu from "../../account/AccountMenu.tsx";
+import useIsLogin from "../../../hooks/useIsLogin.ts";
 
 const MainMenu: React.FC = () => {
+
+    const {isLogin} = useIsLogin();
+
     return (
         <>
-            <Paper sx={{ maxWidth: '100%'}}>
-
                 <div className={"flex flex-col gap-[4px] overflow-visible"}>
                     <MenuByCategory/>
+
+                    {isLogin && (
+                        <AccountMenu/>
+                    )}
+
                     <SocialNetworks/>
                 </div>
-            </Paper>
-
-            <Link to={"category-1"}>Category 1</Link>
-
         </>
     );
 };

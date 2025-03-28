@@ -40,9 +40,10 @@ export const OrderServices = {
 
     getAllStatuses() {
         return axios.get<IOrderStatus[]>(apiToken + "/GetAllStatuses");
+        //return api.get<IOrderStatus[]>("GetAllStatuses");
     },
 
     changeStatus(orderId: number,statusId:number) {
-        return axios.get(apiToken + "/ChangeStatus" + `?orderId=${orderId}` + `&statusId=${statusId}`);
+        return axios.put(apiToken + "/ChangeStatus" + `?orderId=${orderId}` + `&statusId=${statusId}`);
     },
 };

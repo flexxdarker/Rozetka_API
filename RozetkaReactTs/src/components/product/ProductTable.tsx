@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {Link} from "react-router-dom";
 import ButtonMui from "@mui/material/Button";
 import {IProductModel} from "../../models/productsModel.ts";
@@ -10,6 +10,8 @@ import {SearchOutlined} from '@ant-design/icons';
 import type {FilterDropdownProps} from 'antd/es/table/interface';
 import dayjs from "dayjs";
 import {IImageModel} from "../../models/imageModel.ts";
+import useProducts from "../../hooks/useProducts.ts";
+import useCategories from "../../hooks/useCategories.ts";
 // import {Highlight} from "@mui/icons-material";
 
 
@@ -19,20 +21,11 @@ const uploadings = import.meta.env.VITE_ROZETKA_UPLOADINGS;
 
 const ProductTable: React.FC = () => {
 
-    const [products, setProducts] = useState<IProductModel[]>([]);
+    const {products, setProducts} = useProducts();
+    const {categories} = useCategories();
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef<InputRef>(null);
-
-    const loadProducts = async () => {
-        const res = await ProductServices.getAll();
-        console.log(res);
-        setProducts(res.data);
-    };
-
-    useEffect(() => {
-        loadProducts();
-    }, []);
 
     const handleSearch = (
         selectedKeys: string[],
@@ -128,104 +121,120 @@ const ProductTable: React.FC = () => {
             ),
     });
 
-    const [columns] = useState([
-        {
-            title: "Id",
-            dataIndex: "id",
-            key: "id",
-            sorter: (a: { id: number; }, b: { id: number; }) => a.id - b.id
-        },
-        {
-            title: "Title",
-            dataIndex: "title",
-            key: "title",
-            ...getColumnSearchProps('title'),
-            render: (text: string) => <div
-                style={{
-                    minWidth: 100,
-                    maxWidth: '30ch',
-                    overflow: 'hidden',
-                    display: '-webkit-box',
-                    WebkitBoxOrient: 'vertical',
-                    WebkitLineClamp: 2,
-                    whiteSpace: 'normal',
-                    textOverflow: 'ellipsis'
-                }}>{
-                text}</div>
-        },
-        {
-            title: "CategoryId",
-            dataIndex: "categoryId",
-            key: "categoryId",
-        },
-        {
-            title: "date",
-            dataIndex: "date",
-            key: "date",
-            ...getColumnSearchProps('date'),
-            render: (text: string) =>{
-                const formattedDate = dayjs(text).format('DD-MM-YYYY'); // Форматуємо дату до "рік-місяць-день"
-                return <p>{formattedDate}</p>;
-                // <div>{dayjs(text).format('YYYY-MM-DD')}</div>
+    const [columns,setColumns] = useState([{}]);
+
+    useEffect(() => {
+
+        setColumns([
+            {
+                title: "Id",
+                dataIndex: "id",
+                key: "id",
+                sorter: (a: { id: number; }, b: { id: number; }) => a.id - b.id
+            },
+            {
+                title: "Title",
+                dataIndex: "title",
+                key: "title",
+                ...getColumnSearchProps('title'),
+                render: (text: string) => <div
+                    style={{
+                        minWidth: 100,
+                        maxWidth: '30ch',
+                        overflow: 'hidden',
+                        display: '-webkit-box',
+                        WebkitBoxOrient: 'vertical',
+                        WebkitLineClamp: 2,
+                        whiteSpace: 'normal',
+                        textOverflow: 'ellipsis'
+                    }}>{
+                    text}</div>
+            },
+            {
+                title: "CategoryId",
+                dataIndex: "categoryId",
+                key: "categoryId",
+                render: (text: string) => {
+                    const filteredCategory = categories.filter(c => c.id == +text);
+
+                    // Якщо є категорії, повертаємо їх назву, якщо ні — порожній рядок
+                    return filteredCategory.length > 0 ? filteredCategory[0].name : "Не знайдено";
                 }
-            ,
+            },
+            {
+                title: "date",
+                dataIndex: "date",
+                key: "date",
+                ...getColumnSearchProps('date'),
+                render: (text: string) =>{
+                    const formattedDate = dayjs(text).format('DD-MM-YYYY'); // Форматуємо дату до "рік-місяць-день"
+                    return <p>{formattedDate}</p>;
+                    // <div>{dayjs(text).format('YYYY-MM-DD')}</div>
+                }
+                ,
 
-        },
-        // {
-        //     title: "Description",
-        //     dataIndex: "description",
-        //     key: "description",
-        //     // maxWidth: 20,
-        //     // ellipsis:true,
-        // },
-        {
-            title: "Price",
-            dataIndex: "price",
-            key: "price",
-        },
-        {
-            title: "Discount",
-            dataIndex: "discount",
-            key: "discount",
-        },
-        {
-            title: "FirstImage",
-            dataIndex: "images",
-            key: "images",
-            render: (record: IImageModel[]) => {
-                const imageUrl = `${uploadings + "200_" + record[0]?.name}`;
-                return <img src={imageUrl} alt="no image" />;
-            }
-        },
-        {
-            title: "Action",
-            key: "action",
-            // render: () => <a>Delete</a>
-            render: (record: any) => (
-                <Space size="middle">
-                    {/* <Button>Show</Button> */}
+            },
+            // {
+            //     title: "Description",
+            //     dataIndex: "description",
+            //     key: "description",
+            //     // maxWidth: 20,
+            //     // ellipsis:true,
+            // },
+            {
+                title: "Price",
+                dataIndex: "price",
+                key: "price",
+            },
+            {
+                title: "Discount",
+                dataIndex: "discount",
+                key: "discount",
+            },
+            {
+                title: "FirstImage",
+                dataIndex: "images",
+                key: "images",
+                render: (record: IImageModel[]) => {
+                    const imageUrl = `${uploadings + "200_" + record[0]?.name}`;
+                    return (
+                        <div className="flex justify-center items-center">
+                            <img src={imageUrl} alt="no image" className="object-contain" />
+                        </div>
+                    );
+                }
+            },
+            {
+                title: "Action",
+                key: "action",
+                // render: () => <a>Delete</a>
+                render: (record: IProductModel) => (
+                    <Space size="middle">
+                        {/* <Button>Show</Button> */}
 
-                    <Link to={`/product-page/${record.id}`}>
-                        <Button>Show</Button>
-                    </Link>
+                        <Link to={`/product-page/${record.id}`}>
+                            <Button>Show</Button>
+                        </Link>
 
-                    <Link to={`edit/${record.id}`}>
-                        <Button>Edit</Button>
-                    </Link>
+                        <Link to={`edit/${record.id}`}>
+                            <Button>Edit</Button>
+                        </Link>
 
-                    <Popconfirm
-                        title="Delete the product"
-                        description={`Are you sure to delete this ${record.name}?`}
-                        onConfirm={() => deleteHandler(record.id)}
-                        okText="Yes"
-                        cancelText="No"
-                    >
-                        <Button>Delete</Button>
-                    </Popconfirm>
-                </Space>
-            )
-        },
-    ]);
+                        <Popconfirm
+                            title="Delete the product"
+                            description={`Are you sure to delete this ${record.title}?`}
+                            onConfirm={() => deleteHandler(record.id)}
+                            okText="Yes"
+                            cancelText="No"
+                        >
+                            <Button>Delete</Button>
+                        </Popconfirm>
+                    </Space>
+                )
+            },
+        ])
+    }, [categories]);
+
 
     const deleteHandler = async (id: number) => {
         const res = await ProductServices.delete(id);
@@ -240,7 +249,6 @@ const ProductTable: React.FC = () => {
     return (
         <>
             <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-                <h1>Product table for admin</h1>
                 <Link to="create">
                     <ButtonMui variant="contained" style={{maxHeight: "25px"}}>Add</ButtonMui>
                 </Link>
@@ -255,15 +263,14 @@ const ProductTable: React.FC = () => {
                     expandedRowRender: (record) => {
                         // Якщо description існує, не є порожнім і не дорівнює "undefined", відобразимо його
                         if (record.description && record.description.trim().length > 0 && record.description !== "undefined") {
-                            return <p style={{ margin: 0 }}>{record.description}</p>;
+                            return <div
+                                dangerouslySetInnerHTML={{__html: record?.description || '<p><em>Description is not provided yet...</em></p>'}}/>
                         }
-                        // Якщо description відсутній або порожній, нічого не передаватимемо
                         else {
                             return null;
                         }
                     },
                     rowExpandable: (record: IProductModel) => {
-                        // Повертаємо лише булеве значення
                         return !!(record.description && record.description !== "undefined" && record.description.trim().length > 0);
                     },
                 }}

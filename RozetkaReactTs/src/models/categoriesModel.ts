@@ -3,7 +3,7 @@ export interface ICategoryModel {
     name: string;
     image: string;
     parentCategoryId?: number;
-    parentCategoryName: string;
+    //parentCategoryName: string;
 }
 
 
@@ -11,10 +11,17 @@ export interface ICreateCategoryModel {
     id?: number;
     name: string;
     parentCategoryId?: number;
-    image: File;
+    image?: File;
 }
 
-export interface ICategoryName {
-    id: number;
+export interface IUploadedFile {
+    lastModified: number;
+    lastModifiedDate: Date;
     name: string;
+    originFileObj: File;
+    percent: number;
+    size: number;
+    thumbUrl: string;
+    type: string;
+    uid: string;
 }

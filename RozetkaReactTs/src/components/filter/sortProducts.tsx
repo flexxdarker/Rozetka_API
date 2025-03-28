@@ -1,14 +1,19 @@
 import React, {useEffect, useState} from 'react';
 import {IProductModel} from "../../models/productsModel.ts";
+import useCategories from "../../hooks/useCategories.ts";
+import {Select} from "antd";
 
 interface ISortProductsProps {
     productsInit: IProductModel[];
-    onChange: (productsInit: IProductModel[]) => void;
+    categoryIdInit: number | null;
+    onChangeProducts: (productsInit: IProductModel[]) => void;
+    onChangeCategoryId: (id: number) => void;
 }
 
-const SortProducts:React.FC<ISortProductsProps> = ({productsInit,onChange}) => {
+const SortProducts:React.FC<ISortProductsProps> = ({productsInit,categoryIdInit,onChangeProducts,onChangeCategoryId}) => {
 
     const [products,setProducts] = useState<IProductModel[]>(productsInit);
+    const {categories} = useCategories();
 
     useEffect(() => {
         setProducts(productsInit); // Оновлення продуктів при зміні пропсів
@@ -30,7 +35,7 @@ const SortProducts:React.FC<ISortProductsProps> = ({productsInit,onChange}) => {
         });
 
         setProducts(sortedProducts); // Оновлюємо локальний стан з відсортованими продуктами
-        onChange(sortedProducts); // Передаємо оновлений список в батьківський компонент
+        onChangeProducts(sortedProducts); // Передаємо оновлений список в батьківський компонент
     };
 
     const sortByTitle = (order: 'asc' | 'desc') => {
@@ -48,7 +53,7 @@ const SortProducts:React.FC<ISortProductsProps> = ({productsInit,onChange}) => {
         });
 
         setProducts(sortedProducts); // Оновлюємо локальний стан з відсортованими продуктами
-        onChange(sortedProducts); // Передаємо оновлений список в батьківський компонент
+        onChangeProducts(sortedProducts); // Передаємо оновлений список в батьківський компонент
     };
 
     const sortByDate = (order: 'asc' | 'desc') => {
@@ -66,14 +71,14 @@ const SortProducts:React.FC<ISortProductsProps> = ({productsInit,onChange}) => {
         });
 
         setProducts(sortedProducts); // Оновлюємо локальний стан з відсортованими продуктами
-        onChange(sortedProducts); // Передаємо оновлений список в батьківський компонент
+        onChangeProducts(sortedProducts); // Передаємо оновлений список в батьківський компонент
     };
 
 
     return (
         <>
             <div
-                className="main-container flex pt-[20px] pr-[20px] pb-[19px] pl-[20px] justify-between items-center flex-nowrap bg-[#fff] rounded-[8px] mx-auto my-0">
+                className="main-container w-full flex p-[20px] justify-around items-center flex-nowrap bg-[#fff] rounded-[8px] mx-auto my-0">
 
                 <div className="flex gap-[40px] justify-center items-center shrink-0 flex-nowrap">
                     <button type={"button"}
@@ -118,22 +123,29 @@ const SortProducts:React.FC<ISortProductsProps> = ({productsInit,onChange}) => {
             популярні
           </span>
                     </button>
-                    <button type={"button"}
-                            className="flex w-[101px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] relative z-[11]">
-          <span
-              className="h-[10px] shrink-0 basis-auto font-['Inter'] text-[14px] font-medium leading-[10px] text-[#3b3b3b] relative text-left whitespace-nowrap z-[12]">
-            з відгуками
-          </span>
-                    </button>
+          {/*          <button type={"button"}*/}
+          {/*                  className="flex w-[101px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] justify-center items-center shrink-0 flex-nowrap bg-[#fff] relative z-[11]">*/}
+          {/*<span*/}
+          {/*    className="h-[10px] shrink-0 basis-auto font-['Inter'] text-[14px] font-medium leading-[10px] text-[#3b3b3b] relative text-left whitespace-nowrap z-[12]">*/}
+          {/*  з відгуками*/}
+          {/*</span>*/}
+          {/*          </button>*/}
+                    <Select placeholder="Select a category" value={categoryIdInit}
+                    onChange={(value) => onChangeCategoryId(value)}>
+                        <Select.Option value={null}>None</Select.Option> {/* Додано опцію None */}
+                        {categories.map(c => (
+                            <Select.Option key={c.id} value={c.id}>{c.name}</Select.Option>
+                        ))}
+                    </Select>
                 </div>
-                <div className="flex w-[79.846px] gap-[20px] items-end shrink-0 flex-nowrap relative z-[13]">
-                    <div
-                        className="flex w-[30px] pt-[4px] pr-[4px] pb-[4px] pl-[4px] flex-col gap-[2px] items-start shrink-0 flex-nowrap relative z-[14] bg-red-500">
-                    </div>
-                    <div
-                        className="flex w-[30px] pt-[4px] pr-[4px] pb-[4px] pl-[4px] flex-col gap-[2px] items-start shrink-0 flex-nowrap relative z-[14] bg-red-500">
-                    </div>
-                </div>
+                {/*<div className="flex w-[79.846px] gap-[20px] items-end shrink-0 flex-nowrap relative z-[13]">*/}
+                {/*    <div*/}
+                {/*        className="flex w-[30px] pt-[4px] pr-[4px] pb-[4px] pl-[4px] flex-col gap-[2px] items-start shrink-0 flex-nowrap relative z-[14] bg-red-500">*/}
+                {/*    </div>*/}
+                {/*    <div*/}
+                {/*        className="flex w-[30px] pt-[4px] pr-[4px] pb-[4px] pl-[4px] flex-col gap-[2px] items-start shrink-0 flex-nowrap relative z-[14] bg-red-500">*/}
+                {/*    </div>*/}
+                {/*</div>*/}
             </div>
         </>
     );

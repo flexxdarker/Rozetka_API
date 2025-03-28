@@ -1,13 +1,36 @@
 import React, {useState} from 'react';
+import {Recipient} from "./OrderPage.tsx";
 
+interface DeliveryProps {
+    recipient: Recipient; // Приймає об'єкт recipient
+    setRecipient: React.Dispatch<React.SetStateAction<Recipient>>; // Функція для оновлення стейту
+}
 
-
-const DeliveryOrder: React.FC = () => {
-    const [isOpen, setIsOpen] = useState(false); // Стан для відкриття/закриття списку
+const DeliveryOrder: React.FC<DeliveryProps> = ({ recipient, setRecipient}) => {
+    const [isOpen, setIsOpen] = useState(true); // Стан для відкриття/закриття списку
 
     const handleToggle = () => {
         setIsOpen(!isOpen); // Зміна стану відкриття/закриття
     };
+
+    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setRecipient(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    };
+
+
+    const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setRecipient(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    };
+
+
 
     return (
         <>
@@ -33,7 +56,8 @@ const DeliveryOrder: React.FC = () => {
                             <div
                                 className="flex w-[304px] flex-col gap-[32px] items-start shrink-0 flex-nowrap">
                                 <div className="flex w-[234px] items-center shrink-0 flex-nowrap">
-                                    <input type="radio" name="group2"/>
+                                    <input type="radio" name="recipientDeliveryType" value={"З магазину BuyZone"}
+                                           onChange={handleRadioChange}/>
                                     <div className="flex w-[218px] items-center shrink-0 flex-nowrap">
                                         <div
                                             className="flex w-[218px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] justify-center items-center shrink-0 flex-nowrap">
@@ -45,7 +69,8 @@ const DeliveryOrder: React.FC = () => {
                                     </div>
                                 </div>
                                 <div className="flex items-center self-stretch shrink-0 flex-nowrap">
-                                    <input type="radio" name="group2"/>
+                                    <input type="radio" name="recipientDeliveryType" value={"З відділення «Нова Пошта»"}
+                                           onChange={handleRadioChange}/>
                                     <div className="flex w-[288px] items-center shrink-0 flex-nowrap">
                                         <div
                                             className="flex w-[288px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] justify-center items-center shrink-0 flex-nowrap">
@@ -57,7 +82,8 @@ const DeliveryOrder: React.FC = () => {
                                     </div>
                                 </div>
                                 <div className="flex w-[206px] items-center shrink-0 flex-nowrap">
-                                        <input type="radio" name="group2"/>
+                                        <input type="radio" name="recipientDeliveryType" value={"Доставка за адресою"}
+                                               onChange={handleRadioChange}/>
                                     <div className="flex w-[190px] items-center shrink-0 flex-nowrap">
                                         <div
                                             className="flex w-[190px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] justify-center items-center shrink-0 flex-nowrap">
@@ -108,24 +134,28 @@ const DeliveryOrder: React.FC = () => {
                                 className="flex w-[380px] flex-col gap-[20px] items-start self-stretch shrink-0 flex-nowrap">
                                 <div
                                     className="flex flex-col gap-[24px] items-start self-stretch shrink-0 flex-nowrap">
-                                    <input placeholder="Введіть ім’я"
+                                    <input placeholder="Введіть ім’я" value={recipient.recipientName!} onChange={handleNameChange} name={"recipientName"}
                                         className="flex pt-[20px] pr-[10px] pb-[20px] pl-[10px] gap-[10px] items-center self-stretch shrink-0 flex-nowrap rounded-[8px] border-solid border border-[#b5b5b5]">
                                     </input>
-                                    <input placeholder="Введіть прізвище"
+
+                                    <input placeholder="Введіть прізвище" value={recipient.recipientSurName!} onChange={handleNameChange} name={"recipientSurName"}
                                         className="flex pt-[20px] pr-[10px] pb-[20px] pl-[10px] gap-[10px] items-center self-stretch shrink-0 flex-nowrap rounded-[8px] border-solid border border-[#b5b5b5]">
                                     </input>
-                                    <input placeholder="Введіть назву міста"
+
+                                    <input placeholder="Введіть назву міста" value={recipient.recipientCity!} onChange={handleNameChange} name={"recipientCity"}
                                         className="flex pt-[20px] pr-[10px] pb-[20px] pl-[10px] gap-[10px] items-center self-stretch shrink-0 flex-nowrap rounded-[8px] border-solid border border-[#b5b5b5]">
                                     </input>
-                                    <input placeholder="Введіть назву вулиці"
+
+                                    <input placeholder="Введіть назву вулиці" value={recipient.recipientStreet!} onChange={handleNameChange} name={"recipientStreet"}
                                         className="flex pt-[20px] pr-[10px] pb-[20px] pl-[10px] gap-[10px] items-center self-stretch shrink-0 flex-nowrap rounded-[8px] border-solid border border-[#b5b5b5]">
                                     </input>
+
                                     <div
                                         className="flex justify-between items-center self-stretch shrink-0 flex-nowrap">
-                                        <input  placeholder="Будинок"
+                                        <input  placeholder="Будинок" value={recipient.recipientHouse!} onChange={handleNameChange} name={"recipientHouse"}
                                             className="flex w-[50%] pt-[20px] pr-[10px] pb-[20px] pl-[10px] gap-[10px] items-center shrink-0 flex-nowrap rounded-[8px] border-solid border border-[#b5b5b5]">
                                         </input>
-                                        <input placeholder="Квартира"
+                                        <input placeholder="Квартира" value={recipient.recipientFlat!} onChange={handleNameChange} name={"recipientFlat"}
                                             className="flex w-[50%] pt-[20px] pr-[10px] pb-[20px] pl-[10px] gap-[10px] items-center shrink-0 flex-nowrap rounded-[8px] border-solid border border-[#b5b5b5]">
                                         </input>
                                     </div>

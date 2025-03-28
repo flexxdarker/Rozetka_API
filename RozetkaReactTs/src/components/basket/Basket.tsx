@@ -1,6 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import {IProductModel} from "../../models/productsModel.ts";
-import {ProductServices} from "../../services/productService.ts";
 import close from "../../assets/icons/close.svg"
 import BasketItem from "./BasketItem.tsx";
 import {IBasketModel} from "../../models/basketModel.ts";
@@ -13,6 +11,9 @@ import deleteBin from "../../assets/icons/deleteBin.svg"
 import {useDispatch, useSelector} from "react-redux";
 import {calculateTotalPrice} from "../../store/actions/basketActions.ts";
 import {AppDispatch, RootState} from "../../store";
+import useProducts from "../../hooks/useProducts.ts";
+import useBasket from "../../hooks/useBasket.ts";
+import useIsLogin from "../../hooks/useIsLogin.ts";
 
 interface BasketProps {
     onClose?: () => void;  // Приймаємо функцію закриття через пропс
@@ -24,15 +25,14 @@ const Basket: React.FC<BasketProps> = ({onClose}) => {
     const [toggleClear, setToggleClear] = useState<boolean>(false);
     const totalPrice = useSelector((state: RootState) => state.basket.totalPrice);
 
-    const [products, setProducts] = useState<IProductModel[]>([]);
+    const {isLogin} = useIsLogin();
+
+    const {BasketClear} = useBasket();
+
+    const {products} = useProducts();
     const [basket, setBasket] = useState<IBasketModel>({});
     const itemWord = getWordForm(Object.keys(basket).length, ['товар', 'товари', 'товарів']);
 
-    const loadProducts = async () => {
-        const res = await ProductServices.getAll();
-        console.log(res);
-        setProducts(res.data);
-    };
 
     const handleBasketUpdate = () => {
         const savedBasket = BasketService.getItems();
@@ -42,7 +42,6 @@ const Basket: React.FC<BasketProps> = ({onClose}) => {
     };
 
     useEffect(() => {
-        loadProducts();
         handleBasketUpdate();
         // setBasket(BasketService.getItems());
         window.addEventListener('basket-updated', handleBasketUpdate);
@@ -52,21 +51,9 @@ const Basket: React.FC<BasketProps> = ({onClose}) => {
         };
     }, []);
 
-    // Розрахунок загальної вартості замовлення та збереження її в Redux
-    // const calculateTotalPrice = () => {
-    //     const total = products.reduce((total, product) => {
-    //         const quantity = basket[product.id.toString()] || 0;
-    //         return total + (product.price - product.discount) * quantity;
-    //     }, 0);
-    //
-    //     // Оновлюємо загальну ціну в Redux
-    //     dispatch(setTotalPrice(total));
-    //
-    //     return total;
-    // };
-
     const clearBasket = () => {
-        BasketService.clearItems();
+        BasketClear();
+        window.dispatchEvent(new Event('basket-updated'));
         setBasket({}); // Очищаємо стан кошика вручну
         setToggleClear(!toggleClear); // Тригеримо оновлення через toggle
     }
@@ -122,7 +109,7 @@ const Basket: React.FC<BasketProps> = ({onClose}) => {
                             </div>
                         </div>
                     </div>
-                    <div className="flex w-[760px] flex-col gap-[20px] items-start shrink-0 flex-nowrap relative">
+                    <div className="flex w-[760px] max-h-[500px] flex-col gap-[20px] items-start shrink-0 flex-nowrap relative overflow-x-scroll">
 
                         {
                             Object.keys(basket).length === 0 ?
@@ -130,7 +117,6 @@ const Basket: React.FC<BasketProps> = ({onClose}) => {
                             // productsInBasket.map(product => (<BasketItem item={product}/>))
                             products.map(product => basket[product.id] > 0 ? <BasketItem item={product} key={product.id}/> : null)
                         }
-
                     </div>
 
                 </div>
@@ -189,6 +175,8 @@ const Basket: React.FC<BasketProps> = ({onClose}) => {
                     </div>
                     <div
                         className="flex w-[250px] flex-col gap-[20px] items-start self-stretch shrink-0 flex-nowrap relative">
+
+                        {isLogin ? (
                         <Link to={"order"}
                               className={`flex h-[50px] flex-col gap-[20px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#9cc319] rounded-[8px] border-none relative ${Object.keys(basket).length === 0 ? "pointer opacity-50 pointer-events-none" : ""}`}
                               onClick={onClose}>
@@ -197,6 +185,16 @@ const Basket: React.FC<BasketProps> = ({onClose}) => {
               Купити зараз
             </span>
                         </Link>
+                            ) :(
+                            <Link to={"/signin"}
+                                  className={`flex h-[50px] flex-col gap-[20px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#9cc319] rounded-[8px] border-none relative ${Object.keys(basket).length === 0 ? "pointer opacity-50 pointer-events-none" : ""}`}
+                                  onClick={onClose}>
+            <span
+                className="h-[15px] shrink-0 basis-auto font-['Inter'] text-[20px] font-medium leading-[15px] text-[#fff] relative text-left whitespace-nowrap">
+              Купити зараз
+            </span>
+                            </Link>
+                        )}
                         <button
                             className="flex h-[50px] pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] justify-center items-center self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[8px] border-solid border border-[#9cc319] relative pointer">
                             <div

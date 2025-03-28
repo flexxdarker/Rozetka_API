@@ -8,10 +8,10 @@ import {ProductServices} from "../../services/productService.ts";
 
 interface ProductCardListProps {
     productsProps ?: IProductModel[];
+    message?: string;
 }
 
-
-const ProductCardList: React.FC<ProductCardListProps> = ({productsProps}) => {
+const ProductCardList: React.FC<ProductCardListProps> = ({productsProps, message}) => {
 
     const [products,setProducts] = useState<IProductModel[] | undefined>(productsProps);
 
@@ -20,8 +20,6 @@ const ProductCardList: React.FC<ProductCardListProps> = ({productsProps}) => {
         console.log(res);
         setProducts(res.data);
     };
-
-
 
     useEffect(() => {
         if (productsProps === undefined) {
@@ -41,19 +39,20 @@ const ProductCardList: React.FC<ProductCardListProps> = ({productsProps}) => {
     }
 
     return (
-        <>
-
-            <Box sx={{ flexGrow: 1 }}>
-                <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-
+        <div className={"flex flex-col"}>
+            {message &&(
+            <div className={"flex justify-center w-full my-[4px] p-[100px] bg-[#fff]"}>
+                {message}
+            </div>
+                )}
+            <Box sx={{flexGrow: 1}}>
+                <Grid container spacing={{xs: 2, md: 3}} columns={{xs: 4, sm: 8, md: 12}}>
                     {
                         products.map(item => <ProductCard key={item.id} item={item}/>)
                     }
-
                 </Grid>
             </Box>
-
-        </>
+        </div>
     );
 };
 

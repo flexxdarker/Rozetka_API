@@ -10,3 +10,9 @@ export interface IFilterValueModel {
     filterId: number;
     filterName: string;
 }
+
+export interface IFilterCreateModel {
+    id?: number;
+    name: string;
+    filerValues: string[];
+}
