@@ -459,20 +459,33 @@ namespace BusinessLogic.Services
 
         public async Task<List<UserViewDto>> GetAllUsers()
         {
-            var query = userRepo.AsQueryable().Include(x => x.UserRoles).ThenInclude(ur => ur.Role);
+            var usersList = await userRepo.AsQueryable()
+                                          .Include(x => x.UserRoles)
+                                          .ThenInclude(ur => ur.Role)
+                                          .Include(x => x.Avatar)
+                                          .AsNoTracking()
+                                          .ToListAsync(); // Виконуємо запит до бази і отримуємо всіх користувачів
 
-            var users = await query.Select(x => new UserViewDto
+            var usersDto = new List<UserViewDto>();
+
+            foreach (var user in usersList)
             {
-                Id = x.Id,
-                FirstName = x.Name,
-                LastName = x.SurName,
-                Email = x.Email,
-                PhoneNumber = x.PhoneNumber,
-                Avatar = x.Avatar.Name,
-                BirthDate = x.Birthdate,
-                Roles = string.Join(", ", x.UserRoles.Select(ur => ur.Role.Name).ToList())
-            }).ToListAsync();
-            return users;
+                var roles = await userManager.GetRolesAsync(user); // Завантажуємо ролі окремо
+
+                usersDto.Add(new UserViewDto
+                {
+                    Id = user.Id,
+                    FirstName = user.Name,
+                    LastName = user.SurName,
+                    Email = user.Email,
+                    PhoneNumber = user.PhoneNumber,
+                    Avatar = user.Avatar?.Name, // Спрощена перевірка на null
+                    BirthDate = user.Birthdate,
+                    Roles = string.Join(", ", roles) // Перетворюємо список у рядок
+                });
+            } // Виконуємо SQL-запит один раз
+
+            return usersDto;
         }
 
         public async Task<bool> ChangeRole(string userId)
