@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-// import {Button, Card, Form, type FormProps, Input, message, Modal, Select, Space, Upload, UploadFile} from "antd";
 import {Button, Form, type FormProps, Input, message, Modal, Select, Upload, UploadFile} from "antd";
 import EditorTiny from "../other/EditorTiny.tsx";
 import {useParams} from "react-router-dom";
@@ -15,6 +14,7 @@ import useFilters from "../../hooks/useFilters.ts";
 import useCategories from "../../hooks/useCategories.ts";
 // import {CloseOutlined} from "@mui/icons-material";
 
+const KEY : string | undefined = import.meta.env.VITE_APP_TINYMCE_KEY;
 
 const ProductForm: React.FC = () => {
 
@@ -53,29 +53,47 @@ const ProductForm: React.FC = () => {
 
         //const imageFiles = values.imageFiles;
         if (editMode) {
-            // if (!values.price) {
-            //     values.price = parseFloat(values.price.toString().replace(".",","));
-            // }
-            //
-            // if (!values.discount) {
-            //     values.discount = parseFloat(values.discount.toString().replace(".",","));
-            // }
-            //values.imageFiles = values.imageFiles.originFileObj;//???????
-            const res = await ProductServices.edit({...values, description});
-            if (res.status == 200) {
-                message.success("Update");
-                navigate(-1);
+            // production
+            // development
+            //  if(import.meta.env.MODE === 'production') {
+             if(KEY === undefined) {
+                console.log("Success create: values ", {values});
+                const res = await ProductServices.edit(values);
+                if (res.status == 200) {
+                    message.success("Update");
+                    navigate(-1);
+                } else {
+                    message.warning("Warning");
+                }
             } else {
-                message.warning("Warning");
+                console.log("Success create:", {...values, description});
+                const res = await ProductServices.edit({...values, description});
+                if (res.status == 200) {
+                    message.success("Update");
+                    navigate(-1);
+                } else {
+                    message.warning("Warning");
+                }
             }
         } else {
-            //console.log("Success create:", {...values, description});
-            const res = await ProductServices.create({...values, description});
-            if (res.status == 200) {
-                message.success("Created");
-                navigate(-1);
+            if(KEY === undefined) {
+                console.log("Success create: values ", {values});
+                const res = await ProductServices.create(values);
+                if (res.status == 200) {
+                    message.success("Created");
+                    navigate(-1);
+                } else {
+                    message.warning("Warning");
+                }
             } else {
-                message.warning("Warning");
+                console.log("Success create:", {...values, description});
+                const res = await ProductServices.create({...values, description});
+                if (res.status == 200) {
+                    message.success("Created");
+                    navigate(-1);
+                } else {
+                    message.warning("Warning");
+                }
             }
         }// з додатковими даними редактора
     };
@@ -167,7 +185,7 @@ const ProductForm: React.FC = () => {
                 wrapperCol={{span: 18}}
                 name="login"
                 initialValues={{remember: true}}
-                style={{margin: "20px", width: "auto"}}
+                style={{margin: "20px", width: "auto", minWidth: "700px"}}
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
             >
@@ -214,6 +232,7 @@ const ProductForm: React.FC = () => {
                     {/*<Input placeholder="Discount" type={"number"}/>*/}
                     <Input type={"double"} placeholder='0,00'/>
                 </Form.Item>
+
 
 
                 <Form.Item name="imageFiles" label="Зображення" valuePropName="Image"
@@ -263,14 +282,22 @@ const ProductForm: React.FC = () => {
             </Form.Item>
                 {/*</Form.Item>*/}
 
+
+
+
                 <Form.Item wrapperCol={{span: 24}} name="description"
                            rules={[{required: true, message: 'Please input your description!'},
-                               {min: 50, message: 'description must be at least 50 characters long!'}]}>
+                               {min: 50, message: 'description must be min 50 characters long!'},
+                               {max: 5000, message: 'description must be max 5000 characters long!'}]}>
+                    {KEY === undefined ? (
+                        <Input.TextArea showCount allowClear autoSize={{ minRows: 10, maxRows: 100 }} />
+                    ) : (
                     <EditorTiny
                         //content={editMode && product !== null? product.description : ""}
                         initialValue={editMode && product !== null ? product.description : ""}
                         onEditorChange={handleEditorChange}
                     />
+                    )}
                 </Form.Item>
 
                 <Form.Item wrapperCol={{span: 24}}>

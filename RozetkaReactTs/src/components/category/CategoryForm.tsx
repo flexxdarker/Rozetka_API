@@ -120,7 +120,7 @@ const CategoryForm: React.FC = () => {
                 wrapperCol={{span: 18}}
                 name="login"
                 initialValues={{remember: true}}
-                style={{margin: "20px", width: "auto"}}
+                style={{margin: "20px", width: "auto", minWidth: "700px"}}
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
             >
