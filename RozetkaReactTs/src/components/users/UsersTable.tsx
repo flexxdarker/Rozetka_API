@@ -94,7 +94,7 @@ const UsersTable: React.FC = () => {
             key: "avatar",
             render: (record: string) => {
                 const imageUrl = `${uploadings + "200_" + record}`;
-                return <img src={imageUrl} alt="no image" className={"w-[100px] h-[100px]"}/>;
+                return <img src={imageUrl} alt="no image" className={"w-[100px] h-[100px] object-contain"}/>;
             }
         },
     ])

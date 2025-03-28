@@ -12,6 +12,7 @@ interface IFilterHotelsSectionProps {
     maxPriceInit: number;
     onChange?: (minPrice: number, maxPrice: number) => void;
     onChangeFilters?: (newFilters: IFilterModel[]) => void;
+    isReset: boolean;
 }
 
 const FiltersProducts:React.FC<IFilterHotelsSectionProps> = (props) => {
@@ -48,6 +49,10 @@ const FiltersProducts:React.FC<IFilterHotelsSectionProps> = (props) => {
             return newState;
         });
     };
+
+    useEffect(() => {
+        setSelectedValues(new Map());
+    }, [props.isReset]);
 
     // Функція для обчислення відфільтрованих значень
     const getFilteredData = (): IFilterModel[] => {

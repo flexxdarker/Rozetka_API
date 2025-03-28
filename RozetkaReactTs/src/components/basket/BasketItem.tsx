@@ -77,7 +77,7 @@ const BasketItem = (props: { item: IProductModel, className?: string }) => {
                 <div
                     className={clsx("flex pt-[20px] pr-[20px] pb-[20px] pl-[20px] gap-[28px] items-start self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[8px]", className)}>
                     <img
-                        className="w-[120px] h-[120px] shrink-0"
+                        className="w-[120px] h-[120px] shrink-0 object-contain"
                         src={`${uploadings + "400_" + item.images![0]?.name}`} alt="no image"/>
                     <div
                         className="flex flex-col gap-[32px] items-start grow shrink-0 basis-0 flex-nowrap">

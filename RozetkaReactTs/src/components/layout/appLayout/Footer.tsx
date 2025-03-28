@@ -1,6 +1,7 @@
 import React from 'react';
 import Box from "@mui/material/Box";
 import {Link} from "react-router-dom";
+import logo from"../../../assets/icons/Logo_SVG_white 1.svg"
 
 const Footer: React.FC = () => {
 
@@ -10,8 +11,10 @@ const Footer: React.FC = () => {
                 className=" main-container flex h-[300px] gap-[50px] items-center flex-nowrap mx-auto my-0  justify-center">
                 <div
                     className="flex w-[320px] pt-0 pr-0 pb-[20px] pl-0 flex-col gap-[40px] justify-center items-start shrink-0 flex-nowrap">
-                    <div
-                        className="w-[120px] h-[76.802px] shrink-0 bg-[url(https://static.codia.ai/image/2025-03-13/db3e7727-229f-465b-9a9c-30179f7961a8.svg)] bg-cover bg-no-repeat overflow-hidden"/>
+                    <Link to={"/"}>
+
+                        <img src={logo} className={"w-[120px] h-[76.802px] shrink-0 overflow-hidden"}/>
+                    </Link>
                     <div
                         className="flex pt-[10px] pr-[10px] pb-[10px] pl-[10px] flex-col gap-[26px] items-start self-stretch shrink-0 flex-nowrap">
             <span
@@ -117,34 +120,38 @@ const Footer: React.FC = () => {
                     Сервіси
                 </span>
                         </div>
-                        <div
+
+                        <Link to={"/bonus-account"}
                             className="flex pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] items-center self-stretch shrink-0 flex-nowrap">
                 <span
                     className="h-[24px] shrink-0 basis-auto font-['Inter'] text-[20px] font-normal leading-[24px] text-[#fff] text-left whitespace-nowrap">
                     Бонусний рахунок
                 </span>
-                        </div>
-                        <div
+                        </Link>
+
+                        <Link to={"/gift-certificates"}
                             className="flex pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] items-center self-stretch shrink-0 flex-nowrap">
                 <span
                     className="h-[24px] shrink-0 basis-auto font-['Inter'] text-[20px] font-normal leading-[24px] text-[#fff] text-left whitespace-nowrap">
                     Подарункові сертифікати
                 </span>
-                        </div>
-                        <div
+                        </Link>
+
+                        <Link to={"/cooperation"}
                             className="flex pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] items-center self-stretch shrink-0 flex-nowrap">
                 <span
                     className="h-[24px] shrink-0 basis-auto font-['Inter'] text-[20px] font-normal leading-[24px] text-[#fff] text-left whitespace-nowrap">
                     Співпраця з нами
                 </span>
-                        </div>
-                        <div
+                        </Link>
+
+                        <Link to={"/service-centers"}
                             className="flex pt-[10px] pr-[10px] pb-[10px] pl-[10px] gap-[10px] items-center self-stretch shrink-0 flex-nowrap">
                 <span
                     className="h-[24px] shrink-0 basis-auto font-['Inter'] text-[20px] font-normal leading-[24px] text-[#fff] text-left whitespace-nowrap">
                     Сервісні центри
                 </span>
-                        </div>
+                        </Link>
                     </div>
                 </div>
             </div>

@@ -52,6 +52,22 @@ const OrderPage: React.FC = () => {
         }
     }
 
+    useEffect(() => {
+        BasketService.clearItems();
+        console.log("items", itemsFromBasketApi);
+        itemsFromBasketApi.forEach(item => {
+            item.items.forEach(item => {
+                if (item.id && item.quantity) {
+                    BasketService.addId(item.id, item.quantity);
+                }
+            });
+        });
+        const savedBasket = BasketService.getItems();
+        if (savedBasket) {
+            setBasket(savedBasket);
+        }
+    }, [itemsFromBasketApi]);
+
     const [userName, setUserName] = useState<string | null>(null);
     const [userSurName, setUserSurName] = useState<string | null>(null);
     const [userPhoneNumber, setUserPhoneNumber] = useState<string | null>(null);
@@ -77,24 +93,7 @@ const OrderPage: React.FC = () => {
         }
     }
 
-    useEffect(() => {
-        BasketService.clearItems();
 
-        console.log("items", itemsFromBasketApi);
-
-        itemsFromBasketApi.forEach(item => {
-            item.items.forEach(item => {
-                if (item.id && item.quantity) {
-                    BasketService.addId(item.id, item.quantity);
-                }
-            });
-        });
-
-        const savedBasket = BasketService.getItems();
-        if (savedBasket) {
-            setBasket(savedBasket);
-        }
-    }, [itemsFromBasketApi]);
 
     useEffect(() => {
         // const payload = TokenService.getAccessTokenPayload();

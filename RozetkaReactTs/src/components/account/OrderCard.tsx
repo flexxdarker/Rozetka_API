@@ -5,7 +5,7 @@ import {OrderServices} from "../../services/orderServices.ts";
 import OrderCardItem from "./OrderCardItem.tsx";
 import dayjs from "dayjs";
 //@ts-ignore
-import OrderCardDelivery from "./OrderCardDelivery.tsx";
+//import OrderCardDelivery from "./OrderCardDelivery.tsx";
 
 interface OrderItemProps {
     item: IOrderInfoItemsModel;
@@ -89,7 +89,7 @@ const OrderCard: React.FC<OrderItemProps> = ({item}) => {
                                 <img
                                     src={`${uploadings + "200_" + item.imagePath}`}
                                     alt={item.imagePath}
-                                    className="w-[120px] h-[120px] shrink-0"
+                                    className="w-[120px] h-[120px] shrink-0 object-contain"
                                     key={index}
                                 />
                             ))

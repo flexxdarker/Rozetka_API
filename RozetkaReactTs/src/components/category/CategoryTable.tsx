@@ -37,13 +37,17 @@ const CategoryTable: React.FC = () => {
             dataIndex: "image",
             key: "image",
             render: (item:string) =>
-        (
-            <img src={`${uploadings + "200_" + item}`} alt="no image" width="100px"/>
-        )
-        },
-        {
-            title: "Action",
-            key: "action",
+                (
+                    <div className="flex justify-center items-center">
+                        <img src={`${uploadings + "200_" + item}`} alt="no image" className="object-contain w-[100px] h-[100px]"/>
+                    </div>
+    )
+},
+    {
+        title: "Action",
+            key
+    :
+        "action",
             // render: () => <a>Delete</a>
             render: (record: ICategoryModel) => (
                 <Space size="middle">

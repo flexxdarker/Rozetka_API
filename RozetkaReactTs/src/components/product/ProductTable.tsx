@@ -197,7 +197,11 @@ const ProductTable: React.FC = () => {
                 key: "images",
                 render: (record: IImageModel[]) => {
                     const imageUrl = `${uploadings + "200_" + record[0]?.name}`;
-                    return <img src={imageUrl} alt="no image" />;
+                    return (
+                        <div className="flex justify-center items-center">
+                            <img src={imageUrl} alt="no image" className="object-contain" />
+                        </div>
+                    );
                 }
             },
             {
@@ -259,15 +263,14 @@ const ProductTable: React.FC = () => {
                     expandedRowRender: (record) => {
                         // Якщо description існує, не є порожнім і не дорівнює "undefined", відобразимо його
                         if (record.description && record.description.trim().length > 0 && record.description !== "undefined") {
-                            return <p style={{ margin: 0 }}>{record.description}</p>;
+                            return <div
+                                dangerouslySetInnerHTML={{__html: record?.description || '<p><em>Description is not provided yet...</em></p>'}}/>
                         }
-                        // Якщо description відсутній або порожній, нічого не передаватимемо
                         else {
                             return null;
                         }
                     },
                     rowExpandable: (record: IProductModel) => {
-                        // Повертаємо лише булеве значення
                         return !!(record.description && record.description !== "undefined" && record.description.trim().length > 0);
                     },
                 }}

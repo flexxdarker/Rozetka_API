@@ -66,15 +66,15 @@ const OrdersTable: React.FC = () => {
                     // <div>{dayjs(text).format('YYYY-MM-DD')}</div>
                 }
             },
-            {
-                title: "Image user",
-                dataIndex: "imageUser",
-                key: "imageUser",
-                render: (record: string) => {
-                    const imageUrl = `${uploadings + "200_" + record}`;
-                    return <img src={imageUrl} alt="no image" className={"w-[100px] h-[100px]"}/>;
-                }
-            },
+            // {
+            //     title: "Image user",
+            //     dataIndex: "imageUser",
+            //     key: "imageUser",
+            //     render: (record: string) => {
+            //         const imageUrl = `${uploadings + "200_" + record}`;
+            //         return <img src={imageUrl} alt="no image" className={"w-[100px] h-[100px] object-contain"}/>;
+            //     }
+            // },
             {
                 title: "Change status",
                 key: "changeStatus",

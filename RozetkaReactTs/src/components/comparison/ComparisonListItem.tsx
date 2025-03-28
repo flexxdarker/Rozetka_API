@@ -50,9 +50,19 @@ const ComparisonListItem: React.FC<{ products: IProductModel[] }> = ({products})
                     )}
             </div>
             <div
-                className="flex pt-[20px] pr-[40px] pb-[20px] pl-[40px] gap-[28px] items-start self-stretch shrink-0 flex-nowrap bg-[#fff]">
+                className="flex pt-[20px] pr-[40px] pb-[20px] pl-[40px] gap-[28px] items-start w-full shrink-0 flex-nowrap bg-[#fff] overflow-x-auto">
                 {
-                    products.map(product => <img src={`${uploadings + "200_" + product.images![0]?.name}`} alt={"no image"} key={product.id}/>)
+                    products.map(product =>
+
+                        (
+                            <div className="flex justify-center items-center h-[200px] w-[200px]" key={product.id}>
+                                <img
+                                    src={`${uploadings + "200_" + product.images![0]?.name}`}
+                                    alt="no image"
+                                    className="object-contain"
+                                />
+                            </div>
+                        ))
                 }
             </div>
         </div>

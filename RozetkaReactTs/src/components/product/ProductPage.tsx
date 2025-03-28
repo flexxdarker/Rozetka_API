@@ -64,11 +64,6 @@ const ProductPage: React.FC = () => {
         }
     }
 
-    const removeHTMLTags = (text: string) => {
-        return text.replace(/<[^>]+>/g, "");
-    };
-
-
     const images: string[] = Array.isArray(product?.images)
         ? product.images.map(image => `${uploadings}` + "1200_" + image.name)
         : [];
@@ -347,7 +342,7 @@ const ProductPage: React.FC = () => {
                                                 </span>
                                                         <span
                                                             className="font-['Inter'] text-[14px] font-medium leading-[16.8px] text-[#9cc319] text-center">
-                                                від 1335 грн в місяць
+                                                від {formatPrice((product.price - product.discount!)/12)} грн в місяць
                                                 </span>
                                                     </div>
                                                 </div>
@@ -475,7 +470,8 @@ const ProductPage: React.FC = () => {
 
 
                     <div className={"flex bg-[#fff] p-[40px] w-auto"}>
-                        {removeHTMLTags(product.description)}
+                        <div
+                            dangerouslySetInnerHTML={{__html: product?.description || '<p><em>Description is not provided yet...</em></p>'}}/>
                     </div>
                 </div>
             }

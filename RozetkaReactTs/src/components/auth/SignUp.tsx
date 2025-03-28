@@ -18,6 +18,7 @@ import utc from 'dayjs/plugin/utc';
 import dayjs from 'dayjs';
 import {TokenService} from "../../services/tokenService.ts";
 import {RcFile, UploadChangeParam} from "antd/es/upload";
+import {toast} from "react-toastify";
 
 dayjs.extend(utc);
 
@@ -51,23 +52,25 @@ const SignUp: React.FC = () => {
 
 
     const onFinish: FormProps<IRegisterModel>['onFinish'] = async (values: IRegisterModel) => {
-        console.log('Form values:', {...values}); // Обробка відправки форми з додатковими даними редактора
-
-
         const selectedDate = values.birthdate;
         const utcDate = dayjs(selectedDate).utc().format()
-
-
-        console.log(utcDate)
         console.log('Form values:111', {...values, birthdate: utcDate});
 
         const res = await AccountsService.register({...values, birthdate: utcDate});
-        TokenService.save(res.data);
-        if (res.status == 200) {
-            message.success("register success");
-            navigate('/');
-        } else {
-            message.warning("Warning");
+        if(res.status === 200 && res.data.accessToken != null) {
+            TokenService.save(res.data);
+            if (res.status == 200) {
+                message.success("register success");
+                navigate('/');
+            } else {
+                message.warning("Warning");
+            }
+        } else{
+            toast('Помилка користувача', {
+                position: 'bottom-right',
+                autoClose: 4000, // Auto close after 3 seconds
+                closeButton: true,  // Add close button to the toast
+            });
         }
     };
 

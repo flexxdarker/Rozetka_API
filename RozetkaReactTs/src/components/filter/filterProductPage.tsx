@@ -97,13 +97,27 @@ const FilterProductPage: React.FC = () => {
             //console.log('Filtered Data:', filteredProducts); // Логування фільтрованих даних
         }, [filtersSelected,categoryId,minPrice, maxPrice]); // Запуск кожного разу, коли filtersSelected змінюється
 
+const [isReset, setIsReset] = useState<boolean>(false);
+
+    const reset = () => {
+        setIsReset(!isReset);
+        priceValue(Math.min(...products.map(product => product.price)),Math.max(...products.map(product => product.price)));
+        //setMinPrice(Math.min(...products.map(product => product.price)));
+        //setMaxPrice(Math.max(...products.map(product => product.price)));
+        setProductsFilterList(products);
+        setFiltersSelected([]);
+        setCategoryId(null);
+
+    }
 
 return (
     <>
+        <button type={"button"} onClick={reset}>reset</button>
+
         <div className="flex felx-col gap-[4px]">
             <div className="flex">
                 <FiltersProducts minPriceInit={minPriceInit} maxPriceInit={maxPriceInit} onChange={priceValue}
-                                 onChangeFilters={handleFiltersChange}/>
+                                 onChangeFilters={handleFiltersChange} isReset={isReset}/>
             </div>
 
             <div className="flex flex-col gap-[4px]">

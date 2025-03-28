@@ -30,7 +30,7 @@ const ComparisonCard: React.FC<ProductProps> = ({product}) => {
             </div>
             <div className="flex flex-col gap-[24px] items-center self-stretch shrink-0 flex-nowrap">
                 <Link to={`/product-page/${product.id}`} className="w-full max-w-[220px] h-[220px]">
-                    <img src={`${uploadings + "400_" + product.images![0]?.name}`} alt="no image"/>
+                    <img src={`${uploadings + "400_" + product.images![0]?.name}`} alt="no image" className="object-contain"/>
                 </Link>
 
                 <div className="flex flex-col gap-[8px] items-start self-stretch shrink-0 flex-nowrap">

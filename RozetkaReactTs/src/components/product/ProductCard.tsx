@@ -138,8 +138,8 @@ const ProductCard: React.FC<ItemProps> = ({item, forComparison}) => {
                 <Link to={`/product-page/${item.id}`}>
                     <div
                         //className={`w-[220px] h-[220px] shrink-0 bg-[url(${uploadings + "400_" + item.images[0]?.name})] bg-cover bg-no-repeat `}>
-                        className={`w-[220px] h-[220px] shrink-0`}>
-                        <img src={`${uploadings + "400_" + item.images![0]?.name}`} alt="no image"/>
+                        className={`w-[220px] h-[220px] shrink-0 w-fit h-fit`}>
+                        <img src={`${uploadings + "400_" + item.images![0]?.name}`} alt="no image" className={"object-contain w-[220px] h-[220px]"}/>
                     </div>
                 </Link>
                 <div className="flex flex-col gap-[8px] items-start self-stretch shrink-0 flex-nowrap">

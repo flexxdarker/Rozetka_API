@@ -100,6 +100,7 @@ export const AccountsService = {
 
     logout() {
     // logout(refreshToken: string) {
+        BasketService.clearItems();
         TokenService.clear();
         //return api.post("logout", { refreshToken: refreshToken});
     },
