@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Form, type FormProps, Input, message, Modal, Select, Upload, UploadFile} from "antd";
-import EditorTiny from "../other/EditorTiny.tsx";
+//import EditorTiny from "../other/EditorTiny.tsx";
 import {useParams} from "react-router-dom";
 import {ProductServices} from "../../services/productService.ts";
 import {ICreateProductModel, IProductModel} from "../../models/productsModel.ts";
@@ -14,7 +14,7 @@ import useFilters from "../../hooks/useFilters.ts";
 import useCategories from "../../hooks/useCategories.ts";
 // import {CloseOutlined} from "@mui/icons-material";
 
-const KEY : string | undefined = import.meta.env.VITE_APP_TINYMCE_KEY;
+//const KEY : string | undefined = import.meta.env.VITE_APP_TINYMCE_KEY;
 
 const ProductForm: React.FC = () => {
 
@@ -33,12 +33,12 @@ const ProductForm: React.FC = () => {
     const [form] = Form.useForm();
     const navigate = useNavigate();
 
-    const [description, setEditorContent] = useState('');
+    //const [description, setEditorContent] = useState('');
 
-    const handleEditorChange = (content: string) => {
-        setEditorContent(content);
-        form.setFieldsValue({ description: content });
-    };
+    // const handleEditorChange = (content: string) => {
+    //     setEditorContent(content);
+    //     form.setFieldsValue({ description: content });
+    // };
 
     const [previewOpen, setPreviewOpen] = useState<boolean>(false);
     const [previewImage, setPreviewImage] = useState('');
@@ -56,7 +56,10 @@ const ProductForm: React.FC = () => {
             // production
             // development
             //  if(import.meta.env.MODE === 'production') {
-             if(KEY === undefined) {
+
+             //if(KEY === undefined) {
+
+
                 console.log("Success create: values ", {values});
                 const res = await ProductServices.edit(values);
                 if (res.status == 200) {
@@ -65,18 +68,21 @@ const ProductForm: React.FC = () => {
                 } else {
                     message.warning("Warning");
                 }
-            } else {
-                console.log("Success create:", {...values, description});
-                const res = await ProductServices.edit({...values, description});
-                if (res.status == 200) {
-                    message.success("Update");
-                    navigate(-1);
-                } else {
-                    message.warning("Warning");
-                }
-            }
+
+            // } else {
+            //
+            //
+            //     console.log("Success create:", {...values, description});
+            //     const res = await ProductServices.edit({...values, description});
+            //     if (res.status == 200) {
+            //         message.success("Update");
+            //         navigate(-1);
+            //     } else {
+            //         message.warning("Warning");
+            //     }
+            //  }
         } else {
-            if(KEY === undefined) {
+             //if(KEY === /undefined) {
                 console.log("Success create: values ", {values});
                 const res = await ProductServices.create(values);
                 if (res.status == 200) {
@@ -85,16 +91,16 @@ const ProductForm: React.FC = () => {
                 } else {
                     message.warning("Warning");
                 }
-            } else {
-                console.log("Success create:", {...values, description});
-                const res = await ProductServices.create({...values, description});
-                if (res.status == 200) {
-                    message.success("Created");
-                    navigate(-1);
-                } else {
-                    message.warning("Warning");
-                }
-            }
+            // } else {
+            //     console.log("Success create:", {...values, description});
+            //     const res = await ProductServices.create({...values, description});
+            //     if (res.status == 200) {
+            //         message.success("Created");
+            //         navigate(-1);
+            //     } else {
+            //         message.warning("Warning");
+            //     }
+            // }
         }// з додатковими даними редактора
     };
 
@@ -113,7 +119,7 @@ const ProductForm: React.FC = () => {
             const res = await ProductServices.getById(params.id);
             if (res.status === 200) {
                 setProduct(res.data);
-                setEditorContent(res.data.description);
+                //setEditorContent(res.data.description);
                 form.setFieldsValue(res.data);
             } else {
                 message.warning("Warning");
@@ -289,15 +295,15 @@ const ProductForm: React.FC = () => {
                            rules={[{required: true, message: 'Please input your description!'},
                                {min: 50, message: 'description must be min 50 characters long!'},
                                {max: 5000, message: 'description must be max 5000 characters long!'}]}>
-                    {KEY === undefined ? (
+                    {/*{KEY === undefined ? (*/}
                         <Input.TextArea showCount allowClear autoSize={{ minRows: 10, maxRows: 100 }} />
-                    ) : (
-                    <EditorTiny
-                        //content={editMode && product !== null? product.description : ""}
-                        initialValue={editMode && product !== null ? product.description : ""}
-                        onEditorChange={handleEditorChange}
-                    />
-                    )}
+                    {/*) : (*/}
+                    {/*<EditorTiny*/}
+                    {/*    //content={editMode && product !== null? product.description : ""}*/}
+                    {/*    initialValue={editMode && product !== null ? product.description : ""}*/}
+                    {/*    onEditorChange={handleEditorChange}*/}
+                    {/*/>*/}
+                    {/*)}*/}
                 </Form.Item>
 
                 <Form.Item wrapperCol={{span: 24}}>
