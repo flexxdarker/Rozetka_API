@@ -7,6 +7,7 @@ using BusinessLogic.Specifications;
 using DataAccess.Repostories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Rozetka_Api.Controllers
@@ -17,21 +18,31 @@ namespace Rozetka_Api.Controllers
     public class OrderController : ControllerBase
     {
         private readonly IOrderService _orderservice;
+        private readonly UserManager<User> roleManager;
 
-        public OrderController(IOrderService order)
+        public OrderController(IOrderService order, UserManager<User> roleManager)
         {
             _orderservice = order;
+            this.roleManager = roleManager;
         }
 
-        [Authorize(Roles = "admin")]
+        [Authorize]
         [HttpGet("OrderInfo")]
         public async Task<IActionResult> GetAllOrders([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 2)
         {
             string userId = User.Claims.ToList()[0].Value.ToString();
+            var role = await roleManager.GetRolesAsync(await roleManager.FindByIdAsync(userId));
+            if(role[0] != "admin")
+            {
+                var orders = await _orderservice.GetInfarmationAboutOrder(userId, pageNumber, pageSize);
+                return Ok(orders);
+            }
+            else
+            {
+                var orders = await _orderservice.GetAllOrders();
 
-            var orders = await _orderservice.GetInfarmationAboutOrder(userId, pageNumber, pageSize);
-         
-            return Ok(orders);
+                return Ok(orders);
+            }
         }
 
         [Authorize]
