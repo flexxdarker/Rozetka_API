@@ -185,7 +185,7 @@ const ProductForm: React.FC = () => {
                 wrapperCol={{span: 18}}
                 name="login"
                 initialValues={{remember: true}}
-                style={{margin: "20px", width: "auto", minWidth: "700px"}}
+                style={{margin: "20px", width: "auto", minWidth: "800px"}}
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
             >

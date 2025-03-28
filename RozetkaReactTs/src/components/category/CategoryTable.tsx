@@ -124,13 +124,14 @@ const CategoryTable: React.FC = () => {
 
     return (
         <>
-            <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+            <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}} className={"p-[10px]"}>
                 <Link to="create">
                     <Button variant="contained" style={{maxHeight: "25px"}}>Add</Button>
                 </Link>
             </div>
 
             <Table
+                className={"min-w-[800px]"}
                 bordered={true}
                 columns={columns}
                 dataSource={categories

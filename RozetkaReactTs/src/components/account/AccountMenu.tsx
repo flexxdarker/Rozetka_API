@@ -18,11 +18,8 @@ const AccountMenu: React.FC = () => {
 
     return (
         <>
-            <div  className="flex flex-col gap-[4px] w-[full]">
-
-
+            <div  className="flex flex-col gap-[4px] w-[full] min-w-[350px]">
                 <AccountMenuUserLabel/>
-
                 <div
                     className="main-container flex w-[full]  flex-0 pt-[32px] pr-0 pb-[32px] pl-0 flex-col gap-[16px] items-start flex-nowrap bg-[#fff] my-0 rounded-[8px]">
                     <Link to="/account/orders"

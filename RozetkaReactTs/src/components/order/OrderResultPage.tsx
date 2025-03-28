@@ -107,6 +107,7 @@ const OrderResultPage: React.FC = () => {
                             </div>
                         </div>
 
+                        {recipient.recipientPayType &&(
                         <div className="flex gap-[60px] items-center self-stretch shrink-0 flex-nowrap">
                             <div
                                 className="flex w-[180px] pt-[10px] pr-0 pb-[10px] pl-0 gap-[10px] items-center shrink-0 flex-nowrap">
@@ -123,7 +124,9 @@ const OrderResultPage: React.FC = () => {
                     </span>
                             </div>
                         </div>
+                            )}
 
+                        {recipient.recipientDeliveryType && (
                         <div className="flex gap-[60px] items-center self-stretch shrink-0 flex-nowrap">
                             <div
                                 className="flex w-[180px] pt-[10px] pr-0 pb-[10px] pl-0 gap-[10px] items-center shrink-0 flex-nowrap">
@@ -140,6 +143,10 @@ const OrderResultPage: React.FC = () => {
                     </span>
                             </div>
                         </div>
+                            )}
+
+
+                        { (recipient.recipientCity || recipient.recipientStreet || recipient.recipientHouse || recipient.recipientFlat) && (
                         <div className="flex gap-[60px] items-start self-stretch shrink-0 flex-nowrap">
                             <div
                                 className="flex w-[180px] pt-[10px] pr-0 pb-[10px] pl-0 gap-[10px] items-center shrink-0 flex-nowrap">
@@ -152,11 +159,13 @@ const OrderResultPage: React.FC = () => {
                                 className="flex p-[10px] gap-[10px] items-center grow shrink-0 basis-0 flex-nowrap">
                     <span
                         className="h-[10px] w-full grow shrink-0 basis-0 font-['Inter'] text-[14px] font-medium leading-[10px] text-[#3b3b3b] text-left whitespace-nowrap">
-                        {recipient.recipientCity}, {recipient.recipientStreet}, буд. {recipient.recipientHouse}, кв. {recipient.recipientFlat}
+                        {/*{recipient.recipientCity}, {recipient.recipientStreet}, буд. {recipient.recipientHouse}, кв. {recipient.recipientFlat}*/}
                         {/*м.Рівне, 6 Київська, 44 (біля кафе Мономах)*/}
+                        {recipient.recipientCity ? recipient.recipientCity : '-'}, {recipient.recipientStreet ? recipient.recipientStreet : '-'}, буд. {recipient.recipientHouse ? recipient.recipientHouse : '-'}, кв. {recipient.recipientFlat ? recipient.recipientFlat : '-'}
                     </span>
                             </div>
                         </div>
+                            )}
 
                         <div className="flex gap-[60px] items-start self-stretch shrink-0 flex-nowrap">
                             <div

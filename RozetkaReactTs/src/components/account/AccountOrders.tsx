@@ -36,7 +36,7 @@ const AccountOrders: React.FC = () => {
 
                 {ordersUser?.items && ordersUser.items.length > 0 ?
                     (ordersUser.items.map(item=>  <OrderCard item={item} key={item.id}/>)) : (
-                        <Link to={"/"} className={"flex bg-[#fff] w-full p-[20px] rounded-[4px] items-center justify-center"}>
+                        <Link to={"/"} className={"flex bg-[#fff] w-full p-[20px] w-[1160px] h-[82px] rounded-[4px] items-center justify-center"}>
                             Зробіть ваше перше замовлення!!!
                         </Link>
                     )}
