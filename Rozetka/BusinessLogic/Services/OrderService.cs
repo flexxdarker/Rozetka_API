@@ -101,6 +101,7 @@ namespace BusinessLogic.Services
                         Quantity = y.Count,
                         ImagePath = y.Advert.Images.FirstOrDefault().Name
                     }).ToList(),
+                    CreateTime = x.DateCrated,
                     TotalPrice = x.Amount,
                 });
             var totalOrders = orderItems.Count();
@@ -139,7 +140,8 @@ namespace BusinessLogic.Services
                                 ImagePath = op.Advert.Images.FirstOrDefault().Name
                             }
                         },
-                        
+                        CreateTime = op.Order.DateCrated,
+                        Amount = op.Order.Amount
                     }));
 
 

@@ -55,6 +55,12 @@ namespace BusinessLogic.Services
             return mapper.Map<IEnumerable<AdvertPrintDto>>(await advertRepo.GetListBySpec(new AdvertSpecs.GetAll()));
         }
 
+        public async Task<IEnumerable<AdvertPrintDto>> GetAllAsync(int catgoryId)
+        {
+            return mapper.Map<IEnumerable<AdvertPrintDto>>(await advertRepo.GetListBySpec(new AdvertSpecs.GetAllByCategoryId(catgoryId)));
+
+        }
+
         public async Task<AdvertPrintDto> GetByIdAsync(int id)
         {
             return mapper.Map<AdvertPrintDto>(await advertRepo.GetItemBySpec(new  AdvertSpecs.GetById(id)));

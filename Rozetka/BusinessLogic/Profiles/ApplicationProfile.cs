@@ -75,7 +75,7 @@ namespace BusinessLogic.Profiles
 
             CreateMap<Filter, FilterDto>()
                 .ForMember(x => x.Values, opt =>
-                opt.MapFrom(z => z.Values.Select(y => new FilterValueDto { Id = y.Id, FilterId = y.FilterId, Value = y.Value })
+                opt.MapFrom(z => z.Values.Select(y => new FilterValueDto { Id = y.Id, FilterId = y.FilterId, Value = y.Value, FilterName = y.Filter.Name })
                 .ToArray()));
 
             CreateMap<FilterValue, FilterValueDto>()

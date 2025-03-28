@@ -263,6 +263,7 @@ namespace BusinessLogic.Services
                             user.Avatar = avatar;
                         }
 
+
                         // Зберегти нового користувача
                         var createResult = await userManager.CreateAsync(user);
                         if (!createResult.Succeeded)
@@ -271,6 +272,7 @@ namespace BusinessLogic.Services
                         }
                         else
                         {
+                            var resultRole = await userManager.AddToRoleAsync(user, Roles.User);
                             var roles = await userManager.GetRolesAsync(user);
                             var avatar = avatarRepository.AsQueryable().FirstOrDefault(x => x.UserId == user.Id)?.Name;
                             var userTokenInfo = new UserTokenInfo
@@ -361,6 +363,7 @@ namespace BusinessLogic.Services
             user.Name = editUserDto.FirstName;
             user.SurName = editUserDto.LastName;
             user.Email = editUserDto.Email;
+            user.PhoneNumber = editUserDto.PhoneNumber;
 
             // Handle Avatar update
             if (editUserDto.Avatar != null)
@@ -470,6 +473,42 @@ namespace BusinessLogic.Services
                 Roles = string.Join(", ", x.UserRoles.Select(ur => ur.Role.Name).ToList())
             }).ToListAsync();
             return users;
+        }
+
+        public async Task<bool> ChangeRole(string userId)
+        {
+            var user = await userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                throw new ArgumentException("Користувача не знайдено");
+            }
+
+            // Отримуємо всі ролі користувача
+            var currentRoles = await userManager.GetRolesAsync(user);
+
+            // Перевіряємо, чи користувач має роль "admin" чи "user"
+            bool hasAdminRole = currentRoles.Contains("admin");
+            bool hasUserRole = currentRoles.Contains("user");
+
+            // Якщо користувач має роль "admin", знімаємо її та додаємо роль "user"
+            if (hasAdminRole)
+            {
+                await userManager.RemoveFromRoleAsync(user, Roles.Admin);
+                await userManager.AddToRoleAsync(user, Roles.User);
+            }
+            // Якщо користувач має роль "user", знімаємо її та додаємо роль "admin"
+            else if (hasUserRole)
+            {
+                await userManager.RemoveFromRoleAsync(user, Roles.User);
+                await userManager.AddToRoleAsync(user, Roles.Admin);
+            }
+            else
+            {
+                // Якщо користувач не має жодної з цих ролей, додаємо роль "user" за замовчуванням
+                await userManager.AddToRoleAsync(user, Roles.User);
+            }
+
+            return true;
         }
     }
 }

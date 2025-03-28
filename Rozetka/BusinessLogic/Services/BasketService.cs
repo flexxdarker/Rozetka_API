@@ -157,7 +157,10 @@ namespace BusinessLogic.Services
                             Name = x.Advert.Title,
                             Price = x.Advert.Price,
                             Quantity = x.Count,
-                            ImagePath = x.ImagePath
+                            ImagePath = x.ImagePath,
+                            Discount = x.Advert.Discount,
+                            Category = x.Advert.Category.Name,
+                            Description = x.Advert.Description
                         }
                     }
                 }).ToList();
@@ -184,18 +187,20 @@ namespace BusinessLogic.Services
             }
         }
 
-        public async Task PushOrder(string userId/*, List<OrderItemDto> orderItems*/)
+        public async Task<OrderInformationDto> PushOrder(string userId/*, List<OrderItemDto> orderItems*/)
         {   
             var orderItems = await GetBasketItems(userId);
 
             var newStatus = await _status.AsQueryable().Where(x => x.Id == 1).FirstOrDefaultAsync();
 
             decimal amount = orderItems.Sum(item => item.Items.Sum(x => x.Price * x.Quantity));
+            decimal dicount = orderItems.Sum(item=>item.Items.Sum(x=>x.Discount * x.Quantity));
+            decimal totalAmount = amount - dicount;
 
             var order = new Order
             {
                 UserId = userId,
-                Amount = amount,
+                Amount = totalAmount,
                 DateCrated = DateTime.UtcNow,
                 OrderStatusId = newStatus.Id
             };
@@ -228,6 +233,24 @@ namespace BusinessLogic.Services
             }
 
              await _basket.SaveAsync();
+
+
+            return new OrderInformationDto
+            {
+                Id = order.Id,
+                Status = order.OrderStatus.Status,
+                OrderItems = order.OrderAdverts.Select(y => new OrderItemInfo
+                {
+                    Id = y.Advert.Id,
+                    Name = y.Advert.Title,
+                    Price = y.Price,
+                    Quantity = y.Count,
+                    ImagePath = y.Advert.Images.FirstOrDefault().Name,
+                    Discount = y.Advert.Discount
+                }).ToList(),
+                CreateTime = order.DateCrated,
+                TotalPrice = order.Amount,
+            };
         }
 
         public async Task PushOrderWhenLogin(string userId, List<OrderItemDto> orderItems)
@@ -323,5 +346,20 @@ namespace BusinessLogic.Services
             await _basket.SaveAsync();
         }
 
+        public async Task ClearBasket(string userId)
+        {
+            var items = await GetBasketItems(userId);
+            if(items == null)
+            {
+                return;
+            }
+            else
+            {
+                foreach (var item in items)
+                {   
+                    await DeleteProductFromBasket(userId, item.Id);
+                }
+            }
+        }
     }
 }
