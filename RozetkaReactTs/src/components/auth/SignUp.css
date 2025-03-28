@@ -1,0 +1,98 @@
+body {
+  background-color: #8f8d8d86;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.signin-container,
+.signin-container h1,
+.signin-container a,
+.signup-link,
+.signup-link a {
+  color: #000 !important;
+}
+
+.signin-container {
+  background-color: #f5f4f4;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  padding: 30px;
+  width: 400px;
+  margin: auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+}
+
+.signin-container h1 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #333;
+  font-size: 24px;
+}
+
+.ant-input {
+  height: 45px;
+  border-radius: 10px;
+}
+
+.ant-input-prefix {
+  color: #aaa;
+}
+
+.ant-btn-primary {
+  background-color: #78ba32; 
+  border-color: #78ba32;
+  font-weight: bold;
+  border-radius: 10px;
+  height: 45px;
+  font-size: 16px;
+}
+
+.ant-btn-primary:hover {
+  background-color: #67a22b !important;
+  border-color: #67a12f !important;
+}
+
+.signup-link {
+  display: flex;
+  justify-content: center;  
+  margin-top: 15px;
+  color: #aaa;
+}
+
+.signup-link a {
+  color: #78ba32;
+  font-weight: 500; 
+  text-decoration: none; 
+}
+
+.signup-link a:hover {
+  color: #67a22b; 
+  text-decoration: underline; 
+}
+
+.signin-form a {
+  color: #aaa;
+}
+
+.google-login-btn-wrapper {
+  width: 100%;
+  margin-top: 15px;
+}
+
+.google-login-btn-wrapper button {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid #78ba32;
+  color: #000;
+  background-color: #f9f9f9;
+  font-weight: 500;
+  height: 45px;
+}
+
+.google-login-btn-wrapper button:hover {
+  background-color: #eef9e1;
+}

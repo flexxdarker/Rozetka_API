@@ -1,29 +1,25 @@
 import { useGoogleLogin } from '@react-oauth/google';
 import { Button } from 'antd';
-import {LoginButtonProps} from "./types.ts";
+import { LoginButtonProps } from "./types.ts";
 import React from 'react';
+import { GoogleOutlined } from '@ant-design/icons';
+import './GoogleLoginButton.css';
 
-const GoogleLoginButton: React.FC<LoginButtonProps> = ({ onLogin, title, icon }) => {
-
-    //Викликаємо AccessToken для доступу до інформації
+const GoogleLoginButton: React.FC<LoginButtonProps> = ({ 
+    title = 'Увійти з Google', 
+    icon, 
+    onLogin 
+}) => {
     const login = useGoogleLogin({
-        onSuccess: async (authCodeResponse) => {
-            console.log("Login Google Token", authCodeResponse.access_token);
-            onLogin(authCodeResponse.access_token);
-            // const result = await accountService.googleLogin({ token: authCodeResponse.access_token });
-            // if (result.status === 200) {
-            //     console.log(result.data)
-            //     onLogin(result.data.token)
-            // }
-
+        onSuccess: tokenResponse => {
+            console.log(tokenResponse);
+            onLogin(tokenResponse.access_token);
         },
-        onError: (error) => {
-            console.error('Login Failed:', error);
-        },
+        onError: error => console.error(error),
     });
 
     return (
-        <Button icon={icon} onClick={()=>login()}>
+        <Button className="google-login-btn" icon={icon} onClick={() => login()}>
             {title}
         </Button>
     );
