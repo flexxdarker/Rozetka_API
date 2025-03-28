@@ -37,13 +37,17 @@ const CategoryTable: React.FC = () => {
             dataIndex: "image",
             key: "image",
             render: (item:string) =>
-        (
-            <img src={`${uploadings + "200_" + item}`} alt="no image" width="100px"/>
-        )
-        },
-        {
-            title: "Action",
-            key: "action",
+                (
+                    <div className="flex justify-center items-center">
+                        <img src={`${uploadings + "200_" + item}`} alt="no image" className="object-contain w-[100px] h-[100px]"/>
+                    </div>
+    )
+},
+    {
+        title: "Action",
+            key
+    :
+        "action",
             // render: () => <a>Delete</a>
             render: (record: ICategoryModel) => (
                 <Space size="middle">
@@ -120,14 +124,14 @@ const CategoryTable: React.FC = () => {
 
     return (
         <>
-            <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-                <h1>Category Table for admin</h1>
+            <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}} className={"p-[10px]"}>
                 <Link to="create">
                     <Button variant="contained" style={{maxHeight: "25px"}}>Add</Button>
                 </Link>
             </div>
 
             <Table
+                className={"min-w-[800px]"}
                 bordered={true}
                 columns={columns}
                 dataSource={categories

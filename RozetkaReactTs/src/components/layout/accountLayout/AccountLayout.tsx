@@ -16,7 +16,7 @@ const AccountLayout: React.FC = () => {
 
     return (
         <>
-            <div style={{backgroundColor: 'blue'}}>
+            <div>
                 <AccountMenu/>
             </div>
             <Content className='Main'

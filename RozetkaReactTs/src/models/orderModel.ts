@@ -24,6 +24,7 @@ export interface IOrderInfoModel {
 export interface IOrderInfoItemsModel {
     id: number;
     orderItems: IOrderInfoOrderItemsModel[];
+    createTime: string,
     status: string;
     totalPrice: number;
 }
@@ -35,9 +36,6 @@ export interface IOrderInfoOrderItemsModel {
     price: number;
     quantity: number;
 }
-
-
-
 
 
 
@@ -67,5 +65,5 @@ export interface IOrderByIdItemsItemsModel {
 export interface IOrderStatus {
     id: number;
     status: string;
-    orders: string;
+    orders?: string;
 }

@@ -7,33 +7,13 @@ import CategoryLayout from "./components/layout/categoryLayout/CategoryLayout.ts
 import ProductPage from "./components/product/ProductPage.tsx";
 import React from "react";
 import AccountLayout from "./components/layout/accountLayout/AccountLayout.tsx";
-// import UsersTable from "./components/users/UsersTable.tsx";
-// import OrdersTable from "./components/orders/OrdersTable.tsx";
-//import CategoriesPage from "./components/category/CategoriesPage.tsx";
-// import ComparisonListPage from "./components/comparison/ComparisonListPage.tsx";
-// import ComparisonProductsPage from "./components/comparison/ComparisonProductsPage.tsx";
-// import FilterProductPage from "./components/filter/filterProductPage.tsx";
-//import WishList from "./components/account/WishList.tsx";
-// import AccountOrders from "./components/account/AccountOrders.tsx";
-// import AccountData from "./components/account/AccountData.tsx";
-// import OrderPage from "./components/order/OrderPage.tsx";
-// import SubCategoryTable from "./components/subCategory/SubCategoryTable.tsx";
-// import SubCategoryForm from "./components/subCategory/SubCategoryForm.tsx";
-// import Home from "./components/Home.tsx";
-// import AboutUs from "./components/layout/footer/AboutUs.tsx";
-// import SignIn from "./components/auth/SignIn.tsx";
-// import NotFoundPage from "./components/NotFoundPage.tsx";
-// import SignUp from "./components/auth/SignUp.tsx";
-// import ProductTable from "./components/product/ProductTable.tsx";
-// import ProductForm from "./components/product/ProductForm.tsx";
-// import Contacts from "./components/layout/footer/Contacts.tsx";
-// import DeliveryAndPayment from "./components/layout/footer/DeliveryAndPayment.tsx";
-// import ForCorporateClient from "./components/layout/footer/ForCorporateClient.tsx";
-// import Franchising from "./components/layout/footer/Franchising.tsx";
-// import ReturnOfGoods from "./components/layout/footer/ReturnOfGoods.tsx";
-// import CategoryTable from "./components/category/CategoryTable.tsx";
-// import CategoryForm from "./components/category/CategoryForm.tsx";
-// import Basket from "./components/basket/Basket.tsx";
+import AdminLayout from "./components/layout/adminLayout/AdminLayout.tsx";
+import SubCategoriesPage from "./components/subCategory/subCategoriesPage.tsx";
+import EasyLayout from "./components/layout/orderResultLayout/EasyLayout.tsx";
+import ProtectedRoute from "./components/guards/ProtectedRoute.tsx";
+import ScrollToTop from "./functions/scrollToTop.ts";
+
+
 
 const Home = lazy(() => import("./components/Home.tsx"));
 const AboutUs = lazy(() => import("./components/layout/footer/AboutUs.tsx"));
@@ -44,8 +24,7 @@ const ProductTable = lazy(() => import("./components/product/ProductTable.tsx"))
 const ProductForm = lazy(() => import("./components/product/ProductForm.tsx"));
 const Contacts = lazy(() => import("./components/layout/footer/Contacts.tsx"));
 const DeliveryAndPayment = lazy(() => import("./components/layout/footer/DeliveryAndPayment.tsx"));
-const ForCorporateClient = lazy(() => import("./components/layout/footer/ForCorporateClient.tsx"));
-const Franchising = lazy(() => import("./components/layout/footer/Franchising.tsx"));
+const BonusAccount = lazy(() => import("./components/layout/footer/BonusAccount.tsx"));
 const ReturnOfGoods = lazy(() => import("./components/layout/footer/ReturnOfGoods.tsx"));
 const CategoryTable = lazy(() => import("./components/category/CategoryTable"));
 const CategoryForm = lazy(() => import("./components/category/CategoryForm.tsx"));
@@ -59,55 +38,80 @@ const ComparisonProductsPage = lazy(() => import("./components/comparison/Compar
 const CategoriesPage = lazy(() => import("./components/category/CategoriesPage.tsx"));
 const OrdersTable = lazy(() => import("./components/orders/OrdersTable.tsx"));
 const UsersTable = lazy(() => import("./components/users/UsersTable.tsx"));
+const FilterTable = lazy(() => import("./components/filter/filterTable.tsx"));
+const OrderResultPage = lazy(() => import("./components/order/OrderResultPage.tsx"));
+const TermsUseSite = lazy(() => import("./components/layout/footer/TermsUseSite.tsx"));
+const Guarantee = lazy(() => import("./components/layout/footer/Guarantee.tsx"));
+const Cooperation = lazy(() => import("./components/layout/footer/Cooperation.tsx"));
+const ServiceCenters = lazy(() => import("./components/layout/footer/ServiceCenters.tsx"));
+const GiftCertificates = lazy(() => import("./components/layout/footer/GiftCertificates.tsx"));
+const ProductsReviewed = lazy(() => import("./components/product/productsReviewed.tsx"));
 
 export default function App() {
     return (
+        <><ScrollToTop/>
         <Routes>
             <Route path="/" element={<AppLayout/>}>
                 <Route path="" element={<MainLayout/>}>
                     {/*Header*/}
                     <Route index element={<Home/>}/>
 
-                    {/*Admin*/}
-                    <Route path="products-crud" element={<ProductTable/>}/>
-                    <Route path="products-crud/create" element={<ProductForm/>}/>
-                    <Route path="products-crud/edit/:id" element={<ProductForm/>}/>
-                    {/*<Route path="product-page/:id" element={<ProductPage/>}/>*/}
-
-                    <Route path="categories-crud" element={<CategoryTable/>}/>
-                    <Route path="categories-crud/create" element={<CategoryForm/>}/>
-                    <Route path="categories-crud/edit/:id" element={<CategoryForm/>}/>
-
-                    <Route path="orders-crud" element={<OrdersTable/>}/>
-
-                    <Route path="users-crud" element={<UsersTable/>}/>
-
                     {/*Footer*/}
                     <Route path="about-us" element={<AboutUs/>}/>
                     <Route path="contacts" element={<Contacts/>}/>
+                    <Route path="terms-use-site" element={<TermsUseSite/>}/>
 
                     <Route path="delivery-and-payment" element={<DeliveryAndPayment/>}/>
+                    <Route path="guarantee" element={<Guarantee/>}/>
                     <Route path="return-of-goods" element={<ReturnOfGoods/>}/>
 
-                    <Route path="for-corporate-client" element={<ForCorporateClient/>}/>
-
-                    <Route path="franchising" element={<Franchising/>}/>
+                    <Route path="bonus-account" element={<BonusAccount/>}/>
+                    <Route path="gift-certificates" element={<GiftCertificates/>}/>
+                    <Route path="cooperation" element={<Cooperation/>}/>
+                    <Route path="service-centers" element={<ServiceCenters/>}/>
 
                     <Route path="order" element={<OrderPage/>}/>
                 </Route>
 
+                <Route path="" element={<AdminLayout/>}>
+                    <Route element={<ProtectedRoute/>}>
+                        <Route path="products-crud" element={<ProductTable/>}/>
+                        <Route path="products-crud/create" element={<ProductForm/>}/>
+                        <Route path="products-crud/edit/:id" element={<ProductForm/>}/>
+                        {/*<Route path="product-page/:id" element={<ProductPage/>}/>*/}
+
+                        <Route path="categories-crud" element={<CategoryTable/>}/>
+                        <Route path="categories-crud/create" element={<CategoryForm/>}/>
+                        <Route path="categories-crud/edit/:id" element={<CategoryForm/>}/>
+
+                        <Route path="orders-crud" element={<OrdersTable/>}/>
+                        <Route path="users-crud" element={<UsersTable/>}/>
+                        <Route path="filter-crud" element={<FilterTable/>}/>
+                    </Route>
+                </Route>
+
+
+                <Route path="subcategories/:id" element={<SubCategoriesPage/>}/>
+
                 <Route path="categories" element={<CategoriesPage/>}/>
 
                 <Route path="product-page/:id" element={<ProductPage/>}/>
+
                 <Route path="product-filter" element={<FilterProductPage/>}/>
 
                 <Route path="comparison-list" element={<ComparisonListPage/>}/>
+
                 <Route path="comparison-products" element={<ComparisonProductsPage/>}/>
+
+                <Route path="wish-list" element={<WishList/>}/>
 
                 <Route path="account" element={<AccountLayout/>}>
                     <Route path="data" element={<AccountData/>}/>
                     <Route path="orders" element={<AccountOrders/>}/>
                     <Route path="wish-list" element={<WishList/>}/>
+                    <Route path="comparison-list" element={<ComparisonListPage/>}/>
+                    <Route path="comparison-products" element={<ComparisonProductsPage/>}/>
+                    <Route path="reviewed-products" element={<ProductsReviewed/>}/>
                 </Route>
 
                 <Route path="" element={<CategoryLayout/>}>
@@ -115,10 +119,16 @@ export default function App() {
                 </Route>
 
             </Route>
-            <Route path="signin" element={<Suspense fallback={<MainLoader/>}> <SignIn/> </Suspense>}/>
-            <Route path="signup" element={<Suspense fallback={<MainLoader/>}> <SignUp/> </Suspense>}/>
-            <Route path="*" element={<Suspense fallback={<MainLoader/>}> <NotFoundPage/> </Suspense>}/>
+
+            <Route path="" element={<EasyLayout/>}>
+                <Route path="order-result" element={<OrderResultPage/>}/>
+                <Route path="signin" element={<Suspense fallback={<MainLoader/>}> <SignIn/> </Suspense>}/>
+                <Route path="signup" element={<Suspense fallback={<MainLoader/>}> <SignUp/> </Suspense>}/>
+                <Route path="*" element={<Suspense fallback={<MainLoader/>}> <NotFoundPage/> </Suspense>}/>
+            </Route>
+
+
         </Routes>
+        </>
     );
 }
-

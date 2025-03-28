@@ -1,5 +1,8 @@
 
 export interface IUserTokens {
+    isSuccess: boolean;
     accessToken: string;
-    refreshToken: string;
+    error: string;
+    baskets: string[];
+    // refreshToken: string;
 }

@@ -1,29 +1,23 @@
 import React, {useEffect, useState} from 'react';
 import PriceFilter from "./filters/PriceFilter.tsx";
 // import MultipleSelect from "./filters/MultipleSelect.tsx";
-import {IFilterModel} from "../../models/filterModel.ts";
 // import {ProductServices} from "../../services/productService.ts";
-import {FilterServices} from "../../services/filterService.ts";
+import MultipleSelect from "./filters/MultipleSelect.tsx";
+import useFilters from "../../hooks/useFilters.ts";
+import {IFilterModel, IFilterValueModel} from "../../models/filterModel.ts";
 
-// export interface IFilter {
-//     prices?: {
-//         minPrice: number;
-//         maxPrice: number;
-//     };
-// }
 
 interface IFilterHotelsSectionProps {
     minPriceInit: number;
     maxPriceInit: number;
-    //onChange?: (filter: IFilter) => void;
     onChange?: (minPrice: number, maxPrice: number) => void;
+    onChangeFilters?: (newFilters: IFilterModel[]) => void;
+    isReset: boolean;
 }
-
 
 const FiltersProducts:React.FC<IFilterHotelsSectionProps> = (props) => {
 
-    //@ts-ignore
-    const [filters, setFilters] = useState<IFilterModel[]>();
+    const {filters} = useFilters();
 
     const [minPriceInit, setMinPriceInit] = useState<number>(props.minPriceInit);
     const [maxPriceInit, setMaxPriceInit] = useState<number>(props.maxPriceInit);
@@ -45,22 +39,49 @@ const FiltersProducts:React.FC<IFilterHotelsSectionProps> = (props) => {
         props.onChange!(minPrice,maxPrice);
     }, [minPrice, maxPrice]); // Оновлюємо стан, коли пропси змінюються
 
-    const loadFilters = async () => {
-        const res = await FilterServices.getAll();
-        console.log(res);
-        setFilters(res.data);
+
+    const [selectedValues, setSelectedValues] = useState<Map<number, IFilterValueModel[]>>(new Map());
+
+    const handleSelectChange = (filterId: number, selected: IFilterValueModel[]) => {
+        setSelectedValues((prevState) => {
+            const newState = new Map(prevState);
+            newState.set(filterId, selected);
+            return newState;
+        });
     };
 
     useEffect(() => {
-        loadFilters();
-    }, []);
+        setSelectedValues(new Map());
+    }, [props.isReset]);
+
+    // Функція для обчислення відфільтрованих значень
+    const getFilteredData = (): IFilterModel[] => {
+        return filters.map((filter) => {
+            const selectedFilterValues = selectedValues.get(filter.id) || [];
+            return {
+                ...filter,
+                values: filter.values.filter((value) =>
+                    selectedFilterValues.some((selected) => selected.value === value.value)
+                )
+            };
+        }).filter((filter) => filter.values.length > 0); // Фільтруємо порожні фільтри
+    };
+
+    useEffect(() => {
+        //console.log('Filtered Data:', getFilteredData());
+        if (props.onChangeFilters) {
+            props.onChangeFilters(getFilteredData());
+        }
+    }, [selectedValues]);
 
     return (
-        <>
+        <div className={"flex flex-col gap-[4px]"}>
             <PriceFilter maxPriceValueInit={maxPriceInit} minPriceValueInit={minPriceInit} onChange={priceValue}/>
-
-            {/*<MultipleSelect title={} options={}/>*/}
-        </>
+            {filters.map(filter => <MultipleSelect title={filter.name} values={filter.values} key={filter.id}
+                                                   selectedValues={selectedValues.get(filter.id) || []}
+                                                   onChange={(selectedValues) => handleSelectChange(filter.id, selectedValues)}/>)
+            }
+        </div>
     );
 };
 

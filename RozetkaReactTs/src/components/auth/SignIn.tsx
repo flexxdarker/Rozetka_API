@@ -6,6 +6,7 @@ import {Link, useNavigate} from "react-router-dom";
 import {ILoginModel} from "../../models/accountsModel.ts";
 import {AccountsService} from "../../services/accountsService.ts";
 import {TokenService} from "../../services/tokenService.ts";
+import {toast} from "react-toastify";
 
 // type FieldTypeSignIn = {
 //     username?: string;
@@ -20,13 +21,23 @@ const SignIn: React.FC = () => {
         const onFinish: FormProps<ILoginModel>['onFinish'] = async (values) => {
                 console.log('Form values:', {...values}); // Обробка відправки форми з додатковими даними редактора
              const res = await AccountsService.login(values);
-            TokenService.save(res.data);
-            if (res.status == 200) {
-                message.success("login success");
-                navigate("/");
-            } else {
-                message.warning("Warning");
-            }
+             console.log("res ",res);
+             if(res.status === 200 && res.data.accessToken != null) {
+                 TokenService.save(res.data);
+                 if (res.status == 200) {
+                     message.success("login success");
+                     navigate("/");
+                 } else {
+                     message.warning("Warning");
+                 }
+             }
+             else{
+                 toast('Помилка користувача', {
+                     position: 'bottom-right',
+                     autoClose: 4000, // Auto close after 3 seconds
+                     closeButton: true,  // Add close button to the toast
+                 });
+             }
         };
 
         const onFinishFailed: FormProps<ILoginModel>['onFinishFailed'] = (errorInfo) => {
@@ -44,7 +55,6 @@ const SignIn: React.FC = () => {
                     minWidth: "300px",
                     maxWidth: "fit-content",
                     height: "fit-content",
-                    backgroundColor: "blue",
                     alignItems: "center",
                     margin: "auto",
                     display: 'flex',
@@ -54,7 +64,8 @@ const SignIn: React.FC = () => {
                     right: 0,
                     top: 0,
                     bottom: 0
-                }}>
+                }}
+                     className={"rounded-[8px] bg-[#fff] border-solid border border-[#9cc319]"}>
                     <h1>SignIn page</h1>
                     <Form
                         name="login"

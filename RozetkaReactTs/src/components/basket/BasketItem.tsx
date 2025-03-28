@@ -8,8 +8,8 @@ import formatPrice from "../../functions/formatPrice.ts";
 import clsx from 'clsx';
 import {BasketServicesApi} from "../../services/basketServiceApi.ts";
 import {IBasketApi} from "../../models/basketModel.ts";
+import {toast} from "react-toastify";
 
-//import Typography from '../assets/contemplative-reptile.jpg';
 
 const uploadings = import.meta.env.VITE_ROZETKA_UPLOADINGS;
 
@@ -20,36 +20,53 @@ const BasketItem = (props: { item: IProductModel, className?: string }) => {
 
     const [count,setCount] = useState(BasketService.getCountById(item.id));
 
-    const addItem = () => {
+    const addItem = async () => {
         BasketService.addId(item.id);
         window.dispatchEvent(new Event('basket-updated'));
         setCount(BasketService.getCountById(item.id));
 
-        const res = BasketServicesApi.deleteBasket(item.id);
-        console.log("res delete basket ", res);
-
+        const res = await BasketServicesApi.deleteBasket(item.id);
+        if(res.status === 200){
+            console.log(200)
+        }
         const data: IBasketApi = {productId: item.id, amount: BasketService.getCountById(item.id)}
-        const res2 = BasketServicesApi.createBasketId(data);
-        console.log("res2 basket ", res2);
+        const res2 = await BasketServicesApi.createBasketId(data);
+        if(res2.status === 200){
+            console.log(200)
+        }
     }
 
-    const removeItem = () => {
+    const removeItem = async () => {
         BasketService.removeId(item.id);
         window.dispatchEvent(new Event('basket-updated'));
         setCount(BasketService.getCountById(item.id));
 
-        const res = BasketServicesApi.deleteBasket(item.id);
-        console.log("res delete basket ", res);
+        const res = await BasketServicesApi.deleteBasket(item.id);
+        if(res.status === 200){
+            console.log(200)
+        }
 
         const data: IBasketApi = {productId: item.id, amount: BasketService.getCountById(item.id)}
-        const res2 = BasketServicesApi.createBasketId(data);
-        console.log("res2 basket ", res2);
+        const res2 = await BasketServicesApi.createBasketId(data);
+        if(res2.status === 200){
+            console.log(200)
+        }
     }
 
-    const removeAll = () => {
+    const removeAll = async () => {
         BasketService.removeAllItems(item.id);
         window.dispatchEvent(new Event('basket-updated'));
         setCount(BasketService.getCountById(item.id));
+
+        const res = await BasketServicesApi.deleteBasket(item.id);
+        if(res.status === 200){
+            // console.log('Товар успішно видалено з корзини!');
+            toast('Товар успішно видалено з корзини!', {
+                position: 'bottom-right',
+                autoClose: 4000, // Auto close after 3 seconds
+                closeButton: true,  // Add close button to the toast
+            });
+        }
     }
 
 
@@ -60,7 +77,7 @@ const BasketItem = (props: { item: IProductModel, className?: string }) => {
                 <div
                     className={clsx("flex pt-[20px] pr-[20px] pb-[20px] pl-[20px] gap-[28px] items-start self-stretch shrink-0 flex-nowrap bg-[#fff] rounded-[8px]", className)}>
                     <img
-                        className="w-[120px] h-[120px] shrink-0"
+                        className="w-[120px] h-[120px] shrink-0 object-contain"
                         src={`${uploadings + "400_" + item.images![0]?.name}`} alt="no image"/>
                     <div
                         className="flex flex-col gap-[32px] items-start grow shrink-0 basis-0 flex-nowrap">

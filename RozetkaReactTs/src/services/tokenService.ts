@@ -1,7 +1,7 @@
 import {IUserTokens} from "../models/tokenModel.ts";
 import { jwtDecode } from "jwt-decode";
 
-interface ITokenPayload {
+export interface ITokenPayload {
     [key: string]: string | number | undefined;
     id: string;
     name:string;
@@ -16,18 +16,24 @@ interface ITokenPayload {
 
 
 const saveaccesstoken = import.meta.env.VITE_APP_SAVE_ACCOUNT_ACCESS;
-// const saveaccesstoken = process.env.REACT_APP_SAVE_ACCOUNT_ACCESS;
-const saverefreshtoken = import.meta.env.VITE_APP_SAVE_ACCOUNT_REFRESH;
+const storageChangeToken = import.meta.env.VITE_APP_CHANGE_TOKEN_EVENT;
+//const saverefreshtoken = import.meta.env.VITE_APP_SAVE_ACCOUNT_REFRESH;
 
 export const TokenService = {
     save(model: IUserTokens) {
         localStorage.setItem(saveaccesstoken, model.accessToken);
-        localStorage.setItem(saverefreshtoken, model.refreshToken);
+        window.dispatchEvent(new Event(storageChangeToken));
+    },
+
+    saveTokenString(token: string) {
+        localStorage.setItem(saveaccesstoken, token);
+        window.dispatchEvent(new Event(storageChangeToken));
     },
 
     clear() {
         localStorage.removeItem(saveaccesstoken);
-        localStorage.removeItem(saverefreshtoken);
+        window.dispatchEvent(new Event(storageChangeToken));
+        //localStorage.removeItem(saverefreshtoken);
     },
 
     getAccessToken(): string | null {
@@ -35,10 +41,10 @@ export const TokenService = {
         return localStorage.getItem(saveaccesstoken);
     },
 
-    getRefreshToken() {
-        if (!saverefreshtoken) return null;
-        return localStorage.getItem(saverefreshtoken);
-    },
+    // getRefreshToken() {
+    //     if (!saverefreshtoken) return null;
+    //     return localStorage.getItem(saverefreshtoken);
+    // },
 
     isExists() {
         if(localStorage.getItem(saveaccesstoken)) {
@@ -85,8 +91,9 @@ export const TokenService = {
                     payload[
                         "birthdate"
                         ] as string,
-                roles: payload[
-                    "role"
+                roles:
+                    payload[
+                    "roles"
                     ] as string,
                 exp:
                     payload[

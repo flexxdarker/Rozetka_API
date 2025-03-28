@@ -32,3 +32,21 @@ export interface IUserModel {
     lockoutEnd: string;
     roles: string;
 }
+
+export interface IEditUserModel {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phoneNumber: string;
+    birthdate: string;
+    avatar?: File;
+}
+
+export interface IUserNewToken {
+    token: string;
+}
+
+export interface IUserChangePassword {
+    currentPassword: string;
+    newPassword: string;
+}
