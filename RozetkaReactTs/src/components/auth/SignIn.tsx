@@ -7,7 +7,7 @@ import {ILoginModel} from "../../models/accountsModel.ts";
 import {AccountsService} from "../../services/accountsService.ts";
 import {TokenService} from "../../services/tokenService.ts";
 import {toast} from "react-toastify";
-
+import './SignIn.css';
 // type FieldTypeSignIn = {
 //     username?: string;
 //     password?: string;
@@ -141,9 +141,9 @@ const SignIn: React.FC = () => {
                             <Button block type="primary" htmlType="submit">
                                 SignIn
                             </Button>
-                            or
-                            {/*<a href="">Register now!</a>*/}
-                            <Link to="/signup">SignUp!</Link>
+                            <div className="signup-link">
+              <Link to="/signup">SignUp!</Link>
+            </div>
                         </Form.Item>
 
 
