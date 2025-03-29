@@ -35,7 +35,7 @@ namespace Rozetka_Api.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromForm] RegisterModel model)
+        public async Task<IActionResult> Register([FromForm] Register÷'Model model)
         {
             await accountsService.Register(model);
             return Ok();
@@ -57,7 +57,6 @@ namespace Rozetka_Api.Controllers
         [HttpPost("GoogleSignIn")]
         public async Task<IActionResult> GoogleSignIn([FromForm] GoogleLoginDto model)
         {
-
             var result = await accountsService.GoogleSignInAsync(model);
             return Ok(result);
         }
@@ -133,7 +132,7 @@ namespace Rozetka_Api.Controllers
             return Ok(await accountsService.BlockUser(model.UserId));
         }
 
-        [Authorize(Roles = "admin")]
+        [Authorize]
         [HttpGet("UserById")]
         public async Task<IActionResult> GetUser()
         {
