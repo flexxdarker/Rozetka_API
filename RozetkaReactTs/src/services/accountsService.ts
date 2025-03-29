@@ -98,6 +98,41 @@ export const AccountsService = {
         return api.post<IUserTokens>("login", data);
     },
 
+
+    googleAuth(tokenGoogle: string) {
+
+        const data = new FormData();
+        data.append('GoogleAccessToken', tokenGoogle);
+
+        const items = BasketService.getItems();
+        if (items != null || items != undefined) {
+            // Для ids
+            const ids = Object.keys(items).map(Number);
+            if (ids.length > 0) {
+                ids.forEach((id: number) => {
+                    data.append('Baskets.AdvertsIds', id.toString());  // додаємо кожен id окремо
+                });
+            }
+            console.log("ids", ids);
+
+            // Для values
+            const values = Object.values(items as number[]);
+            if (values.length > 0) {
+                values.forEach((value: number) => {
+                    data.append('Baskets.Amount', value.toString());  // додаємо кожне значення окремо
+                });
+            }
+            console.log("values", values);
+        }
+        console.log("data: ");
+        data.forEach((value, key) => {
+            console.log(`${key}: ${value}`);
+        });
+
+        return api.post<IUserTokens>("GoogleSignIn", data);
+    },
+
+
     logout() {
     // logout(refreshToken: string) {
         BasketService.clearItems();

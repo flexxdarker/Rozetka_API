@@ -7,7 +7,10 @@ import {ILoginModel} from "../../models/accountsModel.ts";
 import {AccountsService} from "../../services/accountsService.ts";
 import {TokenService} from "../../services/tokenService.ts";
 import {toast} from "react-toastify";
-
+import {GoogleOAuthProvider} from '@react-oauth/google';
+import GoogleLoginButton from "./GoogleLoginButton.tsx";
+import {GoogleOutlined} from '@ant-design/icons';
+import './SignIn.css';
 // type FieldTypeSignIn = {
 //     username?: string;
 //     password?: string;
@@ -16,41 +19,60 @@ import {toast} from "react-toastify";
 
 const SignIn: React.FC = () => {
 
-    const navigate = useNavigate();
+        const navigate = useNavigate();
 
         const onFinish: FormProps<ILoginModel>['onFinish'] = async (values) => {
-                console.log('Form values:', {...values}); // Обробка відправки форми з додатковими даними редактора
-             const res = await AccountsService.login(values);
-             console.log("res ",res);
-             if(res.status === 200 && res.data.accessToken != null) {
-                 TokenService.save(res.data);
-                 if (res.status == 200) {
-                     message.success("login success");
-                     navigate("/");
-                 } else {
-                     message.warning("Warning");
-                 }
-             }
-             else{
-                 toast('Помилка користувача', {
-                     position: 'bottom-right',
-                     autoClose: 4000, // Auto close after 3 seconds
-                     closeButton: true,  // Add close button to the toast
-                 });
-             }
+            console.log('Form values:', {...values}); // Обробка відправки форми з додатковими даними редактора
+            const res = await AccountsService.login(values);
+            console.log("res ", res);
+            if (res.status === 200 && res.data.accessToken != null) {
+                TokenService.save(res.data);
+                if (res.status == 200) {
+                    message.success("login success");
+                    navigate("/");
+                } else {
+                    message.warning("Warning");
+                }
+            } else {
+                toast('Помилка користувача', {
+                    position: 'bottom-right',
+                    autoClose: 4000, // Auto close after 3 seconds
+                    closeButton: true,  // Add close button to the toast
+                });
+            }
         };
 
         const onFinishFailed: FormProps<ILoginModel>['onFinishFailed'] = (errorInfo) => {
             console.log('Failed:', errorInfo);
         };
 
-        const GoogleSignIn = () => {
-            console.log('Google SignIn');
+        const CLIENT_ID = '234334407358-8tdcpdrksc7d9o6mv3gkm7tcnpfdg4q4.apps.googleusercontent.com';
+
+        const onLoginGoogleResult = async (tokenGoogle: string) => {
+            // console.log("google token", tokenGoogle);
+            const res = await AccountsService.googleAuth(tokenGoogle);
+            console.log("res ", res);
+            if (res.status === 200 && res.data.accessToken != null) {
+                TokenService.save(res.data);
+                if (res.status == 200) {
+                    message.success("login success");
+                    navigate("/");
+                } else {
+                    message.warning("Warning");
+                }
+            } else {
+                toast('Помилка користувача', {
+                    position: 'bottom-right',
+                    autoClose: 4000, // Auto close after 3 seconds
+                    closeButton: true,  // Add close button to the toast
+                });
+            }
+
+
         };
 
-
         return (
-            <>
+            <GoogleOAuthProvider clientId={CLIENT_ID}>
                 <div style={{
                     minWidth: "300px",
                     maxWidth: "fit-content",
@@ -101,13 +123,13 @@ const SignIn: React.FC = () => {
                         {/* const [description, setDescription] = useState<string>("");*/}
                         {/* const editorRef = useRef<Editor | null>(null);*/}
 
-                    {/*    const onFinish: FormProps<FieldTypeSignIn>['onFinish'] = (values) => {*/}
-                    {/*    // if (editorRef.current) {*/}
-                    {/*    const description = editorContent;*/}
-                    {/*    // const description = editorRef.current.getContent();*/}
-                    {/*    console.log('Form values:', {...values, description}); // Обробка відправки форми з додатковими даними редактора*/}
-                    {/*    // }*/}
-                    {/*};*/}
+                        {/*    const onFinish: FormProps<FieldTypeSignIn>['onFinish'] = (values) => {*/}
+                        {/*    // if (editorRef.current) {*/}
+                        {/*    const description = editorContent;*/}
+                        {/*    // const description = editorRef.current.getContent();*/}
+                        {/*    console.log('Form values:', {...values, description}); // Обробка відправки форми з додатковими даними редактора*/}
+                        {/*    // }*/}
+                        {/*};*/}
 
                         {/*// const handleEditorChange = (content, editor) => { setEditorContent(content); console.log('Content was updated:', content); };*/}
 
@@ -141,18 +163,16 @@ const SignIn: React.FC = () => {
                             <Button block type="primary" htmlType="submit">
                                 SignIn
                             </Button>
-                            or
-                            {/*<a href="">Register now!</a>*/}
-                            <Link to="/signup">SignUp!</Link>
+                            <div className="signup-link">
+                                <Link to="/signup">SignUp!</Link>
+                            </div>
                         </Form.Item>
 
+                        <GoogleLoginButton icon={<GoogleOutlined/>} title='Увійти з Google' onLogin={onLoginGoogleResult}/>
 
-                        <Button block type="primary" htmlType="button" onClick={GoogleSignIn}>
-                            SignIn with Google
-                        </Button>
                     </Form>
                 </div>
-            </>
+            </GoogleOAuthProvider>
         );
     }
 ;
